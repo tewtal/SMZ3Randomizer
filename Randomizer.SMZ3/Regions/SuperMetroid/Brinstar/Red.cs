@@ -35,7 +35,14 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
         }
 
         public override bool CanEnter(List<Item> items) {
-            return (items.CanDestroyBombWalls() || items.Has(SpeedBooster)) && items.Has(Super) && items.Has(Morph);
+            return Logic switch {
+                Casual =>
+                    (items.CanDestroyBombWalls() || items.Has(SpeedBooster)) && items.Has(Super) && items.Has(Morph) ||
+                    items.CanAccessNorfairUpperPortal() && (items.Has(Ice) || items.Has(HiJump) || items.Has(SpaceJump)),
+                _ =>
+                    (items.CanDestroyBombWalls() || items.Has(SpeedBooster)) && items.Has(Super) && items.Has(Morph) ||
+                    items.CanAccessNorfairUpperPortal() && (items.Has(Ice) || items.CanSpringBallJump() || items.Has(HiJump) || items.CanFly())
+            };
         }
 
     }

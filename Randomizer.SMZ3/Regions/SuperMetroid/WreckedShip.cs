@@ -40,11 +40,16 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
             return Logic switch
             {
                 Casual =>
-                    items.Has(Super) && items.CanUsePowerBombs() && (
-                        items.Has(SpeedBooster) || items.Has(Grapple) || items.Has(SpaceJump) ||
-                        items.Has(Gravity) && (items.CanFly() || items.Has(HiJump))),
+                    items.Has(Super) && (
+                        items.CanUsePowerBombs() && (items.Has(SpeedBooster) || items.Has(Grapple) || items.Has(SpaceJump) ||
+                            items.Has(Gravity) && (items.CanFly() || items.Has(HiJump))) ||
+                        items.CanAccessMaridiaPortal(Logic) && items.Has(Gravity) && items.CanPassBombPassages()
+                    ),
                 _ =>
-                    items.Has(Super) && items.CanUsePowerBombs()
+                    items.Has(Super) && (
+                        items.CanUsePowerBombs() ||
+                        items.CanAccessMaridiaPortal(Logic) && (items.Has(HiJump) || items.Has(Gravity)) && items.CanPassBombPassages()
+                    )
             };
         }
 

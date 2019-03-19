@@ -41,19 +41,24 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
 
         public override bool CanEnter(List<Item> items) {
             return Logic switch {
-                Casual => 
-                    (items.CanDestroyBombWalls() || items.Has(SpeedBooster)) && items.Has(Super) && items.Has(Morph) &&
+                Casual => (
+                        (items.CanDestroyBombWalls() || items.Has(SpeedBooster)) && items.Has(Super) && items.Has(Morph) ||
+                        items.CanAccessNorfairUpperPortal()
+                    ) &&
                     items.Has(Varia) && items.Has(Super) && (
                         items.CanUsePowerBombs() && items.Has(SpeedBooster) ||
                         items.Has(SpeedBooster) && items.Has(Wave) ||
                         items.Has(Morph) && (items.CanFly() || items.Has(HiJump)) && items.Has(Wave)
                     ),
-                _ =>
-                    (items.CanDestroyBombWalls() || items.Has(SpeedBooster)) && items.Has(Super) && items.Has(Morph) &&
+                _ => (
+                        (items.CanDestroyBombWalls() || items.Has(SpeedBooster)) && items.Has(Super) && items.Has(Morph) ||
+                        items.CanAccessNorfairUpperPortal()
+                    ) &&
                     items.Has(Super) &&
                     (items.HasEnergyReserves(2) && items.Has(SpeedBooster) || items.CanHellRun()) &&
                     (items.CanFly() || items.Has(HiJump) || items.CanSpringBallJump() || items.Has(Varia) && items.Has(Ice) || items.Has(SpeedBooster)) &&
                     (items.CanPassBombPassages() || items.Has(SpeedBooster) || items.Has(Varia) && items.Has(Morph))
+                    || items.CanAccessNorfairLowerPortal() && items.Has(ScrewAttack) && items.Has(SpaceJump) && items.Has(Varia) && items.Has(Super) && items.HasEnergyReserves(2)
             };
         }
 

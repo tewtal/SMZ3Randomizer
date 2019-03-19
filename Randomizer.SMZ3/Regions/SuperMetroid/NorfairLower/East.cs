@@ -38,11 +38,14 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
             return Logic switch
             {
                 Casual =>
-                    items.Has(Varia) && World.CanEnter("Norfair Upper East", items) && items.CanUsePowerBombs() &&
-                    items.Has(SpaceJump) && items.Has(Gravity),
+                    items.Has(Varia) && (
+                        World.CanEnter("Norfair Upper East", items) && items.CanUsePowerBombs() && items.Has(SpaceJump) && items.Has(Gravity) ||
+                        items.CanAccessNorfairLowerPortal() && items.CanDestroyBombWalls() && items.Has(Super) && items.CanUsePowerBombs() && items.CanFly()),
                 _ =>
-                    items.Has(Varia) && World.CanEnter("Norfair Upper East", items) && items.CanUsePowerBombs() &&
-                    (items.Has(HiJump) || items.Has(Gravity)) &&
+                    items.Has(Varia) && (
+                        World.CanEnter("Norfair Upper East", items) && items.CanUsePowerBombs() && (items.Has(HiJump) || items.Has(Gravity)) ||
+                        items.CanAccessNorfairLowerPortal() && items.CanDestroyBombWalls() && items.Has(Super) && (items.CanFly() || items.CanSpringBallJump() || items.Has(SpeedBooster))
+                    ) &&
                     (items.CanFly() || items.Has(HiJump) || items.CanSpringBallJump() || items.Has(Ice) && items.Has(Charge)) &&
                     (items.CanPassBombPassages() || items.Has(ScrewAttack) && items.Has(SpaceJump)) &&
                     (items.Has(Morph) || items.HasEnergyReserves(5))

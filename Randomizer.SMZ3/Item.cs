@@ -349,6 +349,14 @@ namespace Randomizer.SMZ3 {
             return items.Count(i => i.Type == itemType) >= amount;
         }
 
+        public static bool CanLiftLight(this List<Item> items) {
+            return items.Has(ProgressiveGlove);
+        }
+
+        public static bool CanLiftHeavy(this List<Item> items) {
+            return items.Has(ProgressiveGlove, 2);
+        }
+
         public static bool CanIbj(this List<Item> items) {
             return items.Has(Morph) && items.Has(Bombs);
         }
@@ -387,8 +395,8 @@ namespace Randomizer.SMZ3 {
 
         public static bool CanDefeatBotwoon(this List<Item> items, Logic logic) {
             return logic switch {
-                Casual => items.Has(SpeedBooster),
-                _ => items.Has(Ice) || items.Has(SpeedBooster)
+                Casual => items.Has(SpeedBooster) || items.CanAccessMaridiaPortal(logic),
+                _ => items.Has(Ice) || items.Has(SpeedBooster) || items.CanAccessMaridiaPortal(logic)
             };
         }
 
@@ -397,6 +405,27 @@ namespace Randomizer.SMZ3 {
                 Casual => items.CanDefeatBotwoon(logic) && items.Has(Gravity) &&
                     (items.Has(SpeedBooster) && items.Has(HiJump) || items.CanFly()),
                 _ => items.CanDefeatBotwoon(logic) && items.Has(Gravity)
+            };
+        }
+
+        public static bool CanAccessNorfairUpperPortal(this List<Item> items) {
+            return items.Has(Flute) || items.CanLiftLight() && items.Has(Lamp);
+        }
+
+        public static bool CanAccessNorfairLowerPortal(this List<Item> items) {
+            return items.Has(Flute) && items.CanLiftHeavy();
+        }
+
+        public static bool CanAccessMaridiaPortal(this List<Item> items, Logic logic) {
+            return logic switch {
+                Casual =>
+                    items.Has(MoonPearl) && items.Has(Flippers) &&
+                    items.Has(Gravity) && items.Has(Morph) &&
+                    (/*DefeatAgahnim || */items.Has(Hammer) && items.CanLiftLight() || items.CanLiftHeavy()),
+                _ =>
+                    items.Has(MoonPearl) && items.Has(Flippers) &&
+                    (items.CanSpringBallJump() || items.Has(HiJump) || items.Has(Gravity)) && items.Has(Morph) &&
+                    (/*DefeatAgahnim || */items.Has(Hammer) && items.CanLiftLight() || items.CanLiftHeavy())
             };
         }
 
