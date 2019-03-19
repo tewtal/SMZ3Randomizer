@@ -17,6 +17,11 @@ namespace Randomizer.SMZ3 {
             Player = player;
 
             Regions = new List<Region> {
+                new Regions.Zelda.LightWorld.DeathMountain.West(this, Logic),
+                new Regions.Zelda.LightWorld.DeathMountain.East(this, Logic),
+                new Regions.Zelda.LightWorld.NorthWest(this, Logic),
+                new Regions.Zelda.LightWorld.NorthEast(this, Logic),
+                new Regions.Zelda.LightWorld.South(this, Logic),
                 new Regions.SuperMetroid.Crateria.Central(this, Logic),
                 new Regions.SuperMetroid.Crateria.West(this, Logic),
                 new Regions.SuperMetroid.Crateria.East(this, Logic),

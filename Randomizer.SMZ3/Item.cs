@@ -349,12 +349,29 @@ namespace Randomizer.SMZ3 {
             return items.Count(i => i.Type == itemType) >= amount;
         }
 
+        public static bool HasMasterSword(this List<Item> items) {
+            return items.Has(ProgressiveSword, 2);
+        }
+
         public static bool CanLiftLight(this List<Item> items) {
             return items.Has(ProgressiveGlove);
         }
 
         public static bool CanLiftHeavy(this List<Item> items) {
             return items.Has(ProgressiveGlove, 2);
+        }
+
+        public static bool CanAccessDeathMountainPortal(this List<Item> items) {
+            return (items.CanDestroyBombWalls() || items.Has(SpeedBooster)) && items.Has(Super) && items.Has(Morph);
+        }
+
+        public static bool CanAccessMiseryMirePortal(this List<Item> items, Logic logic) {
+            return logic switch {
+                Casual =>
+                    items.Has(Varia) && items.Has(Super) && (items.Has(Gravity) && items.Has(SpaceJump)) && items.CanUsePowerBombs(),
+                _ =>
+                    items.Has(Varia) && items.Has(Super) && (items.Has(Gravity) || items.Has(HiJump)) && items.CanUsePowerBombs()
+            };
         }
 
         public static bool CanIbj(this List<Item> items) {
