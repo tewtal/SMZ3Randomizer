@@ -361,8 +361,24 @@ namespace Randomizer.SMZ3 {
             return items.Has(ProgressiveGlove, 2);
         }
 
+        public static bool CanExtendMagic(this List<Item> items, int bars = 2) {
+            return (items.Has(HalfMagic) ? 2 : 1) * (items.Count(i => i.Type == Bottle) + 1) >= bars;
+        }
+
         public static bool CanAccessDeathMountainPortal(this List<Item> items) {
             return (items.CanDestroyBombWalls() || items.Has(SpeedBooster)) && items.Has(Super) && items.Has(Morph);
+        }
+
+        public static bool CanAccessDarkWorldPortal(this List<Item> items, Logic logic) {
+            return logic switch {
+                Casual =>
+                    items.CanUsePowerBombs() && items.Has(Super) && items.Has(Gravity) && items.Has(SpeedBooster),
+                _ =>
+                    items.CanUsePowerBombs() && items.Has(Super) &&
+                    (items.Has(Charge) || items.Has(Super) && items.Has(Missile)) &&
+                    (items.Has(Gravity) || items.Has(HiJump) && items.Has(Ice) && items.Has(Grapple)) &&
+                    (items.Has(Ice) || items.Has(Gravity) && items.Has(SpeedBooster))
+            };
         }
 
         public static bool CanAccessMiseryMirePortal(this List<Item> items, Logic logic) {
