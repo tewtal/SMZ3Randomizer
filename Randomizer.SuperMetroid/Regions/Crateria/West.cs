@@ -6,29 +6,29 @@ namespace Randomizer.SuperMetroid.Regions.Crateria {
 
     class West : Region {
 
-        public override string Name => "West Crateria";
+        public override string Name => "Crateria West";
         public override string Area => "Crateria";
 
         public West(World world, Logic logic) : base(world, logic) {
             Locations = new List<Location> {
                 new Location(this, "Energy Tank, Terminator", LocationType.Visible, 0x78432),
                 new Location(this, "Energy Tank, Gauntlet", LocationType.Visible, 0x78264, Logic switch {
-                    Casual  => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.HasEnergyReserves(1)),
-                    _       => new Requirement(items => CanEnterAndLeaveGauntlet(items))
+                    Casual => items => CanEnterAndLeaveGauntlet(items) && items.HasEnergyReserves(1),
+                    _ => new Requirement(items => CanEnterAndLeaveGauntlet(items))
                 }),
                 new Location(this, "Missile (Crateria gauntlet right)", LocationType.Visible, 0x78464, Logic switch {
-                    Casual  => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2)),
-                    _       => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
+                    Casual => items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2),
+                    _ => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
                 }),
                 new Location(this, "Missile (Crateria gauntlet left)", LocationType.Visible, 0x7846A, Logic switch {
-                    Casual  => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2)),
-                    _       => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
+                    Casual => items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2),
+                    _ => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
                 })
             };
         }
 
         public override bool CanEnter(List<Item> items) {
-            return (items.CanDestroyBombWalls() || items.Has(SpeedBooster));
+            return items.CanDestroyBombWalls() || items.Has(SpeedBooster);
         }
 
         private bool CanEnterAndLeaveGauntlet(List<Item> items) {
@@ -38,7 +38,6 @@ namespace Randomizer.SuperMetroid.Regions.Crateria {
                         items.CanIbj() ||
                         items.CanUsePowerBombs() && items.Has(PowerBomb, 2) ||
                         items.Has(ScrewAttack)),
-
                 _ =>
                     items.Has(Morph) && (items.Has(Bombs) || items.Has(PowerBomb, 2)) ||
                     items.Has(ScrewAttack) ||

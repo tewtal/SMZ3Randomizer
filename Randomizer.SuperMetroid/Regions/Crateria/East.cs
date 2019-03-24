@@ -6,7 +6,7 @@ namespace Randomizer.SuperMetroid.Regions.Crateria {
 
     class East : Region {
 
-        public override string Name => "East Crateria";
+        public override string Name => "Crateria East";
         public override string Area => "Crateria";
 
         public East(World world, Logic logic) : base(world, logic) {

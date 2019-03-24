@@ -1,31 +1,32 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using static Randomizer.SuperMetroid.ItemType;
+using static Randomizer.SuperMetroid.Logic;
 
 namespace Randomizer.SuperMetroid {
 
     public enum ItemType {
-        ETank,
         Missile,
         Super,
         PowerBomb,
-        Bombs,
-        ChargeBeam,
-        IceBeam,
-        HiJump,
-        SpeedBooster,
-        WaveBeam,
+        Grapple,
+        XRay,
+        ETank,
+        ReserveTank,
+        Charge,
+        Ice,
+        Wave,
         Spazer,
-        SpringBall,
+        Plasma,
         Varia,
         Gravity,
-        XRay,
-        PlasmaBeam,
-        Grapple,
-        SpaceJump,
-        ScrewAttack,
         Morph,
-        ReserveTank
+        Bombs,
+        SpringBall,
+        ScrewAttack,
+        HiJump,
+        SpaceJump,
+        SpeedBooster
     }
 
     class Item {
@@ -65,12 +66,35 @@ namespace Randomizer.SuperMetroid {
             return items.CanPassBombPassages() || items.Has(ScrewAttack);
         }
 
+        public static bool CanSpringBallJump(this List<Item> items) {
+            return items.Has(Morph) && items.Has(SpringBall);
+        }
+
+        public static bool CanHellRun(this List<Item> items) {
+            return items.Has(Varia) || items.HasEnergyReserves(5);
+        }
+
         public static bool HasEnergyReserves(this List<Item> items, int amount) {
             return (items.Count(i => i.Type == ETank) + items.Count(i => i.Type == ReserveTank)) >= amount;
         }
 
         public static bool CanOpenRedDoors(this List<Item> items) {
             return items.Has(Missile) || items.Has(Super);
+        }
+
+        public static bool CanDefeatBotwoon(this List<Item> items, Logic logic) {
+            return logic switch {
+                Casual => items.Has(SpeedBooster),
+                _ => items.Has(Ice) || items.Has(SpeedBooster)
+            };
+        }
+
+        public static bool CanDefeatDraygon(this List<Item> items, Logic logic) {
+            return logic switch {
+                Casual  => items.CanDefeatBotwoon(logic) && items.Has(Gravity) &&
+                            (items.Has(SpeedBooster) && items.Has(HiJump) || items.CanFly()),
+                _       => items.CanDefeatBotwoon(logic) && items.Has(Gravity)
+            };
         }
 
     }
