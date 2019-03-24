@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Randomizer.Contracts;
 
 namespace Randomizer.SuperMetroid {
@@ -7,7 +8,7 @@ namespace Randomizer.SuperMetroid {
     public class Randomizer : IRandomizer {
 
         public IPatchData GenerateSeed(IDictionary<string, string> options, string seed) {
-            var world = new World(Difficulty.Tournament);
+            var world = new World(Logic.Tournament);
             var patchData = new PatchData {
                 Seed = new Random().Next(1000000, 9999999).ToString(),
                 Name = "Super Metroid Randomizer",
@@ -24,7 +25,7 @@ namespace Randomizer.SuperMetroid {
         private Dictionary<int, byte[]> patches;
         public IDictionary<int, byte[]> Patches {
             get { return patches; }
-            set { patches = value as Dictionary<int, byte[]>; }
+            set { patches = value as Dictionary<int, byte[]> ?? value.ToDictionary(x => x.Key, x => x.Value); }
         }
 
         public string Seed { get; set; }

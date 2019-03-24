@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 
 namespace Randomizer.SuperMetroid {
@@ -46,21 +47,29 @@ namespace Randomizer.SuperMetroid {
     public static class LocationListExtensions {
 
         public static List<T> Shuffle<T>(this IList<T> list) {
+            if (list.Count > byte.MaxValue)
+                throw new ArgumentOutOfRangeException(nameof(list), $"List Count can not exceed #{byte.MaxValue}");
+
             var shuffledList = new List<T>(list);
             var provider = new RNGCryptoServiceProvider();
             int n = shuffledList.Count;
             while (n > 1) {
-                byte[] box = new byte[1];
-                do provider.GetBytes(box);
-                while (!(box[0] < n * (byte.MaxValue / n)));
-                int k = (box[0] % n);
-                n--;
+                int k = GetRandomByte(provider, n) % n;
+                n -= 1;
+
                 var value = shuffledList[k];
                 shuffledList[k] = shuffledList[n];
                 shuffledList[n] = value;
             }
 
             return shuffledList;
+        }
+
+        private static byte GetRandomByte(RandomNumberGenerator provider, int n) {
+            var numbers = new byte[1];
+            do provider.GetBytes(numbers);
+            while (numbers[0] >= n * (byte.MaxValue / n));
+            return numbers[0];
         }
 
     }

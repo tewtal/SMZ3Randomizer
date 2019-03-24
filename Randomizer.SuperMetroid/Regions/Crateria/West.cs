@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using static Randomizer.SuperMetroid.ItemType;
-using static Randomizer.SuperMetroid.Difficulty;
+using static Randomizer.SuperMetroid.Logic;
 
 namespace Randomizer.SuperMetroid.Regions.Crateria {
 
@@ -9,18 +9,18 @@ namespace Randomizer.SuperMetroid.Regions.Crateria {
         public override string Name => "West Crateria";
         public override string Area => "Crateria";
 
-        public West(World world, Difficulty difficulty) : base(world, difficulty) {
+        public West(World world, Logic logic) : base(world, logic) {
             Locations = new List<Location> {
                 new Location(this, "Energy Tank, Terminator", LocationType.Visible, 0x78432),
-                new Location(this, "Energy Tank, Gauntlet", LocationType.Visible, 0x78264, Difficulty switch {
+                new Location(this, "Energy Tank, Gauntlet", LocationType.Visible, 0x78264, Logic switch {
                     Casual  => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.HasEnergyReserves(1)),
                     _       => new Requirement(items => CanEnterAndLeaveGauntlet(items))
                 }),
-                new Location(this, "Missile (Crateria gauntlet right)", LocationType.Visible, 0x78464, Difficulty switch {
+                new Location(this, "Missile (Crateria gauntlet right)", LocationType.Visible, 0x78464, Logic switch {
                     Casual  => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2)),
                     _       => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
                 }),
-                new Location(this, "Missile (Crateria gauntlet left)", LocationType.Visible, 0x7846A, Difficulty switch {
+                new Location(this, "Missile (Crateria gauntlet left)", LocationType.Visible, 0x7846A, Logic switch {
                     Casual  => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2)),
                     _       => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
                 })
@@ -32,7 +32,7 @@ namespace Randomizer.SuperMetroid.Regions.Crateria {
         }
 
         private bool CanEnterAndLeaveGauntlet(List<Item> items) {
-            return Difficulty switch {
+            return Logic switch {
                 Casual =>
                     items.Has(Morph) && (items.CanFly() || items.Has(SpeedBooster)) && (
                         items.CanIbj() ||

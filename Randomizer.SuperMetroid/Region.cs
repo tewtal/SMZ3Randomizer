@@ -8,10 +8,10 @@ namespace Randomizer.SuperMetroid {
         public virtual string Area { get; }
         public List<Location> Locations { get; set; }
         internal World World { get; set; }
-        internal Difficulty Difficulty { get; set; }
+        internal Logic Logic { get; set; }
 
-        public Region(World world, Difficulty difficulty) {
-            Difficulty = difficulty;
+        public Region(World world, Logic logic) {
+            Logic = logic;
             World = world;
         }
 

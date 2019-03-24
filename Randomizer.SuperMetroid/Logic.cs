@@ -1,6 +1,6 @@
 ﻿namespace Randomizer.SuperMetroid {
 
-    enum Difficulty {
+    enum Logic {
         Casual,
         Tournament,
         Normal,
