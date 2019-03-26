@@ -11,17 +11,17 @@ namespace Randomizer.SuperMetroid.Regions.Maridia {
 
         public Outer(World world, Logic logic) : base(world, logic) {
             Locations = new List<Location> {
-                new Location(this, "Missile (green Maridia shinespark)", LocationType.Visible, 0x7C437, Logic switch {
+                new Location(this, 136, "Missile (green Maridia shinespark)", LocationType.Visible, 0x7C437, Logic switch {
                     Casual => items => items.Has(SpeedBooster),
                     _ => new Requirement(items => items.Has(Gravity) && items.Has(SpeedBooster))
                 }),
-                new Location(this, "Super Missile (green Maridia)", LocationType.Visible, 0x7C43D),
-                new Location(this, "Energy Tank, Mama turtle", LocationType.Visible, 0x7C47D, Logic switch {
+                new Location(this, 137, "Super Missile (green Maridia)", LocationType.Visible, 0x7C43D),
+                new Location(this, 138, "Energy Tank, Mama turtle", LocationType.Visible, 0x7C47D, Logic switch {
                     Casual => items => items.CanFly() || items.Has(SpeedBooster) || items.Has(Grapple),
                     _ => new Requirement(items => items.CanFly() || items.Has(SpeedBooster) || items.Has(Grapple) ||
                         items.CanSpringBallJump() && (items.Has(Gravity) || items.Has(HiJump)))
                 }),
-                new Location(this, "Missile (green Maridia tatori)", LocationType.Hidden, 0x7C483),
+                new Location(this, 139, "Missile (green Maridia tatori)", LocationType.Hidden, 0x7C483),
             };
         }
 

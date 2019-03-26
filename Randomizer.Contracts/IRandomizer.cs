@@ -8,6 +8,7 @@ namespace Randomizer.Contracts
         IDictionary<int, byte[]> Patches { get; }
         string Seed { get; }
         string Name { get; }
+        List<Dictionary<string, string>> Playthrough { get; }
     }
 
     public interface IRandomizer

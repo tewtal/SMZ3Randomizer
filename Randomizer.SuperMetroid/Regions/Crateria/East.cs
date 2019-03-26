@@ -11,19 +11,19 @@ namespace Randomizer.SuperMetroid.Regions.Crateria {
 
         public East(World world, Logic logic) : base(world, logic) {
             Locations = new List<Location> {
-                new Location(this, "Missile (outside Wrecked Ship bottom)", LocationType.Visible, 0x781E8, Logic switch {
+                new Location(this, 1, "Missile (outside Wrecked Ship bottom)", LocationType.Visible, 0x781E8, Logic switch {
                     Casual => items => items.Has(SpaceJump) || items.Has(SpeedBooster) || items.Has(Grapple),
                     _ => new Requirement(items => true)
                 }),
-                new Location(this, "Missile (outside Wrecked Ship top)", LocationType.Hidden, 0x781EE, Logic switch {
+                new Location(this, 2, "Missile (outside Wrecked Ship top)", LocationType.Hidden, 0x781EE, Logic switch {
                     Casual => items => items.Has(Super) && items.CanPassBombPassages() && (items.Has(SpaceJump) || items.Has(SpeedBooster) || items.Has(Grapple)),
                     _ => new Requirement(items => items.Has(Super) && items.CanPassBombPassages())
                 }),
-                new Location(this, "Missile (outside Wrecked Ship middle)", LocationType.Visible, 0x781F4, Logic switch {
+                new Location(this, 3, "Missile (outside Wrecked Ship middle)", LocationType.Visible, 0x781F4, Logic switch {
                     Casual => items => items.Has(Super) && items.CanPassBombPassages() && (items.Has(SpaceJump) || items.Has(SpeedBooster) || items.Has(Grapple)),
                     _ => new Requirement(items => items.Has(Super) && items.CanPassBombPassages())
                 }),
-                new Location(this, "Missile (Crateria moat)", LocationType.Visible, 0x78248, Logic switch {
+                new Location(this, 4, "Missile (Crateria moat)", LocationType.Visible, 0x78248, Logic switch {
                     Casual => items => items.Has(SpaceJump) || items.Has(SpeedBooster) || items.Has(Grapple),
                     _ => new Requirement(items => true)
                 }),
