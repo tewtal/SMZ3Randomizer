@@ -3,16 +3,25 @@ using System.Collections.Generic;
 
 namespace Randomizer.Contracts
 {
-    public interface IPatchData
+    public interface IWorldData
     {
-        IDictionary<int, byte[]> Patches { get; }
+        string Guid { get; }
+        string Player { get; }
+        Dictionary<int, byte[]> Patches { get; }
+    }
+
+    public interface ISeedData
+    {
+        string Guid { get; }
         string Seed { get; }
-        string Name { get; }
+        string Game { get; }
+        string Logic { get; }
+        List<IWorldData> Worlds { get; }
         List<Dictionary<string, string>> Playthrough { get; }
     }
 
     public interface IRandomizer
     {
-        IPatchData GenerateSeed(IDictionary<string, string> options, string seed);
+        ISeedData GenerateSeed(IDictionary<string, string> options, string seed);
     }
 }

@@ -7,13 +7,31 @@ namespace Randomizer.SuperMetroid {
 
     public class Randomizer : IRandomizer {
 
-        public IPatchData GenerateSeed(IDictionary<string, string> options, string seed) {
+        public ISeedData GenerateSeed(IDictionary<string, string> options, string seed) {
             if (seed == "") {
                 seed = new Random().Next(0, int.MaxValue).ToString();
             }
 
             var rnd = new Random(int.Parse(seed));
-            var worlds = new List<World>(Enumerable.Range(1, 2).Select(x => new World(Logic.Tournament, $"Player {x}")));
+
+            var logic = Logic.Tournament;
+            if(options.ContainsKey("logic")) {
+                logic = options["logic"] switch
+                {
+                    "casual" => Logic.Casual,
+                    "touranment" => Logic.Tournament,
+                    _ => Logic.Tournament
+                };
+            }
+
+            int players = options.ContainsKey("worlds") ? int.Parse(options["worlds"]) : 1;
+            var worlds = new List<World>();
+
+            for (int p = 0;  p< players; p++) {
+                worlds.Add(new World(logic, options[$"player-{p}"]));
+            }
+
+            var guid = Guid.NewGuid().ToString();
 
             var filler = new Filler(worlds, rnd);
             filler.Fill();
@@ -21,31 +39,41 @@ namespace Randomizer.SuperMetroid {
             var playthrough = new Playthrough(worlds);
             var spheres = playthrough.Generate();
 
-            var patchData = new PatchData {
+            var seedData = new SeedData {
+                Guid = guid.Replace("-", ""),
                 Seed = seed,
-                Name = "Super Metroid Randomizer",
-                Patches = new Dictionary<int, byte[]> {
-                    [0x71234] = new byte[] { 0x10, 0x20, 0x30 }
-                },
-                Playthrough = spheres
+                Game = "Super Metroid Item Randomizer",
+                Logic = Logic.Tournament.ToString(),
+                Playthrough = spheres,
+                Worlds = new List<IWorldData>()
             };
 
-            return patchData;
+            foreach(var world in worlds) {
+                var worldData = new WorldData {
+                    Guid = world.Guid.Replace("-",""),
+                    Player = world.Player,
+                    Patches = new Dictionary<int, byte[]>()
+                };
+
+                seedData.Worlds.Add(worldData);
+            }
+
+            return seedData;
         }
     }
 
-    public class PatchData : IPatchData {
-
-        private Dictionary<int, byte[]> patches;
-
-        public IDictionary<int, byte[]> Patches {
-            get { return patches; }
-            set { patches = value as Dictionary<int, byte[]> ?? value.ToDictionary(x => x.Key, x => x.Value); }
-        }
-
+    public class SeedData : ISeedData {
+        public string Guid { get; set; }
         public string Seed { get; set; }
-        public string Name { get; set; }
+        public string Game { get; set; }
+        public string Logic { get; set; }
+        public List<IWorldData> Worlds { get; set; }
         public List<Dictionary<string, string>> Playthrough { get; set; }
     }
 
+    public class WorldData : IWorldData {
+        public string Guid { get; set; }
+        public string Player { get; set; }
+        public Dictionary<int, byte[]> Patches { get; set; }
+    }
 }

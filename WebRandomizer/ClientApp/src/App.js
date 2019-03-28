@@ -3,6 +3,7 @@ import { Route } from 'react-router';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import { Randomizer } from './components/Randomizer';
+import { Multiworld } from './components/Multiworld';
 
 export default class App extends Component {
   static displayName = App.name;
@@ -12,6 +13,7 @@ export default class App extends Component {
       <Layout>
             <Route exact path='/' component={Home} />
             <Route path='/randomizer' component={Randomizer} />
+            <Route path='/multiworld' component={Multiworld} />
       </Layout>
     );
   }

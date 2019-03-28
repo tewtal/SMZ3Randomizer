@@ -11,6 +11,7 @@ namespace Randomizer.SuperMetroid {
         public List<Item> Items { get; set; }
         public Logic Logic { get; set; }
         public string Player { get; set; }
+        public string Guid => System.Guid.NewGuid().ToString();
 
         public World(Logic logic, string player) {
             Logic = logic;

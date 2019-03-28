@@ -6,10 +6,10 @@ export class Home extends Component {
   render () {
     return (
       <div>
-        <h1>Hello, world!</h1>
-        <p>This is Randomizer</p>
+        <h1>Randomizer</h1>
+        <p>This is a Randomizer, it randomizes things.</p>
         <ul>
-          <li><a href='/randomizer'>RANDOMIZER</a></li>
+          <li><a href='/randomizer'>Create new randomized game</a></li>
         </ul>
       </div>
     );
