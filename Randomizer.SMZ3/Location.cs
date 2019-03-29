@@ -4,6 +4,12 @@ using System.Linq;
 namespace Randomizer.SMZ3 {
 
     enum LocationType {
+        Regular,
+        HeraStandingKey,
+        Pedestal,
+        Ether,
+        Bombos,
+
         Visible,
         Chozo,
         Hidden
