@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.Logic;
+using System.Text.RegularExpressions;
 
 namespace Randomizer.SMZ3 {
 
@@ -134,6 +135,12 @@ namespace Randomizer.SMZ3 {
         public ItemType Type { get; set; }
         public bool Progression { get; set; }
         public World World { get; set; }
+
+        readonly Regex dungeon = new Regex("^(BigKey|Key|Map|Compass)");
+
+        public bool IsDungeonItem {
+            get { return dungeon.IsMatch(Type.ToString()); }
+        }
 
         public static Item Nothing(World world) {
             return new Item { Name = "Nothing", Type = ItemType.Nothing, World = world };
@@ -349,6 +356,10 @@ namespace Randomizer.SMZ3 {
             return items.Count(i => i.Type == itemType) >= amount;
         }
 
+        public static bool HasSword(this List<Item> items, int level = 1) {
+            return items.Has(ProgressiveSword, level);
+        }
+
         public static bool HasMasterSword(this List<Item> items) {
             return items.Has(ProgressiveSword, 2);
         }
@@ -359,6 +370,18 @@ namespace Randomizer.SMZ3 {
 
         public static bool CanLiftHeavy(this List<Item> items) {
             return items.Has(ProgressiveGlove, 2);
+        }
+
+        public static bool CanLightTorches(this List<Item> items) {
+            return items.Has(Firerod) || items.Has(Lamp);
+        }
+
+        public static bool CanMeltFreezors(this List<Item> items) {
+            return items.Has(Firerod) || items.Has(Bombos) && items.HasSword();
+        }
+
+        public static bool CanBlockLasers(this List<Item> items) {
+            return items.Has(ProgressiveShield, 3);
         }
 
         public static bool CanExtendMagic(this List<Item> items, int bars = 2) {

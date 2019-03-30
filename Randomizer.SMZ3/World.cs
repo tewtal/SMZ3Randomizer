@@ -17,11 +17,24 @@ namespace Randomizer.SMZ3 {
             Player = player;
 
             Regions = new List<Region> {
+                new Regions.Zelda.CastleTower(this, Logic),
+                new Regions.Zelda.EasternPalace(this, Logic),
+                new Regions.Zelda.DesertPalace(this, Logic),
+                new Regions.Zelda.TowerOfHera(this, Logic),
+                new Regions.Zelda.PalaceOfDarkness(this, Logic),
+                new Regions.Zelda.SwampPalace(this, Logic),
+                new Regions.Zelda.SkullWoods(this, Logic),
+                new Regions.Zelda.ThievesTown(this, Logic),
+                new Regions.Zelda.IcePalace(this, Logic),
+                new Regions.Zelda.MiseryMire(this, Logic),
+                new Regions.Zelda.TurtleRock(this, Logic),
+                new Regions.Zelda.GanonTower(this, Logic),
                 new Regions.Zelda.LightWorld.DeathMountain.West(this, Logic),
                 new Regions.Zelda.LightWorld.DeathMountain.East(this, Logic),
                 new Regions.Zelda.LightWorld.NorthWest(this, Logic),
                 new Regions.Zelda.LightWorld.NorthEast(this, Logic),
                 new Regions.Zelda.LightWorld.South(this, Logic),
+                new Regions.Zelda.HyruleCastle(this, Logic),
                 new Regions.Zelda.DarkWorld.DeathMountain.West(this, Logic),
                 new Regions.Zelda.DarkWorld.DeathMountain.East(this, Logic),
                 new Regions.Zelda.DarkWorld.NorthWest(this, Logic),
@@ -52,10 +65,9 @@ namespace Randomizer.SMZ3 {
 
         public bool CanEnter(string regionName, List<Item> items) {
             var region = Regions.Find(r => r.Name == regionName);
-            if (region != null)
-                return region.CanEnter(items);
-            else
-                throw new ArgumentException("World.CanEnter: Invalid region name " + regionName);
+            if (region == null)
+                throw new ArgumentException($"World.CanEnter: Invalid region name {regionName}", nameof(regionName));
+            return region.CanEnter(items);
         }
 
     }
