@@ -13,7 +13,7 @@ export default class App extends Component {
       <Layout>
             <Route exact path='/' component={Home} />
             <Route path='/randomizer' component={Randomizer} />
-            <Route path='/multiworld' component={Multiworld} />
+            <Route path='/multiworld/:session_id' component={Multiworld} />
       </Layout>
     );
   }

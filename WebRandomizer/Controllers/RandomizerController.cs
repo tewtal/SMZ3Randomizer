@@ -9,12 +9,26 @@ using WebRandomizer.Models;
 using Newtonsoft.Json;
 
 namespace WebRandomizer.Controllers {
+
     [Route("api/[controller]")]
+
     public class RandomizerController : Controller {
+
         private readonly RandomizerContext context;
 
         public RandomizerController(RandomizerContext context) {
             this.context = context;
+        }
+
+        private byte[] ConvertPatch(Dictionary<int, byte[]> patches) {
+            var bytes = new List<byte>();
+            foreach(var patch in patches) {
+                bytes.AddRange(BitConverter.GetBytes(patch.Key));
+                bytes.AddRange(BitConverter.GetBytes((ushort)patch.Value.Length));
+                bytes.AddRange(patch.Value);
+            }
+
+            return bytes.ToArray();
         }
 
         [HttpPost("[action]")]
@@ -44,25 +58,42 @@ namespace WebRandomizer.Controllers {
 
                 foreach (var seedWorld in seedData.Worlds) {
                     var world = new World {
+                        WorldId = seedWorld.Id,
                         Guid = seedWorld.Guid,
                         Logic = option.options["logic"],
                         Player = seedWorld.Player,
-                        Patch = new byte[] { 0x13, 0x37 }
+                        Patch = ConvertPatch(seedWorld.Patches)
                     };
                     seed.Worlds.Add(world);
                 }
 
                 context.Add(seed);
                 await context.SaveChangesAsync();
-                return new OkObjectResult(seedData);
+
+                /* If this is a co-op seed, we also create a new multiworld session with the same session guid as the seed guid */
+                if (seed.Players > 1) {
+                    var session = new Session {
+                        Clients = new List<Client>(),
+                        Guid = seed.Guid,
+                        Seed = seed,
+                        State = SessionState.Created
+                    };
+
+                    context.Add(session);
+                    await context.SaveChangesAsync();
+                }
+
+                return new OkObjectResult(seed);
             }
             catch {
                 return new StatusCodeResult(500);
             }
         }
+
     }
 
     public class Option {
         public Dictionary<string, string> options;
     }
+
 }

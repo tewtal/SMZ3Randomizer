@@ -5,7 +5,9 @@
   "dependencies": {
     "@aspnet/signalr": "^1.1.2",
     "bootstrap": "^4.3.1",
+    "file-saver": "^2.0.1",
     "jquery": "3.3.1",
+    "localforage": "^1.7.3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router-bootstrap": "^0.24.4",

@@ -19,7 +19,7 @@ namespace Randomizer.SuperMetroid {
                 logic = options["logic"] switch
                 {
                     "casual" => Logic.Casual,
-                    "touranment" => Logic.Tournament,
+                    "tournament" => Logic.Tournament,
                     _ => Logic.Tournament
                 };
             }
@@ -27,8 +27,8 @@ namespace Randomizer.SuperMetroid {
             int players = options.ContainsKey("worlds") ? int.Parse(options["worlds"]) : 1;
             var worlds = new List<World>();
 
-            for (int p = 0;  p< players; p++) {
-                worlds.Add(new World(logic, options[$"player-{p}"]));
+            for (int p = 0; p < players; p++) {
+                worlds.Add(new World(logic, options[$"player-{p}"], p));
             }
 
             var guid = Guid.NewGuid().ToString();
@@ -43,16 +43,18 @@ namespace Randomizer.SuperMetroid {
                 Guid = guid.Replace("-", ""),
                 Seed = seed,
                 Game = "Super Metroid Item Randomizer",
-                Logic = Logic.Tournament.ToString(),
+                Logic = logic.ToString(),
                 Playthrough = spheres,
                 Worlds = new List<IWorldData>()
             };
 
             foreach(var world in worlds) {
+                var patch = new Patch(world, worlds, seedData.Guid);
                 var worldData = new WorldData {
+                    Id = world.Id,
                     Guid = world.Guid.Replace("-",""),
                     Player = world.Player,
-                    Patches = new Dictionary<int, byte[]>()
+                    Patches = patch.Create()
                 };
 
                 seedData.Worlds.Add(worldData);
@@ -72,6 +74,7 @@ namespace Randomizer.SuperMetroid {
     }
 
     public class WorldData : IWorldData {
+        public int Id { get; set; }
         public string Guid { get; set; }
         public string Player { get; set; }
         public Dictionary<int, byte[]> Patches { get; set; }

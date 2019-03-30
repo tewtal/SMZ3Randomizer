@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace WebRandomizer.Models {
+
     public enum ClientState {
         Disconnected,
         Registering,
@@ -23,5 +24,7 @@ namespace WebRandomizer.Models {
         public ClientState State { get; set; }
         public string ConnectionId { get; set; }
         public int SessionId { get; set; }
+        public int WorldId { get; set; }
     }
+
 }

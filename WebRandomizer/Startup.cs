@@ -11,9 +11,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.SignalR;
 using WebRandomizer.Hubs;
 using WebRandomizer.Models;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace WebRandomizer {
+
     public class Startup {
+
         public Startup(IConfiguration configuration) {
             Configuration = configuration;
         }
@@ -55,9 +58,16 @@ namespace WebRandomizer {
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            app.UseSpaStaticFiles();
+            var provider = new FileExtensionContentTypeProvider();
+            provider.Mappings[".ips"] = "application/octet-stream";
+
+            app.UseStaticFiles(new StaticFileOptions {
+                ContentTypeProvider = provider
+            });
+
+            app.UseSpaStaticFiles(new StaticFileOptions {
+                ContentTypeProvider = provider
+            });
 
             app.UseSignalR(routes => {
                 routes.MapHub<MultiworldHub>("/multiworldHub");
@@ -77,5 +87,7 @@ namespace WebRandomizer {
                 }
             });
         }
+
     }
+
 }

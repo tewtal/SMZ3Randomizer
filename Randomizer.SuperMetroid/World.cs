@@ -11,11 +11,14 @@ namespace Randomizer.SuperMetroid {
         public List<Item> Items { get; set; }
         public Logic Logic { get; set; }
         public string Player { get; set; }
-        public string Guid => System.Guid.NewGuid().ToString();
+        public string Guid { get; set; }
+        public int Id { get; set; }
 
-        public World(Logic logic, string player) {
+        public World(Logic logic, string player, int id) {
+            Id = id;
             Logic = logic;
             Player = player;
+            Guid = System.Guid.NewGuid().ToString();
 
             Regions = new List<Region> {
                 new Regions.Crateria.Central(this, Logic),

@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { Container, Row, Col, Card, CardHeader, CardBody, CardText, Button, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Modal, ModalHeader, ModalBody, Progress } from 'reactstrap';
+import { Container, Row, Col, Card, CardHeader, CardBody, Button, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Modal, ModalHeader, ModalBody, Progress } from 'reactstrap';
 
 export class Randomizer extends Component {
     static displayName = Randomizer.name;
@@ -34,15 +34,12 @@ export class Randomizer extends Component {
                     body: JSON.stringify({ options: opts })
                 });
             let data = await response.json();
-            console.log("Success:", data);
-            this.setState({
-                seed: data.seed
-            });
+            this.setState({ showGeneratingDialog: false });
+            this.props.history.push('/multiworld/' + data.guid);
         } catch (err) {
+            this.setState({ showGeneratingDialog: false });
             console.log("Error:", err);
         }
-
-        this.setState({ showGeneratingDialog: false });
     }
 
     updatePlayers(e) {
