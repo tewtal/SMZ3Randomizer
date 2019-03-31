@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using static Randomizer.SuperMetroid.ItemType;
 
 namespace Randomizer.SuperMetroid {
     class Filler {
@@ -25,21 +26,57 @@ namespace Randomizer.SuperMetroid {
 
         public void Fill() {
             /* First fill the worlds with the very basic tools for progression from their own respective worlds */
-            foreach (var world in Worlds) {
-                InitialFill(world);
-            }
+            var initialItems = InitialFill(ProgressionItems, Worlds);
+
+            /* Priority fill items that needs to be placed first (will be placed in random order out of all items matching the types) */
+            PriorityFill(new[] { Varia, Gravity }, ProgressionItems, initialItems, Worlds);
 
             /* Next up we do assumed filling of progression items cross-world */
-            AssumedFill(ProgressionItems, Worlds);
+            AssumedFill(ProgressionItems, initialItems, Worlds);
+
+            /* Fast fill (no logic) the rest of the world */
             FastFill(NiceItems, Worlds);
             FastFill(JunkItems, Worlds);
-
         }
 
-        public void AssumedFill(List<Item> items, List<World> worlds) {
-            var initialItems = worlds.SelectMany(w => w.Items).ToList();
-            var assumedItems = new List<Item>(items);
+        public void PriorityFill(IList<ItemType> itemTypes, List<Item> items, List<Item> initialItems, List<World> worlds) {
+            var assumedItems = new List<Item>(items.Where(x => !itemTypes.Contains(x.Type)));
+            var priorityItems = new List<Item>(items.Where(x => itemTypes.Contains(x.Type)));
+            var locations = worlds.SelectMany(w => w.Locations).ToList().Empty();
+            
+            /* Place items until priority item pool is empty */
+            while (priorityItems.Count > 0) {
 
+                /* Get a candidate item from the pool */
+                var itemToPlace = priorityItems.Shuffle(Rnd).First();
+
+                /* Remove it from the pool */
+                priorityItems.Remove(itemToPlace);
+
+                /* Get a location */
+                var locationToPlace = locations.Available(priorityItems.Concat(assumedItems.Concat(initialItems)).ToList(), true).Shuffle(Rnd).First();
+
+                /* If we can't place this item, put the item back and try again */
+                if (!CanPlaceAtLocation(locationToPlace, itemToPlace.Type)) {
+                    priorityItems.Add(itemToPlace);
+                    continue;
+                }
+
+                /* Get the world from the location */
+                var world = locationToPlace.Region.World;
+
+                /* Place item at location */
+                locationToPlace.Item = itemToPlace;
+                world.Items.Add(itemToPlace);
+
+                /* Remove item and location from their respective pools */
+                items.Remove(itemToPlace);
+                locations.Remove(locationToPlace);
+            }
+        }
+
+        public void AssumedFill(List<Item> items, List<Item> initialItems, List<World> worlds) {
+            var assumedItems = new List<Item>(items);
             var locations = worlds.SelectMany(w => w.Locations).ToList().Empty();
 
             /* Place items until progression item pool is empty */
@@ -53,6 +90,12 @@ namespace Randomizer.SuperMetroid {
 
                 /* Get a location */
                 var locationToPlace = locations.Available(assumedItems.Concat(initialItems).ToList(), true).Shuffle(Rnd).First();
+
+                /* If we can't place this item, put the item back and try again */
+                if (!CanPlaceAtLocation(locationToPlace, itemToPlace.Type)) {
+                    assumedItems.Add(itemToPlace);
+                    continue;
+                }
 
                 /* Get the world from the location */
                 var world = locationToPlace.Region.World;
@@ -80,27 +123,24 @@ namespace Randomizer.SuperMetroid {
             }
         }
 
-        private void InitialFill(World world) {
-            /* This fills the world with the initial items from its own world to make meaningful progress */
+        private List<Item> InitialFill(List<Item> items, List<World> worlds) {
+            foreach(var world in worlds) {
+                /* Place Morph */
+                FrontFillItemInWorld(world, items, Morph, true);
 
-            /* Place Morph */
-            FrontFillItemInWorld(world, ProgressionItems, ItemType.Morph, true);
+                /* Place missile or super */
+                FrontFillItemInWorld(world, items, Rnd.Next(2) == 0 ? Missile : Super, true);
 
-            /* Place missile or super */
-            FrontFillItemInWorld(world, ProgressionItems, Rnd.Next(2) == 0 ? ItemType.Missile : ItemType.Super, true);
+                /* Place a way to break bomb blocks */
+                FrontFillItemInWorld(world, items, Rnd.Next(8) switch {
+                    0 => ScrewAttack,
+                    1 => SpeedBooster,
+                    2 => Bombs,
+                    _ => PowerBomb
+                }, true);
+            }
 
-            /* Place a way to break bomb blocks */
-            FrontFillItemInWorld(world, ProgressionItems, Rnd.Next(8) switch
-            {
-                0 => ItemType.ScrewAttack,
-                1 => ItemType.SpeedBooster,
-                2 => ItemType.Bombs,
-                _ => ItemType.PowerBomb
-            }, true);
-
-            /* Place a super if it's not already placed */
-            if (!world.Items.Has(ItemType.Super))
-                FrontFillItemInWorld(world, ProgressionItems, ItemType.Super, true);
+            return worlds.SelectMany(w => w.Items).ToList();
         }
 
         private void FrontFillItemInWorld(World world, List<Item> itemPool, ItemType itemType, bool restrictWorld = false) {
@@ -116,7 +156,19 @@ namespace Randomizer.SuperMetroid {
             else {
                 throw new Exception("No location to place item:" + item.Name);
             }
-
         }
+
+        private bool CanPlaceAtLocation(Location location, ItemType itemType) {
+            return itemType switch
+            {
+                Gravity => (!(location.Region.Area == "Crateria" || location.Region.Area == "Brinstar")) || location.Name == "X-Ray Scope" || location.Name == "Energy Tank, Waterway",
+                Varia => (!(location.Region.Area == "LowerNorfair" || location.Region.Area == "Crateria" || location.Name == "Morphing Ball" || location.Name == "Missile (blue Brinstar middle)" || location.Name == "Energy Tank, Brinstar Ceiling")),
+                SpeedBooster => !(location.Name == "Morphing Ball" || location.Name == "Missile (blue Brinstar middle)" || location.Name == "Energy Tank, Brinstar Ceiling"),
+                ScrewAttack => !(location.Name == "Morphing Ball" || location.Name == "Missile (blue Brinstar middle)" || location.Name == "Energy Tank, Brinstar Ceiling"),
+                _ => true
+            };
+        }
+
     }
+
 }
