@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { Form, Row, Col, Card, CardBody, Button } from 'reactstrap';
 import { saveAs } from 'file-saver';
-import baseIps from '../files/base.ips';
+import baseIps from '../files/base_190331_3.ips';
 
 export class Patch extends Component {
     static displayName = Patch.name;

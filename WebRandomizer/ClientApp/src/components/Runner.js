@@ -8,6 +8,7 @@ export class Runner extends Component {
     constructor(props) {
         super(props);
         this.state = { events: [] };
+        this.writeQueue = [];
         this.eventLoop = this.eventLoop.bind(this);
         this.readMessages = this.readMessages.bind(this);
         this.handleMessage = this.handleMessage.bind(this);
@@ -23,7 +24,7 @@ export class Runner extends Component {
     componentDidMount() {
         this.setState({ gameStatus: "Detecting game...", gameState: 0 });
         this.props.hubConnection.on("ReceiveItem", this.receiveItem);
-        this.eventLoop();
+        this.timerHandle = setTimeout(this.eventLoop, 200);
     }
 
     componentWillUnmount() {
@@ -35,6 +36,7 @@ export class Runner extends Component {
         if (this.props.hubState === 1 && this.props.connState === 1) {
             if (this.state.gameState === 1) {
                 await this.readMessages();
+                await this.handleWriteQueue();
                 this.timerHandle = setTimeout(this.eventLoop, 200);
                 return;
             } else {
@@ -60,16 +62,10 @@ export class Runner extends Component {
         }
     }
 
-    async receiveItem(worldId, itemId) {
-        try {
-            let message = [0x11, 0x10, worldId & 0xFF, (worldId << 8) & 0xFF, itemId & 0xFF, (itemId << 8) & 0xFF];
-            let result = await this.sendMessage(message);
-            if (!result) {
-                console.log("Unknown error sending SNES message");
-            }
-        } catch (err) {
-            console.log("Could not send SNES message", err);
-        }
+    receiveItem(worldId, itemId) {
+        /* Push a message into the writeQueue to be written later by the main event loop */
+        let message = [0x11, 0x10, worldId & 0xFF, (worldId << 8) & 0xFF, itemId & 0xFF, (itemId << 8) & 0xFF];
+        this.writeQueue.push(message);
     }
 
     async sendItem(worldId, itemId) {
@@ -79,6 +75,26 @@ export class Runner extends Component {
             console.log("Error sending item to player", err);
             return false;
         }            
+    }
+
+    async handleWriteQueue() {
+        if (this.props.hubState === 1 && this.props.connState === 1) {
+            while (this.writeQueue.length > 0) {
+                let message = this.writeQueue.pop();
+                try {
+                    let ok = await this.sendMessage(message);
+                    if (!ok) {
+                        /* if there's an error while writing, push this message back and return completely */
+                        this.writeQueue.push(message);
+                        return;
+                    }
+                } catch (err) {
+                    /* if there's an error while writing, push this message back and return completely */
+                    this.writeQueue.push(message);
+                    return;
+                }
+            }
+        }
     }
 
     async readMessages() {
@@ -100,7 +116,7 @@ export class Runner extends Component {
                     let ok = await this.handleMessage(message);
                     if (ok) {
                         this.inPtr++;
-                        this.inPtr = this.inPtr === 8 ? 0 : this.inPtr
+                        this.inPtr = (this.inPtr === 8) ? 0 : this.inPtr
                         await writeData(0xE01F86, new Uint8Array([this.inPtr]));
                     } else {
                         /* if handling a message fails, bail out completely and retry next time */
@@ -123,7 +139,8 @@ export class Runner extends Component {
                     /* 0x1001 = Send multiworld item to player */
                     let itemId = (msg[2] + (msg[3] << 8));
                     let worldId = (msg[4] + (msg[5] << 8));
-                    return await this.sendItem(worldId, itemId);
+                    let result = await this.sendItem(worldId, itemId);
+                    return result;
                 }
             default:
                 {
@@ -135,18 +152,12 @@ export class Runner extends Component {
 
     async sendMessage(data) {
         try {
-            let ok = await writeData(0xE01E00 + (this.outPtr * 0x10), new Uint8Array(data));
-            if (!ok) {
-                return false;
-            }
+            await writeData(0xE01E00 + (this.outPtr * 0x10), new Uint8Array(data));
 
             this.outPtr++;
             this.outPtr = this.outPtr === 16 ? 0 : this.outPtr
 
-            ok = await writeData(0xE01F80, new Uint8Array([this.outPtr]));
-            if (!ok) {
-                return false;
-            }
+            await writeData(0xE01F80, new Uint8Array([this.outPtr]));
 
             return true;
         } catch (err) {
