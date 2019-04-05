@@ -8,7 +8,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain {
         public override string Name => "Dark World Death Mountain East";
         public override string Area => "Dark World";
 
-        public East(World world, Logic logic) : base(world, logic) {
+        public East(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 256+65, 0xEB51, LocationType.Regular, "Hookshot Cave - Top Right",
                     items => items.Has(MoonPearl) && items.Has(Hookshot)),

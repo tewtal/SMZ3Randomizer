@@ -8,7 +8,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public override string Name => "Hyrule Castle";
         public override string Area => "Hyrule Castle";
 
-        public HyruleCastle(World world, Logic logic) : base(world, logic) {
+        public HyruleCastle(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeyHC, MapHC };
 
             Locations = new List<Location> {
@@ -27,9 +27,9 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                 new Location(this, 256+98, 0xEB09, LocationType.Regular, "Hyrule Castle - Zelda's Cell",
                     items => items.Has(KeyHC)),
                 new Location(this, 256+99, 0x2DF45, LocationType.Regular, "Link's Uncle")
-                    .Allow((item, items) => /*config.keysanity*/false || !item.IsDungeonItem),
+                    .Allow((item, items) => Config.Keysanity || !item.IsDungeonItem),
                 new Location(this, 256+100, 0xE971, LocationType.Regular, "Secret Passage")
-                    .Allow((item, items) => /*config.keysanity*/false || !item.IsDungeonItem),
+                    .Allow((item, items) => Config.Keysanity || !item.IsDungeonItem),
             };
         }
 

@@ -404,8 +404,8 @@ namespace Randomizer.SMZ3 {
             return (items.CanDestroyBombWalls() || items.Has(SpeedBooster)) && items.Has(Super) && items.Has(Morph);
         }
 
-        public static bool CanAccessDarkWorldPortal(this List<Item> items, Logic logic) {
-            return logic switch {
+        public static bool CanAccessDarkWorldPortal(this List<Item> items, Config config) {
+            return config.Logic switch {
                 Casual =>
                     items.CanUsePowerBombs() && items.Has(Super) && items.Has(Gravity) && items.Has(SpeedBooster),
                 _ =>
@@ -416,8 +416,8 @@ namespace Randomizer.SMZ3 {
             };
         }
 
-        public static bool CanAccessMiseryMirePortal(this List<Item> items, Logic logic) {
-            return logic switch {
+        public static bool CanAccessMiseryMirePortal(this List<Item> items, Config config) {
+            return config.Logic switch {
                 Casual =>
                     items.Has(Varia) && items.Has(Super) && (items.Has(Gravity) && items.Has(SpaceJump)) && items.CanUsePowerBombs(),
                 _ =>
@@ -462,14 +462,14 @@ namespace Randomizer.SMZ3 {
         }
 
         public static bool CanDefeatBotwoon(this List<Item> items, World world) {
-            return world.Logic switch {
+            return world.Config.Logic switch {
                 Casual => items.Has(SpeedBooster) || items.CanAccessMaridiaPortal(world),
                 _ => items.Has(Ice) || items.Has(SpeedBooster) || items.CanAccessMaridiaPortal(world)
             };
         }
 
         public static bool CanDefeatDraygon(this List<Item> items, World world) {
-            return world.Logic switch {
+            return world.Config.Logic switch {
                 Casual => items.CanDefeatBotwoon(world) && items.Has(Gravity) &&
                     (items.Has(SpeedBooster) && items.Has(HiJump) || items.CanFly()),
                 _ => items.CanDefeatBotwoon(world) && items.Has(Gravity)
@@ -485,7 +485,7 @@ namespace Randomizer.SMZ3 {
         }
 
         public static bool CanAccessMaridiaPortal(this List<Item> items, World world) {
-            return world.Logic switch {
+            return world.Config.Logic switch {
                 Casual =>
                     items.Has(MoonPearl) && items.Has(Flippers) &&
                     items.Has(Gravity) && items.Has(Morph) &&

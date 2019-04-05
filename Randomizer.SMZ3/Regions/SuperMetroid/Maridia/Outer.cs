@@ -9,14 +9,14 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
         public override string Name => "Maridia Outer";
         public override string Area => "Maridia";
 
-        public Outer(World world, Logic logic) : base(world, logic) {
+        public Outer(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
-                new Location(this, 136, 0x7C437, LocationType.Visible, "Missile (green Maridia shinespark)", Logic switch {
+                new Location(this, 136, 0x7C437, LocationType.Visible, "Missile (green Maridia shinespark)", Config.Logic switch {
                     Casual => items => items.Has(SpeedBooster),
                     _ => new Requirement(items => items.Has(Gravity) && items.Has(SpeedBooster))
                 }),
                 new Location(this, 137, 0x7C43D, LocationType.Visible, "Super Missile (green Maridia)"),
-                new Location(this, 138, 0x7C47D, LocationType.Visible, "Energy Tank, Mama turtle", Logic switch {
+                new Location(this, 138, 0x7C47D, LocationType.Visible, "Energy Tank, Mama turtle", Config.Logic switch {
                     Casual => items => items.CanFly() || items.Has(SpeedBooster) || items.Has(Grapple),
                     _ => new Requirement(items => items.CanFly() || items.Has(SpeedBooster) || items.Has(Grapple) ||
                         items.CanSpringBallJump() && (items.Has(Gravity) || items.Has(HiJump)))
@@ -26,7 +26,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
         }
 
         public override bool CanEnter(List<Item> items) {
-            return Logic switch {
+            return Config.Logic switch {
                 Casual => (
                         World.CanEnter("Norfair Upper West", items) && items.CanUsePowerBombs() ||
                         items.CanAccessMaridiaPortal(World)

@@ -10,54 +10,54 @@ namespace Randomizer.SMZ3 {
         public List<Location> Locations { get; set; }
         public List<Region> Regions { get; set; }
         public List<Item> Items { get; set; }
-        public Logic Logic { get; set; }
+        public Config Config { get; set; }
         public string Player { get; set; }
 
-        public World(Logic logic, string player) {
-            Logic = logic;
+        public World(Config config, string player) {
+            Config = config;
             Player = player;
 
             Regions = new List<Region> {
-                new Regions.Zelda.CastleTower(this, Logic),
-                new Regions.Zelda.EasternPalace(this, Logic),
-                new Regions.Zelda.DesertPalace(this, Logic),
-                new Regions.Zelda.TowerOfHera(this, Logic),
-                new Regions.Zelda.PalaceOfDarkness(this, Logic),
-                new Regions.Zelda.SwampPalace(this, Logic),
-                new Regions.Zelda.SkullWoods(this, Logic),
-                new Regions.Zelda.ThievesTown(this, Logic),
-                new Regions.Zelda.IcePalace(this, Logic),
-                new Regions.Zelda.MiseryMire(this, Logic),
-                new Regions.Zelda.TurtleRock(this, Logic),
-                new Regions.Zelda.GanonTower(this, Logic),
-                new Regions.Zelda.LightWorld.DeathMountain.West(this, Logic),
-                new Regions.Zelda.LightWorld.DeathMountain.East(this, Logic),
-                new Regions.Zelda.LightWorld.NorthWest(this, Logic),
-                new Regions.Zelda.LightWorld.NorthEast(this, Logic),
-                new Regions.Zelda.LightWorld.South(this, Logic),
-                new Regions.Zelda.HyruleCastle(this, Logic),
-                new Regions.Zelda.DarkWorld.DeathMountain.West(this, Logic),
-                new Regions.Zelda.DarkWorld.DeathMountain.East(this, Logic),
-                new Regions.Zelda.DarkWorld.NorthWest(this, Logic),
-                new Regions.Zelda.DarkWorld.NorthEast(this, Logic),
-                new Regions.Zelda.DarkWorld.South(this, Logic),
-                new Regions.Zelda.DarkWorld.Mire(this, Logic),
-                new Regions.SuperMetroid.Crateria.Central(this, Logic),
-                new Regions.SuperMetroid.Crateria.West(this, Logic),
-                new Regions.SuperMetroid.Crateria.East(this, Logic),
-                new Regions.SuperMetroid.Brinstar.Blue(this, Logic),
-                new Regions.SuperMetroid.Brinstar.Green(this, Logic),
-                new Regions.SuperMetroid.Brinstar.Kraid(this, Logic),
-                new Regions.SuperMetroid.Brinstar.Pink(this, Logic),
-                new Regions.SuperMetroid.Brinstar.Red(this, Logic),
-                new Regions.SuperMetroid.Maridia.Outer(this, Logic),
-                new Regions.SuperMetroid.Maridia.Inner(this, Logic),
-                new Regions.SuperMetroid.NorfairUpper.West(this, Logic),
-                new Regions.SuperMetroid.NorfairUpper.East(this, Logic),
-                new Regions.SuperMetroid.NorfairUpper.Crocomire(this, Logic),
-                new Regions.SuperMetroid.NorfairLower.West(this, Logic),
-                new Regions.SuperMetroid.NorfairLower.East(this, Logic),
-                new Regions.SuperMetroid.WreckedShip(this, Logic)
+                new Regions.Zelda.CastleTower(this, Config),
+                new Regions.Zelda.EasternPalace(this, Config),
+                new Regions.Zelda.DesertPalace(this, Config),
+                new Regions.Zelda.TowerOfHera(this, Config),
+                new Regions.Zelda.PalaceOfDarkness(this, Config),
+                new Regions.Zelda.SwampPalace(this, Config),
+                new Regions.Zelda.SkullWoods(this, Config),
+                new Regions.Zelda.ThievesTown(this, Config),
+                new Regions.Zelda.IcePalace(this, Config),
+                new Regions.Zelda.MiseryMire(this, Config),
+                new Regions.Zelda.TurtleRock(this, Config),
+                new Regions.Zelda.GanonTower(this, Config),
+                new Regions.Zelda.LightWorld.DeathMountain.West(this, Config),
+                new Regions.Zelda.LightWorld.DeathMountain.East(this, Config),
+                new Regions.Zelda.LightWorld.NorthWest(this, Config),
+                new Regions.Zelda.LightWorld.NorthEast(this, Config),
+                new Regions.Zelda.LightWorld.South(this, Config),
+                new Regions.Zelda.HyruleCastle(this, Config),
+                new Regions.Zelda.DarkWorld.DeathMountain.West(this, Config),
+                new Regions.Zelda.DarkWorld.DeathMountain.East(this, Config),
+                new Regions.Zelda.DarkWorld.NorthWest(this, Config),
+                new Regions.Zelda.DarkWorld.NorthEast(this, Config),
+                new Regions.Zelda.DarkWorld.South(this, Config),
+                new Regions.Zelda.DarkWorld.Mire(this, Config),
+                new Regions.SuperMetroid.Crateria.Central(this, Config),
+                new Regions.SuperMetroid.Crateria.West(this, Config),
+                new Regions.SuperMetroid.Crateria.East(this, Config),
+                new Regions.SuperMetroid.Brinstar.Blue(this, Config),
+                new Regions.SuperMetroid.Brinstar.Green(this, Config),
+                new Regions.SuperMetroid.Brinstar.Kraid(this, Config),
+                new Regions.SuperMetroid.Brinstar.Pink(this, Config),
+                new Regions.SuperMetroid.Brinstar.Red(this, Config),
+                new Regions.SuperMetroid.Maridia.Outer(this, Config),
+                new Regions.SuperMetroid.Maridia.Inner(this, Config),
+                new Regions.SuperMetroid.NorfairUpper.West(this, Config),
+                new Regions.SuperMetroid.NorfairUpper.East(this, Config),
+                new Regions.SuperMetroid.NorfairUpper.Crocomire(this, Config),
+                new Regions.SuperMetroid.NorfairLower.West(this, Config),
+                new Regions.SuperMetroid.NorfairLower.East(this, Config),
+                new Regions.SuperMetroid.WreckedShip(this, Config)
             };
 
             Locations = Regions.SelectMany(x => x.Locations).ToList();

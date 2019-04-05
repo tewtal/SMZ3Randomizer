@@ -10,7 +10,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
 
         public RewardType Reward { get; set; } = RewardType.None;
 
-        public EasternPalace(World world, Logic logic) : base(world, logic) {
+        public EasternPalace(World world, Config config) : base(world, config) {
             RegionItems = new[] { BigKeyEP, MapEP, CompassEP };
 
             Locations = new List<Location> {

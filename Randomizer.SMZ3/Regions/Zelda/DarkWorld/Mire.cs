@@ -8,7 +8,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld {
         public override string Name => "Dark World Mire";
         public override string Area => "Dark World";
 
-        public Mire(World world, Logic logic) : base(world, logic) {
+        public Mire(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 256+89, 0xEA73, LocationType.Regular, "Mire Shed - Left",
                     items => items.Has(MoonPearl)),
@@ -18,7 +18,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld {
         }
 
         public override bool CanEnter(List<Item> items) {
-            return items.Has(Flute) && items.CanLiftHeavy() || items.CanAccessMiseryMirePortal(Logic);
+            return items.Has(Flute) && items.CanLiftHeavy() || items.CanAccessMiseryMirePortal(Config);
         }
 
     }

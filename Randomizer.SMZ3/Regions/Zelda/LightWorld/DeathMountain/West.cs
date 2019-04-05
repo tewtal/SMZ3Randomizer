@@ -8,7 +8,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain {
         public override string Name => "Light World Death Mountain West";
         public override string Area => "Light World";
 
-        public West(World world, Logic logic) : base(world, logic) {
+        public West(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 256+0, 0x180016, LocationType.Ether, "Ether Tablet",
                     items => items.Has(Book) && items.HasMasterSword() && (items.Has(Mirror) || items.Has(Hammer) && items.Has(Hookshot))),

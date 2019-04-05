@@ -10,7 +10,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
 
         public RewardType Reward { get; set; } = RewardType.None;
 
-        public PalaceOfDarkness(World world, Logic logic) : base(world, logic) {
+        public PalaceOfDarkness(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeyPD, BigKeyPD, MapPD, CompassPD };
 
             Locations = new List<Location> {

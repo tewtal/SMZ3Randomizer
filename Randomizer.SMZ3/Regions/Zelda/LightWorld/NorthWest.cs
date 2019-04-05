@@ -10,7 +10,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
         public override string Name => "Light World North West";
         public override string Area => "Light World";
 
-        public NorthWest(World world, Logic logic) : base(world, logic) {
+        public NorthWest(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 256+14, 0x289B0, LocationType.Pedestal, "Master Sword Pedestal",
                     items => World.CanAquireAll(items, PendantGreen, PendantNonGreen)),

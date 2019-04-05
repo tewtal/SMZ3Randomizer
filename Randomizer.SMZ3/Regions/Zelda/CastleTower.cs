@@ -10,7 +10,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
 
         public RewardType Reward { get; set; } = RewardType.Agahnim;
 
-        public CastleTower(World world, Logic logic) : base(world, logic) {
+        public CastleTower(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeyCT };
 
             Locations = new List<Location> {

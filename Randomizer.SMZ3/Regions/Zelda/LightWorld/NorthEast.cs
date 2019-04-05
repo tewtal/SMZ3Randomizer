@@ -9,7 +9,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
         public override string Name => "Light World North East";
         public override string Area => "Light World";
 
-        public NorthEast(World world, Logic logic) : base(world, logic) {
+        public NorthEast(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 256+36, 0xEE1C3, LocationType.Regular, "King Zora",
                     items => items.CanLiftLight() || items.Has(Flippers)),

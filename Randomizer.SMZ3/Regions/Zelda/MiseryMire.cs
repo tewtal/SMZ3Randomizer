@@ -11,7 +11,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public RewardType Reward { get; set; } = RewardType.None;
         public ItemType Medallion { get; set; }
 
-        public MiseryMire(World world, Logic logic) : base(world, logic) {
+        public MiseryMire(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeyMM, BigKeyMM, MapMM, CompassMM };
 
             Locations = new List<Location> {

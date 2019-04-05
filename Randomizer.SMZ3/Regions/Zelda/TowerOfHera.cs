@@ -10,7 +10,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
 
         public RewardType Reward { get; set; } = RewardType.None;
 
-        public TowerOfHera(World world, Logic logic) : base(world, logic) {
+        public TowerOfHera(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeyTH, BigKeyTH, MapTH, CompassTH };
 
             Locations = new List<Location> {

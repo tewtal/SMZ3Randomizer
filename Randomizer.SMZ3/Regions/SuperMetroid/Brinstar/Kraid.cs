@@ -10,11 +10,11 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
 
         public RewardType Reward { get; set; } = RewardType.GoldenFourBoss;
 
-        public Kraid(World world, Logic logic) : base(world, logic) {
+        public Kraid(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 43, 0x7899C, LocationType.Hidden, "Energy Tank, Kraid"),
                 new Location(this, 48, 0x78ACA, LocationType.Chozo, "Varia Suit"),
-                new Location(this, 44, 0x789EC, LocationType.Hidden, "Missile (Kraid)", Logic switch {
+                new Location(this, 44, 0x789EC, LocationType.Hidden, "Missile (Kraid)", Config.Logic switch {
                     _ => new Requirement(items => items.CanUsePowerBombs())
                 }),
             };

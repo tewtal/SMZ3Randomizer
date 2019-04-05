@@ -10,7 +10,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
 
         public RewardType Reward { get; set; } = RewardType.None;
 
-        public DesertPalace(World world, Logic logic) : base(world, logic) {
+        public DesertPalace(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeyDP, BigKeyDP, MapDP, CompassDP };
 
             Locations = new List<Location> {
@@ -26,7 +26,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                 new Location(this, 256+114, 0x180151, LocationType.Regular, "Desert Palace - Lanmolas",
                     items => (
                         items.CanLiftLight() ||
-                        items.CanAccessMiseryMirePortal(Logic) && items.Has(Mirror)
+                        items.CanAccessMiseryMirePortal(Config) && items.Has(Mirror)
                     ) && items.Has(BigKeyDP) && items.Has(KeyDP) && items.CanLightTorches() && CanBeatBoss(items)),
             };
         }
@@ -40,7 +40,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public override bool CanEnter(List<Item> items) {
             return items.Has(Book) ||
                 items.Has(Mirror) && items.CanLiftHeavy() && items.Has(Flute) ||
-                items.CanAccessMiseryMirePortal(Logic) && items.Has(Mirror);
+                items.CanAccessMiseryMirePortal(Config) && items.Has(Mirror);
         }
 
         public bool CanComplete(List<Item> items) {

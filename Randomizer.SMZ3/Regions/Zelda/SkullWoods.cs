@@ -10,7 +10,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
 
         public RewardType Reward { get; set; } = RewardType.None;
 
-        public SkullWoods(World world, Logic logic) : base(world, logic) {
+        public SkullWoods(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeySW, BigKeySW, MapSW, CompassSW };
 
             Locations = new List<Location> {

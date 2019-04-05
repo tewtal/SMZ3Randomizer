@@ -10,12 +10,12 @@ namespace Randomizer.SMZ3.Regions.Zelda {
 
         public RewardType Reward { get; set; } = RewardType.None;
 
-        public SwampPalace(World world, Logic logic) : base(world, logic) {
+        public SwampPalace(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeySP, BigKeySP, MapSP, CompassSP };
 
             Locations = new List<Location> {
                 new Location(this, 256+135, 0xEA9D, LocationType.Regular, "Swamp Palace - Entrance")
-                    .Allow((item, items) => /*config.keysanity*/false || item.Type == KeySP),
+                    .Allow((item, items) => Config.Keysanity || item.Type == KeySP),
                 new Location(this, 256+136, 0xE986, LocationType.Regular, "Swamp Palace - Map Chest",
                     items => items.Has(KeySP)),
                 new Location(this, 256+137, 0xE989, LocationType.Regular, "Swamp Palace - Big Chest",

@@ -9,7 +9,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld {
         public override string Name => "Dark World North East";
         public override string Area => "Dark World";
 
-        public NorthEast(World world, Logic logic) : base(world, logic) {
+        public NorthEast(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 256+78, 0xEE185, LocationType.Regular, "Catfish",
                     items => items.Has(MoonPearl) && items.CanLiftLight()),
@@ -27,7 +27,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld {
             return World.CanAquire(items, Agahnim) || items.Has(MoonPearl) && (
                 items.Has(Hammer) && items.CanLiftLight() ||
                 items.CanLiftHeavy() && items.Has(Flippers) ||
-                items.CanAccessDarkWorldPortal(Logic) && items.Has(Flippers)
+                items.CanAccessDarkWorldPortal(Config) && items.Has(Flippers)
             );
         }
 

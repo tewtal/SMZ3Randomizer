@@ -11,7 +11,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public RewardType Reward { get; set; } = RewardType.None;
         public ItemType Medallion { get; set; }
 
-        public TurtleRock(World world, Logic logic) : base(world, logic) {
+        public TurtleRock(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeyTR, BigKeyTR, MapTR, CompassTR };
 
             Requirement laserBridge = items => items.Has(BigKeyTR) && items.Has(KeyTR, 3) &&
@@ -27,7 +27,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                     items => items.Has(KeyTR)),
                 new Location(this, 256+181, 0xEA25, LocationType.Regular, "Turtle Rock - Big Key Chest",
                     items => items.Has(KeyTR,
-                        /*!config.keysanity*/true || Locations.Get("Turtle Rock - Big Key Chest").ItemType == BigKeyTR ? 2 :
+                        !Config.Keysanity || Locations.Get("Turtle Rock - Big Key Chest").ItemType == BigKeyTR ? 2 :
                             Locations.Get("Turtle Rock - Big Key Chest").ItemType == KeyTR ? 3 : 4))
                     .AlwaysAllow((item, items) => item.Type == KeyTR && items.Has(KeyTR, 3)),
                 new Location(this, 256+182, 0xEA19, LocationType.Regular, "Turtle Rock - Big Chest",

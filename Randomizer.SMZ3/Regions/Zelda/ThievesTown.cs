@@ -10,7 +10,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
 
         public RewardType Reward { get; set; } = RewardType.None;
 
-        public ThievesTown(World world, Logic logic) : base(world, logic) {
+        public ThievesTown(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeyTT, BigKeyTT, MapTT, CompassTT };
 
             Locations = new List<Location> {

@@ -8,7 +8,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
         public override string Name => "Light World South";
         public override string Area => "Light World";
 
-        public South(World world, Logic logic) : base(world, logic) {
+        public South(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 256+45, 0x180142, LocationType.Regular, "Maze Race"),
                 new Location(this, 256+46, 0x180012, LocationType.Regular, "Library",
@@ -29,7 +29,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
                 new Location(this, 256+57, 0x180005, LocationType.Regular, "Checkerboard Cave",
                     items => items.Has(Mirror) && (
                         items.Has(Flute) && items.CanLiftHeavy() ||
-                        items.CanAccessMiseryMirePortal(Logic)
+                        items.CanAccessMiseryMirePortal(Config)
                     ) && items.CanLiftLight()),
                 new Location(this, 256+58, 0x180017, LocationType.Bombos, "Bombos Tablet",
                     items => items.Has(Book) && items.HasMasterSword() && items.Has(Mirror) && World.CanEnter("Dark World South", items)),

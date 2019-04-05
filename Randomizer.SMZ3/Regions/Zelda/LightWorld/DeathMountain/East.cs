@@ -8,7 +8,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain {
         public override string Name => "Light World Death Mountain East";
         public override string Area => "Light World";
 
-        public East(World world, Logic logic) : base(world, logic) {
+        public East(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 256+4, 0x180141, LocationType.Regular, "Floating Island",
                     items => items.Has(Mirror) && items.Has(MoonPearl) && items.CanLiftHeavy()),

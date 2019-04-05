@@ -9,7 +9,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld {
         public override string Name => "Dark World North West";
         public override string Area => "Dark World";
 
-        public NorthWest(World world, Logic logic) : base(world, logic) {
+        public NorthWest(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 256+71, 0x180146, LocationType.Regular, "Bumper Cave",
                     items => items.CanLiftLight() && items.Has(Cape)),
@@ -28,7 +28,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld {
         public override bool CanEnter(List<Item> items) {
             return items.Has(MoonPearl) && ((
                     World.CanAquire(items, Agahnim) ||
-                    items.CanAccessDarkWorldPortal(Logic) && items.Has(Flippers)
+                    items.CanAccessDarkWorldPortal(Config) && items.Has(Flippers)
                 ) && items.Has(Hookshot) && (items.Has(Flippers) || items.CanLiftLight() || items.Has(Hammer)) ||
                 items.Has(Hammer) && items.CanLiftLight() ||
                 items.CanLiftHeavy()
