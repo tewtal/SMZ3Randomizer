@@ -9,6 +9,8 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public override string Area => "Ice Palace";
 
         public IcePalace(World world, Logic logic) : base(world, logic) {
+            RegionItems = new[] { KeyIP, BigKeyIP, MapIP, CompassIP };
+
             Locations = new List<Location> {
                 new Location(this, 256+161, 0xE9D4, LocationType.Regular, "Ice Palace - Compass Chest"),
                 new Location(this, 256+162, 0xE9E0, LocationType.Regular, "Ice Palace - Spike Room",

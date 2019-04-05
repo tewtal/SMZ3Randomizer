@@ -9,6 +9,8 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public override string Area => "Swamp Palace";
 
         public SwampPalace(World world, Logic logic) : base(world, logic) {
+            RegionItems = new[] { KeySP, BigKeySP, MapSP, CompassSP };
+
             Locations = new List<Location> {
                 new Location(this, 256+135, 0xEA9D, LocationType.Regular, "Swamp Palace - Entrance")
                     .Allow((item, items) => /*config.keysanity*/false || item.Type == KeySP),

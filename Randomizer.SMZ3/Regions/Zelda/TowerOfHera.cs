@@ -9,6 +9,8 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public override string Area => "Tower of Hera";
 
         public TowerOfHera(World world, Logic logic) : base(world, logic) {
+            RegionItems = new[] { KeyTH, BigKeyTH, MapTH, CompassTH };
+
             Locations = new List<Location> {
                 new Location(this, 256+115, 0x180162, LocationType.HeraStandingKey, "Tower of Hera - Basement Cage"),
                 new Location(this, 256+116, 0xE9AD, LocationType.Regular, "Tower of Hera - Map Chest"),

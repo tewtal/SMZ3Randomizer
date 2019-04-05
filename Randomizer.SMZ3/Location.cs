@@ -65,6 +65,13 @@ namespace Randomizer.SMZ3 {
             return Region.CanEnter(items) && canAccess(items);
         }
 
+        public bool CanFill(Item item, List<Item> items) {
+            var oldItem = Item;
+            Item = item;
+            bool fillable = alwaysAllow(item, items) || (Region.CanFill(item) && allow(item, items) && Available(items));
+            Item = oldItem;
+            return fillable;
+        }
     }
 
     public static class LocationListExtensions {

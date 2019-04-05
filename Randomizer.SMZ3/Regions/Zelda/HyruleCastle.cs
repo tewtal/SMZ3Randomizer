@@ -9,6 +9,8 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public override string Area => "Hyrule Castle";
 
         public HyruleCastle(World world, Logic logic) : base(world, logic) {
+            RegionItems = new[] { KeyHC, MapHC };
+
             Locations = new List<Location> {
                 new Location(this, 256+91, 0xEA79, LocationType.Regular, "Sanctuary"),
                 new Location(this, 256+92, 0xEB5D, LocationType.Regular, "Sewers - Secret Room - Left",
@@ -29,7 +31,6 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                 new Location(this, 256+100, 0xE971, LocationType.Regular, "Secret Passage")
                     .Allow((item, items) => /*config.keysanity*/false || !item.IsDungeonItem),
             };
-
         }
 
     }

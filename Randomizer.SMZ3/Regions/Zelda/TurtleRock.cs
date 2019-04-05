@@ -11,8 +11,11 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public ItemType Medallion { get; set; }
 
         public TurtleRock(World world, Logic logic) : base(world, logic) {
+            RegionItems = new[] { KeyTR, BigKeyTR, MapTR, CompassTR };
+
             Requirement laserBridge = items => items.Has(BigKeyTR) && items.Has(KeyTR, 3) &&
                 items.Has(Lamp) && (items.Has(Cape) || items.Has(Byrna) || items.CanBlockLasers());
+
             Locations = new List<Location> {
                 new Location(this, 256+177, 0xEA22, LocationType.Regular, "Turtle Rock - Compass Chest"),
                 new Location(this, 256+178, 0xEA1C, LocationType.Regular, "Turtle Rock - Roller Room - Left",
@@ -38,9 +41,6 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                 new Location(this, 256+188, 0x180159, LocationType.Regular, "Turtle Rock - Trinexx",
                     items => items.Has(BigKeyTR) && items.Has(KeyTR, 4) && items.Has(Lamp) && CanBeatBoss(items)),
             };
-
-            Reward = RewardType.Crystal;
-            RegionItems = new[] { KeyTR, BigKeyTR, MapTR, CompassTR };
         }
 
         static bool CanBeatBoss(List<Item> items) {

@@ -9,6 +9,8 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public override string Area => "Castle Tower";
 
         public CastleTower(World world, Logic logic) : base(world, logic) {
+            RegionItems = new[] { KeyCT };
+
             Locations = new List<Location> {
                 new Location(this, 256+101, 0xEAB5, LocationType.Regular, "Castle Tower - Foyer"),
                 new Location(this, 256+102, 0xEAB2, LocationType.Regular, "Castle Tower - Dark Maze",

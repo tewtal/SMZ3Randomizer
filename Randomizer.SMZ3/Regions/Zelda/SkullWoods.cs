@@ -9,6 +9,8 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public override string Area => "Skull Woods";
 
         public SkullWoods(World world, Logic logic) : base(world, logic) {
+            RegionItems = new[] { KeySW, BigKeySW, MapSW, CompassSW };
+
             Locations = new List<Location> {
                 new Location(this, 256+145, 0xE9A1, LocationType.Regular, "Skull Woods - Pot Prison"),
                 new Location(this, 256+146, 0xE992, LocationType.Regular, "Skull Woods - Compass Chest"),

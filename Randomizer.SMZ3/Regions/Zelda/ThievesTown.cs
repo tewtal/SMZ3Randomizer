@@ -9,6 +9,8 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public override string Area => "Thieves' Town";
 
         public ThievesTown(World world, Logic logic) : base(world, logic) {
+            RegionItems = new[] { KeyTT, BigKeyTT, MapTT, CompassTT };
+
             Locations = new List<Location> {
                 new Location(this, 256+153, 0xEA01, LocationType.Regular, "Thieves' Town - Map Chest"),
                 new Location(this, 256+154, 0xEA0A, LocationType.Regular, "Thieves' Town - Ambush Chest"),

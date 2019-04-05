@@ -9,6 +9,8 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public override string Area => "Palace of Darkness";
 
         public PalaceOfDarkness(World world, Logic logic) : base(world, logic) {
+            RegionItems = new[] { KeyPD, BigKeyPD, MapPD, CompassPD };
+
             Locations = new List<Location> {
                 new Location(this, 256+121, 0xEA5B, LocationType.Regular, "Palace of Darkness - Shooter Room"),
                 new Location(this, 256+122, 0xEA37, LocationType.Regular, "Palace of Darkness - Big Key Chest",

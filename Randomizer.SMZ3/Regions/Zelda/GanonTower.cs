@@ -11,6 +11,8 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public override string Area => "Ganon Tower";
 
         public GanonTower(World world, Logic logic) : base(world, logic) {
+            RegionItems = new[] { KeyGT, BigKeyGT, MapGT, CompassGT };
+
             Func<List<Item>, IList<Location>, bool> leftSide = (items, locations) =>
                 items.Has(Hammer) && items.Has(Hookshot) &&
                 items.Has(KeyGT, locations.Any(l => l.ItemType == BigKeyGT) ? 3 : 4);

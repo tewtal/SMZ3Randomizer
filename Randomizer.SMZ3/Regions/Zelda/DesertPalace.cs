@@ -9,6 +9,8 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public override string Area => "Desert Palace";
 
         public DesertPalace(World world, Logic logic) : base(world, logic) {
+            RegionItems = new[] { KeyDP, BigKeyDP, MapDP, CompassDP };
+
             Locations = new List<Location> {
                 new Location(this, 256+109, 0xE98F, LocationType.Regular, "Desert Palace - Big Chest",
                     items => items.Has(BigKeyDP)),

@@ -9,6 +9,8 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public override string Area => "Eastern Palace";
 
         public EasternPalace(World world, Logic logic) : base(world, logic) {
+            RegionItems = new[] { BigKeyEP, MapEP, CompassEP };
+
             Locations = new List<Location> {
                 new Location(this, 256+103, 0xE9B3, LocationType.Regular, "Eastern Palace - Cannonball Chest"),
                 new Location(this, 256+104, 0xE9F5, LocationType.Regular, "Eastern Palace - Map Chest"),

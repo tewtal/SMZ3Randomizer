@@ -11,6 +11,8 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public ItemType Medallion { get; set; }
 
         public MiseryMire(World world, Logic logic) : base(world, logic) {
+            RegionItems = new[] { KeyMM, BigKeyMM, MapMM, CompassMM };
+
             Locations = new List<Location> {
                 new Location(this, 256+169, 0xEA5E, LocationType.Regular, "Misery Mire - Main Lobby",
                     items => items.Has(BigKeyMM) || items.Has(KeyMM)),
