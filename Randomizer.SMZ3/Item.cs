@@ -107,6 +107,11 @@ namespace Randomizer.SMZ3 {
         ArrowUpgrade5 = 0x53,
         ArrowUpgrade10 = 0x54,
 
+        KraidKey/* = ?*/,
+        PhantoonKey/* = ?*/,
+        DraygonKey/* = ?*/,
+        RidleyKey/* = ?*/,
+
         Missile = 0xC2,
         Super = 0xC3,
         PowerBomb = 0xC4,
@@ -459,21 +464,6 @@ namespace Randomizer.SMZ3 {
 
         public static bool CanOpenRedDoors(this List<Item> items) {
             return items.Has(Missile) || items.Has(Super);
-        }
-
-        public static bool CanDefeatBotwoon(this List<Item> items, World world) {
-            return world.Config.Logic switch {
-                Casual => items.Has(SpeedBooster) || items.CanAccessMaridiaPortal(world),
-                _ => items.Has(Ice) || items.Has(SpeedBooster) || items.CanAccessMaridiaPortal(world)
-            };
-        }
-
-        public static bool CanDefeatDraygon(this List<Item> items, World world) {
-            return world.Config.Logic switch {
-                Casual => items.CanDefeatBotwoon(world) && items.Has(Gravity) &&
-                    (items.Has(SpeedBooster) && items.Has(HiJump) || items.CanFly()),
-                _ => items.CanDefeatBotwoon(world) && items.Has(Gravity)
-            };
         }
 
         public static bool CanAccessNorfairUpperPortal(this List<Item> items) {

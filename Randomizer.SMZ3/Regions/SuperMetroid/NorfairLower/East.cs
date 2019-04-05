@@ -30,7 +30,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
                     _ => items => items.Has(Morph) && items.CanDestroyBombWalls()
                 }),
                 new Location(this, 78, 0x79108, LocationType.Hidden, "Energy Tank, Ridley", Config.Logic switch {
-                    _ => new Requirement(items => items.CanUsePowerBombs() && items.Has(Super))
+                    _ => new Requirement(items => (!Config.Keysanity || items.Has(RidleyKey)) && items.CanUsePowerBombs() && items.Has(Super))
                 }),
                 new Location(this, 80, 0x79184, LocationType.Visible, "Energy Tank, Firefleas")
             };

@@ -29,9 +29,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
                         (items.Has(Gravity) || items.Has(Ice) || items.Has(HiJump) && items.CanSpringBallJump()))
                 }),
                 new Location(this, 143, 0x7C559, LocationType.Chozo, "Plasma Beam", Config.Logic switch {
-                    Casual => items => items.CanDefeatDraygon(World) && (items.Has(ScrewAttack) || items.Has(Plasma)) &&
+                    Casual => items => CanDefeatDraygon(items) && (items.Has(ScrewAttack) || items.Has(Plasma)) &&
                         (items.Has(HiJump) || items.CanFly()),
-                    _ => new Requirement(items => items.CanDefeatDraygon(World) &&
+                    _ => new Requirement(items => CanDefeatDraygon(items) &&
                         (items.Has(Charge) && items.HasEnergyReserves(3) || items.Has(ScrewAttack) || items.Has(Plasma) || items.Has(SpeedBooster)) &&
                         (items.Has(HiJump) || items.CanSpringBallJump() || items.CanFly() || items.Has(SpeedBooster)))
                 }),
@@ -66,17 +66,33 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
                         items.Has(Ice) && items.Has(HiJump) && items.CanSpringBallJump() && items.Has(SpaceJump)))
                 }),
                 new Location(this, 151, 0x7C74D, LocationType.Hidden, "Missile (Draygon)", Config.Logic switch {
-                    Casual => items => items.CanDefeatBotwoon(World),
-                    _ => new Requirement(items => items.CanDefeatBotwoon(World) && items.Has(Gravity))
+                    Casual => items => CanDefeatBotwoon(items),
+                    _ => new Requirement(items => CanDefeatBotwoon(items) && items.Has(Gravity))
                 }),
                 new Location(this, 152, 0x7C755, LocationType.Visible, "Energy Tank, Botwoon", Config.Logic switch {
-                    _ => new Requirement(items => items.CanDefeatBotwoon(World))
+                    _ => new Requirement(items => CanDefeatBotwoon(items))
                 }),
                 new Location(this, 154, 0x7C7A7, LocationType.Chozo, "Space Jump", Config.Logic switch {
-                    Casual => items => items.CanDefeatDraygon(World),
-                    _ => new Requirement(items => items.CanDefeatDraygon(World) &&
+                    Casual => items => CanDefeatDraygon(items),
+                    _ => new Requirement(items => CanDefeatDraygon(items) &&
                         (items.CanFly() || items.Has(SpeedBooster) && items.Has(HiJump)))
                 })
+            };
+        }
+
+        bool CanDefeatDraygon(List<Item> items) {
+            return World.Config.Logic switch {
+                Casual => CanDefeatBotwoon(items) && (!World.Config.Keysanity || items.Has(DraygonKey)) &&
+                    items.Has(Gravity) && (items.Has(SpeedBooster) && items.Has(HiJump) || items.CanFly()),
+                _ => CanDefeatBotwoon(items) && (!World.Config.Keysanity || items.Has(DraygonKey)) &&
+                    items.Has(Gravity)
+            };
+        }
+
+        bool CanDefeatBotwoon(List<Item> items) {
+            return World.Config.Logic switch {
+                Casual => items.Has(SpeedBooster) || items.CanAccessMaridiaPortal(World),
+                _ => items.Has(Ice) || items.Has(SpeedBooster) || items.CanAccessMaridiaPortal(World)
             };
         }
 
