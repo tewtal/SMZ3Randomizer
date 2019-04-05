@@ -70,6 +70,20 @@ namespace Randomizer.SMZ3 {
             return region.CanEnter(items);
         }
 
+        public void Setup(Random rnd) {
+            SetMedallions(rnd);
+        }
+
+        private void SetMedallions(Random rnd) {
+            foreach (var region in Regions.OfType<MedallionAccess>()) {
+                region.Medallion = rnd.Next(0, 2) switch {
+                    0 => ItemType.Bombos,
+                    1 => ItemType.Quake,
+                    _ => ItemType.Ether
+                };
+            }
+        }
+
     }
 
 }

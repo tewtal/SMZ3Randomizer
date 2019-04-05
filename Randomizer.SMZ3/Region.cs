@@ -2,6 +2,10 @@
 
 namespace Randomizer.SMZ3 {
 
+    interface MedallionAccess {
+        ItemType Medallion { get; set; }
+    }
+
     abstract class Region {
 
         public virtual string Name { get; }
