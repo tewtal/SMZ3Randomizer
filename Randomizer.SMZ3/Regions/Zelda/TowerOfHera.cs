@@ -3,10 +3,12 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda {
 
-    class TowerOfHera : Region {
+    class TowerOfHera : Region, Reward {
 
         public override string Name => "Tower of Hera";
         public override string Area => "Tower of Hera";
+
+        public RewardType Reward { get; set; } = RewardType.None;
 
         public TowerOfHera(World world, Logic logic) : base(world, logic) {
             RegionItems = new[] { KeyTH, BigKeyTH, MapTH, CompassTH };
@@ -32,6 +34,10 @@ namespace Randomizer.SMZ3.Regions.Zelda {
 
         public override bool CanEnter(List<Item> items) {
             return (items.Has(Mirror) || items.Has(Hookshot) && items.Has(Hammer)) && World.CanEnter("Light World Death Mountain West", items);
+        }
+
+        public bool CanComplete(List<Item> items) {
+            return Locations.Get("Tower of Hera - Moldorm").Available(items);
         }
 
     }

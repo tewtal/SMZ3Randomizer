@@ -2,6 +2,21 @@
 
 namespace Randomizer.SMZ3 {
 
+    enum RewardType {
+        None,
+        Agahnim,
+        PendantGreen,
+        PendantNonGreen,
+        CrystalBlue,
+        CrystalRed,
+        GoldenFourBoss
+    }
+
+    interface Reward {
+        RewardType Reward { get; set; }
+        bool CanComplete(List<Item> items);
+    }
+
     interface MedallionAccess {
         ItemType Medallion { get; set; }
     }

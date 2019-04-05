@@ -3,10 +3,12 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda {
 
-    class EasternPalace : Region {
+    class EasternPalace : Region, Reward {
 
         public override string Name => "Eastern Palace";
         public override string Area => "Eastern Palace";
+
+        public RewardType Reward { get; set; } = RewardType.None;
 
         public EasternPalace(World world, Logic logic) : base(world, logic) {
             RegionItems = new[] { BigKeyEP, MapEP, CompassEP };
@@ -22,6 +24,10 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                 new Location(this, 256+108, 0x180150, LocationType.Regular, "Eastern Palace - Armos Knights",
                     items => items.Has(BigKeyEP) && items.Has(Bow) && items.Has(Lamp)),
             };
+        }
+
+        public bool CanComplete(List<Item> items) {
+            return Locations.Get("Eastern Palace - Armos Knights").Available(items);
         }
 
     }

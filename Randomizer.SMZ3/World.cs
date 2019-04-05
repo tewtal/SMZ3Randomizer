@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using static Randomizer.SMZ3.RewardType;
 
 namespace Randomizer.SMZ3 {
 
@@ -70,8 +71,17 @@ namespace Randomizer.SMZ3 {
             return region.CanEnter(items);
         }
 
+        public bool CanAquire(List<Item> items, RewardType reward) {
+            return Regions.OfType<Reward>().First(x => reward == x.Reward).CanComplete(items);
+        }
+
+        public bool CanAquireAll(List<Item> items, params RewardType[] rewards) {
+            return Regions.OfType<Reward>().Where(x => rewards.Contains(x.Reward)).All(x => x.CanComplete(items));
+        }
+
         public void Setup(Random rnd) {
             SetMedallions(rnd);
+            SetRewards(rnd);
         }
 
         private void SetMedallions(Random rnd) {
@@ -81,6 +91,16 @@ namespace Randomizer.SMZ3 {
                     1 => ItemType.Quake,
                     _ => ItemType.Ether
                 };
+            }
+        }
+
+        private void SetRewards(Random rnd) {
+            var rewards = new[] {
+                PendantGreen, PendantNonGreen, PendantNonGreen, CrystalRed, CrystalRed,
+                CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue }.Shuffle(rnd);
+            foreach (var region in Regions.OfType<Reward>().Where(x => x.Reward == None)) {
+                region.Reward = rewards.First();
+                rewards.Remove(region.Reward);
             }
         }
 

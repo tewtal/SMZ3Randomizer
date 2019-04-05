@@ -3,10 +3,12 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda {
 
-    class CastleTower : Region {
+    class CastleTower : Region, Reward {
 
         public override string Name => "Castle Tower";
         public override string Area => "Castle Tower";
+
+        public RewardType Reward { get; set; } = RewardType.Agahnim;
 
         public CastleTower(World world, Logic logic) : base(world, logic) {
             RegionItems = new[] { KeyCT };
@@ -22,7 +24,10 @@ namespace Randomizer.SMZ3.Regions.Zelda {
             return items.Has(Cape) || items.HasMasterSword();
         }
 
-        //Complete: items.Has(Lamp) && items.Has(KeyCT, 2) && items.HasSword()
+        public bool CanComplete(List<Item> items) {
+            return CanEnter(items) && items.Has(Lamp) && items.Has(KeyCT, 2) && items.HasSword();
+        }
+
     }
 
 }

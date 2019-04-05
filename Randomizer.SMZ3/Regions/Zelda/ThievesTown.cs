@@ -3,10 +3,12 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda {
 
-    class ThievesTown : Region {
+    class ThievesTown : Region, Reward {
 
         public override string Name => "Thieves' Town";
         public override string Area => "Thieves' Town";
+
+        public RewardType Reward { get; set; } = RewardType.None;
 
         public ThievesTown(World world, Logic logic) : base(world, logic) {
             RegionItems = new[] { KeyTT, BigKeyTT, MapTT, CompassTT };
@@ -36,6 +38,10 @@ namespace Randomizer.SMZ3.Regions.Zelda {
 
         public override bool CanEnter(List<Item> items) {
             return items.Has(MoonPearl) && World.CanEnter("Dark World North West", items);
+        }
+
+        public bool CanComplete(List<Item> items) {
+            return Locations.Get("Thieves' Town - Blind").Available(items);
         }
 
     }

@@ -3,11 +3,12 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda {
 
-    class MiseryMire : Region, MedallionAccess {
+    class MiseryMire : Region, Reward, MedallionAccess {
 
         public override string Name => "Misery Mire";
         public override string Area => "Misery Mire";
 
+        public RewardType Reward { get; set; } = RewardType.None;
         public ItemType Medallion { get; set; }
 
         public MiseryMire(World world, Logic logic) : base(world, logic) {
@@ -38,6 +39,10 @@ namespace Randomizer.SMZ3.Regions.Zelda {
             return items.Has(Medallion) && items.HasSword() &&
                 items.Has(MoonPearl) && (items.Has(Boots) || items.Has(Hookshot)) &&
                 World.CanEnter("Dark World Mire", items);
+        }
+
+        public bool CanComplete(List<Item> items) {
+            return Locations.Get("Misery Mire - Vitreous").Available(items);
         }
 
     }

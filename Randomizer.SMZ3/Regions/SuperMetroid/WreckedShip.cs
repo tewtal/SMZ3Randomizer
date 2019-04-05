@@ -4,10 +4,12 @@ using static Randomizer.SMZ3.Logic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid {
 
-    class WreckedShip : Region {
+    class WreckedShip : Region, Reward {
 
         public override string Name => "Wrecked Ship";
         public override string Area => "Wrecked Ship";
+
+        public RewardType Reward { get; set; } = RewardType.GoldenFourBoss;
 
         public WreckedShip(World world, Logic logic) : base(world, logic) {
             Locations = new List<Location> {
@@ -37,20 +39,23 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
         }
 
         public override bool CanEnter(List<Item> items) {
-            return Logic switch
-            {
+            return Logic switch {
                 Casual =>
                     items.Has(Super) && (
                         items.CanUsePowerBombs() && (items.Has(SpeedBooster) || items.Has(Grapple) || items.Has(SpaceJump) ||
                             items.Has(Gravity) && (items.CanFly() || items.Has(HiJump))) ||
-                        items.CanAccessMaridiaPortal(Logic) && items.Has(Gravity) && items.CanPassBombPassages()
+                        items.CanAccessMaridiaPortal(World) && items.Has(Gravity) && items.CanPassBombPassages()
                     ),
                 _ =>
                     items.Has(Super) && (
                         items.CanUsePowerBombs() ||
-                        items.CanAccessMaridiaPortal(Logic) && (items.Has(HiJump) || items.Has(Gravity)) && items.CanPassBombPassages()
+                        items.CanAccessMaridiaPortal(World) && (items.Has(HiJump) || items.Has(Gravity)) && items.CanPassBombPassages()
                     )
             };
+        }
+
+        public bool CanComplete(List<Item> items) {
+            return CanEnter(items);
         }
 
     }

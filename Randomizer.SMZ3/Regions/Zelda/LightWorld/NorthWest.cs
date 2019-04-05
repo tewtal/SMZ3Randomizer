@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using static Randomizer.SMZ3.ItemType;
+using static Randomizer.SMZ3.RewardType;
 
 namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
 
@@ -10,12 +12,12 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
 
         public NorthWest(World world, Logic logic) : base(world, logic) {
             Locations = new List<Location> {
-                new Location(this, 256+14, 0x289B0, LocationType.Pedestal, "Master Sword Pedestal"),
-                    /*PendantOfPower && PendantOfWisdom && PendantOfCourage*/
+                new Location(this, 256+14, 0x289B0, LocationType.Pedestal, "Master Sword Pedestal",
+                    items => World.CanAquireAll(items, PendantGreen, PendantNonGreen)),
                 new Location(this, 256+15, 0x180013, LocationType.Regular, "Mushroom"),
                 new Location(this, 256+16, 0x180000, LocationType.Regular, "Lost Woods Hideout"),
                 new Location(this, 256+17, 0x180001, LocationType.Regular, "Lumberjack Tree",
-                    items => /*DefeatAgahnim && */items.Has(Boots)),
+                    items => World.CanAquire(items, Agahnim) && items.Has(Boots)),
                 new Location(this, 256+18, 0xEB3F, LocationType.Regular, "Pegasus Rocks",
                     items => items.Has(Boots)),
                 new Location(this, 256+19, 0x180004, LocationType.Regular, "Graveyard Ledge",

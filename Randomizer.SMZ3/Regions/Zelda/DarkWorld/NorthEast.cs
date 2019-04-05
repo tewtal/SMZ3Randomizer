@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using static Randomizer.SMZ3.ItemType;
+using static Randomizer.SMZ3.RewardType;
 
 namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld {
 
@@ -23,7 +24,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld {
         }
 
         public override bool CanEnter(List<Item> items) {
-            return /*DefeatAgahnim || */items.Has(MoonPearl) && (
+            return World.CanAquire(items, Agahnim) || items.Has(MoonPearl) && (
                 items.Has(Hammer) && items.CanLiftLight() ||
                 items.CanLiftHeavy() && items.Has(Flippers) ||
                 items.CanAccessDarkWorldPortal(Logic) && items.Has(Flippers)

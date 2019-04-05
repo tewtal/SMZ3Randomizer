@@ -3,10 +3,12 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda {
 
-    class DesertPalace : Region {
+    class DesertPalace : Region, Reward {
 
         public override string Name => "Desert Palace";
         public override string Area => "Desert Palace";
+
+        public RewardType Reward { get; set; } = RewardType.None;
 
         public DesertPalace(World world, Logic logic) : base(world, logic) {
             RegionItems = new[] { KeyDP, BigKeyDP, MapDP, CompassDP };
@@ -39,6 +41,10 @@ namespace Randomizer.SMZ3.Regions.Zelda {
             return items.Has(Book) ||
                 items.Has(Mirror) && items.CanLiftHeavy() && items.Has(Flute) ||
                 items.CanAccessMiseryMirePortal(Logic) && items.Has(Mirror);
+        }
+
+        public bool CanComplete(List<Item> items) {
+            return Locations.Get("Desert Palace - Lanmolas").Available(items);
         }
 
     }

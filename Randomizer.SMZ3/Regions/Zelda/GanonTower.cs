@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using static Randomizer.SMZ3.ItemType;
+using static Randomizer.SMZ3.RewardType;
 
 namespace Randomizer.SMZ3.Regions.Zelda {
 
@@ -139,9 +140,8 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         }
 
         public override bool CanEnter(List<Item> items) {
-            return items.Has(MoonPearl) && World.CanEnter("Dark World Death Mountain East", items);
-                /*&& Crystal1 && Crystal2 && Crystal3 && Crystal4 && Crystal5 && Crystal6 && Crystal7
-                  && DefeatMotherBrain*/
+            return items.Has(MoonPearl) && World.CanEnter("Dark World Death Mountain East", items) &&
+                World.CanAquireAll(items, new[] { CrystalBlue, CrystalRed, GoldenFourBoss });
         }
 
     }

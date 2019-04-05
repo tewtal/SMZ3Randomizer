@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using static Randomizer.SMZ3.ItemType;
+using static Randomizer.SMZ3.RewardType;
 
 namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
 
@@ -23,8 +24,8 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
                 new Location(this, 256+41, 0xEA82, LocationType.Regular, "Sahasrahla's Hut - Left"),
                 new Location(this, 256+42, 0xEA85, LocationType.Regular, "Sahasrahla's Hut - Middle"),
                 new Location(this, 256+43, 0xEA88, LocationType.Regular, "Sahasrahla's Hut - Right"),
-                new Location(this, 256+44, 0x2F1FC, LocationType.Regular, "Sahasrahla"),
-                    /*PendantOfCourage*/
+                new Location(this, 256+44, 0x2F1FC, LocationType.Regular, "Sahasrahla",
+                    items => World.CanAquire(items, PendantGreen))
             };
         }
 

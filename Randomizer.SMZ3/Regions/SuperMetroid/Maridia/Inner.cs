@@ -4,10 +4,12 @@ using static Randomizer.SMZ3.Logic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
 
-    class Inner : Region {
+    class Inner : Region, Reward {
 
         public override string Name => "Maridia Inner";
         public override string Area => "Maridia";
+
+        public RewardType Reward { get; set; } = RewardType.GoldenFourBoss;
 
         public Inner(World world, Logic logic) : base(world, logic) {
             Locations = new List<Location> {
@@ -27,9 +29,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
                         (items.Has(Gravity) || items.Has(Ice) || items.Has(HiJump) && items.CanSpringBallJump()))
                 }),
                 new Location(this, 143, 0x7C559, LocationType.Chozo, "Plasma Beam", Logic switch {
-                    Casual => items => items.CanDefeatDraygon(Logic) && (items.Has(ScrewAttack) || items.Has(Plasma)) &&
+                    Casual => items => items.CanDefeatDraygon(World) && (items.Has(ScrewAttack) || items.Has(Plasma)) &&
                         (items.Has(HiJump) || items.CanFly()),
-                    _ => new Requirement(items => items.CanDefeatDraygon(Logic) &&
+                    _ => new Requirement(items => items.CanDefeatDraygon(World) &&
                         (items.Has(Charge) && items.HasEnergyReserves(3) || items.Has(ScrewAttack) || items.Has(Plasma) || items.Has(SpeedBooster)) &&
                         (items.Has(HiJump) || items.CanSpringBallJump() || items.CanFly() || items.Has(SpeedBooster)))
                 }),
@@ -64,15 +66,15 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
                         items.Has(Ice) && items.Has(HiJump) && items.CanSpringBallJump() && items.Has(SpaceJump)))
                 }),
                 new Location(this, 151, 0x7C74D, LocationType.Hidden, "Missile (Draygon)", Logic switch {
-                    Casual => items => items.CanDefeatBotwoon(Logic),
-                    _ => new Requirement(items => items.CanDefeatBotwoon(Logic) && items.Has(Gravity))
+                    Casual => items => items.CanDefeatBotwoon(World),
+                    _ => new Requirement(items => items.CanDefeatBotwoon(World) && items.Has(Gravity))
                 }),
                 new Location(this, 152, 0x7C755, LocationType.Visible, "Energy Tank, Botwoon", Logic switch {
-                    _ => new Requirement(items => items.CanDefeatBotwoon(Logic))
+                    _ => new Requirement(items => items.CanDefeatBotwoon(World))
                 }),
                 new Location(this, 154, 0x7C7A7, LocationType.Chozo, "Space Jump", Logic switch {
-                    Casual => items => items.CanDefeatDraygon(Logic),
-                    _ => new Requirement(items => items.CanDefeatDraygon(Logic) &&
+                    Casual => items => items.CanDefeatDraygon(World),
+                    _ => new Requirement(items => items.CanDefeatDraygon(World) &&
                         (items.CanFly() || items.Has(SpeedBooster) && items.Has(HiJump)))
                 })
             };
@@ -83,13 +85,17 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
                 Casual => (
                         World.CanEnter("Norfair Upper West", items) && items.CanUsePowerBombs() &&
                         (items.CanFly() || items.Has(SpeedBooster) || items.Has(Grapple))
-                        || items.CanAccessMaridiaPortal(Logic)
+                        || items.CanAccessMaridiaPortal(World)
                     ) && items.Has(Gravity),
                 _ =>
                     World.CanEnter("Norfair Upper West", items) && items.CanUsePowerBombs() &&
                     (items.Has(Gravity) || items.Has(HiJump) && (items.Has(Ice) || items.CanSpringBallJump()) && items.Has(Grapple))
-                    || items.CanAccessMaridiaPortal(Logic)
+                    || items.CanAccessMaridiaPortal(World)
             };
+        }
+
+        public bool CanComplete(List<Item> items) {
+            return Locations.Get("Space Jump").Available(items);
         }
 
     }

@@ -3,11 +3,12 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda {
 
-    class TurtleRock : Region, MedallionAccess {
+    class TurtleRock : Region, Reward, MedallionAccess {
 
         public override string Name => "Turtle Rock";
         public override string Area => "Turtle Rock";
 
+        public RewardType Reward { get; set; } = RewardType.None;
         public ItemType Medallion { get; set; }
 
         public TurtleRock(World world, Logic logic) : base(world, logic) {
@@ -54,6 +55,10 @@ namespace Randomizer.SMZ3.Regions.Zelda {
             return items.Has(Medallion) && items.HasSword() &&
                 items.Has(MoonPearl) && items.CanLiftHeavy() && items.Has(Hammer) && items.Has(Somaria) &&
                 World.CanEnter("Light World Death Mountain East", items);
+        }
+
+        public bool CanComplete(List<Item> items) {
+            return Locations.Get("Turtle Rock - Trinexx").Available(items);
         }
 
     }

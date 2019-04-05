@@ -4,10 +4,12 @@ using static Randomizer.SMZ3.Logic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
 
-    class East : Region {
+    class East : Region, Reward {
 
         public override string Name => "Norfair Lower East";
         public override string Area => "Norfair Lower";
+
+        public RewardType Reward { get; set; } = RewardType.GoldenFourBoss;
 
         public East(World world, Logic logic) : base(world, logic) {
             Locations = new List<Location> {
@@ -50,6 +52,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
                     (items.CanPassBombPassages() || items.Has(ScrewAttack) && items.Has(SpaceJump)) &&
                     (items.Has(Morph) || items.HasEnergyReserves(5))
             };
+        }
+
+        public bool CanComplete(List<Item> items) {
+            return Locations.Get("Energy Tank, Ridley").Available(items);
         }
 
     }

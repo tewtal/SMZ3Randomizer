@@ -3,10 +3,12 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
 
-    class Kraid : Region {
+    class Kraid : Region, Reward {
 
         public override string Name => "Brinstar Kraid";
         public override string Area => "Brinstar";
+
+        public RewardType Reward { get; set; } = RewardType.GoldenFourBoss;
 
         public Kraid(World world, Logic logic) : base(world, logic) {
             Locations = new List<Location> {
@@ -21,6 +23,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
         public override bool CanEnter(List<Item> items) {
             return (items.CanDestroyBombWalls() || items.Has(SpeedBooster) || items.CanAccessNorfairUpperPortal()) &&
                 items.Has(Super) && items.CanPassBombPassages();
+        }
+
+        public bool CanComplete(List<Item> items) {
+            return CanEnter(items);
         }
 
     }

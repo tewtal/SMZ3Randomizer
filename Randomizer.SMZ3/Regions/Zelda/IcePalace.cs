@@ -3,10 +3,12 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda {
 
-    class IcePalace : Region {
+    class IcePalace : Region, Reward {
 
         public override string Name => "Ice Palace";
         public override string Area => "Ice Palace";
+
+        public RewardType Reward { get; set; } = RewardType.None;
 
         public IcePalace(World world, Logic logic) : base(world, logic) {
             RegionItems = new[] { KeyIP, BigKeyIP, MapIP, CompassIP };
@@ -33,6 +35,10 @@ namespace Randomizer.SMZ3.Regions.Zelda {
 
         public override bool CanEnter(List<Item> items) {
             return items.Has(MoonPearl) && items.Has(Flippers) && items.CanLiftHeavy() && items.CanMeltFreezors();
+        }
+
+        public bool CanComplete(List<Item> items) {
+            return Locations.Get("Ice Palace - Kholdstare").Available(items);
         }
 
     }

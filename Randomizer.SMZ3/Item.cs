@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.Logic;
+using static Randomizer.SMZ3.RewardType;
 using System.Text.RegularExpressions;
 
 namespace Randomizer.SMZ3 {
@@ -460,18 +461,18 @@ namespace Randomizer.SMZ3 {
             return items.Has(Missile) || items.Has(Super);
         }
 
-        public static bool CanDefeatBotwoon(this List<Item> items, Logic logic) {
-            return logic switch {
-                Casual => items.Has(SpeedBooster) || items.CanAccessMaridiaPortal(logic),
-                _ => items.Has(Ice) || items.Has(SpeedBooster) || items.CanAccessMaridiaPortal(logic)
+        public static bool CanDefeatBotwoon(this List<Item> items, World world) {
+            return world.Logic switch {
+                Casual => items.Has(SpeedBooster) || items.CanAccessMaridiaPortal(world),
+                _ => items.Has(Ice) || items.Has(SpeedBooster) || items.CanAccessMaridiaPortal(world)
             };
         }
 
-        public static bool CanDefeatDraygon(this List<Item> items, Logic logic) {
-            return logic switch {
-                Casual => items.CanDefeatBotwoon(logic) && items.Has(Gravity) &&
+        public static bool CanDefeatDraygon(this List<Item> items, World world) {
+            return world.Logic switch {
+                Casual => items.CanDefeatBotwoon(world) && items.Has(Gravity) &&
                     (items.Has(SpeedBooster) && items.Has(HiJump) || items.CanFly()),
-                _ => items.CanDefeatBotwoon(logic) && items.Has(Gravity)
+                _ => items.CanDefeatBotwoon(world) && items.Has(Gravity)
             };
         }
 
@@ -483,16 +484,16 @@ namespace Randomizer.SMZ3 {
             return items.Has(Flute) && items.CanLiftHeavy();
         }
 
-        public static bool CanAccessMaridiaPortal(this List<Item> items, Logic logic) {
-            return logic switch {
+        public static bool CanAccessMaridiaPortal(this List<Item> items, World world) {
+            return world.Logic switch {
                 Casual =>
                     items.Has(MoonPearl) && items.Has(Flippers) &&
                     items.Has(Gravity) && items.Has(Morph) &&
-                    (/*DefeatAgahnim || */items.Has(Hammer) && items.CanLiftLight() || items.CanLiftHeavy()),
+                    (world.CanAquire(items, Agahnim) || items.Has(Hammer) && items.CanLiftLight() || items.CanLiftHeavy()),
                 _ =>
                     items.Has(MoonPearl) && items.Has(Flippers) &&
                     (items.CanSpringBallJump() || items.Has(HiJump) || items.Has(Gravity)) && items.Has(Morph) &&
-                    (/*DefeatAgahnim || */items.Has(Hammer) && items.CanLiftLight() || items.CanLiftHeavy())
+                    (world.CanAquire(items, Agahnim) || items.Has(Hammer) && items.CanLiftLight() || items.CanLiftHeavy())
             };
         }
 
