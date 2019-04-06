@@ -15,7 +15,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
                     items => items.CanLiftLight() || items.Has(Flippers)),
                 new Location(this, 256+37, 0x180149, LocationType.Regular, "Zora's Ledge",
                     items => items.Has(Flippers)),
-                new Location(this, 256+38, 0xE9B0, LocationType.Regular, "Waterfall Fairy - Left",
+                new Location(this, 256+254, 0xE9B0, LocationType.Regular, "Waterfall Fairy - Left",
                     items => items.Has(Flippers)),
                 new Location(this, 256+39, 0xE9D1, LocationType.Regular, "Waterfall Fairy - Right",
                     items => items.Has(Flippers)),

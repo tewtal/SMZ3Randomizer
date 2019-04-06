@@ -19,6 +19,7 @@ export class Runner extends Component {
         this.timerHandle = 0;
         this.inPtr = -1;
         this.outPtr = -1;
+        this.MessageBaseAddress = 0xE03700;
     }
 
     componentDidMount() {
@@ -52,14 +53,42 @@ export class Runner extends Component {
     }
 
     async detectGame() {
-        const seedData = await readData(0x384F00, 0x50);
-        const seedGuid = String.fromCharCode.apply(null, seedData.slice(0x10, 0x30));
-        const clientGuid = String.fromCharCode.apply(null, seedData.slice(0x30, 0x50));
+        /* Check SNES Mapping */
+        let seedData = await readData(0x00FF50, 0x50);
+        let seedGuid = String.fromCharCode.apply(null, seedData.slice(0x10, 0x30));
+        let clientGuid = String.fromCharCode.apply(null, seedData.slice(0x30, 0x50));
         if (seedGuid === this.props.sessionData.seed.guid && clientGuid === this.props.clientData.guid) {
+            this.MessageBaseAddress = 0xE03700;
             this.setState({
                 gameState: 1, gameStatus: "Game detected and running, have fun!"
             });
+            return;
         }
+
+        /* Check SNES9x Mapping */
+        seedData = await readData(0x407F50, 0x50);
+        seedGuid = String.fromCharCode.apply(null, seedData.slice(0x10, 0x30));
+        clientGuid = String.fromCharCode.apply(null, seedData.slice(0x30, 0x50));
+        if (seedGuid === this.props.sessionData.seed.guid && clientGuid === this.props.clientData.guid) {
+            this.MessageBaseAddress = 0xE03700;
+            this.setState({
+                gameState: 1, gameStatus: "Game detected and running, have fun!"
+            });
+            return;
+        }
+
+        /* Check Retroarch Mapping */
+        seedData = await readData(0xC0FF50, 0x50);
+        seedGuid = String.fromCharCode.apply(null, seedData.slice(0x10, 0x30));
+        clientGuid = String.fromCharCode.apply(null, seedData.slice(0x30, 0x50));
+        if (seedGuid === this.props.sessionData.seed.guid && clientGuid === this.props.clientData.guid) {
+            this.MessageBaseAddress = 0x717700;
+            this.setState({
+                gameState: 1, gameStatus: "Game detected and running, have fun!"
+            });
+            return;
+        }
+
     }
 
     receiveItem(worldId, itemId) {
@@ -100,7 +129,7 @@ export class Runner extends Component {
     async readMessages() {
         /* Reads messages from the SNES message outbox */
         try {
-            const snesMsg = await readData(0xE03800, 0x090);
+            const snesMsg = await readData(this.MessageBaseAddress + 0x100, 0x090);
 
             /* If we got disconnected somehow, read back our pointers from the SNES to get back in sync */
             if (this.inPtr === -1 || this.outPtr === -1) {
@@ -117,7 +146,7 @@ export class Runner extends Component {
                     if (ok) {
                         this.inPtr++;
                         this.inPtr = (this.inPtr === 8) ? 0 : this.inPtr
-                        await writeData(0xE03886, new Uint8Array([this.inPtr]));
+                        await writeData(this.MessageBaseAddress + 0x186, new Uint8Array([this.inPtr]));
                     } else {
                         /* if handling a message fails, bail out completely and retry next time */
                         return;
@@ -152,12 +181,12 @@ export class Runner extends Component {
 
     async sendMessage(data) {
         try {
-            await writeData(0xE03700 + (this.outPtr * 0x10), new Uint8Array(data));
+            await writeData(this.MessageBaseAddress + (this.outPtr * 0x10), new Uint8Array(data));
 
             this.outPtr++;
             this.outPtr = this.outPtr === 16 ? 0 : this.outPtr
 
-            await writeData(0xE03880, new Uint8Array([this.outPtr]));
+            await writeData(this.MessageBaseAddress + 0x0180, new Uint8Array([this.outPtr]));
 
             return true;
         } catch (err) {

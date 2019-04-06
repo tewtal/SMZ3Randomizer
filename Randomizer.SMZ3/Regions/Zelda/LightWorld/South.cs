@@ -11,22 +11,22 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
         public South(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 256+45, 0x180142, LocationType.Regular, "Maze Race"),
-                new Location(this, 256+46, 0x180012, LocationType.Regular, "Library",
+                new Location(this, 256+240, 0x180012, LocationType.Regular, "Library",
                     items => items.Has(Boots)),
-                new Location(this, 256+47, 0x18014A, LocationType.Regular, "Flute Spot",
+                new Location(this, 256+241, 0x18014A, LocationType.Regular, "Flute Spot",
                     items => items.Has(Shovel)),
-                new Location(this, 256+48, 0x180003, LocationType.Regular, "South of Grove",
+                new Location(this, 256+242, 0x180003, LocationType.Regular, "South of Grove",
                     items => items.Has(Mirror) && World.CanEnter("Dark World South", items)),
-                new Location(this, 256+49, 0xE9BC, LocationType.Regular, "Link's House"),
-                new Location(this, 256+50, 0xE9F2, LocationType.Regular, "Aginah's Cave"),
+                new Location(this, 256+243, 0xE9BC, LocationType.Regular, "Link's House"),
+                new Location(this, 256+244, 0xE9F2, LocationType.Regular, "Aginah's Cave"),
                 new Location(this, 256+51, 0xEB42, LocationType.Regular, "Mini Moldorm Cave - Far Left"),
                 new Location(this, 256+52, 0xEB45, LocationType.Regular, "Mini Moldorm Cave - Left"),
                 new Location(this, 256+53, 0x180010, LocationType.Regular, "Mini Moldorm Cave - NPC"),
                 new Location(this, 256+54, 0xEB48, LocationType.Regular, "Mini Moldorm Cave - Right"),
-                new Location(this, 256+55, 0xEB4B, LocationType.Regular, "Mini Moldorm Cave - Far Right"),
-                new Location(this, 256+56, 0x180143, LocationType.Regular, "Desert Ledge",
+                new Location(this, 256+251, 0xEB4B, LocationType.Regular, "Mini Moldorm Cave - Far Right"),
+                new Location(this, 256+252, 0x180143, LocationType.Regular, "Desert Ledge",
                     items => World.CanEnter("Desert Palace", items)),
-                new Location(this, 256+57, 0x180005, LocationType.Regular, "Checkerboard Cave",
+                new Location(this, 256+253, 0x180005, LocationType.Regular, "Checkerboard Cave",
                     items => items.Has(Mirror) && (
                         items.Has(Flute) && items.CanLiftHeavy() ||
                         items.CanAccessMiseryMirePortal(Config)

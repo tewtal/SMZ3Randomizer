@@ -103,16 +103,16 @@ namespace Randomizer.SMZ3 {
             /* Write seed data into ROM */
 
             /* My world player id */
-            patches.Add(0x384F00, BitConverter.GetBytes((uint)myWorld.Id));
+            patches.Add(0x00FF50, BitConverter.GetBytes((uint)myWorld.Id));
 
             /* Seed configuration bitfield */
-            patches.Add(0x384F02, BitConverter.GetBytes((uint)0));
+            patches.Add(0x00FF52, BitConverter.GetBytes((uint)0));
 
             /* Write seed guid */
-            patches.Add(0x384F10, Encoding.ASCII.GetBytes(seedGuid.Replace("-", "")));
+            patches.Add(0x00FF60, Encoding.ASCII.GetBytes(seedGuid.Replace("-", "")));
 
             /* Write world guid */
-            patches.Add(0x384F30, Encoding.ASCII.GetBytes(myWorld.Guid.Replace("-", "")));
+            patches.Add(0x00FF80, Encoding.ASCII.GetBytes(myWorld.Guid.Replace("-", "")));
 
             return patches;
         }

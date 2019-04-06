@@ -37,7 +37,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
                 new Location(this, 256+29, 0xEB15, LocationType.Regular, "Blind's Hideout - Right"),
                 new Location(this, 256+30, 0xEB1B, LocationType.Regular, "Blind's Hideout - Far Right"),
                 new Location(this, 256+31, 0x2EB18, LocationType.Regular, "Bottle Merchant"),
-                new Location(this, 256+32, 0xE9E9, LocationType.Regular, "Chicken House"),
+                new Location(this, 256+250, 0xE9E9, LocationType.Regular, "Chicken House"),
                 new Location(this, 256+33, 0x339CF, LocationType.Regular, "Sick Kid",
                     items => items.Has(Bottle)),
                 new Location(this, 256+34, 0xE9CE, LocationType.Regular, "Kakariko Tavern"),

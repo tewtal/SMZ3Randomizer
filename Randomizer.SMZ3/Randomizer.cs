@@ -42,14 +42,17 @@ namespace Randomizer.SMZ3 {
             var seedData = new SeedData {
                 Guid = guid.Replace("-", ""),
                 Seed = seed,
-                Game = "Super Metroid and A Link to the Past Combo Randomizer",
+                Game = "SMAlttP Combo Randomizer",
                 Logic = logic.ToString(),
                 Playthrough = spheres,
                 Worlds = new List<IWorldData>()
             };
 
+            /* Make sure RNG is the same when applying patches to the ROM to have consistent RNG for seed identifer etc */
+            int patchSeed = rnd.Next();
             foreach (var world in worlds) {
-                var patch = new Patch(world, worlds, seedData.Guid, rnd);
+                var patchRnd = new Random(patchSeed);
+                var patch = new Patch(world, worlds, seedData.Guid, patchRnd);
                 var worldData = new WorldData {
                     Id = world.Id,
                     Guid = world.Guid.Replace("-", ""),
