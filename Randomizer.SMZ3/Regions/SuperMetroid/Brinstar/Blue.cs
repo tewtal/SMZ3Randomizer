@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.Logic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
@@ -16,14 +15,14 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
                     _ => new Requirement(items => items.CanUsePowerBombs())
                 }),
                 new Location(this, 28, 0x78798, LocationType.Visible, "Missile (blue Brinstar middle)", Config.Logic switch {
-                    _ => new Requirement(items => items.Has(Morph))
+                    _ => new Requirement(items => items.Morph)
                 }),
                 new Location(this, 29, 0x7879E, LocationType.Hidden, "Energy Tank, Brinstar Ceiling", Config.Logic switch {
-                    Casual => items => items.CanFly() || items.Has(HiJump) ||items.Has(SpeedBooster) || items.Has(Ice),
+                    Casual => items => items.CanFly() || items.HiJump ||items.SpeedBooster || items.Ice,
                     _ => new Requirement(items => true)
                 }),
                 new Location(this, 34, 0x78802, LocationType.Chozo, "Missile (blue Brinstar bottom)", Config.Logic switch {
-                    _ => new Requirement(items => items.Has(Morph))
+                    _ => new Requirement(items => items.Morph)
                 }),
                 new Location(this, 36, 0x78836, LocationType.Visible, "Missile (blue Brinstar top)", Config.Logic switch {
                     _ => new Requirement(items => items.CanUsePowerBombs())

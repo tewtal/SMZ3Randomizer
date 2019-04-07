@@ -16,9 +16,9 @@ namespace Randomizer.SMZ3.Regions.Zelda {
 
             Locations = new List<Location> {
                 new Location(this, 256+169, 0xEA5E, LocationType.Regular, "Misery Mire - Main Lobby",
-                    items => items.Has(BigKeyMM) || items.Has(KeyMM)),
+                    items => items.BigKeyMM || items.Has(KeyMM)),
                 new Location(this, 256+170, 0xEA6A, LocationType.Regular, "Misery Mire - Map Chest",
-                    items => items.Has(BigKeyMM) || items.Has(KeyMM)),
+                    items => items.BigKeyMM || items.Has(KeyMM)),
                 new Location(this, 256+171, 0xEA61, LocationType.Regular, "Misery Mire - Bridge Chest"),
                 new Location(this, 256+172, 0xE9DA, LocationType.Regular, "Misery Mire - Spike Chest"),
                 new Location(this, 256+173, 0xEA64, LocationType.Regular, "Misery Mire - Compass Chest",
@@ -28,20 +28,24 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                     items => items.CanLightTorches() &&
                         items.Has(KeyMM, Locations.Get("Misery Mire - Compass Chest").ItemType == BigKeyMM ? 2 : 3)),
                 new Location(this, 256+175, 0xEA67, LocationType.Regular, "Misery Mire - Big Chest",
-                    items => items.Has(BigKeyMM)),
+                    items => items.BigKeyMM),
                 new Location(this, 256+176, 0x180158, LocationType.Regular, "Misery Mire - Vitreous",
-                    items => items.Has(BigKeyMM) && items.Has(Lamp) && items.Has(Somaria)),
+                    items => items.BigKeyMM && items.Lamp && items.Somaria),
             };
         }
 
         // Need "CanKillMostThings" if implementing swordless
-        public override bool CanEnter(List<Item> items) {
-            return items.Has(Medallion) && items.HasSword() &&
-                items.Has(MoonPearl) && (items.Has(Boots) || items.Has(Hookshot)) &&
+        public override bool CanEnter(Progression items) {
+            return Medallion switch {
+                    Bombos => items.Bombos,
+                    Ether => items.Ether,
+                    _ => items.Quake
+                } && items.Sword &&
+                items.MoonPearl && (items.Boots || items.Hookshot) &&
                 World.CanEnter("Dark World Mire", items);
         }
 
-        public bool CanComplete(List<Item> items) {
+        public bool CanComplete(Progression items) {
             return Locations.Get("Misery Mire - Vitreous").Available(items);
         }
 

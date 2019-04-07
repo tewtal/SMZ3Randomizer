@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.Logic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
@@ -12,28 +11,28 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
         public Outer(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 136, 0x7C437, LocationType.Visible, "Missile (green Maridia shinespark)", Config.Logic switch {
-                    Casual => items => items.Has(SpeedBooster),
-                    _ => new Requirement(items => items.Has(Gravity) && items.Has(SpeedBooster))
+                    Casual => items => items.SpeedBooster,
+                    _ => new Requirement(items => items.Gravity && items.SpeedBooster)
                 }),
                 new Location(this, 137, 0x7C43D, LocationType.Visible, "Super Missile (green Maridia)"),
                 new Location(this, 138, 0x7C47D, LocationType.Visible, "Energy Tank, Mama turtle", Config.Logic switch {
-                    Casual => items => items.CanFly() || items.Has(SpeedBooster) || items.Has(Grapple),
-                    _ => new Requirement(items => items.CanFly() || items.Has(SpeedBooster) || items.Has(Grapple) ||
-                        items.CanSpringBallJump() && (items.Has(Gravity) || items.Has(HiJump)))
+                    Casual => items => items.CanFly() || items.SpeedBooster || items.Grapple,
+                    _ => new Requirement(items => items.CanFly() || items.SpeedBooster || items.Grapple ||
+                        items.CanSpringBallJump() && (items.Gravity || items.HiJump))
                 }),
                 new Location(this, 139, 0x7C483, LocationType.Hidden, "Missile (green Maridia tatori)"),
             };
         }
 
-        public override bool CanEnter(List<Item> items) {
+        public override bool CanEnter(Progression items) {
             return Config.Logic switch {
                 Casual => (
                         World.CanEnter("Norfair Upper West", items) && items.CanUsePowerBombs() ||
                         items.CanAccessMaridiaPortal(World)
-                    ) && items.Has(Gravity),
+                    ) && items.Gravity,
                 _ =>
                     World.CanEnter("Norfair Upper West", items) && items.CanUsePowerBombs() &&
-                    (items.Has(Gravity) || items.Has(HiJump) && (items.CanSpringBallJump() || items.Has(Ice)))
+                    (items.Gravity || items.HiJump && (items.CanSpringBallJump() || items.Ice))
                     || items.CanAccessMaridiaPortal(World)
             };
         }

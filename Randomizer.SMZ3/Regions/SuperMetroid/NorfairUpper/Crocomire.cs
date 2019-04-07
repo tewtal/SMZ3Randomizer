@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.Logic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
@@ -12,53 +11,53 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
         public Crocomire(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 52, 0x78BA4, LocationType.Visible, "Energy Tank, Crocomire", Config.Logic switch {
-                    Casual => items => items.HasEnergyReserves(1) || items.Has(SpaceJump) || items.Has(Grapple),
+                    Casual => items => items.HasEnergyReserves(1) || items.SpaceJump || items.Grapple,
                     _ => new Requirement(items => true)
                 }),
                 new Location(this, 54, 0x78BC0, LocationType.Visible, "Missile (above Crocomire)", Config.Logic switch {
-                    Casual => items => items.CanFly() || items.Has(Grapple) || items.Has(HiJump) && items.Has(SpeedBooster),
-                    _ => new Requirement(items => (items.CanFly() || items.Has(Grapple) || items.Has(HiJump) &&
-                        (items.Has(SpeedBooster) || items.CanSpringBallJump() || items.Has(Varia) && items.Has(Ice))) && items.CanHellRun())
+                    Casual => items => items.CanFly() || items.Grapple || items.HiJump && items.SpeedBooster,
+                    _ => new Requirement(items => (items.CanFly() || items.Grapple || items.HiJump &&
+                        (items.SpeedBooster || items.CanSpringBallJump() || items.Varia && items.Ice)) && items.CanHellRun())
                 }),
                 new Location(this, 57, 0x78C04, LocationType.Visible, "Power Bomb (Crocomire)", Config.Logic switch {
-                    Casual => items => items.CanFly() || items.Has(HiJump) || items.Has(Grapple),
+                    Casual => items => items.CanFly() || items.HiJump || items.Grapple,
                     _ => new Requirement(items => true)
                 }),
                 new Location(this, 58, 0x78C14, LocationType.Visible, "Missile (below Crocomire)", Config.Logic switch {
-                    _ => new Requirement(items => items.Has(Morph))
+                    _ => new Requirement(items => items.Morph)
                 }),
                 new Location(this, 59, 0x78C2A, LocationType.Visible, "Missile (Grapple Beam)", Config.Logic switch {
-                    Casual => items => items.Has(Morph) && (items.CanFly() || items.Has(SpeedBooster) && items.CanUsePowerBombs()),
-                    _ => new Requirement(items => items.Has(SpeedBooster) || items.Has(Morph) && (items.CanFly() || items.Has(Grapple)))
+                    Casual => items => items.Morph && (items.CanFly() || items.SpeedBooster && items.CanUsePowerBombs()),
+                    _ => new Requirement(items => items.SpeedBooster || items.Morph && (items.CanFly() || items.Grapple))
                 }),
                 new Location(this, 60, 0x78C36, LocationType.Chozo, "Grapple Beam", Config.Logic switch {
-                    Casual => items => items.Has(Morph) && (items.CanFly() || items.Has(SpeedBooster) && items.CanUsePowerBombs()),
-                    _ => new Requirement(items => items.Has(SpaceJump) || items.Has(Morph) || items.Has(Grapple) ||
-                        items.Has(HiJump) && items.Has(SpeedBooster))
+                    Casual => items => items.Morph && (items.CanFly() || items.SpeedBooster && items.CanUsePowerBombs()),
+                    _ => new Requirement(items => items.SpaceJump || items.Morph || items.Grapple ||
+                        items.HiJump && items.SpeedBooster)
                 }),
             };
         }
 
-        public override bool CanEnter(List<Item> items) {
+        public override bool CanEnter(Progression items) {
             return Config.Logic switch {
                 Casual => (
-                        (items.CanDestroyBombWalls() || items.Has(SpeedBooster)) && items.Has(Super) && items.Has(Morph) ||
+                        (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
                         items.CanAccessNorfairUpperPortal()
                     ) &&
-                    items.Has(Varia) && items.Has(Super) && (
-                        items.CanUsePowerBombs() && items.Has(SpeedBooster) ||
-                        items.Has(SpeedBooster) && items.Has(Wave) ||
-                        items.Has(Morph) && (items.CanFly() || items.Has(HiJump)) && items.Has(Wave)
+                    items.Varia && items.Super && (
+                        items.CanUsePowerBombs() && items.SpeedBooster ||
+                        items.SpeedBooster && items.Wave ||
+                        items.Morph && (items.CanFly() || items.HiJump) && items.Wave
                     ),
                 _ => (
-                        (items.CanDestroyBombWalls() || items.Has(SpeedBooster)) && items.Has(Super) && items.Has(Morph) ||
+                        (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
                         items.CanAccessNorfairUpperPortal()
                     ) &&
-                    items.Has(Super) &&
-                    (items.HasEnergyReserves(2) && items.Has(SpeedBooster) || items.CanHellRun()) &&
-                    (items.CanFly() || items.Has(HiJump) || items.CanSpringBallJump() || items.Has(Varia) && items.Has(Ice) || items.Has(SpeedBooster)) &&
-                    (items.CanPassBombPassages() || items.Has(SpeedBooster) || items.Has(Varia) && items.Has(Morph))
-                    || items.CanAccessNorfairLowerPortal() && items.Has(ScrewAttack) && items.Has(SpaceJump) && items.Has(Varia) && items.Has(Super) && items.HasEnergyReserves(2)
+                    items.Super &&
+                    (items.HasEnergyReserves(2) && items.SpeedBooster || items.CanHellRun()) &&
+                    (items.CanFly() || items.HiJump || items.CanSpringBallJump() || items.Varia && items.Ice || items.SpeedBooster) &&
+                    (items.CanPassBombPassages() || items.SpeedBooster || items.Varia && items.Morph)
+                    || items.CanAccessNorfairLowerPortal() && items.ScrewAttack && items.SpaceJump && items.Varia && items.Super && items.HasEnergyReserves(2)
             };
         }
 

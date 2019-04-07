@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.Logic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
@@ -27,21 +26,21 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
             };
         }
 
-        public override bool CanEnter(List<Item> items) {
-            return items.CanDestroyBombWalls() || items.Has(SpeedBooster);
+        public override bool CanEnter(Progression items) {
+            return items.CanDestroyBombWalls() || items.SpeedBooster;
         }
 
-        private bool CanEnterAndLeaveGauntlet(List<Item> items) {
+        private bool CanEnterAndLeaveGauntlet(Progression items) {
             return Config.Logic switch {
                 Casual =>
-                    items.Has(Morph) && (items.CanFly() || items.Has(SpeedBooster)) && (
+                    items.Morph && (items.CanFly() || items.SpeedBooster) && (
                         items.CanIbj() ||
-                        items.CanUsePowerBombs() && items.Has(PowerBomb, 2) ||
-                        items.Has(ScrewAttack)),
+                        items.CanUsePowerBombs() && items.TwoPowerBombs ||
+                        items.ScrewAttack),
                 _ =>
-                    items.Has(Morph) && (items.Has(Bombs) || items.Has(PowerBomb, 2)) ||
-                    items.Has(ScrewAttack) ||
-                    items.Has(SpeedBooster) && items.CanUsePowerBombs() && items.HasEnergyReserves(2)
+                    items.Morph && (items.Bombs || items.TwoPowerBombs) ||
+                    items.ScrewAttack ||
+                    items.SpeedBooster && items.CanUsePowerBombs() && items.HasEnergyReserves(2)
             };
         }
 

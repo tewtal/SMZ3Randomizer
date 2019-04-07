@@ -68,18 +68,18 @@ namespace Randomizer.SMZ3 {
             Items = new List<Item>();
         }
 
-        public bool CanEnter(string regionName, List<Item> items) {
+        public bool CanEnter(string regionName, Progression items) {
             var region = Regions.Find(r => r.Name == regionName);
             if (region == null)
                 throw new ArgumentException($"World.CanEnter: Invalid region name {regionName}", nameof(regionName));
             return region.CanEnter(items);
         }
 
-        public bool CanAquire(List<Item> items, RewardType reward) {
+        public bool CanAquire(Progression items, RewardType reward) {
             return Regions.OfType<Reward>().First(x => reward == x.Reward).CanComplete(items);
         }
 
-        public bool CanAquireAll(List<Item> items, params RewardType[] rewards) {
+        public bool CanAquireAll(Progression items, params RewardType[] rewards) {
             return Regions.OfType<Reward>().Where(x => rewards.Contains(x.Reward)).All(x => x.CanComplete(items));
         }
 

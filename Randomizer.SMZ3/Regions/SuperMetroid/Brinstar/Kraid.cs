@@ -22,12 +22,12 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
             };
         }
 
-        public override bool CanEnter(List<Item> items) {
-            return (items.CanDestroyBombWalls() || items.Has(SpeedBooster) || items.CanAccessNorfairUpperPortal()) &&
-                items.Has(Super) && items.CanPassBombPassages();
+        public override bool CanEnter(Progression items) {
+            return (items.CanDestroyBombWalls() || items.SpeedBooster || items.CanAccessNorfairUpperPortal()) &&
+                items.Super && items.CanPassBombPassages();
         }
 
-        public bool CanComplete(List<Item> items) {
+        public bool CanComplete(Progression items) {
             return Locations.Get("Varia Suit").Available(items);
         }
 

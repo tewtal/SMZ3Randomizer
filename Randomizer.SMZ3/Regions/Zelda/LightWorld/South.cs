@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
 
@@ -12,11 +11,11 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
             Locations = new List<Location> {
                 new Location(this, 256+45, 0x180142, LocationType.Regular, "Maze Race"),
                 new Location(this, 256+240, 0x180012, LocationType.Regular, "Library",
-                    items => items.Has(Boots)),
+                    items => items.Boots),
                 new Location(this, 256+241, 0x18014A, LocationType.Regular, "Flute Spot",
-                    items => items.Has(Shovel)),
+                    items => items.Shovel),
                 new Location(this, 256+242, 0x180003, LocationType.Regular, "South of Grove",
-                    items => items.Has(Mirror) && World.CanEnter("Dark World South", items)),
+                    items => items.Mirror && World.CanEnter("Dark World South", items)),
                 new Location(this, 256+243, 0xE9BC, LocationType.Regular, "Link's House"),
                 new Location(this, 256+244, 0xE9F2, LocationType.Regular, "Aginah's Cave"),
                 new Location(this, 256+51, 0xEB42, LocationType.Regular, "Mini Moldorm Cave - Far Left"),
@@ -27,20 +26,20 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
                 new Location(this, 256+252, 0x180143, LocationType.Regular, "Desert Ledge",
                     items => World.CanEnter("Desert Palace", items)),
                 new Location(this, 256+253, 0x180005, LocationType.Regular, "Checkerboard Cave",
-                    items => items.Has(Mirror) && (
-                        items.Has(Flute) && items.CanLiftHeavy() ||
+                    items => items.Mirror && (
+                        items.Flute && items.CanLiftHeavy() ||
                         items.CanAccessMiseryMirePortal(Config)
                     ) && items.CanLiftLight()),
                 new Location(this, 256+58, 0x180017, LocationType.Bombos, "Bombos Tablet",
-                    items => items.Has(Book) && items.HasMasterSword() && items.Has(Mirror) && World.CanEnter("Dark World South", items)),
+                    items => items.Book && items.MasterSword && items.Mirror && World.CanEnter("Dark World South", items)),
                 new Location(this, 256+59, 0xE98C, LocationType.Regular, "Floodgate Chest"),
                 new Location(this, 256+60, 0x180145, LocationType.Regular, "Sunken Treasure"),
                 new Location(this, 256+61, 0x180144, LocationType.Regular, "Lake Hylia Island",
-                    items => items.Has(Flippers) && items.Has(MoonPearl) && items.Has(Mirror) && (
+                    items => items.Flippers && items.MoonPearl && items.Mirror && (
                         World.CanEnter("Dark World South", items) ||
                         World.CanEnter("Dark World North East", items))),
                 new Location(this, 256+62, 0x33E7D, LocationType.Regular, "Hobo",
-                    items => items.Has(Flippers)),
+                    items => items.Flippers),
                 new Location(this, 256+63, 0xEB4E, LocationType.Regular, "Ice Rod Cave"),
             };
 

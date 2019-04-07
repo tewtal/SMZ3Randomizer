@@ -16,8 +16,8 @@ namespace Randomizer.SMZ3 {
         Hidden
     }
 
-    delegate bool Requirement(List<Item> items);
-    delegate bool Verification(Item item, List<Item> items);
+    delegate bool Requirement(Progression items);
+    delegate bool Verification(Item item, Progression items);
 
     class Location {
 
@@ -61,11 +61,11 @@ namespace Randomizer.SMZ3 {
             return this;
         }
 
-        public bool Available(List<Item> items) {
+        public bool Available(Progression items) {
             return Region.CanEnter(items) && canAccess(items);
         }
 
-        public bool CanFill(Item item, List<Item> items) {
+        public bool CanFill(Item item, Progression items) {
             var oldItem = Item;
             Item = item;
             bool fillable = alwaysAllow(item, items) || (Region.CanFill(item) && allow(item, items) && Available(items));
@@ -88,15 +88,26 @@ namespace Randomizer.SMZ3 {
         }
 
         internal static List<Location> AvailableWithinWorld(this List<Location> locations, List<Item> items) {
-            return locations.Where(l => l.Available(items.Where(i => i.World == l.Region.World).ToList())).ToList();
+            var availableLocations = new List<Location>();
+            foreach (var world in locations.Select(x => x.Region.World).Distinct()) {
+                var progression = new Progression(items.Where(i => i.World == world));
+                availableLocations.AddRange(locations.Where(l => l.Region.World == world && l.Available(progression)).ToList());
+            }
+            return availableLocations;
         }
 
         internal static List<Location> Available(this List<Location> locations, List<Item> items) {
-            return locations.Where(l => l.Available(items)).ToList();
+            var progression = new Progression(items);
+            return locations.Where(l => l.Available(progression)).ToList();
         }
 
         internal static List<Location> CanFillWithinWorld(this List<Location> locations, Item item, List<Item> items) {
-            return locations.Where(l => l.CanFill(item, items.Where(i => i.World == l.Region.World).ToList())).ToList();
+            var availableLocations = new List<Location>();
+            foreach (var world in locations.Select(x => x.Region.World).Distinct()) {
+                var progression = new Progression(items.Where(i => i.World == world));
+                availableLocations.AddRange(locations.Where(l => l.Region.World == world && l.CanFill(item, progression)).ToList());
+            }
+            return availableLocations;
         }
 
     }

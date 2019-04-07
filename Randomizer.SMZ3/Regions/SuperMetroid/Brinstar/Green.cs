@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.Logic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
@@ -18,33 +17,32 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
                     _ => new Requirement(items => items.CanPassBombPassages() && items.CanOpenRedDoors())
                 }),
                 new Location(this, 16, 0x7851E, LocationType.Visible, "Super Missile (green Brinstar top)", Config.Logic switch {
-                    Casual => items => items.CanOpenRedDoors() && items.Has(SpeedBooster),
-                    _ => new Requirement(items => items.CanOpenRedDoors() && (items.Has(Morph) || items.Has(SpeedBooster)))
+                    Casual => items => items.CanOpenRedDoors() && items.SpeedBooster,
+                    _ => new Requirement(items => items.CanOpenRedDoors() && (items.Morph || items.SpeedBooster))
                 }),
                 new Location(this, 17, 0x7852C, LocationType.Chozo, "Reserve Tank, Brinstar", Config.Logic switch {
-                    Casual => items => items.CanOpenRedDoors() && items.Has(SpeedBooster),
-                    _ => new Requirement(items => items.CanOpenRedDoors() && (items.Has(Morph) || items.Has(SpeedBooster)))
+                    Casual => items => items.CanOpenRedDoors() && items.SpeedBooster,
+                    _ => new Requirement(items => items.CanOpenRedDoors() && (items.Morph || items.SpeedBooster))
                 }),
                 new Location(this, 18, 0x78532, LocationType.Hidden, "Missile (green Brinstar behind missile)", Config.Logic switch {
-                    Casual => items => items.Has(SpeedBooster) && items.CanPassBombPassages() && items.CanOpenRedDoors(),
-                    _ => new Requirement(items => (items.CanPassBombPassages() || items.Has(Morph) && items.Has(ScrewAttack)) &&
-                        items.CanOpenRedDoors())
+                    Casual => items => items.SpeedBooster && items.CanPassBombPassages() && items.CanOpenRedDoors(),
+                    _ => new Requirement(items => (items.CanPassBombPassages() || items.Morph && items.ScrewAttack) && items.CanOpenRedDoors())
                 }),
                 new Location(this, 19, 0x78538, LocationType.Visible, "Missile (green Brinstar behind reserve tank)", Config.Logic switch {
-                    Casual => items => items.Has(SpeedBooster) && items.CanOpenRedDoors() && items.Has(Morph),
-                    _ => new Requirement(items => items.CanOpenRedDoors() && items.Has(Morph))
+                    Casual => items => items.SpeedBooster && items.CanOpenRedDoors() && items.Morph,
+                    _ => new Requirement(items => items.CanOpenRedDoors() && items.Morph)
                 }),
                 new Location(this, 30, 0x787C2, LocationType.Visible, "Energy Tank, Etecoons", Config.Logic switch {
                     _ => new Requirement(items => items.CanUsePowerBombs())
                 }),
                 new Location(this, 31, 0x787D0, LocationType.Visible, "Super Missile (green Brinstar bottom)", Config.Logic switch {
-                    _ => new Requirement(items => items.CanUsePowerBombs() && items.Has(Super))
+                    _ => new Requirement(items => items.CanUsePowerBombs() && items.Super)
                 }),
             };
         }
 
-        public override bool CanEnter(List<Item> items) {
-            return items.CanDestroyBombWalls() || items.Has(SpeedBooster);
+        public override bool CanEnter(Progression items) {
+            return items.CanDestroyBombWalls() || items.SpeedBooster;
         }
 
     }

@@ -36,11 +36,8 @@ namespace Randomizer.SMZ3 {
 
             foreach (var world in Worlds) {
                 var dungeon = DungeonItems.Where(x => x.World == world).ToList();
-                var progression = ProgressionItems.Where(x => x.World == world);
-                var nice = NiceItems.Where(x => x.World == world);
-                var junk = JunkItems.Where(x => x.World == world);
-                var baseAssumed = progression.Concat(nice).Concat(junk).ToList();
-                AssumedFill(dungeon, baseAssumed, new[] { world });
+                var progression = ProgressionItems.Where(x => x.World == world).ToList();
+                AssumedFill(dungeon, progression, new[] { world });
 
                 /* We place a PB and Super in Sphere 1 to make sure the filler doesn't start locking items behind this when there are a high chance of the trash fill actually making them available */
                 FrontFillItemInWorld(world, ProgressionItems, ItemType.Super, true);
@@ -53,7 +50,7 @@ namespace Randomizer.SMZ3 {
             FastFillLocations(JunkItems, gtTrashLocations);
 
             /* Next up we do assumed filling of progression items cross-world */
-            AssumedFill(ProgressionItems, NiceItems.Concat(JunkItems).ToList(), Worlds);
+            AssumedFill(ProgressionItems, new List<Item>(), Worlds);
             FastFill(NiceItems, Worlds);
             FastFill(JunkItems, Worlds);
 

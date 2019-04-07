@@ -17,24 +17,24 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                 new Location(this, 256+145, 0xE9A1, LocationType.Regular, "Skull Woods - Pot Prison"),
                 new Location(this, 256+146, 0xE992, LocationType.Regular, "Skull Woods - Compass Chest"),
                 new Location(this, 256+147, 0xE998, LocationType.Regular, "Skull Woods - Big Chest",
-                    items => items.Has(BigKeySW))
+                    items => items.BigKeySW)
                     .AlwaysAllow((item, items) => item.Type == BigKeySW),
                 new Location(this, 256+148, 0xE99B, LocationType.Regular, "Skull Woods - Map Chest"),
                 new Location(this, 256+149, 0xE9C8, LocationType.Regular, "Skull Woods - Pinball Room")
                     .Allow((item, items) => item.Type == KeySW),
                 new Location(this, 256+150, 0xE99E, LocationType.Regular, "Skull Woods - Big Key Chest"),
                 new Location(this, 256+151, 0xE9FE, LocationType.Regular, "Skull Woods - Bridge Room",
-                    items => items.Has(Firerod)),
+                    items => items.Firerod),
                 new Location(this, 256+152, 0x180155, LocationType.Regular, "Skull Woods - Mothula",
-                    items => items.Has(Firerod) && items.HasSword() && items.Has(KeySW, 3)),
+                    items => items.Firerod && items.Sword && items.Has(KeySW, 3)),
             };
         }
 
-        public override bool CanEnter(List<Item> items) {
-            return items.Has(MoonPearl) && World.CanEnter("Dark World North West", items);
+        public override bool CanEnter(Progression items) {
+            return items.MoonPearl && World.CanEnter("Dark World North West", items);
         }
 
-        public bool CanComplete(List<Item> items) {
+        public bool CanComplete(Progression items) {
             return Locations.Get("Skull Woods - Mothula").Available(items);
         }
 

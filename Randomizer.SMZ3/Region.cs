@@ -14,7 +14,7 @@ namespace Randomizer.SMZ3 {
 
     interface Reward {
         RewardType Reward { get; set; }
-        bool CanComplete(List<Item> items);
+        bool CanComplete(Progression items);
     }
 
     interface MedallionAccess {
@@ -40,7 +40,7 @@ namespace Randomizer.SMZ3 {
             return Config.Keysanity || !item.IsDungeonItem || RegionItems.Contains(item.Type);
         }
 
-        public virtual bool CanEnter(List<Item> items) {
+        public virtual bool CanEnter(Progression items) {
             return true;
         }
 

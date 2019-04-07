@@ -15,23 +15,23 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
             Locations = new List<Location> {
                 new Location(this, 128, 0x7C265, LocationType.Visible, "Missile (Wrecked Ship middle)"),
                 new Location(this, 129, 0x7C2E9, LocationType.Chozo, "Reserve Tank, Wrecked Ship", Config.Logic switch {
-                    Casual => items => CanUnlockShip(items) && items.Has(SpeedBooster) && items.CanUsePowerBombs() &&
-                        (items.Has(Grapple) || items.Has(SpaceJump) || items.Has(Varia) && items.HasEnergyReserves(2) || items.HasEnergyReserves(3)),
-                    _ => new Requirement(items => CanUnlockShip(items) && items.CanUsePowerBombs() && items.Has(SpeedBooster) &&
-                        (items.Has(Varia) || items.HasEnergyReserves(2)))
+                    Casual => items => CanUnlockShip(items) && items.SpeedBooster && items.CanUsePowerBombs() &&
+                        (items.Grapple || items.SpaceJump || items.Varia && items.HasEnergyReserves(2) || items.HasEnergyReserves(3)),
+                    _ => new Requirement(items => CanUnlockShip(items) && items.CanUsePowerBombs() && items.SpeedBooster &&
+                        (items.Varia || items.HasEnergyReserves(2)))
                 }),
                 new Location(this, 130, 0x7C2EF, LocationType.Visible, "Missile (Gravity Suit)", Config.Logic switch {
                     Casual => items => CanUnlockShip(items) &&
-                        (items.Has(Grapple) || items.Has(SpaceJump) || items.Has(Varia) && items.HasEnergyReserves(2) || items.HasEnergyReserves(3)),
-                    _ => new Requirement(items => CanUnlockShip(items) && items.Has(Varia) || items.HasEnergyReserves(1))
+                        (items.Grapple || items.SpaceJump || items.Varia && items.HasEnergyReserves(2) || items.HasEnergyReserves(3)),
+                    _ => new Requirement(items => CanUnlockShip(items) && items.Varia || items.HasEnergyReserves(1))
                 }),
                 new Location(this, 131, 0x7C319, LocationType.Visible, "Missile (Wrecked Ship top)",
                     items => CanUnlockShip(items)),
                 new Location(this, 132, 0x7C337, LocationType.Visible, "Energy Tank, Wrecked Ship", Config.Logic switch {
                     Casual => items => CanUnlockShip(items) &&
-                        (items.Has(HiJump) || items.Has(SpaceJump) || items.Has(SpeedBooster) || items.Has(Gravity)),
-                    _ => new Requirement(items => CanUnlockShip(items) && (items.Has(Bombs) || items.Has(PowerBomb) || items.CanSpringBallJump() ||
-                        items.Has(HiJump) || items.Has(SpaceJump) || items.Has(SpeedBooster) || items.Has(Gravity)))
+                        (items.HiJump || items.SpaceJump || items.SpeedBooster || items.Gravity),
+                    _ => new Requirement(items => CanUnlockShip(items) && (items.Bombs || items.PowerBomb || items.CanSpringBallJump() ||
+                        items.HiJump || items.SpaceJump || items.SpeedBooster || items.Gravity))
                 }),
                 new Location(this, 133, 0x7C357, LocationType.Visible, "Super Missile (Wrecked Ship left)",
                     items => CanUnlockShip(items)),
@@ -39,31 +39,31 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
                     items => CanUnlockShip(items)),
                 new Location(this, 135, 0x7C36D, LocationType.Chozo, "Gravity Suit", Config.Logic switch {
                     Casual => items => CanUnlockShip(items) &&
-                        (items.Has(Grapple) || items.Has(SpaceJump) || items.Has(Varia) && items.HasEnergyReserves(2) || items.HasEnergyReserves(3)),
-                    _ => new Requirement(items => CanUnlockShip(items) && items.Has(Varia) || items.HasEnergyReserves(1))
+                        (items.Grapple || items.SpaceJump || items.Varia && items.HasEnergyReserves(2) || items.HasEnergyReserves(3)),
+                    _ => new Requirement(items => CanUnlockShip(items) && items.Varia || items.HasEnergyReserves(1))
                 })
             };
         }
 
-        bool CanUnlockShip(List<Item> items) {
+        bool CanUnlockShip(Progression items) {
             return !Config.Keysanity || items.Has(PhantoonKey);
         }
 
-        public override bool CanEnter(List<Item> items) {
+        public override bool CanEnter(Progression items) {
             return Config.Logic switch {
                 Casual =>
-                    items.Has(Super) && (
-                        items.CanUsePowerBombs() && (items.Has(SpeedBooster) || items.Has(Grapple) || items.Has(SpaceJump) ||
-                            items.Has(Gravity) && (items.CanFly() || items.Has(HiJump))) ||
-                        items.CanAccessMaridiaPortal(World) && items.Has(Gravity) && items.CanPassBombPassages()),
+                    items.Super && (
+                        items.CanUsePowerBombs() && (items.SpeedBooster || items.Grapple || items.SpaceJump ||
+                            items.Gravity && (items.CanFly() || items.HiJump)) ||
+                        items.CanAccessMaridiaPortal(World) && items.Gravity && items.CanPassBombPassages()),
                 _ =>
-                    items.Has(Super) && (
+                    items.Super && (
                         items.CanUsePowerBombs() ||
-                        items.CanAccessMaridiaPortal(World) && (items.Has(HiJump) || items.Has(Gravity)) && items.CanPassBombPassages())
+                        items.CanAccessMaridiaPortal(World) && (items.HiJump || items.Gravity) && items.CanPassBombPassages())
             };
         }
 
-        public bool CanComplete(List<Item> items) {
+        public bool CanComplete(Progression items) {
             return CanEnter(items) && CanUnlockShip(items);
         }
 

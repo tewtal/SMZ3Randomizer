@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld {
 
@@ -11,14 +10,14 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld {
         public Mire(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 256+89, 0xEA73, LocationType.Regular, "Mire Shed - Left",
-                    items => items.Has(MoonPearl)),
+                    items => items.MoonPearl),
                 new Location(this, 256+90, 0xEA76, LocationType.Regular, "Mire Shed - Right",
-                    items => items.Has(MoonPearl)),
+                    items => items.MoonPearl),
             };
         }
 
-        public override bool CanEnter(List<Item> items) {
-            return items.Has(Flute) && items.CanLiftHeavy() || items.CanAccessMiseryMirePortal(Config);
+        public override bool CanEnter(Progression items) {
+            return items.Flute && items.CanLiftHeavy() || items.CanAccessMiseryMirePortal(Config);
         }
 
     }

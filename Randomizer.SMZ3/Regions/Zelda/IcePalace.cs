@@ -16,28 +16,28 @@ namespace Randomizer.SMZ3.Regions.Zelda {
             Locations = new List<Location> {
                 new Location(this, 256+161, 0xE9D4, LocationType.Regular, "Ice Palace - Compass Chest"),
                 new Location(this, 256+162, 0xE9E0, LocationType.Regular, "Ice Palace - Spike Room",
-                    items => items.Has(Hookshot) || items.Has(BigKeyIP) && items.Has(KeyIP)),
+                    items => items.Hookshot || items.BigKeyIP && items.Has(KeyIP)),
                 new Location(this, 256+163, 0xE9DD, LocationType.Regular, "Ice Palace - Map Chest",
-                    items => items.Has(Hammer) && items.CanLiftLight() &&
-                        items.Has(Hookshot) || items.Has(BigKeyIP) && items.Has(KeyIP)),
+                    items => items.Hammer && items.CanLiftLight() &&
+                        items.Hookshot || items.BigKeyIP && items.Has(KeyIP)),
                 new Location(this, 256+164, 0xE9A4, LocationType.Regular, "Ice Palace - Big Key Chest",
-                    items => items.Has(Hammer) && items.CanLiftLight() &&
-                        items.Has(Hookshot) || items.Has(BigKeyIP) && items.Has(KeyIP)),
+                    items => items.Hammer && items.CanLiftLight() &&
+                        items.Hookshot || items.BigKeyIP && items.Has(KeyIP)),
                 new Location(this, 256+165, 0xE9E3, LocationType.Regular, "Ice Palace - Iced T Room"),
                 new Location(this, 256+166, 0xE995, LocationType.Regular, "Ice Palace - Freezor Chest"),
                 new Location(this, 256+167, 0xE9AA, LocationType.Regular, "Ice Palace - Big Chest",
-                    items => items.Has(BigKeyIP)),
+                    items => items.BigKeyIP),
                 new Location(this, 256+168, 0x180157, LocationType.Regular, "Ice Palace - Kholdstare",
-                    items => items.Has(BigKeyIP) && items.Has(Hammer) && items.CanLiftLight() &&
-                        items.Has(KeyIP, items.Has(Somaria) ? 1 : 2)),
+                    items => items.BigKeyIP && items.Hammer && items.CanLiftLight() &&
+                        items.Has(KeyIP, items.Somaria ? 1 : 2)),
             };
         }
 
-        public override bool CanEnter(List<Item> items) {
-            return items.Has(MoonPearl) && items.Has(Flippers) && items.CanLiftHeavy() && items.CanMeltFreezors();
+        public override bool CanEnter(Progression items) {
+            return items.MoonPearl && items.Flippers && items.CanLiftHeavy() && items.CanMeltFreezors();
         }
 
-        public bool CanComplete(List<Item> items) {
+        public bool CanComplete(Progression items) {
             return Locations.Get("Ice Palace - Kholdstare").Available(items);
         }
 

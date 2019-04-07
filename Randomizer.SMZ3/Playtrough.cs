@@ -33,7 +33,8 @@ namespace Randomizer.SMZ3 {
 
                     var n = 0;
                     foreach (var item in inaccessableItems) {
-                        sphere.Add($"Inaccessable Item - #{n += 1}", $"{item.Name} ({item.World.Player})");
+                        var itemLocation = inaccessibleLocations.Find(x => x.Item == item);
+                        sphere.Add($"Inaccessable Item - #{n += 1} ({itemLocation.Name} - {itemLocation.Region.World.Player})", $"{item.Name} ({item.World.Player})");
                     }
                     spheres.Add(sphere);
                     return spheres;

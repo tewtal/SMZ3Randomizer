@@ -365,125 +365,276 @@ namespace Randomizer.SMZ3 {
             return items.Find(i => i.Type == itemType && i.World == world);
         }
 
-        public static bool Has(this List<Item> items, ItemType itemType) {
-            return items.Any(i => i.Type == itemType);
+    }
+
+    class Progression {
+
+        public bool BigKeyEP { get; private set; }
+        public bool BigKeyDP { get; private set; }
+        public bool BigKeyTH { get; private set; }
+        public bool BigKeyPD { get; private set; }
+        public bool BigKeySP { get; private set; }
+        public bool BigKeySW { get; private set; }
+        public bool BigKeyTT { get; private set; }
+        public bool BigKeyIP { get; private set; }
+        public bool BigKeyMM { get; private set; }
+        public bool BigKeyTR { get; private set; }
+        public bool BigKeyGT { get; private set; }
+        public bool KeyHC { get; private set; }
+        public bool KeyDP { get; private set; }
+        public bool KeyTH { get; private set; }
+        public bool KeySP { get; private set; }
+        public bool KeyTT { get; private set; }
+        public bool CanBlockLasers { get { return shield >= 3; } }
+        public bool Sword { get; private set; }
+        public bool MasterSword { get; private set; }
+        public bool Bow { get; private set; }
+        public bool Hookshot { get; private set; }
+        public bool Mushroom { get; private set; }
+        public bool Powder { get; private set; }
+        public bool Firerod { get; private set; }
+        public bool Icerod { get; private set; }
+        public bool Bombos { get; private set; }
+        public bool Ether { get; private set; }
+        public bool Quake { get; private set; }
+        public bool Lamp { get; private set; }
+        public bool Hammer { get; private set; }
+        public bool Shovel { get; private set; }
+        public bool Flute { get; private set; }
+        public bool Book { get; private set; }
+        public bool Bottle { get; private set; }
+        public bool Somaria { get; private set; }
+        public bool Byrna { get; private set; }
+        public bool Cape { get; private set; }
+        public bool Mirror { get; private set; }
+        public bool Boots { get; private set; }
+        public bool Glove { get; private set; }
+        public bool Mitt { get; private set; }
+        public bool Flippers { get; private set; }
+        public bool MoonPearl { get; private set; }
+        public bool HalfMagic { get; private set; }
+        public bool Grapple { get; private set; }
+        public bool Charge { get; private set; }
+        public bool Ice { get; private set; }
+        public bool Wave { get; private set; }
+        public bool Plasma { get; private set; }
+        public bool Varia { get; private set; }
+        public bool Gravity { get; private set; }
+        public bool Morph { get; private set; }
+        public bool Bombs { get; private set; }
+        public bool SpringBall { get; private set; }
+        public bool ScrewAttack { get; private set; }
+        public bool HiJump { get; private set; }
+        public bool SpaceJump { get; private set; }
+        public bool SpeedBooster { get; private set; }
+        public bool Missile { get; private set; }
+        public bool Super { get; private set; }
+        public bool PowerBomb { get; private set; }
+        public bool TwoPowerBombs { get; private set; }
+        public int ETank { get; private set; }
+        public int ReserveTank { get; private set; }
+
+        public bool Has(ItemType itemType) => remaining.Any(x => x == itemType);
+        public bool Has(ItemType itemType, int amount) => remaining.Count(x => x == itemType) >= amount;
+
+        int shield;
+        readonly List<ItemType> remaining = new List<ItemType>();
+
+        public Progression(IEnumerable<Item> items) {
+            Add(items);
         }
 
-        public static bool Has(this List<Item> items, ItemType itemType, int amount) {
-            return items.Count(i => i.Type == itemType) >= amount;
+        public void Add(IEnumerable<Item> items) {
+            foreach (var item in items) {
+                bool done = item.Type switch {
+                    ItemType.BigKeyEP => BigKeyEP = true,
+                    ItemType.BigKeyDP => BigKeyDP = true,
+                    ItemType.BigKeyTH => BigKeyTH = true,
+                    ItemType.BigKeyPD => BigKeyPD = true,
+                    ItemType.BigKeySP => BigKeySP = true,
+                    ItemType.BigKeySW => BigKeySW = true,
+                    ItemType.BigKeyTT => BigKeyTT = true,
+                    ItemType.BigKeyIP => BigKeyIP = true,
+                    ItemType.BigKeyMM => BigKeyMM = true,
+                    ItemType.BigKeyTR => BigKeyTR = true,
+                    ItemType.BigKeyGT => BigKeyGT = true,
+                    ItemType.KeyHC => KeyHC = true,
+                    ItemType.KeyDP => KeyDP = true,
+                    ItemType.KeyTH => KeyTH = true,
+                    ItemType.KeySP => KeySP = true,
+                    ItemType.KeyTT => KeyTT = true,
+                    ItemType.Bow => Bow = true,
+                    ItemType.Hookshot => Hookshot = true,
+                    ItemType.Mushroom => Mushroom = true,
+                    ItemType.Powder => Powder = true,
+                    ItemType.Firerod => Firerod = true,
+                    ItemType.Icerod => Icerod = true,
+                    ItemType.Bombos => Bombos = true,
+                    ItemType.Ether => Ether = true,
+                    ItemType.Quake => Quake = true,
+                    ItemType.Lamp => Lamp = true,
+                    ItemType.Hammer => Hammer = true,
+                    ItemType.Shovel => Shovel = true,
+                    ItemType.Flute => Flute = true,
+                    ItemType.Book => Book = true,
+                    ItemType.Bottle => Bottle = true,
+                    ItemType.Somaria => Somaria = true,
+                    ItemType.Byrna => Byrna = true,
+                    ItemType.Cape => Cape = true,
+                    ItemType.Mirror => Mirror = true,
+                    ItemType.Boots => Boots = true,
+                    ItemType.Flippers => Flippers = true,
+                    ItemType.MoonPearl => MoonPearl = true,
+                    ItemType.HalfMagic => HalfMagic = true,
+                    ItemType.Grapple => Grapple = true,
+                    ItemType.Charge => Charge = true,
+                    ItemType.Ice => Ice = true,
+                    ItemType.Wave => Wave = true,
+                    ItemType.Plasma => Plasma = true,
+                    ItemType.Varia => Varia = true,
+                    ItemType.Gravity => Gravity = true,
+                    ItemType.Morph => Morph = true,
+                    ItemType.Bombs => Bombs = true,
+                    ItemType.SpringBall => SpringBall = true,
+                    ItemType.ScrewAttack => ScrewAttack = true,
+                    ItemType.HiJump => HiJump = true,
+                    ItemType.SpaceJump => SpaceJump = true,
+                    ItemType.SpeedBooster => SpeedBooster = true,
+                    ItemType.Missile => Missile = true,
+                    ItemType.Super => Super = true,
+                    _ => false
+                };
+
+                if (done)
+                    continue;
+
+                switch (item.Type) {
+                    case ProgressiveShield:
+                        shield += 1;
+                        break;
+                    case ItemType.ETank:
+                        ETank += 1;
+                        break;
+                    case ItemType.ReserveTank:
+                        ReserveTank += 1;
+                        break;
+                    case ProgressiveSword:
+                        MasterSword = Sword;
+                        Sword = true;
+                        break;
+                    case ProgressiveGlove:
+                        Mitt = Glove;
+                        Glove = true;
+                        break;
+                    case ItemType.PowerBomb:
+                        TwoPowerBombs = PowerBomb;
+                        PowerBomb = true;
+                        break;
+                    default:
+                        remaining.Add(item.Type);
+                        break;
+                }
+            }
         }
 
-        public static bool HasSword(this List<Item> items, int level = 1) {
-            return items.Has(ProgressiveSword, level);
+    }
+
+    static class ProgressionExtensions {
+
+        public static bool CanLiftLight(this Progression items) => items.Glove;
+        public static bool CanLiftHeavy(this Progression items) => items.Mitt;
+
+        public static bool CanLightTorches(this Progression items) {
+            return items.Firerod || items.Lamp;
         }
 
-        public static bool HasMasterSword(this List<Item> items) {
-            return items.Has(ProgressiveSword, 2);
+        public static bool CanMeltFreezors(this Progression items) {
+            return items.Firerod || items.Bombos && items.Sword;
         }
 
-        public static bool CanLiftLight(this List<Item> items) {
-            return items.Has(ProgressiveGlove);
+        public static bool CanExtendMagic(this Progression items, int bars = 2) {
+            return (items.HalfMagic ? 2 : 1) * (items.Bottle ? 2 : 1) >= bars;
         }
 
-        public static bool CanLiftHeavy(this List<Item> items) {
-            return items.Has(ProgressiveGlove, 2);
+        public static bool CanAccessDeathMountainPortal(this Progression items) {
+            return (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph;
         }
 
-        public static bool CanLightTorches(this List<Item> items) {
-            return items.Has(Firerod) || items.Has(Lamp);
-        }
-
-        public static bool CanMeltFreezors(this List<Item> items) {
-            return items.Has(Firerod) || items.Has(Bombos) && items.HasSword();
-        }
-
-        public static bool CanBlockLasers(this List<Item> items) {
-            return items.Has(ProgressiveShield, 3);
-        }
-
-        public static bool CanExtendMagic(this List<Item> items, int bars = 2) {
-            return (items.Has(HalfMagic) ? 2 : 1) * (items.Count(i => i.Type == Bottle) + 1) >= bars;
-        }
-
-        public static bool CanAccessDeathMountainPortal(this List<Item> items) {
-            return (items.CanDestroyBombWalls() || items.Has(SpeedBooster)) && items.Has(Super) && items.Has(Morph);
-        }
-
-        public static bool CanAccessDarkWorldPortal(this List<Item> items, Config config) {
+        public static bool CanAccessDarkWorldPortal(this Progression items, Config config) {
             return config.Logic switch {
                 Casual =>
-                    items.CanUsePowerBombs() && items.Has(Super) && items.Has(Gravity) && items.Has(SpeedBooster),
+                    items.CanUsePowerBombs() && items.Super && items.Gravity && items.SpeedBooster,
                 _ =>
-                    items.CanUsePowerBombs() && items.Has(Super) &&
-                    (items.Has(Charge) || items.Has(Super) && items.Has(Missile)) &&
-                    (items.Has(Gravity) || items.Has(HiJump) && items.Has(Ice) && items.Has(Grapple)) &&
-                    (items.Has(Ice) || items.Has(Gravity) && items.Has(SpeedBooster))
+                    items.CanUsePowerBombs() && items.Super &&
+                    (items.Charge || items.Super && items.Missile) &&
+                    (items.Gravity || items.HiJump && items.Ice && items.Grapple) &&
+                    (items.Ice || items.Gravity && items.SpeedBooster)
             };
         }
 
-        public static bool CanAccessMiseryMirePortal(this List<Item> items, Config config) {
+        public static bool CanAccessMiseryMirePortal(this Progression items, Config config) {
             return config.Logic switch {
                 Casual =>
-                    items.Has(Varia) && items.Has(Super) && (items.Has(Gravity) && items.Has(SpaceJump)) && items.CanUsePowerBombs(),
+                    items.Varia && items.Super && (items.Gravity && items.SpaceJump) && items.CanUsePowerBombs(),
                 _ =>
-                    items.Has(Varia) && items.Has(Super) && (items.Has(Gravity) || items.Has(HiJump)) && items.CanUsePowerBombs()
+                    items.Varia && items.Super && (items.Gravity || items.HiJump) && items.CanUsePowerBombs()
             };
         }
 
-        public static bool CanIbj(this List<Item> items) {
-            return items.Has(Morph) && items.Has(Bombs);
+        public static bool CanIbj(this Progression items) {
+            return items.Morph && items.Bombs;
         }
 
-        public static bool CanFly(this List<Item> items) {
-            return items.Has(SpaceJump) || items.CanIbj();
+        public static bool CanFly(this Progression items) {
+            return items.SpaceJump || items.CanIbj();
         }
 
-        public static bool CanUsePowerBombs(this List<Item> items) {
-            return items.Has(Morph) && items.Has(PowerBomb);
+        public static bool CanUsePowerBombs(this Progression items) {
+            return items.Morph && items.PowerBomb;
         }
 
-        public static bool CanPassBombPassages(this List<Item> items) {
-            return items.Has(Morph) && (items.Has(Bombs) || items.Has(PowerBomb));
+        public static bool CanPassBombPassages(this Progression items) {
+            return items.Morph && (items.Bombs || items.PowerBomb);
         }
 
-        public static bool CanDestroyBombWalls(this List<Item> items) {
-            return items.CanPassBombPassages() || items.Has(ScrewAttack);
+        public static bool CanDestroyBombWalls(this Progression items) {
+            return items.CanPassBombPassages() || items.ScrewAttack;
         }
 
-        public static bool CanSpringBallJump(this List<Item> items) {
-            return items.Has(Morph) && items.Has(SpringBall);
+        public static bool CanSpringBallJump(this Progression items) {
+            return items.Morph && items.SpringBall;
         }
 
-        public static bool CanHellRun(this List<Item> items) {
-            return items.Has(Varia) || items.HasEnergyReserves(5);
+        public static bool CanHellRun(this Progression items) {
+            return items.Varia || items.HasEnergyReserves(5);
         }
 
-        public static bool HasEnergyReserves(this List<Item> items, int amount) {
-            return (items.Count(i => i.Type == ETank) + items.Count(i => i.Type == ReserveTank)) >= amount;
+        public static bool HasEnergyReserves(this Progression items, int amount) {
+            return (items.ETank + items.ReserveTank) >= amount;
         }
 
-        public static bool CanOpenRedDoors(this List<Item> items) {
-            return items.Has(Missile) || items.Has(Super);
+        public static bool CanOpenRedDoors(this Progression items) {
+            return items.Missile || items.Super;
         }
 
-        public static bool CanAccessNorfairUpperPortal(this List<Item> items) {
-            return items.Has(Flute) || items.CanLiftLight() && items.Has(Lamp);
+        public static bool CanAccessNorfairUpperPortal(this Progression items) {
+            return items.Flute || items.CanLiftLight() && items.Lamp;
         }
 
-        public static bool CanAccessNorfairLowerPortal(this List<Item> items) {
-            return items.Has(Flute) && items.CanLiftHeavy();
+        public static bool CanAccessNorfairLowerPortal(this Progression items) {
+            return items.Flute && items.CanLiftHeavy();
         }
 
-        public static bool CanAccessMaridiaPortal(this List<Item> items, World world) {
+        public static bool CanAccessMaridiaPortal(this Progression items, World world) {
             return world.Config.Logic switch {
                 Casual =>
-                    items.Has(MoonPearl) && items.Has(Flippers) &&
-                    items.Has(Gravity) && items.Has(Morph) &&
-                    (world.CanAquire(items, Agahnim) || items.Has(Hammer) && items.CanLiftLight() || items.CanLiftHeavy()),
+                    items.MoonPearl && items.Flippers &&
+                    items.Gravity && items.Morph &&
+                    (world.CanAquire(items, Agahnim) || items.Hammer && items.CanLiftLight() || items.CanLiftHeavy()),
                 _ =>
-                    items.Has(MoonPearl) && items.Has(Flippers) &&
-                    (items.CanSpringBallJump() || items.Has(HiJump) || items.Has(Gravity)) && items.Has(Morph) &&
-                    (world.CanAquire(items, Agahnim) || items.Has(Hammer) && items.CanLiftLight() || items.CanLiftHeavy())
+                    items.MoonPearl && items.Flippers &&
+                    (items.CanSpringBallJump() || items.HiJump || items.Gravity) && items.Morph &&
+                    (world.CanAquire(items, Agahnim) || items.Hammer && items.CanLiftLight() || items.CanLiftHeavy())
             };
         }
 
