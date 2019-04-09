@@ -144,6 +144,13 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                 World.CanAquireAll(items, new[] { CrystalBlue, CrystalRed, GoldenFourBoss });
         }
 
+        public override bool CanFill(Item item) {
+            /* Never cross-world fill GT */
+            if (item.World != World)
+                return false;
+            return base.CanFill(item);
+        }
+
     }
 
 }

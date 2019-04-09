@@ -36,7 +36,7 @@ namespace Randomizer.SMZ3 {
             World = world;
         }
 
-        public bool CanFill(Item item) {
+        public virtual bool CanFill(Item item) {
             return Config.Keysanity || !item.IsDungeonItem || RegionItems.Contains(item.Type);
         }
 
