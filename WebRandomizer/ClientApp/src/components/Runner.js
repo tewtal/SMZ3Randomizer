@@ -1,13 +1,14 @@
 ﻿/* eslint-disable no-mixed-operators */
 import React, { Component } from 'react';
 import { readData, writeData } from '../usb2snes';
+import { Button } from 'reactstrap';
 
 export class Runner extends Component {
     static displayName = Runner.name;
 
     constructor(props) {
         super(props);
-        this.state = { events: [] };
+        this.state = { inEvents: [], outEvents: [] };
         this.writeQueue = [];
         this.eventLoop = this.eventLoop.bind(this);
         this.readMessages = this.readMessages.bind(this);
@@ -16,6 +17,7 @@ export class Runner extends Component {
         this.detectGame = this.detectGame.bind(this);
         this.receiveItem = this.receiveItem.bind(this);
         this.sendItem = this.sendItem.bind(this);
+        this.resend = this.resend.bind(this);
         this.timerHandle = 0;
         this.inPtr = -1;
         this.outPtr = -1;
@@ -60,7 +62,7 @@ export class Runner extends Component {
         if (seedGuid === this.props.sessionData.seed.guid && clientGuid === this.props.clientData.guid) {
             this.MessageBaseAddress = 0xE03700;
             this.setState({
-                gameState: 1, gameStatus: "Game detected and running, have fun!"
+                gameState: 1, gameStatus: "Game detected, have fun!"
             });
             return;
         }
@@ -72,7 +74,7 @@ export class Runner extends Component {
         if (seedGuid === this.props.sessionData.seed.guid && clientGuid === this.props.clientData.guid) {
             this.MessageBaseAddress = 0xE03700;
             this.setState({
-                gameState: 1, gameStatus: "Game detected and running, have fun!"
+                gameState: 1, gameStatus: "Game detected, have fun!"
             });
             return;
         }
@@ -84,7 +86,7 @@ export class Runner extends Component {
         if (seedGuid === this.props.sessionData.seed.guid && clientGuid === this.props.clientData.guid) {
             this.MessageBaseAddress = 0x717700;
             this.setState({
-                gameState: 1, gameStatus: "Game detected and running, have fun!"
+                gameState: 1, gameStatus: "Game detected, have fun!"
             });
             return;
         }
@@ -131,13 +133,32 @@ export class Runner extends Component {
         try {
             const snesMsg = await readData(this.MessageBaseAddress + 0x100, 0x090);
 
-            /* If we got disconnected somehow, read back our pointers from the SNES to get back in sync */
             if (this.inPtr === -1 || this.outPtr === -1) {
                 this.inPtr = snesMsg[0x086];
                 this.outPtr = snesMsg[0x080];
             }
 
             let snesOutPtr = snesMsg[0x084];
+
+            let snesHistory = [];
+            let historyPointer = snesOutPtr;
+
+            for (let i = 0; i < 8; i++) {
+                let histAddr = (historyPointer * 0x10);
+                let histMsg = snesMsg.slice(histAddr, histAddr + 0x10);
+                let itemId = (histMsg[2] + (histMsg[3] << 8));
+                let worldId = (histMsg[4] + (histMsg[5] << 8));
+
+                if (itemId > 0) {
+                    snesHistory.push([worldId, itemId]);
+                }
+
+                historyPointer++;
+                historyPointer = (historyPointer === 8) ? 0 : historyPointer;
+            }
+
+            this.setState({ outEvents: snesHistory });
+
             while (this.inPtr !== snesOutPtr) {
                 let msgAddress = (this.inPtr * 0x10);
                 let message = snesMsg.slice(msgAddress, msgAddress + 0x10);
@@ -168,6 +189,7 @@ export class Runner extends Component {
                     /* 0x1001 = Send multiworld item to player */
                     let itemId = (msg[2] + (msg[3] << 8));
                     let worldId = (msg[4] + (msg[5] << 8));
+
                     let result = await this.sendItem(worldId, itemId);
                     return result;
                 }
@@ -192,18 +214,45 @@ export class Runner extends Component {
         } catch (err) {
             return false;
         }
+    }
 
+    async resend(e) {
+        let worldId = e.target.dataset.world;
+        let itemId = e.target.dataset.itemid;
+        await this.sendItem(worldId, itemId);
     }
 
     render() {
+        const sentItems = [];
+        let lastEvents = this.state.outEvents.reverse();
+
+        for (let i = 0; i < this.state.outEvents.length; i++) {
+            sentItems.push(<tr><td>{this.props.sessionData.seed.worlds[lastEvents[i][0]].player}</td><td>{lastEvents[i][1]}</td><td><Button data-world={lastEvents[i][0]} data-itemid={lastEvents[i][1]} color="primary" onClick={this.resend}>Resend item</Button></td></tr>); 
+        }
+
         return (
             <div className="container">
                 <div className="row">
-                    <div className="col-sm-6">
+                    <div className="col-sm-4">
                         <div className="card">
                             <div className="card-body">
                                 <h5 className="card-title">Game information</h5>
                                 <p className="card-text">Status: {this.state.gameStatus}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-sm-8">
+                        <div className="card">
+                            <div className="card-body">
+                                <h5 className="card-title">Sent items</h5>
+                                <table>
+                                    <tr>
+                                        <th>Player</th>
+                                        <th>Item</th>
+                                        <th></th>
+                                    </tr>
+                                    {sentItems}
+                                </table>
                             </div>
                         </div>
                     </div>

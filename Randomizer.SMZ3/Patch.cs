@@ -200,7 +200,7 @@ namespace Randomizer.SMZ3 {
         private byte GetZ3ItemId(ItemType item) {
             int id = (int)item;
             if(id >= 0x72 && id <= 0x7F) {
-                return 0x033;
+                return 0x33;
             } else if(id >= 0x82 && id <= 0x8D) {
                 return 0x25;
             } else if(id >= 0x92 && id <= 0x9D) {
