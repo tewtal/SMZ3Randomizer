@@ -5,4 +5,8 @@
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Randomizer.Contracts\Randomizer.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>

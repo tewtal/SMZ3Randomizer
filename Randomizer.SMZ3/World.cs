@@ -12,10 +12,14 @@ namespace Randomizer.SMZ3 {
         public List<Item> Items { get; set; }
         public Config Config { get; set; }
         public string Player { get; set; }
+        public string Guid { get; set; }
+        public int Id { get; set; }
 
-        public World(Config config, string player) {
+        public World(Config config, string player, int id) {
             Config = config;
             Player = player;
+            Id = id;
+            Guid = System.Guid.NewGuid().ToString();
 
             Regions = new List<Region> {
                 new Regions.Zelda.CastleTower(this, Config),
