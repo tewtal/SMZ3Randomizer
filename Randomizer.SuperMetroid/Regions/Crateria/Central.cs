@@ -20,7 +20,7 @@ namespace Randomizer.SuperMetroid.Regions.Crateria {
                 new Location(this, 6, "Missile (Crateria bottom)", LocationType.Visible, 0x783EE, Logic switch {
                     _ => new Requirement(items => items.CanDestroyBombWalls())
                 }),
-                new Location(this, 11, "Super Missile (Crateria)", LocationType.Visible, 0x78468, Logic switch {
+                new Location(this, 11, "Super Missile (Crateria)", LocationType.Visible, 0x78478, Logic switch {
                     _ => new Requirement(items => items.CanUsePowerBombs() && items.HasEnergyReserves(2) && items.Has(SpeedBooster))
                 }),
                 new Location(this, 7, "Bombs", LocationType.Chozo, 0x78404, Logic switch {

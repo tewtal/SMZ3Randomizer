@@ -11,7 +11,7 @@ namespace Randomizer.SuperMetroid.Regions.Brinstar {
 
         public Blue(World world, Logic logic) : base(world, logic) {
             Locations = new List<Location> {
-                new Location(this, 26, "Morphing Ball", LocationType.Visible, 0x786EC),
+                new Location(this, 26, "Morphing Ball", LocationType.Visible, 0x786DE),
                 new Location(this, 27, "Power Bomb (blue Brinstar)", LocationType.Visible, 0x7874C, Logic switch {
                     _ => new Requirement(items => items.CanUsePowerBombs())
                 }),
