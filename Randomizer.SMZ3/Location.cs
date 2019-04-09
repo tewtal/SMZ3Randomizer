@@ -83,16 +83,20 @@ namespace Randomizer.SMZ3 {
             return location;
         }
 
+        internal static List<Location> Empty(this List<Location> locations) {
+            return locations.Where(l => l.Item == null).ToList();
+        }
+
         internal static List<Location> AvailableWithinWorld(this List<Location> locations, List<Item> items) {
             return locations.Where(l => l.Available(items.Where(i => i.World == l.Region.World).ToList())).ToList();
         }
-        
+
         internal static List<Location> Available(this List<Location> locations, List<Item> items) {
             return locations.Where(l => l.Available(items)).ToList();
         }
 
-        internal static List<Location> Empty(this List<Location> locations) {
-            return locations.Where(l => l.Item == null).ToList();
+        internal static List<Location> CanFillWithinWorld(this List<Location> locations, Item item, List<Item> items) {
+            return locations.Where(l => l.CanFill(item, items.Where(i => i.World == l.Region.World).ToList())).ToList();
         }
 
     }
