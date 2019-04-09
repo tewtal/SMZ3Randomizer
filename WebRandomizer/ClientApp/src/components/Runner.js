@@ -52,7 +52,7 @@ export class Runner extends Component {
     }
 
     async detectGame() {
-        const seedData = await readData(0x1C4F00, 0x50);
+        const seedData = await readData(0x384F00, 0x50);
         const seedGuid = String.fromCharCode.apply(null, seedData.slice(0x10, 0x30));
         const clientGuid = String.fromCharCode.apply(null, seedData.slice(0x30, 0x50));
         if (seedGuid === this.props.sessionData.seed.guid && clientGuid === this.props.clientData.guid) {
@@ -100,7 +100,7 @@ export class Runner extends Component {
     async readMessages() {
         /* Reads messages from the SNES message outbox */
         try {
-            const snesMsg = await readData(0xE01F00, 0x090);
+            const snesMsg = await readData(0xE03800, 0x090);
 
             /* If we got disconnected somehow, read back our pointers from the SNES to get back in sync */
             if (this.inPtr === -1 || this.outPtr === -1) {
@@ -117,7 +117,7 @@ export class Runner extends Component {
                     if (ok) {
                         this.inPtr++;
                         this.inPtr = (this.inPtr === 8) ? 0 : this.inPtr
-                        await writeData(0xE01F86, new Uint8Array([this.inPtr]));
+                        await writeData(0xE03886, new Uint8Array([this.inPtr]));
                     } else {
                         /* if handling a message fails, bail out completely and retry next time */
                         return;
@@ -152,12 +152,12 @@ export class Runner extends Component {
 
     async sendMessage(data) {
         try {
-            await writeData(0xE01E00 + (this.outPtr * 0x10), new Uint8Array(data));
+            await writeData(0xE03700 + (this.outPtr * 0x10), new Uint8Array(data));
 
             this.outPtr++;
             this.outPtr = this.outPtr === 16 ? 0 : this.outPtr
 
-            await writeData(0xE01F80, new Uint8Array([this.outPtr]));
+            await writeData(0xE03880, new Uint8Array([this.outPtr]));
 
             return true;
         } catch (err) {

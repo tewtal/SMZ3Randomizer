@@ -42,7 +42,7 @@ namespace WebRandomizer.Controllers {
 
             try {
                 /* Initialize the randomizer and generate a seed with the given options */
-                IRandomizer randomizer = new Randomizer.SuperMetroid.Randomizer();
+                IRandomizer randomizer = new Randomizer.SMZ3.Randomizer();
                 var seedData = randomizer.GenerateSeed(option.options, "");
 
                 /* Store this seed to the database */

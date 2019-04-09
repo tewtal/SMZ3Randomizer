@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { Form, Row, Col, Card, CardBody, Button } from 'reactstrap';
 import { saveAs } from 'file-saver';
-import baseIps from '../files/base_190331_3.ips';
+import baseIps from '../files/zsm_190416.ips';
 
 export class Patch extends Component {
     static displayName = Patch.name;
@@ -12,12 +12,13 @@ export class Patch extends Component {
         this.handleSubmitRom = this.handleSubmitRom.bind(this);
         this.handleDownloadRom = this.handleDownloadRom.bind(this);
         this.patchFile = this.patchFile.bind(this);
-        this.fileInput = React.createRef();
+        this.fileInputSM = React.createRef();
+        this.fileInputLTTP = React.createRef();
         this.localForage = require('localforage');
     }
 
     async componentDidMount() {
-        let fileData = await this.localForage.getItem("baseRom");
+        let fileData = await this.localForage.getItem("baseRomCombo");
         if (fileData != null) {
             this.setState({ patchState: 1 });
         }
@@ -25,24 +26,63 @@ export class Patch extends Component {
 
     async handleSubmitRom(e) {
         e.preventDefault();
-        const file = this.fileInput.current.files[0];
-        let fileData = null;
+        const smFile = this.fileInputSM.current.files[0];
+        const lttpFile = this.fileInputLTTP.current.files[0];
+
+        let fileDataSM = null;
+        let fileDataLTTP = null;
 
         try {
-            fileData = await this.readFile(file);
+            fileDataSM = await this.readFile(smFile);
         } catch (err) {
-            console.log("Could not read uploaded file data", err);
+            console.log("Could not read uploaded SM file data", err);
             return;
         }
 
         try {
-            await this.localForage.setItem("baseRom", new Blob([fileData]));
+            fileDataLTTP = await this.readFile(lttpFile);
+        } catch (err) {
+            console.log("Could not read uploaded LTTP file data", err);
+            return;
+        }
+
+        let fileData = this.mergeROMS(fileDataSM, fileDataLTTP);
+
+        try {
+            await this.localForage.setItem("baseRomCombo", fileData);
             this.setState({
                 patchState: 1
             });
         } catch (err) {
             console.log("Could not store file to localforage:", err);
         }
+    }
+
+    async mergeROMS(smRomBuffer, alttpRomBuffer) {
+        let smRom = new Uint8Array(smRomBuffer);
+        let alttpRom = new Uint8Array(alttpRomBuffer);
+
+        let data = new Uint8Array(0x600000);
+        let pos = 0;
+
+        for (let i = 0; i < 0x40; i++) {
+            let hi_bank = smRom.slice((i * 0x8000), (i * 0x8000) + 0x8000);
+            let lo_bank = smRom.slice(((i + 0x40) * 0x8000), ((i + 0x40) * 0x8000) + 0x8000);
+
+            data.set(lo_bank, pos);
+            data.set(hi_bank, pos + 0x8000);
+            pos += 0x10000;
+        }
+
+        pos = 0x400000;
+
+        for (let i = 0; i < 0x20; i++) {
+            let hi_bank = alttpRom.slice((i * 0x8000), (i * 0x8000) + 0x8000);
+            data.set(hi_bank, pos + 0x8000);
+            pos += 0x10000;
+        }
+
+        return new Blob([data]);
     }
 
     async handleDownloadRom(e) {
@@ -58,7 +98,7 @@ export class Patch extends Component {
         return new Promise(async (resolve, reject) => {
             try {
                 let i = 0;
-                let fileBuf = await this.localForage.getItem("baseRom");
+                let fileBuf = await this.localForage.getItem("baseRomCombo");
                 let outBuf = await this.readBlob(fileBuf);
 
                 outBuf = await this.applyIPS(outBuf, baseIps);
@@ -153,10 +193,16 @@ export class Patch extends Component {
                         <h6>No ROM uploaded, please upload a valid ROM file.</h6>
                         <Row className="justify-content-between">
                             <Col md="6">
-                                <input type="file" ref={this.fileInput} />
+                                SM ROM: <input type="file" ref={this.fileInputSM} />
                             </Col>
+                            <Col md="6">
+                                ALTTP ROM: <input type="file" ref={this.fileInputLTTP} />
+                            </Col>
+                        </Row>
+                        <Row>
                             <Col md="2">
-                                <Button type="submit" color="primary">Upload File</Button>
+                                <br />
+                                <Button type="submit" color="primary">Upload Files</Button>
                             </Col>
                         </Row>
                     </Form>
