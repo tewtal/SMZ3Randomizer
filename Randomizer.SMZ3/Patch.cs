@@ -185,7 +185,7 @@ namespace Randomizer.SMZ3 {
             patches.Add(ComboOffset(location.Address), new byte[] { (byte)(location.Id - 256) });
 
             if(location.Type == LocationType.HeraStandingKey) {
-                patches.Add(ComboOffset(0x4E3BB), location.Item.Type == ItemType.KeyTH ? new byte[] { 0xE4 } : new byte[] { 0xE8 });
+                patches.Add(ComboOffset(0x4E3BB), location.Item.Type == ItemType.KeyTH ? new byte[] { 0xE4 } : new byte[] { 0xEB });
             }
 
             /* Write item information to new randomizer item table */
