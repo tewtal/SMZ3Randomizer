@@ -197,6 +197,11 @@ namespace Randomizer.SMZ3 {
                 new Item { Name = "Energy Tank", Type = ETank },
                 new Item { Name = "Energy Tank", Type = ETank },
                 new Item { Name = "Energy Tank", Type = ETank },
+
+                new Item { Name = "Reserve Tank", Type = ReserveTank },
+                new Item { Name = "Reserve Tank", Type = ReserveTank },
+                new Item { Name = "Reserve Tank", Type = ReserveTank },
+                new Item { Name = "Reserve Tank", Type = ReserveTank },
             };
 
             foreach (var item in itemPool) {
@@ -248,7 +253,6 @@ namespace Randomizer.SMZ3 {
             itemPool.AddRange(Copies(5,  () => new Item { Name = "Three Hundred Rupees", Type = ThreeHundredRupees }));
 
             itemPool.AddRange(Copies(9,  () => new Item { Name = "Energy Tank", Type = ETank }));
-            itemPool.AddRange(Copies(4,  () => new Item { Name = "Reserve Tank", Type = ReserveTank }));
             itemPool.AddRange(Copies(39, () => new Item { Name = "Missile", Type = Missile }));
             itemPool.AddRange(Copies(15, () => new Item { Name = "Super Missile", Type = Super }));
             itemPool.AddRange(Copies(8,  () => new Item { Name = "Power Bomb", Type = PowerBomb }));
