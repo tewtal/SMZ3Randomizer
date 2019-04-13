@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace WebRandomizer.Migrations
 {
@@ -12,7 +13,7 @@ namespace WebRandomizer.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     Guid = table.Column<string>(nullable: true),
                     Type = table.Column<string>(nullable: true),
                     SeedNumber = table.Column<string>(nullable: true),
@@ -30,7 +31,7 @@ namespace WebRandomizer.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     Guid = table.Column<string>(nullable: true),
                     State = table.Column<int>(nullable: false),
                     SeedId = table.Column<int>(nullable: true)
@@ -51,7 +52,8 @@ namespace WebRandomizer.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    WorldId = table.Column<int>(nullable: false),
                     SeedId = table.Column<int>(nullable: false),
                     Guid = table.Column<string>(nullable: true),
                     Player = table.Column<string>(nullable: true),
@@ -74,13 +76,14 @@ namespace WebRandomizer.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     Guid = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: true),
                     Device = table.Column<string>(nullable: true),
                     State = table.Column<int>(nullable: false),
                     ConnectionId = table.Column<string>(nullable: true),
-                    SessionId = table.Column<int>(nullable: false)
+                    SessionId = table.Column<int>(nullable: false),
+                    WorldId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

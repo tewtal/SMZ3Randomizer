@@ -29,7 +29,8 @@ namespace WebRandomizer {
                 .AddNewtonsoftJson();
 
             services.AddDbContext<RandomizerContext>
-                (options => options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+                //(options => options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+                (options => options.UseNpgsql(Configuration.GetConnectionString("PostgresConnection")));
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration => {
