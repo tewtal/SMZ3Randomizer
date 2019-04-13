@@ -22,6 +22,87 @@ export class Runner extends Component {
         this.inPtr = -1;
         this.outPtr = -1;
         this.MessageBaseAddress = 0xE03700;
+        this.itemNames = {
+            0x60: "ProgressiveTunic",
+            0x5F: "ProgressiveShield",
+            0x5E: "ProgressiveSword",
+            0x0B: "Bow",
+            0x58: "SilverArrows",
+            0x0C: "BlueBoomerang",
+            0x2A: "RedBoomerang",
+            0x0A: "Hookshot",
+            0x29: "Mushroom",
+            0x0D: "Powder",
+            0x07: "Firerod",
+            0x08: "Icerod",
+            0x0f: "Bombos",
+            0x10: "Ether",
+            0x11: "Quake",
+            0x12: "Lamp",
+            0x09: "Hammer",
+            0x13: "Shovel",
+            0x14: "Flute",
+            0x21: "Bugnet",
+            0x1D: "Book",
+            0x16: "Bottle",
+            0x15: "Somaria",
+            0x18: "Byrna",
+            0x19: "Cape",
+            0x1A: "Mirror",
+            0x4B: "Boots",
+            0x61: "ProgressiveGlove",
+            0x1E: "Flippers",
+            0x1F: "MoonPearl",
+            0x4E: "HalfMagic",
+            0x17: "HeartPiece",
+            0x3E: "HeartContainer",
+            0x3F: "HeartContainerRefill",
+            0x28: "ThreeBombs",
+            0x43: "Arrow",
+            0x44: "TenArrows",
+            0x34: "OneRupee",
+            0x35: "FiveRupees",
+            0x36: "TwentyRupees",
+            0x47: "TwentyRupees2",
+            0x41: "FiftyRupees",
+            0x40: "OneHundredRupees",
+            0x46: "ThreeHundredRupees",
+            0x51: "BombUpgrade5",
+            0x52: "BombUpgrade10",
+            0x53: "ArrowUpgrade5",
+            0x54: "ArrowUpgrade10",
+            0xC2: "Missile",
+            0xC3: "Super",
+            0xC4: "PowerBomb",
+            0xB0: "Grapple",
+            0xB1: "XRay",
+            0xC0: "ETank",
+            0xC1: "ReserveTank",
+            0xBB: "Charge",
+            0xBC: "Ice",
+            0xBD: "Wave",
+            0xBE: "Spazer",
+            0xBF: "Plasma",
+            0xB2: "Varia",
+            0xB6: "Gravity",
+            0xB4: "Morph",
+            0xB9: "Bombs",
+            0xB3: "SpringBall",
+            0xB5: "ScrewAttack",
+            0xB7: "HiJump",
+            0xB8: "SpaceJump",
+            0xBA: "SpeedBooster",
+            0x2B: "BottleWithRedPotion",
+            0x2C: "BottleWithGreenPotion",
+            0x2D: "BottleWithBluePotion",
+            0x3D: "BottleWithFairy",
+            0x3C: "BottleWithBee",
+            0x48: "BottleWithGoldBee",
+            0x2E: "RedContent",
+            0x2F: "GreenContent",
+            0x30: "BlueContent",
+            0x0E: "BeeContent"
+        };
     }
 
     componentDidMount() {
@@ -227,7 +308,7 @@ export class Runner extends Component {
         let lastEvents = this.state.outEvents.reverse();
 
         for (let i = 0; i < this.state.outEvents.length; i++) {
-            sentItems.push(<tr><td>{this.props.sessionData.seed.worlds[lastEvents[i][0]].player}</td><td>{lastEvents[i][1]}</td><td><Button data-world={lastEvents[i][0]} data-itemid={lastEvents[i][1]} color="primary" onClick={this.resend}>Resend item</Button></td></tr>); 
+            sentItems.push(<tr><td>{this.props.sessionData.seed.worlds[lastEvents[i][0]].player}</td><td>{this.itemNames[lastEvents[i][1]]}</td><td><Button data-world={lastEvents[i][0]} data-itemid={lastEvents[i][1]} color="primary" onClick={this.resend}>Resend item</Button></td></tr>); 
         }
 
         return (
