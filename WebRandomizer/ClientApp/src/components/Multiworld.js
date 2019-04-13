@@ -4,6 +4,7 @@ import { Patch } from './Patch';
 import { HubConnectionBuilder } from '@aspnet/signalr';
 import { Connection } from './Connection';
 import { Runner } from './Runner';
+import { Spoiler } from './Spoiler';
 import { create_message, connect, send, clearBusy } from '../usb2snes';
 
 export class Multiworld extends Component {
@@ -22,7 +23,7 @@ export class Multiworld extends Component {
             hubConnection: null,
             clientData: null,
             connState: 0,
-            connInfo: [""]
+            connInfo: [""],
         };
 
 
@@ -238,6 +239,8 @@ export class Multiworld extends Component {
                 {this.state.clientData !== null ? (<Connection connState={this.state.connState} clientData={this.state.clientData} connInfo={this.state.connInfo} onConnectClick={this.handleConnect} />) : ""}
                 <br />
                 {this.state.connState === 1 ? (<Runner connState={this.state.connState} sessionData={this.state.sessionData} clientData={this.state.clientData} hubState={this.state.hubState} hubConnection={this.state.hubConnection} connInfo={this.state.connInfo} />) : ""}
+                <br />
+                {this.state.sessionData !== null ? (<Spoiler sessionData={this.state.sessionData} />) : ""}
             </div>
         );
     }

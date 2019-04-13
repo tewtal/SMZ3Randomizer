@@ -5,10 +5,11 @@ export class Randomizer extends Component {
     static displayName = Randomizer.name;
     constructor(props) {
         super(props);
-        this.state = { showGeneratingDialog: false, seed: [], players: 2, playerNames: ["", ""], logic: "casual" };
+        this.state = { showGeneratingDialog: false, seed: [], players: 2, playerNames: ["", ""], logic: "casual", seedNumber: "" };
         this.updatePlayers = this.updatePlayers.bind(this);
         this.updatePlayerName = this.updatePlayerName.bind(this);
         this.updateLogic = this.updateLogic.bind(this);
+        this.updateSeedNumber = this.updateSeedNumber.bind(this);
         this.createGame = this.createGame.bind(this);
     }
 
@@ -18,7 +19,7 @@ export class Randomizer extends Component {
         this.setState({ showGeneratingDialog: true });
 
         try {
-            let opts = { "mode": "multiworld", "logic": this.state.logic, "worlds": this.state.players };
+            let opts = { "mode": "multiworld", "logic": this.state.logic, "worlds": this.state.players, "seed": this.state.seedNumber };
 
             for (let p = 0; p < this.state.players; p++) {
                 opts["player-" + p] = this.state.playerNames[p];
@@ -70,6 +71,10 @@ export class Randomizer extends Component {
         this.setState({ logic: e.target.value });
     }
 
+    updateSeedNumber(e) {
+        this.setState({ seedNumber: e.target.value });
+    }
+
     render() {
 
         let playerInputs = [];
@@ -92,12 +97,12 @@ export class Randomizer extends Component {
                     <Col md="8">
                         <Card>
                             <CardHeader className="bg-primary text-white">
-                                New Randomized Game - SMZ3 Multiworld 0.1
+                                New Randomized Game - SMZ3 Multiworld 0.2
                             </CardHeader>
                             <CardBody>
                                 <Form onSubmit={this.createGame}>
                                     <Row className="form-group">
-                                        <Col md="5">
+                                        <Col md="3">
                                             <InputGroup>
                                                 <InputGroupAddon addonType="prepend">
                                                     <InputGroupText>Players</InputGroupText>
@@ -105,7 +110,15 @@ export class Randomizer extends Component {
                                                 <Input id="players" defaultValue={this.state.players} onChange={this.updatePlayers} />
                                             </InputGroup>
                                         </Col>
-                                        <Col md="2"></Col>
+                                        <Col md="3">
+                                            <InputGroup>
+                                                <InputGroupAddon addonType="prepend">
+                                                    <InputGroupText>Seed</InputGroupText>
+                                                </InputGroupAddon>
+                                                <Input id="seed" defaultValue={this.state.seedNumber} onChange={this.updateSeedNumber} />
+                                            </InputGroup>
+                                        </Col>
+                                        <Col md="1"></Col>
                                         <Col md="5">
                                             <InputGroup>
                                                 <InputGroupAddon addonType="prepend">
