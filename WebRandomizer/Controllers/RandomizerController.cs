@@ -40,6 +40,10 @@ namespace WebRandomizer.Controllers {
                 return new StatusCodeResult(400);
             }
 
+            if (option.options["password"] != "password123") {
+                return new StatusCodeResult(400);
+            }
+
             try {
                 /* Initialize the randomizer and generate a seed with the given options */
                 IRandomizer randomizer = new Randomizer.SMZ3.Randomizer();

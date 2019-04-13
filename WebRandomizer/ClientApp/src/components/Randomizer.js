@@ -5,11 +5,12 @@ export class Randomizer extends Component {
     static displayName = Randomizer.name;
     constructor(props) {
         super(props);
-        this.state = { showGeneratingDialog: false, seed: [], players: 2, playerNames: ["", ""], logic: "casual", seedNumber: "" };
+        this.state = { showGeneratingDialog: false, seed: [], players: 2, playerNames: ["", ""], logic: "casual", seedNumber: "", password: "" };
         this.updatePlayers = this.updatePlayers.bind(this);
         this.updatePlayerName = this.updatePlayerName.bind(this);
         this.updateLogic = this.updateLogic.bind(this);
         this.updateSeedNumber = this.updateSeedNumber.bind(this);
+        this.updatePassword = this.updatePassword.bind(this);
         this.createGame = this.createGame.bind(this);
     }
 
@@ -19,7 +20,7 @@ export class Randomizer extends Component {
         this.setState({ showGeneratingDialog: true });
 
         try {
-            let opts = { "mode": "multiworld", "logic": this.state.logic, "worlds": this.state.players, "seed": this.state.seedNumber };
+            let opts = { "mode": "multiworld", "logic": this.state.logic, "worlds": this.state.players, "seed": this.state.seedNumber, "password": this.state.password };
 
             for (let p = 0; p < this.state.players; p++) {
                 opts["player-" + p] = this.state.playerNames[p];
@@ -75,6 +76,10 @@ export class Randomizer extends Component {
         this.setState({ seedNumber: e.target.value });
     }
 
+    updatePassword(e) {
+        this.setState({ password: e.target.value });
+    }
+
     render() {
 
         let playerInputs = [];
@@ -97,7 +102,7 @@ export class Randomizer extends Component {
                     <Col md="8">
                         <Card>
                             <CardHeader className="bg-primary text-white">
-                                New Randomized Game - SMZ3 Multiworld 0.2
+                                New Randomized Game - SMZ3 Multiworld 0.3
                             </CardHeader>
                             <CardBody>
                                 <Form onSubmit={this.createGame}>
@@ -135,6 +140,14 @@ export class Randomizer extends Component {
                                         {playerInputs}
                                     </Row>
                                     <Row className="form-group">
+                                        <Col md="6">
+                                            <InputGroup>
+                                                <InputGroupAddon addonType="prepend">
+                                                    <InputGroupText>Password</InputGroupText>
+                                                </InputGroupAddon>
+                                                <Input id="password" defaultValue={this.state.password} onChange={this.updatePassword} />
+                                            </InputGroup>
+                                        </Col>
                                         <Col md="6">
                                             <Button color="success" type="submit">Create Multiworld Game</Button>
                                         </Col>
