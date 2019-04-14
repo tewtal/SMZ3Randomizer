@@ -556,6 +556,11 @@ namespace Randomizer.SMZ3 {
             return (items.HalfMagic ? 2 : 1) * (items.Bottle ? 2 : 1) >= bars;
         }
 
+        public static bool CanKillManyEnemies(this Progression items) {
+            return items.Sword || items.Hammer || items.Bow || items.Firerod ||
+                items.Somaria || items.Byrna && items.CanExtendMagic();
+        }
+
         public static bool CanAccessDeathMountainPortal(this Progression items) {
             return (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph;
         }

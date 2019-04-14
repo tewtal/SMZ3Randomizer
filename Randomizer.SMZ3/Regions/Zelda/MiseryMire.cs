@@ -34,7 +34,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
             };
         }
 
-        // Need "CanKillMostThings" if implementing swordless
+        // Need "CanKillManyEnemies" if implementing swordless
         public override bool CanEnter(Progression items) {
             return Medallion switch {
                     Bombos => items.Bombos,
