@@ -102,8 +102,7 @@ namespace Randomizer.SMZ3 {
         }
 
         internal static List<Location> CanFillWithinWorld(this List<Location> locations, Item item, List<Item> items) {
-            /* Restrict cross-world item placement so that the location needs to be accessible in both worlds */
-            var itemWorldProgression = new Progression(items.Where(i => i.World == item.World));
+            var itemWorldProgression = new Progression(items.Where(i => i.World == item.World).Append(item));
             var availableLocations = new List<Location>();
             foreach (var world in locations.Select(x => x.Region.World).Distinct()) {
                 var progression = new Progression(items.Where(i => i.World == world));

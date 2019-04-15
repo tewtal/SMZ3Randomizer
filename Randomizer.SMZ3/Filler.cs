@@ -44,6 +44,22 @@ namespace Randomizer.SMZ3 {
                 FrontFillItemInWorld(world, ProgressionItems, ItemType.PowerBomb, true);
             }
 
+            /* Place moon pearls randomly in the last 50% of items to be placed to move it to a early-mid game item*/
+            /* Temporary test hack */
+            var pearls = ProgressionItems.Where(x => x.Type == ItemType.MoonPearl).ToList();
+            ProgressionItems.RemoveAll(x => x.Type == ItemType.MoonPearl);
+            foreach (var pearl in pearls) {
+                ProgressionItems.Insert(ProgressionItems.Count - Rnd.Next(ProgressionItems.Count >> 1), pearl);
+            }
+
+            /* Place morph balls randomly in the last 25% of items to be placed to move it to an early game item */
+            /* Temporary test hack */
+            var morphs = ProgressionItems.Where(x => x.Type == ItemType.Morph).ToList();
+            ProgressionItems.RemoveAll(x => x.Type == ItemType.Morph);
+            foreach(var morph in morphs) {
+                ProgressionItems.Insert(ProgressionItems.Count - Rnd.Next(ProgressionItems.Count >> 2), morph);
+            }
+
             /* GT Trash fill */
             var gtLocations = Worlds.SelectMany(x => x.Locations).Where(x => x.Region is Regions.Zelda.GanonTower).ToList().Empty().Shuffle(Rnd);
             var gtTrashLocations = gtLocations.Take((int)(gtLocations.Count() * 0.5)).ToList();
