@@ -1,7 +1,7 @@
 ﻿/* eslint-disable no-mixed-operators */
 import React, { Component } from 'react';
 import { readData, writeData } from '../usb2snes';
-import { Button } from 'reactstrap';
+import { Button, Row, Col } from 'reactstrap';
 
 export class Runner extends Component {
     static displayName = Runner.name;
@@ -18,6 +18,11 @@ export class Runner extends Component {
         this.receiveItem = this.receiveItem.bind(this);
         this.sendItem = this.sendItem.bind(this);
         this.resend = this.resend.bind(this);
+        this.sendSelectedItem = this.sendSelectedItem.bind(this);
+
+        this.sendItemRef = React.createRef();
+        this.sendPlayerRef = React.createRef();
+
         this.timerHandle = 0;
         this.inPtr = -1;
         this.outPtr = -1;
@@ -303,12 +308,32 @@ export class Runner extends Component {
         await this.sendItem(worldId, itemId);
     }
 
+    async sendSelectedItem(e) {
+        let selectedPlayer = this.sendPlayerRef.current.options[this.sendPlayerRef.current.selectedIndex];
+        let selectedItem = this.sendItemRef.current.options[this.sendItemRef.current.selectedIndex];
+
+        let worldId = selectedPlayer.dataset.world;
+        let itemId = selectedItem.dataset.itemid;
+
+        await this.sendItem(worldId, itemId);
+    }
+
     render() {
         const sentItems = [];
-        let lastEvents = this.state.outEvents.reverse();
+        const itemNames = [];
+        const playerNames = [];
 
+        let lastEvents = this.state.outEvents.reverse();
         for (let i = 0; i < this.state.outEvents.length; i++) {
             sentItems.push(<tr><td>{this.props.sessionData.seed.worlds[lastEvents[i][0]].player}</td><td>{this.itemNames[lastEvents[i][1]]}</td><td><Button data-world={lastEvents[i][0]} data-itemid={lastEvents[i][1]} color="primary" onClick={this.resend}>Resend item</Button></td></tr>); 
+        }
+
+        for (let key in this.itemNames) {
+            itemNames.push(<option key={"send-item-" + key} data-itemid={key}>{this.itemNames[key]}</option>);
+        }
+
+        for (let i = 0; i < this.props.sessionData.seed.players; i++) {
+            playerNames.push(<option key={"send-player-" + i} data-world={i}>{this.props.sessionData.seed.worlds[i].player}</option>);
         }
 
         return (
@@ -325,15 +350,36 @@ export class Runner extends Component {
                     <div className="col-sm-8">
                         <div className="card">
                             <div className="card-body">
-                                <h5 className="card-title">Sent items</h5>
-                                <table>
-                                    <tr>
-                                        <th>Player</th>
-                                        <th>Item</th>
-                                        <th></th>
-                                    </tr>
-                                    {sentItems}
-                                </table>
+                                <Row>
+                                    <Col>
+                                    <h5 className="card-title">Sent items</h5>
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <th>Player</th>
+                                                    <th>Item</th>
+                                                    <th></th>
+                                                </tr>
+                                                {sentItems}
+                                                <tr>
+                                                    <td>
+                                                        <select id="send-player" ref={this.sendPlayerRef}>
+                                                            {playerNames}
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="send-item" ref={this.sendItemRef}>
+                                                            {itemNames}
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <Button onClick={this.sendSelectedItem} color="danger">Send</Button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </Col>
+                                </Row>
                             </div>
                         </div>
                     </div>
