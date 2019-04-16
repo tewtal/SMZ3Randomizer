@@ -65,162 +65,6 @@ namespace Randomizer.SMZ3 {
             return patches.ToDictionary(x => x.Item1, x => x.Item2);
         }
 
-        void WritePlayerNames() {
-            patches.AddRange(allWorlds.Select(world => (0x385000 + (world.Id * 16), PlayerNameBytes(world.Player))));
-        }
-
-        byte[] PlayerNameBytes(string name) {
-            name = name.Length > 12 ? name[..12] : name;
-            int padding = 12 - name.Length;
-            if (padding > 0) {
-                double pad = padding / 2.0;
-                name = name.PadLeft(name.Length + (int)Math.Ceiling(pad));
-                name = name.PadRight(name.Length + (int)Math.Floor(pad));
-            }
-            return AsciiBytes(name.ToUpper()).Concat(new byte[] { 0x00, 0x00, 0x00, 0x00 }).ToArray();
-        }
-
-        List<(int, byte[])> RemapComboOffsets(List<(int, byte[])> patches) {
-            return patches.Select(x => (ComboOffset(x.Item1), x.Item2)).ToList();
-        }
-
-        int ComboOffset(int offset) {
-            offset = offset switch {
-                /* Convert LoROM to HiROM mapping and then apply the ExHiROM offset */
-                _ when offset < 0x170000 =>
-                    0x400000 + offset + (0x8000 * ((int)Math.Floor((decimal)offset / 0x8000) + 1)),
-                /* Change 0x180000 access into ExHiROM bank 40 */
-                _ when (offset & 0xff0000) == 0x180000 =>
-                    0x400000 + (offset & 0x00ffff),
-                /* Repoint RNG Block */
-                _ when offset == 0x178000 => 0x420000,
-                /* SM ExHiROM Header */
-                _ when (offset & 0xff0000) == 0xff0000 => offset & 0x00ffff,
-                _ => throw new InvalidOperationException($"Unmapped combo offset source {offset}"),
-            };
-            if (offset > 0x600000)
-                throw new InvalidOperationException($"Unmapped combo offset target {offset}");
-            return offset;
-        }
-
-        void WriteSMLocations(IEnumerable<Location> locations) {
-            foreach (var location in locations) {
-                var locationValue = location.Type switch {
-                    LocationType.Visible => UshortBytes(0xEFE0),
-                    LocationType.Chozo => UshortBytes(0xEFE4),
-                    LocationType.Hidden => UshortBytes(0xEFE8),
-                    var x => throw new InvalidOperationException($"Location {location.Name} should not have the type {x}")
-                };
-
-                patches.Add((0x80000 + location.Address, locationValue));
-                patches.Add(ItemTablePatch(location, (byte)location.Item.Type));
-            }
-        }
-
-        void WriteZ3Locations(IEnumerable<Location> locations) {
-            foreach (var location in locations) {
-                if (location.Type == LocationType.HeraStandingKey) {
-                    patches.Add((ComboOffset(0x4E3BB), location.Item.Type == KeyTH ? new byte[] { 0xE4 } : new byte[] { 0xEB }));
-                }
-                patches.Add((ComboOffset(location.Address), new byte[] { (byte)(location.Id - 256) }));
-                patches.Add(ItemTablePatch(location, GetZ3ItemId(location.Item.Type)));
-            }
-        }
-
-        byte GetZ3ItemId(ItemType item) {
-            var value = (int)item switch {
-                var id when id >= 0x72 && id <= 0x7F => 0x33,
-                var id when id >= 0x82 && id <= 0x8D => 0x25,
-                var id when id >= 0x92 && id <= 0x9D => 0x32,
-                var id when id >= 0xA0 && id <= 0xAD => 0x24,
-                var id => id,
-            };
-            return (byte)value;
-        }
-
-        (int, byte[]) ItemTablePatch(Location location, byte itemId) {
-            var type = location.Item.World == location.Region.World ? 0 : 1;
-            var owner = location.Item.World.Id;
-            var extra = 0;
-            return (0x386000 + (location.Id * 8), new[] { type, itemId, owner, extra }.SelectMany(UshortBytes).ToArray());
-        }
-
-        void WriteSeedData() {
-            patches.Add((0x00FF50, UintBytes(myWorld.Id)));
-            /* Seed configuration bitfield */
-            patches.Add((0x00FF52, UintBytes(0)));
-            patches.Add((0x00FF60, AsciiBytes(seedGuid)));
-            patches.Add((0x00FF80, AsciiBytes(myWorldGuid)));
-        }
-
-        void WriteDiggingGameRng() {
-            byte digs = (byte)rnd.Next(1, 30 + 1);
-            patches.Add((0x180020, new byte[] { digs }));
-            patches.Add((0xEFD95, new byte[] { digs }));
-        }
-
-        void WriteWishingWellRoomData() {
-            patches.Add((0x1F714, wishingWellRoomData));
-        }
-
-        void WriteWishingWellChests() {
-            patches.Add((0xE9AE, new byte[] { 0x14, 0x01 }));
-            patches.Add((0xE9CF, new byte[] { 0x14, 0x01 }));
-        }
-
-        void WritePyramidFairyChests() {
-            patches.Add((0x1FC16, new byte[] { 0xB1, 0xC6, 0xF9, 0xC9, 0xC6, 0xF9 }));
-        }
-
-        void WriteOpenModeFlags() {
-            patches.AddRange(new[] {
-                (0x180032, new byte[] { 0x01 }),
-                (0x180038, new byte[] { 0x00 }),
-                (0x180039, new byte[] { 0x00 }),
-                (0x18003A, new byte[] { 0x00 }),
-            });
-        }
-
-        void WriteLockAgahnimDoorInEscape() {
-            patches.Add((0x180169, new byte[] { 0x01 }));
-        }
-
-        void WriteWishingWellUpgradeFalse() {
-            patches.Add((0x348DB, new byte[] { 0x2A }));
-            patches.Add((0x348EB, new byte[] { 0x05 }));
-        }
-
-        void WriteRestrictFairyPonds() {
-            patches.Add((0x18017E, new byte[] { 0x01 }));
-        }
-
-        void WriteGanonInvicible(GanonInvincible invincible) {
-            var value = invincible switch {
-                GanonInvincible.Never => 0x00,
-                GanonInvincible.Always => 0x01,
-                GanonInvincible.BeforeAllDungeons => 0x02,
-                GanonInvincible.BeforeCrystals => 0x03,
-                var x => throw new ArgumentException($"Unknown Ganon invincible value {x}", nameof(invincible))
-            };
-            patches.Add((0x18003E, new byte[] { (byte)value }));
-        }
-
-        void WriteRngBlock() {
-            patches.Add((0x178000, Enumerable.Range(0, 1024).Select(x => (byte)rnd.Next(0x100 + 1)).ToArray()));
-        }
-
-        void WriteSmithyQuickItemGive() {
-            patches.Add((0x180029, new byte[] { 0x01 }));
-        }
-
-        void WriteSaveAndQuitFromBossRoom() {
-            patches.Add((0x180042, new byte[] { 0x01 }));
-        }
-
-        void WriteWorldOnAgahnimDeath() {
-            patches.Add((0x1800A3, new byte[] { 0x01 }));
-        }
-
         void WriteMedallions() {
             var turtleRock = myWorld.Regions.OfType<TurtleRock>().First();
             var miseryMire = myWorld.Regions.OfType<MiseryMire>().First();
@@ -306,6 +150,162 @@ namespace Randomizer.SMZ3 {
                 3 => new byte[] { 0x02, 0x34, 0x60, 0x00, 0x69, 0x02 },
                 var x => throw new InvalidOperationException($"Tried using {x} as a pendant number")
             };
+        }
+
+        void WriteSMLocations(IEnumerable<Location> locations) {
+            foreach (var location in locations) {
+                var locationValue = location.Type switch {
+                    LocationType.Visible => UshortBytes(0xEFE0),
+                    LocationType.Chozo => UshortBytes(0xEFE4),
+                    LocationType.Hidden => UshortBytes(0xEFE8),
+                    var x => throw new InvalidOperationException($"Location {location.Name} should not have the type {x}")
+                };
+
+                patches.Add((0x80000 + location.Address, locationValue));
+                patches.Add(ItemTablePatch(location, (byte)location.Item.Type));
+            }
+        }
+
+        void WriteZ3Locations(IEnumerable<Location> locations) {
+            foreach (var location in locations) {
+                if (location.Type == LocationType.HeraStandingKey) {
+                    patches.Add((ComboOffset(0x4E3BB), location.Item.Type == KeyTH ? new byte[] { 0xE4 } : new byte[] { 0xEB }));
+                }
+                patches.Add((ComboOffset(location.Address), new byte[] { (byte)(location.Id - 256) }));
+                patches.Add(ItemTablePatch(location, GetZ3ItemId(location.Item.Type)));
+            }
+        }
+
+        byte GetZ3ItemId(ItemType item) {
+            var value = (int)item switch {
+                var id when id >= 0x72 && id <= 0x7F => 0x33,
+                var id when id >= 0x82 && id <= 0x8D => 0x25,
+                var id when id >= 0x92 && id <= 0x9D => 0x32,
+                var id when id >= 0xA0 && id <= 0xAD => 0x24,
+                var id => id,
+            };
+            return (byte)value;
+        }
+
+        (int, byte[]) ItemTablePatch(Location location, byte itemId) {
+            var type = location.Item.World == location.Region.World ? 0 : 1;
+            var owner = location.Item.World.Id;
+            var extra = 0;
+            return (0x386000 + (location.Id * 8), new[] { type, itemId, owner, extra }.SelectMany(UshortBytes).ToArray());
+        }
+
+        void WritePlayerNames() {
+            patches.AddRange(allWorlds.Select(world => (0x385000 + (world.Id * 16), PlayerNameBytes(world.Player))));
+        }
+
+        byte[] PlayerNameBytes(string name) {
+            name = name.Length > 12 ? name[..12] : name;
+            int padding = 12 - name.Length;
+            if (padding > 0) {
+                double pad = padding / 2.0;
+                name = name.PadLeft(name.Length + (int)Math.Ceiling(pad));
+                name = name.PadRight(name.Length + (int)Math.Floor(pad));
+            }
+            return AsciiBytes(name.ToUpper()).Concat(new byte[] { 0x00, 0x00, 0x00, 0x00 }).ToArray();
+        }
+
+        void WriteSeedData() {
+            patches.Add((0x00FF50, UintBytes(myWorld.Id)));
+            /* Seed configuration bitfield */
+            patches.Add((0x00FF52, UintBytes(0)));
+            patches.Add((0x00FF60, AsciiBytes(seedGuid)));
+            patches.Add((0x00FF80, AsciiBytes(myWorldGuid)));
+        }
+
+        void WriteWishingWellRoomData() {
+            patches.Add((0x1F714, wishingWellRoomData));
+        }
+
+        void WriteWishingWellChests() {
+            patches.Add((0xE9AE, new byte[] { 0x14, 0x01 }));
+            patches.Add((0xE9CF, new byte[] { 0x14, 0x01 }));
+        }
+
+        void WritePyramidFairyChests() {
+            patches.Add((0x1FC16, new byte[] { 0xB1, 0xC6, 0xF9, 0xC9, 0xC6, 0xF9 }));
+        }
+
+        void WriteDiggingGameRng() {
+            byte digs = (byte)rnd.Next(1, 30 + 1);
+            patches.Add((0x180020, new byte[] { digs }));
+            patches.Add((0xEFD95, new byte[] { digs }));
+        }
+
+        void WriteOpenModeFlags() {
+            patches.AddRange(new[] {
+                (0x180032, new byte[] { 0x01 }),
+                (0x180038, new byte[] { 0x00 }),
+                (0x180039, new byte[] { 0x00 }),
+                (0x18003A, new byte[] { 0x00 }),
+            });
+        }
+
+        void WriteLockAgahnimDoorInEscape() {
+            patches.Add((0x180169, new byte[] { 0x01 }));
+        }
+
+        void WriteWishingWellUpgradeFalse() {
+            patches.Add((0x348DB, new byte[] { 0x2A }));
+            patches.Add((0x348EB, new byte[] { 0x05 }));
+        }
+
+        void WriteRestrictFairyPonds() {
+            patches.Add((0x18017E, new byte[] { 0x01 }));
+        }
+
+        void WriteGanonInvicible(GanonInvincible invincible) {
+            var value = invincible switch {
+                GanonInvincible.Never => 0x00,
+                GanonInvincible.Always => 0x01,
+                GanonInvincible.BeforeAllDungeons => 0x02,
+                GanonInvincible.BeforeCrystals => 0x03,
+                var x => throw new ArgumentException($"Unknown Ganon invincible value {x}", nameof(invincible))
+            };
+            patches.Add((0x18003E, new byte[] { (byte)value }));
+        }
+
+        void WriteRngBlock() {
+            patches.Add((0x178000, Enumerable.Range(0, 1024).Select(x => (byte)rnd.Next(0x100 + 1)).ToArray()));
+        }
+
+        void WriteSmithyQuickItemGive() {
+            patches.Add((0x180029, new byte[] { 0x01 }));
+        }
+
+        void WriteSaveAndQuitFromBossRoom() {
+            patches.Add((0x180042, new byte[] { 0x01 }));
+        }
+
+        void WriteWorldOnAgahnimDeath() {
+            patches.Add((0x1800A3, new byte[] { 0x01 }));
+        }
+
+        List<(int, byte[])> RemapComboOffsets(List<(int, byte[])> patches) {
+            return patches.Select(x => (ComboOffset(x.Item1), x.Item2)).ToList();
+        }
+
+        int ComboOffset(int offset) {
+            offset = offset switch {
+                /* Convert LoROM to HiROM mapping and then apply the ExHiROM offset */
+                _ when offset < 0x170000 =>
+                    0x400000 + offset + (0x8000 * ((int)Math.Floor((decimal)offset / 0x8000) + 1)),
+                /* Change 0x180000 access into ExHiROM bank 40 */
+                _ when (offset & 0xff0000) == 0x180000 =>
+                    0x400000 + (offset & 0x00ffff),
+                /* Repoint RNG Block */
+                _ when offset == 0x178000 => 0x420000,
+                /* SM ExHiROM Header */
+                _ when (offset & 0xff0000) == 0xff0000 => offset & 0x00ffff,
+                _ => throw new InvalidOperationException($"Unmapped combo offset source {offset}"),
+            };
+            if (offset > 0x600000)
+                throw new InvalidOperationException($"Unmapped combo offset target {offset}");
+            return offset;
         }
 
         byte[] UintBytes(int value) {
