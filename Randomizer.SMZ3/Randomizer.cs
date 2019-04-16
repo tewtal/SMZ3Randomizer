@@ -56,7 +56,7 @@ namespace Randomizer.SMZ3 {
                     Id = world.Id,
                     Guid = world.Guid.Replace("-", ""),
                     Player = world.Player,
-                    Patches = patch.Create()
+                    Patches = patch.Create(config)
                 };
 
                 seedData.Worlds.Add(worldData);

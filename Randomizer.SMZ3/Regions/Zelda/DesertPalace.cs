@@ -3,7 +3,7 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda {
 
-    class DesertPalace : Region, Reward {
+    class DesertPalace : Z3Region, Reward {
 
         public override string Name => "Desert Palace";
         public override string Area => "Desert Palace";

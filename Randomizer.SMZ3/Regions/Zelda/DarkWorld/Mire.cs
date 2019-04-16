@@ -2,7 +2,7 @@
 
 namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld {
 
-    class Mire : Region {
+    class Mire : Z3Region {
 
         public override string Name => "Dark World Mire";
         public override string Area => "Dark World";

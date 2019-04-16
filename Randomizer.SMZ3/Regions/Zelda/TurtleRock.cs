@@ -3,7 +3,7 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda {
 
-    class TurtleRock : Region, Reward, MedallionAccess {
+    class TurtleRock : Z3Region, Reward, MedallionAccess {
 
         public override string Name => "Turtle Rock";
         public override string Area => "Turtle Rock";

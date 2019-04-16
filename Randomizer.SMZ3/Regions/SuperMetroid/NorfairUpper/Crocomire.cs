@@ -3,7 +3,7 @@ using static Randomizer.SMZ3.Logic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
 
-    class Crocomire : Region {
+    class Crocomire : SMRegion {
 
         public override string Name => "Norfair Upper Crocomire";
         public override string Area => "Norfair Upper";

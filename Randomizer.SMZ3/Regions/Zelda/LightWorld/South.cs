@@ -2,7 +2,7 @@
 
 namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
 
-    class South : Region {
+    class South : Z3Region {
 
         public override string Name => "Light World South";
         public override string Area => "Light World";

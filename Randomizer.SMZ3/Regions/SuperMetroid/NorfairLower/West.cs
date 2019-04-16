@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.Logic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
 
-    class West : Region {
+    class West : SMRegion {
 
         public override string Name => "Norfair Lower West";
         public override string Area => "Norfair Lower";

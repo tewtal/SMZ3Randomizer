@@ -3,7 +3,7 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain {
 
-    class East : Region {
+    class East : Z3Region {
 
         public override string Name => "Light World Death Mountain East";
         public override string Area => "Light World";

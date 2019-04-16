@@ -3,7 +3,7 @@ using static Randomizer.SMZ3.Logic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
 
-    class East : Region {
+    class East : SMRegion {
 
         public override string Name => "Crateria East";
         public override string Area => "Crateria";

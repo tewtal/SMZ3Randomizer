@@ -3,7 +3,7 @@ using static Randomizer.SMZ3.Logic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
 
-    class Green : Region {
+    class Green : SMRegion {
 
         public override string Name => "Brinstar Green";
         public override string Area => "Brinstar";

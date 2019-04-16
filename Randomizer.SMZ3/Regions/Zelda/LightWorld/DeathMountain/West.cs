@@ -2,7 +2,7 @@
 
 namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain {
 
-    class West : Region {
+    class West : Z3Region {
 
         public override string Name => "Light World Death Mountain West";
         public override string Area => "Light World";

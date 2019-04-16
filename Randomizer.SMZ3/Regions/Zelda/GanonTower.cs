@@ -6,7 +6,7 @@ using static Randomizer.SMZ3.RewardType;
 
 namespace Randomizer.SMZ3.Regions.Zelda {
 
-    class GanonTower : Region {
+    class GanonTower : Z3Region {
 
         public override string Name => "Ganon Tower";
         public override string Area => "Ganon Tower";

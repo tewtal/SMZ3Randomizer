@@ -21,6 +21,16 @@ namespace Randomizer.SMZ3 {
         ItemType Medallion { get; set; }
     }
 
+    abstract class SMRegion : Region {
+        public SMRegion(World world, Config config)
+            : base(world, config) { }
+    }
+
+    abstract class Z3Region : Region {
+        public Z3Region(World world, Config config)
+            : base(world, config) { }
+    }
+
     abstract class Region {
 
         public virtual string Name { get; }

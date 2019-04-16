@@ -3,7 +3,7 @@ using static Randomizer.SMZ3.RewardType;
 
 namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld {
 
-    class NorthWest : Region {
+    class NorthWest : Z3Region {
 
         public override string Name => "Dark World North West";
         public override string Area => "Dark World";
