@@ -53,7 +53,7 @@ namespace Randomizer.SMZ3 {
             patches.Add(0x18003E, new byte[] { 0x03 });
 
             /* Write RNG Block */
-            patches.Add(0x178000, Enumerable.Range(0, 1024).Select(x => (byte)rnd.Next(0x100)).ToArray());
+            patches.Add(0x178000, Enumerable.Range(0, 1024).Select(x => (byte)rnd.Next(0x100 + 1)).ToArray());
 
             /* setSmithyQuickItemGive */
             patches.Add(0x180029, new byte[] { 0x01 });
@@ -213,7 +213,7 @@ namespace Randomizer.SMZ3 {
         }
 
         private void WriteDiggingGameRng(ref Dictionary<int, byte[]> patches) {
-            byte digs = (byte)rnd.Next(1, 30);
+            byte digs = (byte)rnd.Next(1, 30 + 1);
             patches.Add(0x180020, new byte[] { digs });
             patches.Add(0xEFD95, new byte[] { digs });
         }

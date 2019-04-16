@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Randomizer.Contracts;
 
 namespace Randomizer.SMZ3 {
@@ -9,7 +8,7 @@ namespace Randomizer.SMZ3 {
 
         public ISeedData GenerateSeed(IDictionary<string, string> options, string seed) {
             if (seed == "") {
-                seed = new Random().Next(0, int.MaxValue).ToString();
+                seed = new Random().Next().ToString();
             }
 
             var rnd = new Random(int.Parse(seed));

@@ -90,10 +90,10 @@ namespace Randomizer.SMZ3 {
 
         private void SetMedallions(Random rnd) {
             foreach (var region in Regions.OfType<MedallionAccess>()) {
-                region.Medallion = rnd.Next(0, 2) switch {
+                region.Medallion = rnd.Next(3) switch {
                     0 => ItemType.Bombos,
-                    1 => ItemType.Quake,
-                    _ => ItemType.Ether
+                    1 => ItemType.Ether,
+                    _ => ItemType.Quake,
                 };
             }
         }
