@@ -3,7 +3,7 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda {
 
-    class TowerOfHera : Z3Region, Reward {
+    class TowerOfHera : Z3Region, IReward {
 
         public override string Name => "Tower of Hera";
         public override string Area => "Tower of Hera";
@@ -28,7 +28,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
             };
         }
 
-        static bool CanBeatBoss(Progression items) {
+        private bool CanBeatBoss(Progression items) {
             return items.Sword || items.Hammer;
         }
 

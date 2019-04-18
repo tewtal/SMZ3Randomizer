@@ -3,7 +3,7 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda {
 
-    class TurtleRock : Z3Region, Reward, MedallionAccess {
+    class TurtleRock : Z3Region, IReward, IMedallionAccess {
 
         public override string Name => "Turtle Rock";
         public override string Area => "Turtle Rock";
@@ -13,9 +13,6 @@ namespace Randomizer.SMZ3.Regions.Zelda {
 
         public TurtleRock(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeyTR, BigKeyTR, MapTR, CompassTR };
-
-            Requirement laserBridge = items => items.BigKeyTR && items.Has(KeyTR, 3) &&
-                items.Lamp && (items.Cape || items.Byrna || items.CanBlockLasers);
 
             Locations = new List<Location> {
                 new Location(this, 256+177, 0xEA22, LocationType.Regular, "Turtle Rock - Compass Chest"),
@@ -35,16 +32,20 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                     .Allow((item, items) => item.Type != BigKeyTR),
                 new Location(this, 256+183, 0xEA34, LocationType.Regular, "Turtle Rock - Crystaroller Room",
                     items => items.BigKeyTR && items.Has(KeyTR, 2)),
-                new Location(this, 256+184, 0xEA28, LocationType.Regular, "Turtle Rock - Eye Bridge - Top Right", laserBridge),
-                new Location(this, 256+185, 0xEA2B, LocationType.Regular, "Turtle Rock - Eye Bridge - Top Left", laserBridge),
-                new Location(this, 256+186, 0xEA2E, LocationType.Regular, "Turtle Rock - Eye Bridge - Bottom Right", laserBridge),
-                new Location(this, 256+187, 0xEA31, LocationType.Regular, "Turtle Rock - Eye Bridge - Bottom Left", laserBridge),
+                new Location(this, 256+184, 0xEA28, LocationType.Regular, "Turtle Rock - Eye Bridge - Top Right", LaserBridge),
+                new Location(this, 256+185, 0xEA2B, LocationType.Regular, "Turtle Rock - Eye Bridge - Top Left", LaserBridge),
+                new Location(this, 256+186, 0xEA2E, LocationType.Regular, "Turtle Rock - Eye Bridge - Bottom Right", LaserBridge),
+                new Location(this, 256+187, 0xEA31, LocationType.Regular, "Turtle Rock - Eye Bridge - Bottom Left", LaserBridge),
                 new Location(this, 256+188, 0x180159, LocationType.Regular, "Turtle Rock - Trinexx",
                     items => items.BigKeyTR && items.Has(KeyTR, 4) && items.Lamp && CanBeatBoss(items)),
             };
         }
 
-        static bool CanBeatBoss(Progression items) {
+        private bool LaserBridge(Progression items) {
+            return items.BigKeyTR && items.Has(KeyTR, 3) && items.Lamp && (items.Cape || items.Byrna || items.CanBlockLasers);
+        }
+
+        private bool CanBeatBoss(Progression items) {
             return items.Firerod && items.Icerod;
         }
 

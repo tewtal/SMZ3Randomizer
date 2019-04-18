@@ -99,7 +99,7 @@ namespace Randomizer.SMZ3 {
             var pendantsBlueRed = new[] { 2, 3 }.Shuffle(rnd);
             var pendantRewards = pendantsGreen.Concat(pendantsBlueRed);
 
-            var regions = myWorld.Regions.OfType<Reward>();
+            var regions = myWorld.Regions.OfType<IReward>();
             var crystalRegions = regions.Where(x => x.Reward == CrystalBlue).Concat(regions.Where(x => x.Reward == CrystalRed));
             var pendantRegions = regions.Where(x => x.Reward == PendantGreen).Concat(regions.Where(x => x.Reward == PendantNonGreen));
 
@@ -107,14 +107,14 @@ namespace Randomizer.SMZ3 {
             patches.AddRange(RewardPatches(pendantRegions, pendantRewards, PendantValues));
         }
 
-        IEnumerable<(int, byte[])> RewardPatches(IEnumerable<Reward> regions, IEnumerable<int> rewards, Func<int, byte[]> rewardValues) {
+        IEnumerable<(int, byte[])> RewardPatches(IEnumerable<IReward> regions, IEnumerable<int> rewards, Func<int, byte[]> rewardValues) {
             var addresses = regions.Select(RewardAddresses);
             var values = rewards.Select(rewardValues);
             var associations = addresses.Zip(values, (a, v) => (a, v));
             return associations.SelectMany(x => x.a.Zip(x.v, (i, b) => (i, new byte[] { b })));
         }
 
-        int[] RewardAddresses(Reward region) {
+        int[] RewardAddresses(IReward region) {
             return region switch {
                 EasternPalace _ => new[] { 0x1209D, 0x53EF8, 0x53EF9, 0x180052, 0x18007C, 0xC6FE },
                 DesertPalace _ => new[] { 0x1209E, 0x53F1C, 0x53F1D, 0x180053, 0x180078, 0xC6FF },

@@ -14,19 +14,6 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public GanonTower(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeyGT, BigKeyGT, MapGT, CompassGT };
 
-            Func<Progression, IList<Location>, bool> leftSide = (items, locations) =>
-                items.Hammer && items.Hookshot &&
-                items.Has(KeyGT, locations.Any(l => l.ItemType == BigKeyGT) ? 3 : 4);
-            Func<Progression, IList<Location>, bool> rightSide = (items, locations) =>
-                items.Somaria && items.Firerod &&
-                items.Has(KeyGT, locations.Any(l => l.ItemType == BigKeyGT) ? 3 : 4);
-            Requirement bigKeyRoom = items =>
-                items.Has(KeyGT, 3) && CanBeatArmos(items) && (
-                    items.Hammer && items.Hookshot ||
-                    items.Firerod && items.Somaria);
-            Requirement towerAscend = items => items.BigKeyGT && items.Has(KeyGT, 3) &&
-                items.Bow && items.CanLightTorches();
-
             Locations = new List<Location> {
                 new Location(this, 256+189, 0x180161, LocationType.Regular, "Ganon's Tower - Bob's Torch",
                     items => items.Boots),
@@ -51,25 +38,25 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                     }.Any(l => l.ItemType == BigKeyGT) ||
                         Locations.Get("Ganon's Tower - Firesnake Room").ItemType == KeyGT ? 2 : 3)),
                 new Location(this, 256+196, 0xEAC4, LocationType.Regular, "Ganon's Tower - Randomizer Room - Top Left",
-                    items => leftSide(items, new[] {
+                    items => LeftSide(items, new[] {
                         Locations.Get("Ganon's Tower - Randomizer Room - Top Right"),
                         Locations.Get("Ganon's Tower - Randomizer Room - Bottom Left"),
                         Locations.Get("Ganon's Tower - Randomizer Room - Bottom Right")
                     })),
                 new Location(this, 256+197, 0xEAC7, LocationType.Regular, "Ganon's Tower - Randomizer Room - Top Right",
-                    items => leftSide(items, new[] {
+                    items => LeftSide(items, new[] {
                         Locations.Get("Ganon's Tower - Randomizer Room - Top Left"),
                         Locations.Get("Ganon's Tower - Randomizer Room - Bottom Left"),
                         Locations.Get("Ganon's Tower - Randomizer Room - Bottom Right")
                     })),
                 new Location(this, 256+198, 0xEACA, LocationType.Regular, "Ganon's Tower - Randomizer Room - Bottom Left",
-                    items => leftSide(items, new[] {
+                    items => LeftSide(items, new[] {
                         Locations.Get("Ganon's Tower - Randomizer Room - Top Right"),
                         Locations.Get("Ganon's Tower - Randomizer Room - Top Left"),
                         Locations.Get("Ganon's Tower - Randomizer Room - Bottom Right")
                     })),
                 new Location(this, 256+199, 0xEACD, LocationType.Regular, "Ganon's Tower - Randomizer Room - Bottom Right",
-                    items => leftSide(items, new[] {
+                    items => LeftSide(items, new[] {
                         Locations.Get("Ganon's Tower - Randomizer Room - Top Right"),
                         Locations.Get("Ganon's Tower - Randomizer Room - Top Left"),
                         Locations.Get("Ganon's Tower - Randomizer Room - Bottom Left")
@@ -79,25 +66,25 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                 new Location(this, 256+202, 0xEAE2, LocationType.Regular, "Ganon's Tower - Tile Room",
                     items => items.Somaria),
                 new Location(this, 256+203, 0xEAE5, LocationType.Regular, "Ganon's Tower - Compass Room - Top Left",
-                    items => rightSide(items, new[] {
+                    items => RightSide(items, new[] {
                         Locations.Get("Ganon's Tower - Compass Room - Top Right"),
                         Locations.Get("Ganon's Tower - Compass Room - Bottom Left"),
                         Locations.Get("Ganon's Tower - Compass Room - Bottom Right")
                     })),
                 new Location(this, 256+204, 0xEAE8, LocationType.Regular, "Ganon's Tower - Compass Room - Top Right",
-                    items => rightSide(items, new[] {
+                    items => RightSide(items, new[] {
                         Locations.Get("Ganon's Tower - Compass Room - Top Left"),
                         Locations.Get("Ganon's Tower - Compass Room - Bottom Left"),
                         Locations.Get("Ganon's Tower - Compass Room - Bottom Right")
                     })),
                 new Location(this, 256+205, 0xEAEB, LocationType.Regular, "Ganon's Tower - Compass Room - Bottom Left",
-                    items => rightSide(items, new[] {
+                    items => RightSide(items, new[] {
                         Locations.Get("Ganon's Tower - Compass Room - Top Right"),
                         Locations.Get("Ganon's Tower - Compass Room - Top Left"),
                         Locations.Get("Ganon's Tower - Compass Room - Bottom Right")
                     })),
                 new Location(this, 256+206, 0xEAEE, LocationType.Regular, "Ganon's Tower - Compass Room - Bottom Right",
-                    items => rightSide(items, new[] {
+                    items => RightSide(items, new[] {
                         Locations.Get("Ganon's Tower - Compass Room - Top Right"),
                         Locations.Get("Ganon's Tower - Compass Room - Top Left"),
                         Locations.Get("Ganon's Tower - Compass Room - Bottom Left")
@@ -111,14 +98,14 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                         items.Hammer && items.Hookshot ||
                         items.Somaria && items.Firerod))
                     .Allow((item, items) => item.Type != BigKeyGT),
-                new Location(this, 256+209, 0xEAF1, LocationType.Regular, "Ganon's Tower - Big Key Chest", bigKeyRoom),
-                new Location(this, 256+210, 0xEAF4, LocationType.Regular, "Ganon's Tower - Big Key Room - Left", bigKeyRoom),
-                new Location(this, 256+211, 0xEAF7, LocationType.Regular, "Ganon's Tower - Big Key Room - Right", bigKeyRoom),
-                new Location(this, 256+212, 0xEAFD, LocationType.Regular, "Ganon's Tower - Mini Helmasaur Room - Left", towerAscend)
+                new Location(this, 256+209, 0xEAF1, LocationType.Regular, "Ganon's Tower - Big Key Chest", BigKeyRoom),
+                new Location(this, 256+210, 0xEAF4, LocationType.Regular, "Ganon's Tower - Big Key Room - Left", BigKeyRoom),
+                new Location(this, 256+211, 0xEAF7, LocationType.Regular, "Ganon's Tower - Big Key Room - Right", BigKeyRoom),
+                new Location(this, 256+212, 0xEAFD, LocationType.Regular, "Ganon's Tower - Mini Helmasaur Room - Left", TowerAscend)
                     .Allow((item, items) => item.Type != BigKeyGT),
-                new Location(this, 256+213, 0xEB00, LocationType.Regular, "Ganon's Tower - Mini Helmasaur Room - Right", towerAscend)
+                new Location(this, 256+213, 0xEB00, LocationType.Regular, "Ganon's Tower - Mini Helmasaur Room - Right", TowerAscend)
                     .Allow((item, items) => item.Type != BigKeyGT),
-                new Location(this, 256+214, 0xEB03, LocationType.Regular, "Ganon's Tower - Pre-Moldorm Chest", towerAscend)
+                new Location(this, 256+214, 0xEB03, LocationType.Regular, "Ganon's Tower - Pre-Moldorm Chest", TowerAscend)
                     .Allow((item, items) => item.Type != BigKeyGT),
                 new Location(this, 256+215, 0xEB06, LocationType.Regular, "Ganon's Tower - Moldorm Chest",
                     items => items.BigKeyGT && items.Has(KeyGT, 4) &&
@@ -128,13 +115,30 @@ namespace Randomizer.SMZ3.Regions.Zelda {
             };
         }
 
-        static bool CanBeatArmos(Progression items) {
+        private bool LeftSide(Progression items, IList<Location> locations) {
+            return items.Hammer && items.Hookshot && items.Has(KeyGT, locations.Any(l => l.ItemType == BigKeyGT) ? 3 : 4);
+        }
+
+        private bool RightSide(Progression items, IList<Location> locations) {
+            return items.Somaria && items.Firerod && items.Has(KeyGT, locations.Any(l => l.ItemType == BigKeyGT) ? 3 : 4);
+        }
+
+        private bool BigKeyRoom(Progression items) {
+            return items.Has(KeyGT, 3) && CanBeatArmos(items) 
+                && (items.Hammer && items.Hookshot || items.Firerod && items.Somaria);
+        }
+
+        private bool TowerAscend(Progression items) {
+            return items.BigKeyGT && items.Has(KeyGT, 3) && items.Bow && items.CanLightTorches();
+        }   
+            
+        private bool CanBeatArmos(Progression items) {
             return items.Sword || items.Hammer || items.Bow ||
                 items.CanExtendMagic(2) && (items.Somaria || items.Byrna) ||
                 items.CanExtendMagic(4) && (items.Firerod || items.Icerod);
         }
 
-        static bool CanBeatMoldorm(Progression items) {
+        private bool CanBeatMoldorm(Progression items) {
             return items.Sword || items.Hammer;
         }
 
@@ -147,6 +151,11 @@ namespace Randomizer.SMZ3.Regions.Zelda {
             /* Never cross-world fill GT */
             if (item.World != World)
                 return false;
+
+            /* TODO: Temporary fix, disallow progression items completely from GT */
+            if (item.Progression)
+                return false;
+
             return base.CanFill(item);
         }
 

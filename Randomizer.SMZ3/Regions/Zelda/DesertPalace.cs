@@ -3,7 +3,7 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda {
 
-    class DesertPalace : Z3Region, Reward {
+    class DesertPalace : Z3Region, IReward {
 
         public override string Name => "Desert Palace";
         public override string Area => "Desert Palace";
@@ -31,7 +31,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
             };
         }
 
-        static bool CanBeatBoss(Progression items) {
+        private bool CanBeatBoss(Progression items) {
             return items.Sword || items.Hammer || items.Bow ||
                 items.Firerod || items.Icerod ||
                 items.Byrna || items.Somaria;

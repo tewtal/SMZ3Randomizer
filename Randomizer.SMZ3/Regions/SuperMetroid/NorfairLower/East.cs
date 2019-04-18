@@ -4,7 +4,7 @@ using static Randomizer.SMZ3.Logic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
 
-    class East : SMRegion, Reward {
+    class East : SMRegion, IReward {
 
         public override string Name => "Norfair Lower East";
         public override string Area => "Norfair Lower";

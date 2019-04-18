@@ -12,12 +12,12 @@ namespace Randomizer.SMZ3 {
         GoldenFourBoss
     }
 
-    interface Reward {
+    interface IReward {
         RewardType Reward { get; set; }
         bool CanComplete(Progression items);
     }
 
-    interface MedallionAccess {
+    interface IMedallionAccess {
         ItemType Medallion { get; set; }
     }
 

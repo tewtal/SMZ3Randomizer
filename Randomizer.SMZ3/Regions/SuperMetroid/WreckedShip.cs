@@ -4,7 +4,7 @@ using static Randomizer.SMZ3.Logic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid {
 
-    class WreckedShip : SMRegion, Reward {
+    class WreckedShip : SMRegion, IReward {
 
         public override string Name => "Wrecked Ship";
         public override string Area => "Wrecked Ship";

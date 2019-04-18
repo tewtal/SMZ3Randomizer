@@ -6,7 +6,7 @@ namespace Randomizer.SMZ3 {
 
     class Playthrough {
 
-        List<World> worlds;
+        readonly List<World> worlds;
 
         public Playthrough(List<World> worlds) {
             this.worlds = worlds;

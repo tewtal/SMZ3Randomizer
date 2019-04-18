@@ -76,11 +76,11 @@ namespace Randomizer.SMZ3 {
         }
 
         public bool CanAquire(Progression items, RewardType reward) {
-            return Regions.OfType<Reward>().First(x => reward == x.Reward).CanComplete(items);
+            return Regions.OfType<IReward>().First(x => reward == x.Reward).CanComplete(items);
         }
 
         public bool CanAquireAll(Progression items, params RewardType[] rewards) {
-            return Regions.OfType<Reward>().Where(x => rewards.Contains(x.Reward)).All(x => x.CanComplete(items));
+            return Regions.OfType<IReward>().Where(x => rewards.Contains(x.Reward)).All(x => x.CanComplete(items));
         }
 
         public void Setup(Random rnd) {
@@ -89,7 +89,7 @@ namespace Randomizer.SMZ3 {
         }
 
         private void SetMedallions(Random rnd) {
-            foreach (var region in Regions.OfType<MedallionAccess>()) {
+            foreach (var region in Regions.OfType<IMedallionAccess>()) {
                 region.Medallion = rnd.Next(3) switch {
                     0 => ItemType.Bombos,
                     1 => ItemType.Ether,
@@ -102,7 +102,7 @@ namespace Randomizer.SMZ3 {
             var rewards = new[] {
                 PendantGreen, PendantNonGreen, PendantNonGreen, CrystalRed, CrystalRed,
                 CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue }.Shuffle(rnd);
-            foreach (var region in Regions.OfType<Reward>().Where(x => x.Reward == None)) {
+            foreach (var region in Regions.OfType<IReward>().Where(x => x.Reward == None)) {
                 region.Reward = rewards.First();
                 rewards.Remove(region.Reward);
             }
