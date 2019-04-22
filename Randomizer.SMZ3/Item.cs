@@ -153,11 +153,13 @@ namespace Randomizer.SMZ3 {
         public bool Progression { get; set; }
         public World World { get; set; }
 
-        readonly Regex dungeon = new Regex("^(BigKey|Key|Map|Compass)");
+        static readonly Regex dungeon = new Regex("^(BigKey|Key|Map|Compass)");
+        static readonly Regex map = new Regex("^Map");
+        static readonly Regex compass = new Regex("^Compass");
 
-        public bool IsDungeonItem {
-            get { return dungeon.IsMatch(Type.ToString()); }
-        }
+        public bool IsDungeonItem => dungeon.IsMatch(Type.ToString());
+        public bool IsMap => map.IsMatch(Type.ToString());
+        public bool IsCompass => compass.IsMatch(Type.ToString());
 
         public static Item Nothing(World world) {
             return new Item { Name = "Nothing", Type = ItemType.Nothing, World = world };

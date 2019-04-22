@@ -5,6 +5,7 @@ using System.Linq;
 using Randomizer.SMZ3.Regions.Zelda;
 using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.RewardType;
+using Randomizer.SMZ3.Text;
 
 namespace Randomizer.SMZ3 {
 
@@ -15,6 +16,7 @@ namespace Randomizer.SMZ3 {
         readonly string myWorldGuid;
         readonly string seedGuid;
         readonly Random rnd;
+        StringTable stringTable;
         List<(int, byte[])> patches;
 
         #region Whishing Well room data
@@ -32,6 +34,7 @@ namespace Randomizer.SMZ3 {
         }
 
         public Dictionary<int, byte[]> Create(Config config) {
+            stringTable = new StringTable();
             patches = new List<(int, byte[])>();
 
             WriteMedallions();
@@ -62,6 +65,8 @@ namespace Randomizer.SMZ3 {
 
             WriteSMLocations(myWorld.Regions.OfType<SMRegion>().SelectMany(x => x.Locations));
             WriteZ3Locations(myWorld.Regions.OfType<Z3Region>().SelectMany(x => x.Locations));
+
+            WriteStringTable();
 
             WritePlayerNames();
             WriteSeedData();
@@ -174,6 +179,21 @@ namespace Randomizer.SMZ3 {
             foreach (var location in locations) {
                 if (location.Type == LocationType.HeraStandingKey) {
                     patches.Add((ComboOffset(0x4E3BB), location.Item.Type == KeyTH ? new byte[] { 0xE4 } : new byte[] { 0xEB }));
+                } else if (new[] { LocationType.Pedestal, LocationType.Ether, LocationType.Bombos }.Contains(location.Type)) {
+                    var text = Texts.ItemTextbox(location.Item);
+                    var dialog = Dialog.Simple(text);
+                    if (location.Type == LocationType.Pedestal) {
+                        stringTable.SetPedestalText(text);
+                        patches.Add((ComboOffset(0x180300), dialog));
+                    }
+                    else if (location.Type == LocationType.Ether) {
+                        stringTable.SetEtherText(text);
+                        patches.Add((ComboOffset(0x180F00), dialog));
+                    }
+                    else if (location.Type == LocationType.Bombos) {
+                        stringTable.SetBombosText(text);
+                        patches.Add((ComboOffset(0x181000), dialog));
+                    }
                 }
                 patches.Add((ComboOffset(location.Address), new byte[] { (byte)(location.Id - 256) }));
                 patches.Add(ItemTablePatch(location, GetZ3ItemId(location.Item.Type)));
@@ -240,6 +260,10 @@ namespace Randomizer.SMZ3 {
                 TurtleRock _ => new[] { 0x155C7, 0x155A7, 0x155AA, 0x155AB },
                 var x => throw new InvalidOperationException($"Region {x} should not be a dungeon music region")
             };
+        }
+
+        void WriteStringTable() {
+            patches.Add((ComboOffset(0xE0000), stringTable.GetPaddedBytes()));
         }
 
         void WritePlayerNames() {
