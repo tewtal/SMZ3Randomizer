@@ -36,6 +36,7 @@ namespace Randomizer.SMZ3 {
 
             WriteMedallions();
             WriteRewards();
+            WriteDungeonMusic(config.Keysanity);
 
             WriteWishingWellRoomData();
             WriteWishingWellChests();
@@ -192,6 +193,50 @@ namespace Randomizer.SMZ3 {
             var owner = location.Item.World.Id;
             var extra = 0;
             return (0x386000 + (location.Id * 8), new[] { type, itemId, owner, extra }.SelectMany(UshortBytes).ToArray());
+        }
+
+        void WriteDungeonMusic(bool keysanity) {
+            var regions = myWorld.Regions.OfType<IReward>();
+            IEnumerable<byte> music;
+            if (keysanity) {
+                regions = regions.Where(x => new[] { PendantGreen, PendantNonGreen, CrystalBlue, CrystalRed }.Contains(x.Reward));
+                music = RandomDungeonMusic().Take(regions.Count());
+            } else {
+                var pendantRegions = regions.Where(x => new[] { PendantGreen, PendantNonGreen }.Contains(x.Reward));
+                var crystalRegions = regions.Where(x => new[] { CrystalBlue, CrystalRed }.Contains(x.Reward));
+                regions = pendantRegions.Concat(crystalRegions);
+                music = new byte[] {
+                    0x11, 0x11, 0x11, 0x16, 0x16,
+                    0x16, 0x16, 0x16, 0x16, 0x16,
+                };
+            }
+            patches.AddRange(MusicPatches(regions, music));
+        }
+
+        IEnumerable<byte> RandomDungeonMusic() {
+            while (true) yield return rnd.Next(2) == 0 ? (byte)0x11 : (byte)0x16;
+        }
+
+        IEnumerable<(int, byte[])> MusicPatches(IEnumerable<IReward> regions, IEnumerable<byte> music) {
+            var addresses = regions.Select(MusicAddresses);
+            var associations = addresses.Zip(music, (a, b) => (a, b));
+            return associations.SelectMany(x => x.a.Select(i => (i, new byte[] { x.b })));
+        }
+
+        int[] MusicAddresses(IReward region) {
+            return region switch {
+                EasternPalace _ => new[] { 0x1559A },
+                DesertPalace _ => new[] { 0x1559B, 0x1559C, 0x1559D, 0x1559E },
+                TowerOfHera _ => new[] { 0x155C5, 0x1107A, 0x10B8C },
+                PalaceOfDarkness _ => new[] { 0x155B8 },
+                SwampPalace _ => new[] { 0x155B7 },
+                SkullWoods _ => new[] { 0x155BA, 0x155BB, 0x155BC, 0x155BD, 0x15608, 0x15609, 0x1560A, 0x1560B },
+                ThievesTown _ => new[] { 0x155C6 },
+                IcePalace _ => new[] { 0x155BF },
+                MiseryMire _ => new[] { 0x155B9 },
+                TurtleRock _ => new[] { 0x155C7, 0x155A7, 0x155AA, 0x155AB },
+                var x => throw new InvalidOperationException($"Region {x} should not be a dungeon music region")
+            };
         }
 
         void WritePlayerNames() {
