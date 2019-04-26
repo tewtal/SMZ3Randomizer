@@ -47,8 +47,12 @@ namespace Randomizer.SMZ3 {
             World = world;
         }
 
+        public bool IsRegionItem(Item item) {
+            return RegionItems.Contains(item.Type);
+        }
+
         public virtual bool CanFill(Item item) {
-            return Config.Keysanity || !item.IsDungeonItem || RegionItems.Contains(item.Type);
+            return Config.Keysanity || !item.IsDungeonItem || IsRegionItem(item);
         }
 
         public virtual bool CanEnter(Progression items) {

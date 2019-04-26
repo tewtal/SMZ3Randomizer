@@ -10,6 +10,7 @@ namespace Randomizer.SMZ3 {
         Pedestal,
         Ether,
         Bombos,
+        NotInDungeon,
 
         Visible,
         Chozo,
