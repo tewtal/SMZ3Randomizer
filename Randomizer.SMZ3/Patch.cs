@@ -45,12 +45,15 @@ namespace Randomizer.SMZ3 {
 
             WriteOpenModeFlags();
 
+            WriteRemoveEquipmentFromUncle(myWorld.Locations.Get("Link's Uncle").Item);
+
             WriteLockAgahnimDoorInEscape();
             WriteWishingWellUpgradeFalse();
             WriteRestrictFairyPonds();
             WriteGanonInvicible(config.GanonInvincible);
             WriteRngBlock();
             WriteSmithyQuickItemGive();
+
             WriteSaveAndQuitFromBossRoom();
             WriteWorldOnAgahnimDeath();
 
@@ -243,6 +246,36 @@ namespace Randomizer.SMZ3 {
                 (0x180039, new byte[] { 0x00 }),
                 (0x18003A, new byte[] { 0x00 }),
             });
+        }
+
+        // Removes Sword/Shield from Uncle by moving the tiles for
+        // sword/shield to his head and replaces them with his head.
+        void WriteRemoveEquipmentFromUncle(Item item) {
+            if (item.Type != ProgressiveSword) {
+                patches.AddRange(new[] {
+                    (0x6D263, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (0x6D26B, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (0x6D293, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (0x6D29B, new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x00, 0x0E }),
+                    (0x6D2B3, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x02, 0x0E }),
+                    (0x6D2BB, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x02, 0x0E }),
+                    (0x6D2E3, new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x02, 0x0E }),
+                    (0x6D2EB, new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x02, 0x0E }),
+                    (0x6D31B, new byte[] { 0x00, 0x00, 0xE4, 0xFF, 0x08, 0x0E }),
+                    (0x6D323, new byte[] { 0x00, 0x00, 0xE4, 0xFF, 0x08, 0x0E }),
+                });
+            }
+            if (item.Type != ProgressiveShield) {
+                patches.AddRange(new[] {
+                    (0x6D253, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (0x6D25B, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (0x6D283, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (0x6D28B, new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x00, 0x0E }),
+                    (0x6D2CB, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x02, 0x0E }),
+                    (0x6D2FB, new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x02, 0x0E }),
+                    (0x6D313, new byte[] { 0x00, 0x00, 0xE4, 0xFF, 0x08, 0x0E }),
+                });
+            }
         }
 
         void WriteLockAgahnimDoorInEscape() {
