@@ -89,14 +89,15 @@ namespace WebRandomizer.Hubs {
                         var world = session.Seed.Worlds.Find(x => x.Guid == worldGuid);
 
                         if (client == null) {
-                            client = new Client();
-                            client.SessionId = session.Id;
-                            client.Name = world.Player;
-                            client.Guid = world.Guid;
-                            client.WorldId = world.WorldId;
-                            client.State = ClientState.Registered;
-                            client.Device = "";
-                            client.ConnectionId = this.Context.ConnectionId;
+                            client = new Client {
+                                SessionId = session.Id,
+                                Name = world.Player,
+                                Guid = world.Guid,
+                                WorldId = world.WorldId,
+                                State = ClientState.Registered,
+                                Device = "",
+                                ConnectionId = this.Context.ConnectionId
+                            };
                             context.Clients.Add(client);
                             await context.SaveChangesAsync();
                         } else {
