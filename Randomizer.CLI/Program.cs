@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using CommandLine;
 using Newtonsoft.Json;
@@ -31,6 +32,10 @@ namespace Randomizer.CLI {
                 HelpText = "Generate a specific seed")]
             public string Seed { get; set; } = string.Empty;
 
+            [Option("rom",
+                HelpText = "Compile rom file of the first world for each seed. Provide the path to the IPS patch.")]
+            public string Rom { get; set; }
+
             [Option("no-interact",
                 HelpText = "Do not wait for keyboard input")]
             public bool NoInteract { get; set; }
@@ -51,18 +56,54 @@ namespace Randomizer.CLI {
 
             public bool Interact => !NoInteract;
 
+            protected const string smFile = @".\Super_Metroid_JU_.smc";
+            protected const string z3File = @".\Zelda_no_Densetsu_-_Kamigami_no_Triforce_Japan.sfc";
+
             public abstract IRandomizer NewRandomizer();
+            public abstract byte[] BaseRom();
 
         }
 
         [Verb("sm", HelpText = "Generate Super Metroid seeds")]
         class SMOptions : CliOptions {
+
+            readonly Lazy<byte[]> smRom;
+
+            public SMOptions() {
+                smRom = new Lazy<byte[]>(() => {
+                    using (var ips = File.OpenRead(Rom)) {
+                        var rom = File.ReadAllBytes(smFile);
+                        RomPatch.ApplyIps(rom, ips);
+                        return rom;
+                    }
+                });
+            }
+
             public override IRandomizer NewRandomizer() => new SuperMetroid.Randomizer();
+            public override byte[] BaseRom() => (byte[]) smRom.Value.Clone();
+
         }
 
         [Verb("smz3", HelpText = "Generate SMZ3 combo seeds")]
         class SMZ3Options : CliOptions {
+
+            readonly Lazy<byte[]> smz3Rom;
+
+            public SMZ3Options() {
+                smz3Rom = new Lazy<byte[]>(() => {
+                    using (var sm = File.OpenRead(smFile))
+                    using (var z3 = File.OpenRead(z3File))
+                    using (var ips = File.OpenRead(Rom)) {
+                        var rom = RomPatch.CombineSMZ3Rom(sm, z3);
+                        RomPatch.ApplyIps(rom, ips);
+                        return rom;
+                    }
+                });
+            }
+
             public override IRandomizer NewRandomizer() => new SMZ3.Randomizer();
+            public override byte[] BaseRom() => (byte[]) smz3Rom.Value.Clone();
+
         }
 
         static void Main(string[] args) {
@@ -93,14 +134,25 @@ namespace Randomizer.CLI {
 
         static void MakeSeed(Dictionary<string, string> options, CliOptions opts) {
             var rando = opts.NewRandomizer();
-            var time = DateTime.Now;
+            var start = DateTime.Now;
             var data = rando.GenerateSeed(options, opts.Seed);
+            var end = DateTime.Now;
             Console.WriteLine(string.Join(" - ",
                 $"Generated seed: {data.Seed}",
                 $"Players: {options["worlds"]}",
                 $"Spheres: {data.Playthrough.Count}",
-                $"Generation time: {DateTime.Now - time}"
+                $"Generation time: {end - start}"
             ));
+            if (opts.Rom != null) {
+                try {
+                    var world = data.Worlds.First();
+                    var rom = opts.BaseRom();
+                    RomPatch.ApplySeed(rom, world.Patches);
+                    File.WriteAllBytes($"{data.Game} {data.Logic} - {data.Seed} - {world.Player}.sfc", rom);
+                } catch (Exception e) {
+                    Console.Error.WriteLine(e.Message);
+                }
+            }
             if (opts.Playthrough) {
                 Console.WriteLine(JsonConvert.SerializeObject(data.Playthrough, Formatting.Indented));
                 Interact(opts);
