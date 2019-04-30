@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="TestData\SimpleText.json" />
+    <None Remove="TestData\StringEntries.json" />
+    <None Remove="TestData\StringTable.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\SimpleText.json" />
+    <EmbeddedResource Include="TestData\StringEntries.json" />
+    <EmbeddedResource Include="TestData\StringTable.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="nunit" Version="3.11.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Randomizer.SMZ3\Randomizer.SMZ3.csproj" />
+  </ItemGroup>
+</Project>

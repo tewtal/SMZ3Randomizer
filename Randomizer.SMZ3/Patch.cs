@@ -5,6 +5,7 @@ using System.Linq;
 using Randomizer.SMZ3.Regions.Zelda;
 using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.RewardType;
+using Randomizer.SMZ3.Text;
 
 namespace Randomizer.SMZ3 {
 
@@ -15,6 +16,7 @@ namespace Randomizer.SMZ3 {
         readonly string myWorldGuid;
         readonly string seedGuid;
         readonly Random rnd;
+        StringTable stringTable;
         List<(int, byte[])> patches;
 
         #region Whishing Well room data
@@ -32,10 +34,12 @@ namespace Randomizer.SMZ3 {
         }
 
         public Dictionary<int, byte[]> Create(Config config) {
+            stringTable = new StringTable();
             patches = new List<(int, byte[])>();
 
             WriteMedallions();
             WriteRewards();
+            WriteDungeonMusic(config.Keysanity);
 
             WriteWishingWellRoomData();
             WriteWishingWellChests();
@@ -45,12 +49,15 @@ namespace Randomizer.SMZ3 {
 
             WriteOpenModeFlags();
 
+            WriteRemoveEquipmentFromUncle(myWorld.Locations.Get("Link's Uncle").Item);
+
             WriteLockAgahnimDoorInEscape();
             WriteWishingWellUpgradeFalse();
             WriteRestrictFairyPonds();
             WriteGanonInvicible(config.GanonInvincible);
             WriteRngBlock();
             WriteSmithyQuickItemGive();
+
             WriteSaveAndQuitFromBossRoom();
             WriteWorldOnAgahnimDeath();
 
@@ -58,6 +65,8 @@ namespace Randomizer.SMZ3 {
 
             WriteSMLocations(myWorld.Regions.OfType<SMRegion>().SelectMany(x => x.Locations));
             WriteZ3Locations(myWorld.Regions.OfType<Z3Region>().SelectMany(x => x.Locations));
+
+            WriteStringTable();
 
             WritePlayerNames();
             WriteSeedData();
@@ -170,6 +179,21 @@ namespace Randomizer.SMZ3 {
             foreach (var location in locations) {
                 if (location.Type == LocationType.HeraStandingKey) {
                     patches.Add((ComboOffset(0x4E3BB), location.Item.Type == KeyTH ? new byte[] { 0xE4 } : new byte[] { 0xEB }));
+                } else if (new[] { LocationType.Pedestal, LocationType.Ether, LocationType.Bombos }.Contains(location.Type)) {
+                    var text = Texts.ItemTextbox(location.Item);
+                    var dialog = Dialog.Simple(text);
+                    if (location.Type == LocationType.Pedestal) {
+                        stringTable.SetPedestalText(text);
+                        patches.Add((ComboOffset(0x180300), dialog));
+                    }
+                    else if (location.Type == LocationType.Ether) {
+                        stringTable.SetEtherText(text);
+                        patches.Add((ComboOffset(0x180F00), dialog));
+                    }
+                    else if (location.Type == LocationType.Bombos) {
+                        stringTable.SetBombosText(text);
+                        patches.Add((ComboOffset(0x181000), dialog));
+                    }
                 }
                 patches.Add((ComboOffset(location.Address), new byte[] { (byte)(location.Id - 256) }));
                 patches.Add(ItemTablePatch(location, GetZ3ItemId(location.Item.Type)));
@@ -192,6 +216,54 @@ namespace Randomizer.SMZ3 {
             var owner = location.Item.World.Id;
             var extra = 0;
             return (0x386000 + (location.Id * 8), new[] { type, itemId, owner, extra }.SelectMany(UshortBytes).ToArray());
+        }
+
+        void WriteDungeonMusic(bool keysanity) {
+            var regions = myWorld.Regions.OfType<IReward>();
+            IEnumerable<byte> music;
+            if (keysanity) {
+                regions = regions.Where(x => new[] { PendantGreen, PendantNonGreen, CrystalBlue, CrystalRed }.Contains(x.Reward));
+                music = RandomDungeonMusic().Take(regions.Count());
+            } else {
+                var pendantRegions = regions.Where(x => new[] { PendantGreen, PendantNonGreen }.Contains(x.Reward));
+                var crystalRegions = regions.Where(x => new[] { CrystalBlue, CrystalRed }.Contains(x.Reward));
+                regions = pendantRegions.Concat(crystalRegions);
+                music = new byte[] {
+                    0x11, 0x11, 0x11, 0x16, 0x16,
+                    0x16, 0x16, 0x16, 0x16, 0x16,
+                };
+            }
+            patches.AddRange(MusicPatches(regions, music));
+        }
+
+        IEnumerable<byte> RandomDungeonMusic() {
+            while (true) yield return rnd.Next(2) == 0 ? (byte)0x11 : (byte)0x16;
+        }
+
+        IEnumerable<(int, byte[])> MusicPatches(IEnumerable<IReward> regions, IEnumerable<byte> music) {
+            var addresses = regions.Select(MusicAddresses);
+            var associations = addresses.Zip(music, (a, b) => (a, b));
+            return associations.SelectMany(x => x.a.Select(i => (i, new byte[] { x.b })));
+        }
+
+        int[] MusicAddresses(IReward region) {
+            return region switch {
+                EasternPalace _ => new[] { 0x1559A },
+                DesertPalace _ => new[] { 0x1559B, 0x1559C, 0x1559D, 0x1559E },
+                TowerOfHera _ => new[] { 0x155C5, 0x1107A, 0x10B8C },
+                PalaceOfDarkness _ => new[] { 0x155B8 },
+                SwampPalace _ => new[] { 0x155B7 },
+                SkullWoods _ => new[] { 0x155BA, 0x155BB, 0x155BC, 0x155BD, 0x15608, 0x15609, 0x1560A, 0x1560B },
+                ThievesTown _ => new[] { 0x155C6 },
+                IcePalace _ => new[] { 0x155BF },
+                MiseryMire _ => new[] { 0x155B9 },
+                TurtleRock _ => new[] { 0x155C7, 0x155A7, 0x155AA, 0x155AB },
+                var x => throw new InvalidOperationException($"Region {x} should not be a dungeon music region")
+            };
+        }
+
+        void WriteStringTable() {
+            patches.Add((ComboOffset(0xE0000), stringTable.GetPaddedBytes()));
         }
 
         void WritePlayerNames() {
@@ -243,6 +315,36 @@ namespace Randomizer.SMZ3 {
                 (0x180039, new byte[] { 0x00 }),
                 (0x18003A, new byte[] { 0x00 }),
             });
+        }
+
+        // Removes Sword/Shield from Uncle by moving the tiles for
+        // sword/shield to his head and replaces them with his head.
+        void WriteRemoveEquipmentFromUncle(Item item) {
+            if (item.Type != ProgressiveSword) {
+                patches.AddRange(new[] {
+                    (0x6D263, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (0x6D26B, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (0x6D293, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (0x6D29B, new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x00, 0x0E }),
+                    (0x6D2B3, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x02, 0x0E }),
+                    (0x6D2BB, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x02, 0x0E }),
+                    (0x6D2E3, new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x02, 0x0E }),
+                    (0x6D2EB, new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x02, 0x0E }),
+                    (0x6D31B, new byte[] { 0x00, 0x00, 0xE4, 0xFF, 0x08, 0x0E }),
+                    (0x6D323, new byte[] { 0x00, 0x00, 0xE4, 0xFF, 0x08, 0x0E }),
+                });
+            }
+            if (item.Type != ProgressiveShield) {
+                patches.AddRange(new[] {
+                    (0x6D253, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (0x6D25B, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (0x6D283, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (0x6D28B, new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x00, 0x0E }),
+                    (0x6D2CB, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x02, 0x0E }),
+                    (0x6D2FB, new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x02, 0x0E }),
+                    (0x6D313, new byte[] { 0x00, 0x00, 0xE4, 0xFF, 0x08, 0x0E }),
+                });
+            }
         }
 
         void WriteLockAgahnimDoorInEscape() {
