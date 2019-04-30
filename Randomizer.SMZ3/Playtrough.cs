@@ -14,44 +14,44 @@ namespace Randomizer.SMZ3 {
 
         public List<Dictionary<string, string>> Generate() {
             var spheres = new List<Dictionary<string, string>>();
-
+            var locations = new List<Location>();
             var items = new List<Item>();
-            var prevCount = 0;
-            while (items.Count < worlds.SelectMany(w => w.Items).Count()) {
-                var sphere = new Dictionary<string, string>();
-                var newLocations = worlds.SelectMany(w => w.Locations.Available(items.Where(i => i.World == w).ToList())).ToList();
-                var newItems = newLocations.Select(l => l.Item).ToList();
-                var addedItems = newItems.Where(i => !items.Contains(i)).ToList();
-                if (prevCount == newItems.Count) {
-                    /* With no new items added we might have a problem, so list inaccessable items */
-                    var inaccessibleLocations = worlds.SelectMany(x => x.Locations).Where(l => !newLocations.Contains(l)).ToList();
-                    var inaccessableItems = inaccessibleLocations.Select(x => x.Item).ToList();
 
-                    if (inaccessableItems.Count >= (5 * worlds.Count)) {
+            var totalItemCount = worlds.SelectMany(w => w.Items).Count();
+            while (items.Count < totalItemCount) {
+                var sphere = new Dictionary<string, string>();
+
+                var allLocations = worlds.SelectMany(w => w.Locations.Available(items.Where(i => i.World == w).ToList()));
+                var newLocations = allLocations.Except(locations).ToList();
+                var newItems = newLocations.Select(l => l.Item).ToList();
+                locations.AddRange(newLocations);
+                items.AddRange(newItems);
+
+                if (!newItems.Any()) {
+                    /* With no new items added we might have a problem, so list inaccessable items */
+                    var inaccessibleLocations = worlds.SelectMany(w => w.Locations).Where(l => !locations.Contains(l)).ToList();
+                    if (inaccessibleLocations.Select(l => l.Item).Count() >= (5 * worlds.Count))
                         throw new Exception("Too many inaccessible items, seed likely impossible.");
-                    }
 
                     var n = 0;
-                    foreach (var item in inaccessableItems) {
-                        var itemLocation = inaccessibleLocations.Find(x => x.Item == item);
-                        sphere.Add($"Inaccessable Item - #{n += 1} ({itemLocation.Name} - {itemLocation.Region.World.Player})", $"{item.Name} ({item.World.Player})");
+                    foreach (var location in inaccessibleLocations) {
+                        sphere.Add($"Inaccessable Item #{n += 1}: {location.Name} ({location.Region.World.Player})",
+                            $"{location.Item.Name} ({location.Item.World.Player})");
                     }
                     spheres.Add(sphere);
                     return spheres;
                 }
 
-                prevCount = newItems.Count;
-                foreach (var addedItem in addedItems.Where(i => i.Progression)) {
-                    var itemLocation = newLocations.Where(l => l.Item == addedItem).First();
-                    sphere.Add($"{itemLocation.Name} ({itemLocation.Region.World.Player})", $"{addedItem.Name} ({addedItem.World.Player})");
+                foreach (var location in newLocations) {
+                    if (!location.Item.Progression)
+                        continue;
+                    sphere.Add($"{location.Name} ({location.Region.World.Player})", $"{location.Item.Name} ({location.Item.World.Player})");
                 }
 
                 spheres.Add(sphere);
-                items = newItems;
 
-                if(spheres.Count > 100) {
+                if (spheres.Count > 100)
                     throw new Exception("Too many spheres, seed likely impossible.");
-                }
             }
 
             return spheres;
