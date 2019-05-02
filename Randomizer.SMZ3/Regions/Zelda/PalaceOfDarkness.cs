@@ -6,6 +6,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
     class PalaceOfDarkness : Z3Region, IReward {
 
         public override string Name => "Palace of Darkness";
+        public override string Area => "Dark Palace";
 
         public RewardType Reward { get; set; } = RewardType.None;
 

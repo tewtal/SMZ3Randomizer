@@ -12,6 +12,30 @@ namespace Randomizer.SMZ3.Text {
             entries = CreateEntries();
         }
 
+        public void SetSahasrahlaRevealText(string text) {
+            SetText("sahasrahla_quest_information", text);
+        }
+
+        public void SetBombShopRevealText(string text) {
+            SetText("bomb_shop", text);
+        }
+
+        public void SetBlindText(string text) {
+            SetText("blind_by_the_light", text);
+        }
+
+        public void SetTavernManText(string text) {
+            SetText("kakariko_tavern_fisherman", text);
+        }
+
+        public void SetGanonFirstPhaseText(string text) {
+            SetText("ganon_fall_in", text);
+        }
+
+        public void SetGanonThirdPhaseText(string text) {
+            SetText("ganon_phase_3", text);
+        }
+
         public void SetPedestalText(string text) {
             SetText("mastersword_pedestal_translated", text);
         }
