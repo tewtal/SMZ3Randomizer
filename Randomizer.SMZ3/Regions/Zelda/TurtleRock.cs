@@ -6,7 +6,6 @@ namespace Randomizer.SMZ3.Regions.Zelda {
     class TurtleRock : Z3Region, IReward, IMedallionAccess {
 
         public override string Name => "Turtle Rock";
-        public override string Area => "Turtle Rock";
 
         public RewardType Reward { get; set; } = RewardType.None;
         public ItemType Medallion { get; set; }

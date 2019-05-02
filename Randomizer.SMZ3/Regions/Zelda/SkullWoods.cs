@@ -6,7 +6,6 @@ namespace Randomizer.SMZ3.Regions.Zelda {
     class SkullWoods : Z3Region, IReward {
 
         public override string Name => "Skull Woods";
-        public override string Area => "Skull Woods";
 
         public RewardType Reward { get; set; } = RewardType.None;
 

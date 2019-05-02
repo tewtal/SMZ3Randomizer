@@ -6,7 +6,6 @@ namespace Randomizer.SMZ3.Regions.Zelda {
     class MiseryMire : Z3Region, IReward, IMedallionAccess {
 
         public override string Name => "Misery Mire";
-        public override string Area => "Misery Mire";
 
         public RewardType Reward { get; set; } = RewardType.None;
         public ItemType Medallion { get; set; }

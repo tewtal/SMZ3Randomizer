@@ -6,7 +6,6 @@ namespace Randomizer.SMZ3.Regions.Zelda {
     class ThievesTown : Z3Region, IReward {
 
         public override string Name => "Thieves' Town";
-        public override string Area => "Thieves' Town";
 
         public RewardType Reward { get; set; } = RewardType.None;
 

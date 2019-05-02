@@ -5,7 +5,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain {
     class East : Z3Region {
 
         public override string Name => "Light World Death Mountain East";
-        public override string Area => "Light World";
+        public override string Area => "Death Mountain";
 
         public East(World world, Config config) : base(world, config) {
             Locations = new List<Location> {

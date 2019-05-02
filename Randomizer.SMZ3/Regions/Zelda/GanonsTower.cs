@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.RewardType;
 
 namespace Randomizer.SMZ3.Regions.Zelda {
 
-    class GanonTower : Z3Region {
+    class GanonsTower : Z3Region {
 
-        public override string Name => "Ganon Tower";
-        public override string Area => "Ganon Tower";
+        public override string Name => "Ganon's Tower";
 
-        public GanonTower(World world, Config config) : base(world, config) {
+        public GanonsTower(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeyGT, BigKeyGT, MapGT, CompassGT };
 
             Locations = new List<Location> {

@@ -6,7 +6,6 @@ namespace Randomizer.SMZ3.Regions.Zelda {
     class DesertPalace : Z3Region, IReward {
 
         public override string Name => "Desert Palace";
-        public override string Area => "Desert Palace";
 
         public RewardType Reward { get; set; } = RewardType.None;
 

@@ -34,7 +34,8 @@ namespace Randomizer.SMZ3 {
     abstract class Region {
 
         public virtual string Name { get; }
-        public virtual string Area { get; }
+        public virtual string Area => Name;
+
         public List<Location> Locations { get; set; }
         public World World { get; set; }
         public int Weight { get; set; } = 0;

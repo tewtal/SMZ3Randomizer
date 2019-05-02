@@ -6,7 +6,6 @@ namespace Randomizer.SMZ3.Regions.Zelda {
     class TowerOfHera : Z3Region, IReward {
 
         public override string Name => "Tower of Hera";
-        public override string Area => "Tower of Hera";
 
         public RewardType Reward { get; set; } = RewardType.None;
 
