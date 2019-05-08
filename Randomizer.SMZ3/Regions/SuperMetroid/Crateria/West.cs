@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using static Randomizer.SMZ3.Logic;
+using static Randomizer.SMZ3.SMLogic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
 
@@ -11,15 +11,15 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
         public West(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 8, 0xC78432, LocationType.Visible, "Energy Tank, Terminator"),
-                new Location(this, 5, 0xC78264, LocationType.Visible, "Energy Tank, Gauntlet", Config.Logic switch {
+                new Location(this, 5, 0xC78264, LocationType.Visible, "Energy Tank, Gauntlet", Logic switch {
                     Casual => items => CanEnterAndLeaveGauntlet(items) && items.HasEnergyReserves(1),
                     _ => new Requirement(items => CanEnterAndLeaveGauntlet(items))
                 }),
-                new Location(this, 9, 0xC78464, LocationType.Visible, "Missile (Crateria gauntlet right)", Config.Logic switch {
+                new Location(this, 9, 0xC78464, LocationType.Visible, "Missile (Crateria gauntlet right)", Logic switch {
                     Casual => items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2),
                     _ => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
                 }),
-                new Location(this, 10, 0xC7846A, LocationType.Visible, "Missile (Crateria gauntlet left)", Config.Logic switch {
+                new Location(this, 10, 0xC7846A, LocationType.Visible, "Missile (Crateria gauntlet left)", Logic switch {
                     Casual => items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2),
                     _ => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
                 })
@@ -31,7 +31,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
         }
 
         private bool CanEnterAndLeaveGauntlet(Progression items) {
-            return Config.Logic switch {
+            return Logic switch {
                 Casual =>
                     items.Morph && (items.CanFly() || items.SpeedBooster) && (
                         items.CanIbj() ||

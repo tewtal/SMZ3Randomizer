@@ -1,6 +1,6 @@
 ﻿namespace Randomizer.SMZ3 {
 
-    enum Logic {
+    enum SMLogic {
         Casual,
         Tournament,
         Normal,
@@ -24,7 +24,7 @@
 
     class Config {
 
-        public Logic Logic { get; set; } = Logic.Tournament;
+        public SMLogic SMLogic { get; set; } = SMLogic.Tournament;
         public Difficulty Difficulty { get; set; } = Difficulty.Normal;
         public bool Keysanity { get; set; } = false;
         public GanonInvincible GanonInvincible { get; set; } = GanonInvincible.BeforeCrystals;

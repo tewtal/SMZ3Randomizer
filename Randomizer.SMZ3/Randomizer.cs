@@ -13,16 +13,16 @@ namespace Randomizer.SMZ3 {
 
             var rnd = new Random(int.Parse(seed));
 
-            var logic = Logic.Tournament;
+            var logic = SMLogic.Tournament;
             if (options.ContainsKey("logic")) {
                 logic = options["logic"] switch {
-                    "casual" => Logic.Casual,
-                    "tournament" => Logic.Tournament,
-                    _ => Logic.Tournament
+                    "casual" => SMLogic.Casual,
+                    "tournament" => SMLogic.Tournament,
+                    _ => SMLogic.Tournament
                 };
             }
 
-            var config = new Config { Logic = logic };
+            var config = new Config { SMLogic = logic };
             var worlds = new List<World>();
 
             int players = options.ContainsKey("worlds") ? int.Parse(options["worlds"]) : 1;

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using static Randomizer.SMZ3.Logic;
+using static Randomizer.SMZ3.SMLogic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
 
@@ -10,18 +10,18 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
 
         public West(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
-                new Location(this, 70, 0xC78E6E, LocationType.Visible, "Missile (Gold Torizo)", Config.Logic switch {
+                new Location(this, 70, 0xC78E6E, LocationType.Visible, "Missile (Gold Torizo)", Logic switch {
                     Casual => items => items.CanUsePowerBombs() && items.SpaceJump && items.Super,
                     _ => new Requirement(items => items.CanUsePowerBombs() && items.SpaceJump && items.Varia && (
                         items.HiJump || items.Gravity ||
                         items.CanAccessNorfairLowerPortal() && (items.CanFly() || items.CanSpringBallJump() || items.SpeedBooster) && items.Super))
                 }),
-                new Location(this, 71, 0xC78E74, LocationType.Hidden, "Super Missile (Gold Torizo)", Config.Logic switch {
+                new Location(this, 71, 0xC78E74, LocationType.Hidden, "Super Missile (Gold Torizo)", Logic switch {
                     Casual => items => items.CanDestroyBombWalls() && (items.Super || items.Charge) &&
                         (items.CanAccessNorfairLowerPortal() || items.SpaceJump && items.CanUsePowerBombs()),
                     _ => new Requirement(items => items.CanDestroyBombWalls() && items.Varia && (items.Super || items.Charge))
                 }),
-                new Location(this, 79, 0xC79110, LocationType.Chozo, "Screw Attack", Config.Logic switch {
+                new Location(this, 79, 0xC79110, LocationType.Chozo, "Screw Attack", Logic switch {
                     Casual => items => items.CanDestroyBombWalls() && (items.SpaceJump && items.CanUsePowerBombs() || items.CanAccessNorfairLowerPortal()),
                     _ => new Requirement(items => items.CanDestroyBombWalls() && (items.Varia || items.CanAccessNorfairLowerPortal()))
                 }),
@@ -29,7 +29,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
         }
 
         public override bool CanEnter(Progression items) {
-            return Config.Logic switch {
+            return Logic switch {
                 Casual =>
                     items.Varia && (
                         World.CanEnter("Norfair Upper East", items) && items.CanUsePowerBombs() && items.SpaceJump && items.Gravity ||

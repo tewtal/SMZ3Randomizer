@@ -22,8 +22,8 @@ namespace Randomizer.SMZ3 {
     }
 
     abstract class SMRegion : Region {
-        public SMRegion(World world, Config config)
-            : base(world, config) { }
+        public SMLogic Logic => Config.SMLogic;
+        public SMRegion(World world, Config config) : base(world, config) { }
     }
 
     abstract class Z3Region : Region {
