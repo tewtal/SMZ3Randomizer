@@ -1,17 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using Randomizer.Contracts;
 
 namespace Randomizer.SMZ3 {
 
     public class Randomizer : IRandomizer {
 
+        static readonly RNGCryptoServiceProvider cryptoRng = new RNGCryptoServiceProvider();
+
         public ISeedData GenerateSeed(IDictionary<string, string> options, string seed) {
-            if (seed == "") {
-                seed = new Random().Next().ToString();
+            int randoSeed;
+            if (string.IsNullOrEmpty(seed)) {
+                randoSeed = StrongRng();
+                seed = randoSeed.ToString();
+            } else {
+                randoSeed = int.Parse(seed);
             }
 
-            var rnd = new Random(int.Parse(seed));
+            var randoRnd = new Random(randoSeed);
 
             var logic = Logic.Tournament;
             if (options.ContainsKey("logic")) {
@@ -32,7 +39,7 @@ namespace Randomizer.SMZ3 {
 
             var guid = Guid.NewGuid().ToString();
 
-            var filler = new Filler(worlds, config, rnd);
+            var filler = new Filler(worlds, config, randoRnd);
             filler.Fill();
 
             var playthrough = new Playthrough(worlds);
@@ -48,7 +55,7 @@ namespace Randomizer.SMZ3 {
             };
 
             /* Make sure RNG is the same when applying patches to the ROM to have consistent RNG for seed identifer etc */
-            int patchSeed = rnd.Next();
+            int patchSeed = randoRnd.Next();
             foreach (var world in worlds) {
                 var patchRnd = new Random(patchSeed);
                 var patch = new Patch(world, worlds, seedData.Guid, patchRnd);
@@ -63,6 +70,13 @@ namespace Randomizer.SMZ3 {
             }
 
             return seedData;
+        }
+
+        int StrongRng() {
+            var bytes = new byte[4];
+            cryptoRng.GetBytes(bytes);
+            // non-negative number by dropping sign bit
+            return BitConverter.ToInt32(bytes) & 0x7FFFFFFF;
         }
 
     }
