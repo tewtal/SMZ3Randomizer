@@ -13,7 +13,6 @@ namespace Randomizer.SMZ3 {
 
         readonly List<World> allWorlds;
         readonly World myWorld;
-        readonly string myWorldGuid;
         readonly string seedGuid;
         readonly Random rnd;
         StringTable stringTable;
@@ -28,8 +27,7 @@ namespace Randomizer.SMZ3 {
         public Patch(World myWorld, List<World> allWorlds, string seedGuid, Random rnd) {
             this.myWorld = myWorld;
             this.allWorlds = allWorlds;
-            myWorldGuid = myWorld.Guid.Replace("-", "");
-            this.seedGuid = seedGuid.Replace("-", "");
+            this.seedGuid = seedGuid;
             this.rnd = rnd;
         }
 
@@ -286,7 +284,7 @@ namespace Randomizer.SMZ3 {
             /* Seed configuration bitfield */
             patches.Add((0x00FF52, UintBytes(0)));
             patches.Add((0x00FF60, AsciiBytes(seedGuid)));
-            patches.Add((0x00FF80, AsciiBytes(myWorldGuid)));
+            patches.Add((0x00FF80, AsciiBytes(myWorld.Guid)));
         }
 
         void WriteWishingWellRoomData() {
