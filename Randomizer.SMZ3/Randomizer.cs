@@ -27,10 +27,8 @@ namespace Randomizer.SMZ3 {
 
             int players = options.ContainsKey("worlds") ? int.Parse(options["worlds"]) : 1;
             for (int p = 0; p < players; p++) {
-                worlds.Add(new World(config, options[$"player-{p}"], p));
+                worlds.Add(new World(config, options[$"player-{p}"], p, new HexGuid()));
             }
-
-            var guid = Guid.NewGuid().ToString();
 
             var filler = new Filler(worlds, config, rnd);
             filler.Fill();
@@ -39,7 +37,7 @@ namespace Randomizer.SMZ3 {
             var spheres = playthrough.Generate();
 
             var seedData = new SeedData {
-                Guid = guid.Replace("-", ""),
+                Guid = new HexGuid(),
                 Seed = seed,
                 Game = "SMAlttP Combo Randomizer",
                 Logic = logic.ToString(),
@@ -54,7 +52,7 @@ namespace Randomizer.SMZ3 {
                 var patch = new Patch(world, worlds, seedData.Guid, patchRnd);
                 var worldData = new WorldData {
                     Id = world.Id,
-                    Guid = world.Guid.Replace("-", ""),
+                    Guid = world.Guid,
                     Player = world.Player,
                     Patches = patch.Create(config)
                 };

@@ -30,7 +30,6 @@ namespace Randomizer.SMZ3 {
 
         readonly List<World> allWorlds;
         readonly World myWorld;
-        readonly string myWorldGuid;
         readonly string seedGuid;
         readonly Random rnd;
         StringTable stringTable;
@@ -45,8 +44,7 @@ namespace Randomizer.SMZ3 {
         public Patch(World myWorld, List<World> allWorlds, string seedGuid, Random rnd) {
             this.myWorld = myWorld;
             this.allWorlds = allWorlds;
-            myWorldGuid = myWorld.Guid.Replace("-", "");
-            this.seedGuid = seedGuid.Replace("-", "");
+            this.seedGuid = seedGuid;
             this.rnd = rnd;
         }
 
@@ -231,8 +229,7 @@ namespace Randomizer.SMZ3 {
         (int, byte[]) ItemTablePatch(Location location, byte itemId) {
             var type = location.Item.World == location.Region.World ? 0 : 1;
             var owner = location.Item.World.Id;
-            var extra = 0;
-            return (0x386000 + (location.Id * 8), new[] { type, itemId, owner, extra }.SelectMany(UshortBytes).ToArray());
+            return (0x386000 + (location.Id * 8), new[] { type, itemId, owner, 0 }.SelectMany(UshortBytes).ToArray());
         }
 
         void WriteDungeonMusic(bool keysanity) {
@@ -464,15 +461,15 @@ namespace Randomizer.SMZ3 {
                 name = name.PadLeft(name.Length + (int)Math.Ceiling(pad));
                 name = name.PadRight(name.Length + (int)Math.Floor(pad));
             }
-            return AsciiBytes(name.ToUpper()).Concat(new byte[] { 0x00, 0x00, 0x00, 0x00 }).ToArray();
+            return AsAscii(name.ToUpper()).Concat(UintBytes(0)).ToArray();
         }
 
         void WriteSeedData() {
             patches.Add((SMSnes(0xC07F50), UshortBytes(myWorld.Id)));
             /* Seed configuration bitfield */
             patches.Add((SMSnes(0xC07F52), UintBytes(0)));
-            patches.Add((SMSnes(0xC07F60), AsciiBytes(seedGuid)));
-            patches.Add((SMSnes(0xC07F80), AsciiBytes(myWorldGuid)));
+            patches.Add((SMSnes(0xC07F60), AsAscii(seedGuid)));
+            patches.Add((SMSnes(0xC07F80), AsAscii(myWorld.Guid)));
         }
 
         void WriteWishingWellRoomData() {
@@ -607,7 +604,7 @@ namespace Randomizer.SMZ3 {
 
         byte[] UshortBytes(int value) => BitConverter.GetBytes((ushort)value);
 
-        byte[] AsciiBytes(string s) => Encoding.ASCII.GetBytes(s);
+        byte[] AsAscii(string text) => Encoding.ASCII.GetBytes(text);
 
     }
 
