@@ -32,19 +32,27 @@ namespace Randomizer.CLI {
                 HelpText = "Generate a specific seed")]
             public string Seed { get; set; } = string.Empty;
 
-            [Option("rom",
-                HelpText = "Compile rom file of the first world for each seed. Provide the path to the IPS patch.")]
-            public string Rom { get; set; }
+            [Option(
+                HelpText = "Compile rom file of the first world for each seed. Use the ips option to provide all required IPS patchs.")]
+            public bool Rom { get; set; }
+
+            [Option(
+                HelpText = "Specify paths for IPS patches to be applied in the specified order.")]
+            public IEnumerable<string> Ips { get; set; }
+
+            [Option(
+                HelpText = "Specify paths for RDC resources to be applied in the specified order.")]
+            public IEnumerable<string> Rdc { get; set; }
 
             [Option("no-interact",
                 HelpText = "Do not wait for keyboard input")]
             public bool NoInteract { get; set; }
 
-            [Option("playthrough",
+            [Option(
                 HelpText = "Show json formated playthrough for each seed")]
             public bool Playthrough { get; set; }
 
-            [Option("patch",
+            [Option(
                 HelpText = "Show json formated patch for each world in the seed")]
             public bool Patch { get; set; }
 
@@ -71,7 +79,7 @@ namespace Randomizer.CLI {
 
             public SMOptions() {
                 smRom = new Lazy<byte[]>(() => {
-                    using var ips = File.OpenRead(Rom);
+                    using var ips = File.OpenRead(Ips.First());
                     var rom = File.ReadAllBytes(smFile);
                     RomPatch.ApplyIps(rom, ips);
                     return rom;
@@ -92,7 +100,7 @@ namespace Randomizer.CLI {
                 smz3Rom = new Lazy<byte[]>(() => {
                     using var sm = File.OpenRead(smFile);
                     using var z3 = File.OpenRead(z3File);
-                    using var ips = File.OpenRead(Rom);
+                    using var ips = File.OpenRead(Ips.First());
                     var rom = RomPatch.CombineSMZ3Rom(sm, z3);
                     RomPatch.ApplyIps(rom, ips);
                     return rom;
@@ -141,11 +149,13 @@ namespace Randomizer.CLI {
                 $"Spheres: {data.Playthrough.Count}",
                 $"Generation time: {end - start}"
             ));
-            if (opts.Rom != null) {
+            if (opts.Rom) {
                 try {
                     var world = data.Worlds.First();
                     var rom = opts.BaseRom();
                     RomPatch.ApplySeed(rom, world.Patches);
+                    AdditionalPatches(rom, opts.Ips.Skip(1));
+                    ApplyRdcResources(rom, opts.Rdc);
                     File.WriteAllBytes($"{data.Game} {data.Logic} - {data.Seed} - {world.Player}.sfc", rom);
                 } catch (Exception e) {
                     Console.Error.WriteLine(e.Message);
@@ -161,6 +171,24 @@ namespace Randomizer.CLI {
                     new PatchWriteConverter()
                 ));
                 Interact(opts);
+            }
+        }
+
+        static void AdditionalPatches(byte[] rom, IEnumerable<string> ips) {
+            foreach (var patch in ips) {
+                using var stream = File.OpenRead(patch);
+                RomPatch.ApplyIps(rom, stream);
+            }
+        }
+
+        static void ApplyRdcResources(byte[] rom, IEnumerable<string> rdc) {
+            foreach (var resource in rdc) {
+                using var stream = File.OpenRead(resource);
+                var content = Rdc.Parse(stream);
+                if (content.TryParse<LinkSprite>(stream, out var block))
+                    block.Apply(rom);
+                if (content.TryParse<SamusSprite>(stream, out block))
+                    block.Apply(rom);
             }
         }
 
