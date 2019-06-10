@@ -47,9 +47,8 @@ export class Multiworld extends Component {
 
         this.connection.on("UpdateClients", async (clients) => {
             if (this.state.sessionData != null) {
-                this.state.sessionData.clients = clients;
                 this.setState({
-                    sessionData: this.state.sessionData
+                    sessionData: { ...this.state.sessionData, clients }
                 });
             }
         });
@@ -178,7 +177,7 @@ export class Multiworld extends Component {
 
             let sessionData = await response.json();
             this.setState({
-                sessionData: sessionData,
+                sessionData: sortWorldsByOrdinal(sessionData),
                 sessionState: 1,
                 sessionInfo: "Session found, connecting to server"
             });
@@ -190,6 +189,12 @@ export class Multiworld extends Component {
                 sessionInfo: "Error trying to establish session: " + err
             });
         }
+    }
+
+    sortWorldsByOrdinal(data) {
+        let worlds = data.seed.worlds;
+        worlds = [...worlds].sort((a, b) => a.worldId - b.worldId);
+        return { ...data, seed: { ...data.seed, worlds } };
     }
 
     async startHub() {
