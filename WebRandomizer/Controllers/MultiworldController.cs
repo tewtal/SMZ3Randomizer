@@ -28,6 +28,10 @@ namespace WebRandomizer.Controllers {
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Session(string guid) {
             var session = context.Sessions.Include(x => x.Clients).Include(x => x.Seed).ThenInclude(x => x.Worlds).SingleOrDefault(x => x.Guid == guid);
+
+            /* Sort these on the server side to make sure it's always in a consistent order by world Id */
+            session.Seed.Worlds = session.Seed.Worlds.OrderBy(x => x.WorldId).ToList();
+
             if (session != null) {
                 return new OkObjectResult(session);
             }

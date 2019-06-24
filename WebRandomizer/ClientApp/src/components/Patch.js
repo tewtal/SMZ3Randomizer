@@ -87,8 +87,20 @@ export class Patch extends Component {
 
     async handleDownloadRom(e) {
         try {
-            let patchedData = await this.patchFile(Uint8Array.from(atob(this.props.patchData), c => c.charCodeAt(0)));
-            saveAs(new Blob([patchedData]), this.props.fileName);
+
+            /* find world by clients worldId to make sure we get the right world */
+            let world = null;
+            for (let i = 0; i < this.props.sessionData.seed.worlds.length; i++) {
+                if (this.props.sessionData.seed.worlds[i].worldId === this.props.clientData.worldId) {
+                    world = this.props.sessionData.seed.worlds[i];
+                }
+            }
+
+            if (world !== null) {
+                let patchedData = await this.patchFile(Uint8Array.from(atob(world.patch), c => c.charCodeAt(0)));
+                saveAs(new Blob([patchedData]), this.props.fileName);
+            }
+
         } catch (err) {
             console.log(err);
         }

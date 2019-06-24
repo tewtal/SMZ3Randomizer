@@ -25,8 +25,9 @@ namespace WebRandomizer {
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
-            services.AddMvc()
-                .AddNewtonsoftJson();
+            services.AddMvc(options => {
+                options.EnableEndpointRouting = false;
+            }).AddNewtonsoftJson();
 
             services.AddDbContext<RandomizerContext>
                 //(options => options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));

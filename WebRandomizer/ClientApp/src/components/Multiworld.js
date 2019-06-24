@@ -234,7 +234,7 @@ export class Multiworld extends Component {
             <div>
                 {this.state.sessionId ? (<Seed onRegisterPlayer={this.handleRegisterPlayer} sessionState={this.state.sessionState} sessionInfo={this.state.sessionInfo} sessionId={this.state.sessionId} sessionData={this.state.sessionData} />) : ""}
                 <br />
-                {this.state.clientData !== null ? (<Patch patchData={this.state.sessionData.seed.worlds[this.state.clientData.worldId].patch} fileName={this.state.sessionData.seed.gameName + " - " + this.state.sessionData.seed.seedNumber + " - " + this.state.clientData.name + ".sfc"} />) : ""}
+                {this.state.clientData !== null ? (<Patch sessionData={this.state.sessionData} clientData={this.state.clientData} fileName={this.state.sessionData.seed.gameName + " - " + this.state.sessionData.seed.seedNumber + " - " + this.state.clientData.name + ".sfc"} />) : ""}
                 <br />
                 {this.state.clientData !== null ? (<Connection connState={this.state.connState} clientData={this.state.clientData} connInfo={this.state.connInfo} onConnectClick={this.handleConnect} />) : ""}
                 <br />
