@@ -23,7 +23,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
                 new Location(this, 130, 0x7C2EF, LocationType.Visible, "Missile (Gravity Suit)", Config.Logic switch {
                     Casual => items => CanUnlockShip(items) &&
                         (items.Grapple || items.SpaceJump || items.Varia && items.HasEnergyReserves(2) || items.HasEnergyReserves(3)),
-                    _ => new Requirement(items => CanUnlockShip(items) && items.Varia || items.HasEnergyReserves(1))
+                    _ => new Requirement(items => CanUnlockShip(items) && (items.Varia || items.HasEnergyReserves(1)))
                 }),
                 new Location(this, 131, 0x7C319, LocationType.Visible, "Missile (Wrecked Ship top)",
                     items => CanUnlockShip(items)),
@@ -40,7 +40,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
                 new Location(this, 135, 0x7C36D, LocationType.Chozo, "Gravity Suit", Config.Logic switch {
                     Casual => items => CanUnlockShip(items) &&
                         (items.Grapple || items.SpaceJump || items.Varia && items.HasEnergyReserves(2) || items.HasEnergyReserves(3)),
-                    _ => new Requirement(items => CanUnlockShip(items) && items.Varia || items.HasEnergyReserves(1))
+                    _ => new Requirement(items => CanUnlockShip(items) && (items.Varia || items.HasEnergyReserves(1)))
                 })
             };
         }
