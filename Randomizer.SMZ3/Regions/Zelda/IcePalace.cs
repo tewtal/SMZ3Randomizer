@@ -18,11 +18,9 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                 new Location(this, 256+162, 0xE9E0, LocationType.Regular, "Ice Palace - Spike Room",
                     items => items.Hookshot || items.BigKeyIP && items.Has(KeyIP)),
                 new Location(this, 256+163, 0xE9DD, LocationType.Regular, "Ice Palace - Map Chest",
-                    items => items.Hammer && items.CanLiftLight() &&
-                        items.Hookshot || items.BigKeyIP && items.Has(KeyIP)),
+                    items => items.Hammer && items.CanLiftLight() && Locations.Get("Ice Palace - Spike Room").Available(items)),
                 new Location(this, 256+164, 0xE9A4, LocationType.Regular, "Ice Palace - Big Key Chest",
-                    items => items.Hammer && items.CanLiftLight() &&
-                        items.Hookshot || items.BigKeyIP && items.Has(KeyIP)),
+                    items => items.Hammer && items.CanLiftLight() && Locations.Get("Ice Palace - Spike Room").Available(items)),
                 new Location(this, 256+165, 0xE9E3, LocationType.Regular, "Ice Palace - Iced T Room"),
                 new Location(this, 256+166, 0xE995, LocationType.Regular, "Ice Palace - Freezor Chest"),
                 new Location(this, 256+167, 0xE9AA, LocationType.Regular, "Ice Palace - Big Chest",
