@@ -16,7 +16,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
             Locations = new List<Location> {
                 new Location(this, 256+161, 0xE9D4, LocationType.Regular, "Ice Palace - Compass Chest"),
                 new Location(this, 256+162, 0xE9E0, LocationType.Regular, "Ice Palace - Spike Room",
-                    items => items.Hookshot || items.BigKeyIP && items.Has(KeyIP)),
+                    items => items.Hookshot || items.BigKeyIP && items.KeyIP >= 1),
                 new Location(this, 256+163, 0xE9DD, LocationType.Regular, "Ice Palace - Map Chest",
                     items => items.Hammer && items.CanLiftLight() && Locations.Get("Ice Palace - Spike Room").Available(items)),
                 new Location(this, 256+164, 0xE9A4, LocationType.Regular, "Ice Palace - Big Key Chest",
@@ -27,7 +27,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                     items => items.BigKeyIP),
                 new Location(this, 256+168, 0x180157, LocationType.Regular, "Ice Palace - Kholdstare",
                     items => items.BigKeyIP && items.Hammer && items.CanLiftLight() &&
-                        items.Has(KeyIP, items.Somaria ? 1 : 2)),
+                        items.KeyIP >= (items.Somaria ? 1 : 2)),
             };
         }
 

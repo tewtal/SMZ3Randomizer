@@ -26,16 +26,16 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                 new Location(this, 256+193, 0xEAC1, LocationType.Regular, "Ganon's Tower - DMs Room - Bottom Right",
                     items => items.Hammer && items.Hookshot),
                 new Location(this, 256+194, 0xEAD3, LocationType.Regular, "Ganon's Tower - Map Chest",
-                    items => items.Hammer && (items.Hookshot || items.Boots) && items.Has(KeyGT,
-                        new[] { BigKeyGT, KeyGT }.Contains(Locations.Get("Ganon's Tower - Map Chest").ItemType) ? 3 : 4))
-                    .AlwaysAllow((item, items) => item.Type == KeyGT && items.Has(KeyGT, 3)),
+                    items => items.Hammer && (items.Hookshot || items.Boots) && items.KeyGT >=
+                        (new[] { BigKeyGT, KeyGT }.Contains(Locations.Get("Ganon's Tower - Map Chest").ItemType) ? 3 : 4))
+                    .AlwaysAllow((item, items) => item.Type == KeyGT && items.KeyGT >= 3),
                 new Location(this, 256+195, 0xEAD0, LocationType.Regular, "Ganon's Tower - Firesnake Room",
-                    items => items.Hammer && items.Hookshot && items.Has(KeyGT, new[] {
-                        Locations.Get("Ganon's Tower - Randomizer Room - Top Right"),
-                        Locations.Get("Ganon's Tower - Randomizer Room - Top Left"),
-                        Locations.Get("Ganon's Tower - Randomizer Room - Bottom Left"),
-                        Locations.Get("Ganon's Tower - Randomizer Room - Bottom Right")
-                    }.Any(l => l.ItemType == BigKeyGT) ||
+                    items => items.Hammer && items.Hookshot && items.KeyGT >= (new[] {
+                            Locations.Get("Ganon's Tower - Randomizer Room - Top Right"),
+                            Locations.Get("Ganon's Tower - Randomizer Room - Top Left"),
+                            Locations.Get("Ganon's Tower - Randomizer Room - Bottom Left"),
+                            Locations.Get("Ganon's Tower - Randomizer Room - Bottom Right")
+                        }.Any(l => l.ItemType == BigKeyGT) ||
                         Locations.Get("Ganon's Tower - Firesnake Room").ItemType == KeyGT ? 2 : 3)),
                 new Location(this, 256+196, 0xEAC4, LocationType.Regular, "Ganon's Tower - Randomizer Room - Top Left",
                     items => LeftSide(items, new[] {
@@ -90,11 +90,11 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                         Locations.Get("Ganon's Tower - Compass Room - Bottom Left")
                     })),
                 new Location(this, 256+207, 0xEADF, LocationType.Regular, "Ganon's Tower - Bob's Chest",
-                    items => items.Has(KeyGT, 3) && (
+                    items => items.KeyGT >= 3 && (
                         items.Hammer && items.Hookshot ||
                         items.Somaria && items.Firerod)),
                 new Location(this, 256+208, 0xEAD6, LocationType.Regular, "Ganon's Tower - Big Chest",
-                    items => items.BigKeyGT && items.Has(KeyGT, 3) && (
+                    items => items.BigKeyGT && items.KeyGT >= 3 && (
                         items.Hammer && items.Hookshot ||
                         items.Somaria && items.Firerod))
                     .Allow((item, items) => item.Type != BigKeyGT),
@@ -108,7 +108,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                 new Location(this, 256+214, 0xEB03, LocationType.Regular, "Ganon's Tower - Pre-Moldorm Chest", TowerAscend)
                     .Allow((item, items) => item.Type != BigKeyGT),
                 new Location(this, 256+215, 0xEB06, LocationType.Regular, "Ganon's Tower - Moldorm Chest",
-                    items => items.BigKeyGT && items.Has(KeyGT, 4) &&
+                    items => items.BigKeyGT && items.KeyGT >= 4 &&
                         items.Bow && items.CanLightTorches() &&
                         CanBeatMoldorm(items) && items.Hookshot)
                     .Allow((item, items) => new[] { KeyGT, BigKeyGT }.Contains(item.Type) == false),
@@ -116,20 +116,20 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         }
 
         private bool LeftSide(Progression items, IList<Location> locations) {
-            return items.Hammer && items.Hookshot && items.Has(KeyGT, locations.Any(l => l.ItemType == BigKeyGT) ? 3 : 4);
+            return items.Hammer && items.Hookshot && items.KeyGT >= (locations.Any(l => l.ItemType == BigKeyGT) ? 3 : 4);
         }
 
         private bool RightSide(Progression items, IList<Location> locations) {
-            return items.Somaria && items.Firerod && items.Has(KeyGT, locations.Any(l => l.ItemType == BigKeyGT) ? 3 : 4);
+            return items.Somaria && items.Firerod && items.KeyGT >= (locations.Any(l => l.ItemType == BigKeyGT) ? 3 : 4);
         }
 
         private bool BigKeyRoom(Progression items) {
-            return items.Has(KeyGT, 3) && CanBeatArmos(items) 
+            return items.KeyGT >= 3 && CanBeatArmos(items) 
                 && (items.Hammer && items.Hookshot || items.Firerod && items.Somaria);
         }
 
         private bool TowerAscend(Progression items) {
-            return items.BigKeyGT && items.Has(KeyGT, 3) && items.Bow && items.CanLightTorches();
+            return items.BigKeyGT && items.KeyGT >= 3 && items.Bow && items.CanLightTorches();
         }   
             
         private bool CanBeatArmos(Progression items) {

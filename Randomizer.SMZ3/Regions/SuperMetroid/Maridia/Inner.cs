@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.Logic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
@@ -81,9 +80,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
 
         bool CanDefeatDraygon(Progression items) {
             return World.Config.Logic switch {
-                Casual => CanDefeatBotwoon(items) && (!World.Config.Keysanity || items.Has(DraygonKey)) &&
+                Casual => CanDefeatBotwoon(items) && (!World.Config.Keysanity || items.DraygonKey) &&
                     items.Gravity && (items.SpeedBooster && items.HiJump || items.CanFly()),
-                _ => CanDefeatBotwoon(items) && (!World.Config.Keysanity || items.Has(DraygonKey)) &&
+                _ => CanDefeatBotwoon(items) && (!World.Config.Keysanity || items.DraygonKey) &&
                     items.Gravity
             };
         }

@@ -387,6 +387,17 @@ namespace Randomizer.SMZ3 {
         public bool KeyTH { get; private set; }
         public bool KeySP { get; private set; }
         public bool KeyTT { get; private set; }
+        public int KeyCT { get; private set; }
+        public int KeyPD { get; private set; }
+        public int KeySW { get; private set; }
+        public int KeyIP { get; private set; }
+        public int KeyMM { get; private set; }
+        public int KeyTR { get; private set; }
+        public int KeyGT { get; private set; }
+        public bool KraidKey { get; private set; }
+        public bool PhantoonKey { get; private set; }
+        public bool DraygonKey { get; private set; }
+        public bool RidleyKey { get; private set; }
         public bool CanBlockLasers { get { return shield >= 3; } }
         public bool Sword { get; private set; }
         public bool MasterSword { get; private set; }
@@ -436,11 +447,7 @@ namespace Randomizer.SMZ3 {
         public int ETank { get; private set; }
         public int ReserveTank { get; private set; }
 
-        public bool Has(ItemType itemType) => remaining.Any(x => x == itemType);
-        public bool Has(ItemType itemType, int amount) => remaining.Count(x => x == itemType) >= amount;
-
         int shield;
-        readonly List<ItemType> remaining = new List<ItemType>();
 
         public Progression(IEnumerable<Item> items) {
             Add(items);
@@ -465,6 +472,10 @@ namespace Randomizer.SMZ3 {
                     ItemType.KeyTH => KeyTH = true,
                     ItemType.KeySP => KeySP = true,
                     ItemType.KeyTT => KeyTT = true,
+                    ItemType.KraidKey => KraidKey = true,
+                    ItemType.PhantoonKey => PhantoonKey = true,
+                    ItemType.DraygonKey => DraygonKey = true,
+                    ItemType.RidleyKey => RidleyKey = true,
                     ItemType.Bow => Bow = true,
                     ItemType.Hookshot => Hookshot = true,
                     ItemType.Mushroom => Mushroom = true,
@@ -511,15 +522,16 @@ namespace Randomizer.SMZ3 {
                     continue;
 
                 switch (item.Type) {
-                    case ProgressiveShield:
-                        shield += 1;
-                        break;
-                    case ItemType.ETank:
-                        ETank += 1;
-                        break;
-                    case ItemType.ReserveTank:
-                        ReserveTank += 1;
-                        break;
+                    case ItemType.KeyCT: KeyCT += 1; break;
+                    case ItemType.KeyPD: KeyPD += 1; break;
+                    case ItemType.KeySW: KeySW += 1; break;
+                    case ItemType.KeyIP: KeyIP += 1; break;
+                    case ItemType.KeyMM: KeyMM += 1; break;
+                    case ItemType.KeyTR: KeyTR += 1; break;
+                    case ItemType.KeyGT: KeyGT += 1; break;
+                    case ItemType.ETank: ETank += 1; break;
+                    case ItemType.ReserveTank: ReserveTank += 1; break;
+                    case ProgressiveShield: shield += 1; break;
                     case ProgressiveSword:
                         MasterSword = Sword;
                         Sword = true;
@@ -531,9 +543,6 @@ namespace Randomizer.SMZ3 {
                     case ItemType.PowerBomb:
                         TwoPowerBombs = PowerBomb;
                         PowerBomb = true;
-                        break;
-                    default:
-                        remaining.Add(item.Type);
                         break;
                 }
             }

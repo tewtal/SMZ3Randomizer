@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.Logic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid {
@@ -46,7 +45,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
         }
 
         bool CanUnlockShip(Progression items) {
-            return !Config.Keysanity || items.Has(PhantoonKey);
+            return !Config.Keysanity || items.PhantoonKey;
         }
 
         public override bool CanEnter(Progression items) {

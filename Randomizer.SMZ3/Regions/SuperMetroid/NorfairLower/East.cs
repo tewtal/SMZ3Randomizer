@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.Logic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
@@ -30,7 +29,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
                     _ => items => items.Morph && items.CanDestroyBombWalls()
                 }),
                 new Location(this, 78, 0xC79108, LocationType.Hidden, "Energy Tank, Ridley", Config.Logic switch {
-                    _ => new Requirement(items => (!Config.Keysanity || items.Has(RidleyKey)) && items.CanUsePowerBombs() && items.Super)
+                    _ => new Requirement(items => (!Config.Keysanity || items.RidleyKey) && items.CanUsePowerBombs() && items.Super)
                 }),
                 new Location(this, 80, 0xC79184, LocationType.Visible, "Energy Tank, Firefleas")
             };
