@@ -187,7 +187,7 @@ export class Runner extends Component {
 
     async sendItem(worldId, itemId) {
         try {
-            return await this.props.hubConnection.invoke("SendItem", this.props.sessionData.guid, worldId, itemId);
+            return await this.props.hubConnection.invoke("SendItem", this.props.sessionData.guid, parseInt(worldId, 10), parseInt(itemId, 10));
         } catch (err) {
             console.log("Error sending item to player", err);
             return false;
