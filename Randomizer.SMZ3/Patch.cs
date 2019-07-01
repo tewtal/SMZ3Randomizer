@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using static System.Linq.Enumerable;
 using Randomizer.SMZ3.Regions.Zelda;
 using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.RewardType;
@@ -331,11 +332,7 @@ namespace Randomizer.SMZ3 {
             (drop, _) = prizes;
             patches.Add((0xE82CC, new[] { drop }));
 
-            /* Enemy prize pack assignment */
-            patches.AddRange(EnemyPrizePackPatches().Select(x => {
-                var prizePacks = RandomPrizePacks().Take(x.bytes.Length);
-                return (x.offset, x.bytes.Zip(prizePacks, (b, p) => (byte)(b | p)).ToArray());
-            }));
+            patches.AddRange(EnemyPrizePackDistribution());
 
             /* Pack drop chance */
             /* 0 => 100%, 1 => 50%, 3 => 25% */
@@ -346,17 +343,59 @@ namespace Randomizer.SMZ3 {
                 Difficulty.Hard => (byte)1,
                 _ => (byte)3,
             };
-            patches.Add((0x37A62, Enumerable.Repeat(p, nrPacks).ToArray()));
+            patches.Add((0x37A62, Repeat(p, nrPacks).ToArray()));
         }
 
-        IEnumerable<byte> RandomPrizePacks() {
-            while (true) yield return (byte)(rnd.Next(7) + 1);
+        IEnumerable<(int offset, byte[] bytes)> EnemyPrizePackDistribution() {
+            var (prizePacks, duplicatePacks) = EnemyPrizePacks();
+
+            var n = prizePacks.Sum(x => x.bytes.Length);
+            var randomization = PrizePackRandomization(n, 1);
+
+            var patches = prizePacks.Select(x => {
+                IEnumerable<byte> packs;
+                (packs, randomization) = randomization.SplitOff(x.bytes.Length);
+                return (x.offset, bytes: x.bytes.Zip(packs, (b, p) => (byte)(b | p)).ToArray());
+            }).ToList();
+
+            var duplicates =
+                from d in duplicatePacks
+                from p in patches
+                where p.offset == d.src
+                select (d.dest, p.bytes);
+            patches.AddRange(duplicates.ToList());
+
+            return patches;
+        }
+
+        /* Guarantees at least s of each prize pack, over a total of n packs.
+         * In each iteration, from the product n * m, use the guaranteed number
+         * at k, where k is the "row" (integer division by m), when k falls
+         * within the list boundary. Otherwise use the "column" (modulo by m)
+         * as the random element.
+         */
+        IEnumerable<byte> PrizePackRandomization(int n, int s) {
+            const int m = 7;
+            var g = Repeat(Range(0, m), s).SelectMany(x => x).ToList();
+
+            IEnumerable<int> randomization(int n) {
+                n = m * n;
+                while (n > 0) {
+                    var r = rnd.Next(n);
+                    var k = r / m;
+                    yield return k < g.Count ? g[k] : r % m;
+                    if (k < g.Count) g.RemoveAt(k);
+                    n -= m;
+                }
+            }
+
+            return randomization(n).Select(x => (byte)(x + 1)).ToList();
         }
 
         /* Todo: Deadrock turns into $8F Blob when powdered, but those "onion blobs" always drop prize pack 1. */
-        IEnumerable<(int offset, byte[] bytes)> EnemyPrizePackPatches() {
+        (IList<(int offset, byte[] bytes)>, IList<(int src, int dest)>) EnemyPrizePacks() {
             const int offset = 0x6B632;
-            return new[] {
+            var patches = new[] {
                 /* sprite_prep */
                 (0x3088D, new byte[] { 0x00 }), // Keese DW
                 (0x308A8, new byte[] { 0x00 }), // Rope
@@ -376,8 +415,9 @@ namespace Randomizer.SMZ3 {
                 // Blue Archer, Green Archer
                 // Red Javelin Soldier, Red Bush Javelin Soldier
                 // Red Bomb Soldiers, Green Soldier Recruits,
-                // Geldman, Toppo, Popo, Popo 2
-                (offset+0x41, new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x10, 0x90, 0x90, 0x80, 0x80, 0x80 }),
+                // Geldman, Toppo
+                (offset+0x41, new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x10, 0x90, 0x90, 0x80 }),
+                (offset+0x4F, new byte[] { 0x80 }), // Popo 2
                 (offset+0x51, new byte[] { 0x80 }), // Armos
                 (offset+0x55, new byte[] { 0x00, 0x00 }), // Ku, Zora
                 (offset+0x58, new byte[] { 0x90 }), // Crab
@@ -403,6 +443,11 @@ namespace Randomizer.SMZ3 {
                 (offset+0xD0, new byte[] { 0x10 }), // Lynel
                 (offset+0xD3, new byte[] { 0x00 }), // Stal
             };
+            var duplicates = new[] {
+                /* Popo2 -> Popo. Popo is not used in vanilla Z3, but we duplicate from Popo2 just to be sure */
+                (offset + 0x4F, offset + 0x4E),
+            };
+            return (patches, duplicates);
         }
 
         void WriteStringTable() {
@@ -515,7 +560,7 @@ namespace Randomizer.SMZ3 {
         }
 
         void WriteRngBlock() {
-            patches.Add((0x178000, Enumerable.Range(0, 1024).Select(x => (byte)rnd.Next(0x100)).ToArray()));
+            patches.Add((0x178000, Range(0, 1024).Select(x => (byte)rnd.Next(0x100)).ToArray()));
         }
 
         void WriteSmithyQuickItemGive() {
