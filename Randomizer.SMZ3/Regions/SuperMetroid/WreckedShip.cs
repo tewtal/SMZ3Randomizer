@@ -13,31 +13,31 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
 
         public WreckedShip(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
-                new Location(this, 128, 0x7C265, LocationType.Visible, "Missile (Wrecked Ship middle)"),
-                new Location(this, 129, 0x7C2E9, LocationType.Chozo, "Reserve Tank, Wrecked Ship", Config.Logic switch {
+                new Location(this, 128, 0xC7C265, LocationType.Visible, "Missile (Wrecked Ship middle)"),
+                new Location(this, 129, 0xC7C2E9, LocationType.Chozo, "Reserve Tank, Wrecked Ship", Config.Logic switch {
                     Casual => items => CanUnlockShip(items) && items.SpeedBooster && items.CanUsePowerBombs() &&
                         (items.Grapple || items.SpaceJump || items.Varia && items.HasEnergyReserves(2) || items.HasEnergyReserves(3)),
                     _ => new Requirement(items => CanUnlockShip(items) && items.CanUsePowerBombs() && items.SpeedBooster &&
                         (items.Varia || items.HasEnergyReserves(2)))
                 }),
-                new Location(this, 130, 0x7C2EF, LocationType.Visible, "Missile (Gravity Suit)", Config.Logic switch {
+                new Location(this, 130, 0xC7C2EF, LocationType.Visible, "Missile (Gravity Suit)", Config.Logic switch {
                     Casual => items => CanUnlockShip(items) &&
                         (items.Grapple || items.SpaceJump || items.Varia && items.HasEnergyReserves(2) || items.HasEnergyReserves(3)),
                     _ => new Requirement(items => CanUnlockShip(items) && (items.Varia || items.HasEnergyReserves(1)))
                 }),
-                new Location(this, 131, 0x7C319, LocationType.Visible, "Missile (Wrecked Ship top)",
+                new Location(this, 131, 0xC7C319, LocationType.Visible, "Missile (Wrecked Ship top)",
                     items => CanUnlockShip(items)),
-                new Location(this, 132, 0x7C337, LocationType.Visible, "Energy Tank, Wrecked Ship", Config.Logic switch {
+                new Location(this, 132, 0xC7C337, LocationType.Visible, "Energy Tank, Wrecked Ship", Config.Logic switch {
                     Casual => items => CanUnlockShip(items) &&
                         (items.HiJump || items.SpaceJump || items.SpeedBooster || items.Gravity),
                     _ => new Requirement(items => CanUnlockShip(items) && (items.Bombs || items.PowerBomb || items.CanSpringBallJump() ||
                         items.HiJump || items.SpaceJump || items.SpeedBooster || items.Gravity))
                 }),
-                new Location(this, 133, 0x7C357, LocationType.Visible, "Super Missile (Wrecked Ship left)",
+                new Location(this, 133, 0xC7C357, LocationType.Visible, "Super Missile (Wrecked Ship left)",
                     items => CanUnlockShip(items)),
-                new Location(this, 134, 0x7C365, LocationType.Visible, "Right Super, Wrecked Ship",
+                new Location(this, 134, 0xC7C365, LocationType.Visible, "Right Super, Wrecked Ship",
                     items => CanUnlockShip(items)),
-                new Location(this, 135, 0x7C36D, LocationType.Chozo, "Gravity Suit", Config.Logic switch {
+                new Location(this, 135, 0xC7C36D, LocationType.Chozo, "Gravity Suit", Config.Logic switch {
                     Casual => items => CanUnlockShip(items) &&
                         (items.Grapple || items.SpaceJump || items.Varia && items.HasEnergyReserves(2) || items.HasEnergyReserves(3)),
                     _ => new Requirement(items => CanUnlockShip(items) && (items.Varia || items.HasEnergyReserves(1)))
