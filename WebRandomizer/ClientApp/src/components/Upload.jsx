@@ -1,5 +1,6 @@
 ﻿import React, { Component } from 'react';
 import { Form, Row, Col, Button } from 'reactstrap';
+import { mergeRoms } from '../file_handling';
 
 export class Upload extends Component {
     static displayName = Upload.name;
@@ -20,23 +21,23 @@ export class Upload extends Component {
         let fileDataLTTP = null;
 
         try {
-            fileDataSM = await this.readFile(smFile);
+            fileDataSM = new Uint8Array(await this.readFile(smFile));
         } catch (err) {
             console.log("Could not read uploaded SM file data", err);
             return;
         }
 
         try {
-            fileDataLTTP = await this.readFile(lttpFile);
+            fileDataLTTP = new Uint8Array(await this.readFile(lttpFile));
         } catch (err) {
             console.log("Could not read uploaded LTTP file data", err);
             return;
         }
 
-        let fileData = this.mergeROMS(fileDataSM, fileDataLTTP);
+        const fileData = mergeRoms(fileDataSM, fileDataLTTP);
 
         try {
-            await this.localForage.setItem("baseRomCombo", fileData);
+            await this.localForage.setItem("baseRomCombo", new Blob([fileData]));
         } catch (err) {
             console.log("Could not store file to localforage:", err);
             return;
@@ -59,32 +60,6 @@ export class Upload extends Component {
 
             fileReader.readAsArrayBuffer(file);
         });
-    }
-
-    async mergeROMS(smRomBuffer, alttpRomBuffer) {
-        let smRom = new Uint8Array(smRomBuffer);
-        let alttpRom = new Uint8Array(alttpRomBuffer);
-
-        let data = new Uint8Array(0x600000);
-
-        let pos = 0;
-        for (let i = 0; i < 0x40; i++) {
-            let hi_bank = smRom.slice((i * 0x8000), (i * 0x8000) + 0x8000);
-            let lo_bank = smRom.slice(((i + 0x40) * 0x8000), ((i + 0x40) * 0x8000) + 0x8000);
-
-            data.set(lo_bank, pos);
-            data.set(hi_bank, pos + 0x8000);
-            pos += 0x10000;
-        }
-
-        pos = 0x400000;
-        for (let i = 0; i < 0x20; i++) {
-            let hi_bank = alttpRom.slice((i * 0x8000), (i * 0x8000) + 0x8000);
-            data.set(hi_bank, pos + 0x8000);
-            pos += 0x10000;
-        }
-
-        return new Blob([data]);
     }
 
     render() {

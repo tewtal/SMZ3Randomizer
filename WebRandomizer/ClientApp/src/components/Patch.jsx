@@ -2,6 +2,7 @@
 import { Form, Row, Col, Card, CardBody, Button } from 'reactstrap';
 import { saveAs } from 'file-saver';
 import { Upload } from './Upload';
+import { applyIps, applySeed } from '../file_handling';
 import baseIps from '../files/zsm_190803.ips';
 
 export class Patch extends Component {
@@ -35,40 +36,24 @@ export class Patch extends Component {
             }
 
             if (world !== null) {
-                let patchedData = await this.patchFile(Uint8Array.from(atob(world.patch), c => c.charCodeAt(0)));
+                let patchedData = await this.prepareRom(world.patch);
                 saveAs(new Blob([patchedData]), this.props.fileName);
             }
         } catch (err) {
             console.log(err);
         }
     }
-    
-    patchFile = async (patchData) => {
-        return new Promise(async (resolve, reject) => {
-            try {
-                let i = 0;
-                let fileBuf = await this.localForage.getItem("baseRomCombo");
-                let outBuf = await this.readBlob(fileBuf);
 
-                outBuf = await this.applyIPS(outBuf, baseIps);
-                if (outBuf === null) {
-                    reject(false);
-                }
+    async prepareRom(world_patch) {
+        const rom_blob = await this.localForage.getItem("baseRomCombo");
+        const rom = await this.readBlob(rom_blob);
+        const base_patch = new Uint8Array(await (await fetch(baseIps)).arrayBuffer());
+        world_patch = Uint8Array.from(atob(world_patch), c => c.charCodeAt(0));
 
-                while (i < patchData.length) {
-                    let target = patchData[i] + (patchData[i + 1] << 8) + (patchData[i + 2] << 16) + (patchData[i + 3] << 24);
-                    let size = patchData[i + 4] + (patchData[i + 5] << 8);
-                    i += 6;
-                    for (let j = 0; j < size; j++) {
-                        outBuf[target + j] = patchData[i + j];
-                    }
-                    i += size;
-                }
-                resolve(outBuf);
-            } catch (err) {
-                reject(err);
-            }
-        });
+        applyIps(rom, base_patch);
+        applySeed(rom, world_patch);
+
+        return rom;
     }
 
     async readBlob(blob) {
@@ -85,37 +70,6 @@ export class Patch extends Component {
 
             fileReader.readAsArrayBuffer(blob);
         });
-    }
-
-    async applyIPS(fileBuf, ipsUrl) {
-        try {
-            let ips = await fetch(ipsUrl);
-            let patchBuf = new Uint8Array(await ips.arrayBuffer());
-
-            let i = 5;
-            while (i < patchBuf.length) {
-                let offset = (patchBuf[i] << 16) + (patchBuf[i + 1] << 8) + (patchBuf[i + 2]);
-                let size = (patchBuf[i + 3] << 8) + (patchBuf[i + 4]);
-                i += 5;
-                if (size > 0) {
-                    for (let j = 0; j < size; j++) {
-                        fileBuf[offset + j] = patchBuf[i + j];
-                    }
-                    i += size;
-                } else {
-                    let rleSize = (patchBuf[i] << 8) + (patchBuf[i + 1]);
-                    let rleByte = patchBuf[i + 2];
-                    for (let j = 0; j < rleSize; j++) {
-                        fileBuf[offset + j] = rleByte;
-                    }
-                    i += 3;
-                }
-            }
-
-            return fileBuf;
-        } catch (err) {
-            return null;
-        }
     }
 
     handleSubmit = (e) => e.preventDefault()
