@@ -1,4 +1,20 @@
-﻿export const mergeRoms = (sm_rom, z3_rom) => {
+﻿export const readAsArrayBuffer = async (blob) => {
+    const fileReader = new FileReader();
+    return new Promise((resolve, reject) => {
+        fileReader.onerror = () => {
+            fileReader.abort();
+            reject(new DOMException("Error parsing data"));
+        };
+
+        fileReader.onload = (e) => {
+            resolve(e.target.result);
+        };
+
+        fileReader.readAsArrayBuffer(blob);
+    });
+};
+
+export const mergeRoms = (sm_rom, z3_rom) => {
     const data = new Uint8Array(0x600000);
 
     let pos = 0;

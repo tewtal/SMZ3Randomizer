@@ -2,7 +2,7 @@
 import { Form, Row, Col, Card, CardBody, Button } from 'reactstrap';
 import { saveAs } from 'file-saver';
 import { Upload } from './Upload';
-import { applyIps, applySeed } from '../file_handling';
+import { readAsArrayBuffer, applyIps, applySeed } from '../file_handling';
 import baseIps from '../files/zsm_190803.ips';
 
 export class Patch extends Component {
@@ -46,7 +46,7 @@ export class Patch extends Component {
 
     async prepareRom(world_patch) {
         const rom_blob = await this.localForage.getItem("baseRomCombo");
-        const rom = await this.readBlob(rom_blob);
+        const rom = new Uint8Array(await readAsArrayBuffer(rom_blob));
         const base_patch = new Uint8Array(await (await fetch(baseIps)).arrayBuffer());
         world_patch = Uint8Array.from(atob(world_patch), c => c.charCodeAt(0));
 
@@ -54,22 +54,6 @@ export class Patch extends Component {
         applySeed(rom, world_patch);
 
         return rom;
-    }
-
-    async readBlob(blob) {
-        const fileReader = new FileReader();
-        return new Promise((resolve, reject) => {
-            fileReader.onerror = () => {
-                fileReader.abort();
-                reject(new DOMException("Error parsing blob"));
-            };
-
-            fileReader.onload = (e) => {
-                resolve(new Uint8Array(e.target.result));
-            };
-
-            fileReader.readAsArrayBuffer(blob);
-        });
     }
 
     handleSubmit = (e) => e.preventDefault()

@@ -1,6 +1,6 @@
 ﻿import React, { Component } from 'react';
 import { Form, Row, Col, Button } from 'reactstrap';
-import { mergeRoms } from '../file_handling';
+import { readAsArrayBuffer, mergeRoms } from '../file_handling';
 
 export class Upload extends Component {
     static displayName = Upload.name;
@@ -21,14 +21,14 @@ export class Upload extends Component {
         let fileDataLTTP = null;
 
         try {
-            fileDataSM = new Uint8Array(await this.readFile(smFile));
+            fileDataSM = new Uint8Array(await readAsArrayBuffer(smFile));
         } catch (err) {
             console.log("Could not read uploaded SM file data", err);
             return;
         }
 
         try {
-            fileDataLTTP = new Uint8Array(await this.readFile(lttpFile));
+            fileDataLTTP = new Uint8Array(await readAsArrayBuffer(lttpFile));
         } catch (err) {
             console.log("Could not read uploaded LTTP file data", err);
             return;
@@ -44,22 +44,6 @@ export class Upload extends Component {
         }
 
         this.props.onUpload();
-    }
-
-    async readFile(file) {
-        const fileReader = new FileReader();
-        return new Promise((resolve, reject) => {
-            fileReader.onerror = () => {
-                fileReader.abort();
-                reject(new DOMException("Error parsing file"));
-            };
-
-            fileReader.onload = (e) => {
-                resolve(e.target.result);
-            };
-
-            fileReader.readAsArrayBuffer(file);
-        });
     }
 
     render() {
