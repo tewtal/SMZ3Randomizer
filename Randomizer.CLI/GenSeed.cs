@@ -183,9 +183,9 @@ namespace Randomizer.CLI {
                 using var stream = File.OpenRead(resource);
                 var content = Rdc.Parse(stream);
                 if (content.TryParse<LinkSprite>(stream, out var block))
-                    block.Apply(rom);
+                    (block as DataBlock)?.Apply(rom);
                 if (content.TryParse<SamusSprite>(stream, out block))
-                    block.Apply(rom);
+                    (block as DataBlock)?.Apply(rom);
             }
         }
 

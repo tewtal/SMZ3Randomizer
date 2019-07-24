@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Randomizer.CLI {
 
@@ -72,12 +74,76 @@ namespace Randomizer.CLI {
             return true;
         }
 
+        public static void Write(Stream stream, string author, params BlockType[] blocks) {
+            using var data = new BinaryWriter(stream, Encoding.UTF8, true);
+            data.Write(header);
+            data.Write((byte) Version);
+
+            var authorData = NullTermBytes(author);
+
+            data.Write((uint) blocks.Length);
+            var offset = stream.Position + blocks.Length * 2 * sizeof(uint) + authorData.Length;
+            foreach (var block in blocks) {
+                data.Write(block.Type);
+                data.Write((uint) offset);
+                offset += block.Length;
+            }
+
+            stream.Write(authorData);
+
+            foreach (var block in blocks) {
+                block.Write(stream);
+            }
+        }
+
+        static byte[] NullTermBytes(string author) {
+            using var writer = new MemoryStream();
+            writer.Write(Encoding.UTF8.GetBytes(author));
+            writer.WriteByte(0);
+            return writer.ToArray();
+        }
+
     }
 
     interface BlockType {
         uint Type { get; }
-        void Parse(Stream stream);
-        void Apply(byte[] rom);
+        int Length { get; }
+        void Parse(Stream rdc);
+        void Write(Stream rdc);
+    }
+
+    class MetaDataBlock : BlockType {
+
+        public uint Type { get; } = 0;
+
+        public JToken Content { get; private set; }
+
+        public int Length {
+            get { return sizeof(uint) + Encoding.UTF8.GetByteCount(Content.ToString(Formatting.None)); }
+        }
+
+        public MetaDataBlock() { }
+
+        public MetaDataBlock(JToken content) {
+            Content = content;
+        }
+
+        public void Parse(Stream stream) {
+            using var data = new BinaryReader(stream, Encoding.UTF8, true);
+            var length = data.ReadUInt32();
+            var bytes = data.ReadBytes((int) length);
+            var meta = Encoding.UTF8.GetString(bytes);
+            Content = JToken.Parse(meta);
+        }
+
+        public void Write(Stream stream) {
+            using var data = new BinaryWriter(stream, Encoding.UTF8, true);
+            var meta = Content.ToString(Formatting.None);
+            var bytes = Encoding.UTF8.GetBytes(meta);
+            data.Write((uint) bytes.Length);
+            data.Write(bytes);
+        }
+
     }
 
     abstract class DataBlock : BlockType {
@@ -88,12 +154,27 @@ namespace Randomizer.CLI {
 
         protected readonly IList<byte[]> content = new List<byte[]>();
 
+        public int Length {
+            get {
+                return Manifest.Sum(field => {
+                    var (_, length, offsets) = field;
+                    return length * offsets.Count();
+                });
+            }
+        }
+
         public void Parse(Stream stream) {
             byte[] slice;
             foreach (var (_, length, offsets) in Manifest) {
                 var count = offsets.Count();
                 stream.Read(slice = new byte[count * length]);
                 content.Add(slice);
+            }
+        }
+
+        public void Write(Stream stream) {
+            foreach (var data in content) {
+                stream.Write(data);
             }
         }
 
