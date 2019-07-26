@@ -4,9 +4,10 @@ using System.IO;
 using System.Linq;
 using CommandLine;
 using Newtonsoft.Json;
+using Randomizer.CLI.FileData;
 using Randomizer.Contracts;
 
-namespace Randomizer.CLI {
+namespace Randomizer.CLI.Verbs {
 
     abstract class GenSeedOptions {
 
@@ -80,7 +81,7 @@ namespace Randomizer.CLI {
             smRom = new Lazy<byte[]>(() => {
                 using var ips = File.OpenRead(Ips.First());
                 var rom = File.ReadAllBytes(smFile);
-                RomPatch.ApplyIps(rom, ips);
+                FileData.Rom.ApplyIps(rom, ips);
                 return rom;
             });
         }
@@ -100,8 +101,8 @@ namespace Randomizer.CLI {
                 using var sm = File.OpenRead(smFile);
                 using var z3 = File.OpenRead(z3File);
                 using var ips = File.OpenRead(Ips.First());
-                var rom = RomPatch.CombineSMZ3Rom(sm, z3);
-                RomPatch.ApplyIps(rom, ips);
+                var rom = FileData.Rom.CombineSMZ3Rom(sm, z3);
+                FileData.Rom.ApplyIps(rom, ips);
                 return rom;
             });
         }
@@ -150,7 +151,7 @@ namespace Randomizer.CLI {
                 try {
                     var world = data.Worlds.First();
                     var rom = opts.BaseRom();
-                    RomPatch.ApplySeed(rom, world.Patches);
+                    Rom.ApplySeed(rom, world.Patches);
                     AdditionalPatches(rom, opts.Ips.Skip(1));
                     ApplyRdcResources(rom, opts.Rdc);
                     File.WriteAllBytes($"{data.Game} {data.Logic} - {data.Seed} - {world.Player}.sfc", rom);
@@ -174,7 +175,7 @@ namespace Randomizer.CLI {
         static void AdditionalPatches(byte[] rom, IEnumerable<string> ips) {
             foreach (var patch in ips) {
                 using var stream = File.OpenRead(patch);
-                RomPatch.ApplyIps(rom, stream);
+                Rom.ApplyIps(rom, stream);
             }
         }
 

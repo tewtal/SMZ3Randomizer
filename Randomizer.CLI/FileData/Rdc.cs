@@ -6,7 +6,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Randomizer.CLI {
+namespace Randomizer.CLI.FileData {
 
     class Rdc {
 

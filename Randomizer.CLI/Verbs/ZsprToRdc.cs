@@ -2,8 +2,9 @@
 using System.IO;
 using CommandLine;
 using Newtonsoft.Json.Linq;
+using Randomizer.CLI.FileData;
 
-namespace Randomizer.CLI {
+namespace Randomizer.CLI.Verbs {
 
     [Verb("zsprtordc", HelpText = "Convert a ZSPR link sprite file to an RDC file")]
     class ZsprToRdcOptions {

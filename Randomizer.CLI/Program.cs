@@ -1,4 +1,5 @@
 ﻿using CommandLine;
+using Randomizer.CLI.Verbs;
 
 namespace Randomizer.CLI {
 

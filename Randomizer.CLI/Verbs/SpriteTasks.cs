@@ -8,8 +8,9 @@ using System.Text.RegularExpressions;
 using CommandLine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Randomizer.CLI.FileData;
 
-namespace Randomizer.CLI {
+namespace Randomizer.CLI.Verbs {
 
     abstract class SpriteTaskOptions {
 
