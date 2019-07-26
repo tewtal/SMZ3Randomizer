@@ -74,6 +74,11 @@ namespace Randomizer.CLI {
             return true;
         }
 
+        public bool Contains<TBlock>() where TBlock : BlockType, new() {
+            var template = new TBlock();
+            return offsets.ContainsKey(template.Type);
+        }
+
         public static void Write(Stream stream, string author, params BlockType[] blocks) {
             using var data = new BinaryWriter(stream, Encoding.UTF8, true);
             data.Write(header);
@@ -216,6 +221,18 @@ namespace Randomizer.CLI {
             };
         }
 
+        public byte[] Fetch8x8(int tileIndex) {
+            byte[] bytes;
+            content[0].AsSpan(tileIndex * 0x20, 0x20).CopyTo(bytes = new byte[0x20]);
+            return bytes;
+        }
+
+        public byte[] FetchPalette(int index) {
+            byte[] bytes;
+            content[1].AsSpan(index * 30, 30).CopyTo(bytes = new byte[30]);
+            return bytes;
+        }
+
     }
 
     class SamusSprite : DataBlock {
@@ -289,6 +306,18 @@ namespace Randomizer.CLI {
                 (Addr(0x22A5A0), 28, Single),         // Ship Standard
                 (Addr(0xDCA54), 2, Offsets(14, 0x6)),   // Ship Glow
             };
+        }
+
+        public byte[] FetchDma8x8(int tileIndex) {
+            byte[] bytes;
+            var addr = tileIndex * 0x20;
+            var bank = content[addr / 0x8000];
+            bank.AsSpan(addr % 0x8000, 0x20).CopyTo(bytes = new byte[0x20]);
+            return bytes;
+        }
+
+        public byte[] FetchPowerStandardPalette() {
+            return content[20];
         }
 
     }
