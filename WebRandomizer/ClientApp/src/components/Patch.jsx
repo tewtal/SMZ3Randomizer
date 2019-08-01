@@ -1,14 +1,39 @@
 ﻿import React, { Component } from 'react';
-import { Form, Row, Col, Card, CardBody, Button } from 'reactstrap';
+import { Form, Row, Col, Card, CardBody, Button, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import styled from 'styled-components';
 import { saveAs } from 'file-saver';
+
+import DropdownSelect from './primitives/DropdownSelect';
 import { Upload } from './Upload';
-import { PlayerSprite } from './PlayerSprite';
+
 import { readAsArrayBuffer, applyIps, applySeed } from '../file_handling';
 import { parse_rdc } from '../file_handling/rdc';
+
 import sprites from '../files/sprite/inventory.json';
 import baseIps from '../files/zsm_190803.ips';
 import spriteEngineIps from '../files/zsm_sm_sprite_engine.ips';
+
+// through bootstrap "$input-btn-padding-x"
+const inputPaddingX = '.75rem';
+
+const SpriteOption = styled.div`
+    display: flex;
+    white-space: nowrap;
+    > * { flex: none; }
+`;
+
+const Z3Sprite = styled.option`
+    width: 16px;
+    height: 24px;
+    margin-right: ${inputPaddingX};
+    background-size: auto 24px;
+    background-position: -${props => props.index * 16}px 0;
+    background-image: url(${process.env.PUBLIC_URL}/sprites/z3.png);
+`;
+
+const SMSprite = styled(Z3Sprite)`
+    background-image: url(${process.env.PUBLIC_URL}/sprites/sm.png);
+`;
 
 export class Patch extends Component {
     static displayName = Patch.name;
@@ -94,14 +119,19 @@ export class Patch extends Component {
 
         const component = uploading ? <Upload onUpload={this.handleUploadRoms} /> :
             <Form onSubmit={this.handleSubmit}>
-                <Row>
+                <Row className="mb-3">
                     <Col md="6">
-                        <PlayerSprite options={this.sprites.z3} onChange={this.onZ3SpriteChange} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col md="6">
-                        <PlayerSprite options={this.sprites.sm} onChange={this.onSMSpriteChange} />
+                        <InputGroup className="flex-nowrap">
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText>Play as</InputGroupText>
+                            </InputGroupAddon>
+                            <DropdownSelect placeholder="Select Z3 sprite" initialIndex={0} onIndexChange={this.onZ3SpriteChange}>
+                                {this.sprites.z3.map(({ title }, i) => <SpriteOption key={title}><Z3Sprite index={i} />{title}</SpriteOption>)}
+                            </DropdownSelect>
+                            <DropdownSelect placeholder="Select SM sprite" initialIndex={0} onIndexChange={this.onSMSpriteChange}>
+                                {this.sprites.sm.map(({ title }, i) => <SpriteOption key={title}><SMSprite index={i} />{title}</SpriteOption>)}
+                            </DropdownSelect>
+                        </InputGroup>
                     </Col>
                 </Row>
                 <Row>
