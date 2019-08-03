@@ -71,11 +71,10 @@ namespace Randomizer.CLI {
 
             public SMOptions() {
                 smRom = new Lazy<byte[]>(() => {
-                    using (var ips = File.OpenRead(Rom)) {
-                        var rom = File.ReadAllBytes(smFile);
-                        RomPatch.ApplyIps(rom, ips);
-                        return rom;
-                    }
+                    using var ips = File.OpenRead(Rom);
+                    var rom = File.ReadAllBytes(smFile);
+                    RomPatch.ApplyIps(rom, ips);
+                    return rom;
                 });
             }
 
@@ -91,13 +90,12 @@ namespace Randomizer.CLI {
 
             public SMZ3Options() {
                 smz3Rom = new Lazy<byte[]>(() => {
-                    using (var sm = File.OpenRead(smFile))
-                    using (var z3 = File.OpenRead(z3File))
-                    using (var ips = File.OpenRead(Rom)) {
-                        var rom = RomPatch.CombineSMZ3Rom(sm, z3);
-                        RomPatch.ApplyIps(rom, ips);
-                        return rom;
-                    }
+                    using var sm = File.OpenRead(smFile);
+                    using var z3 = File.OpenRead(z3File);
+                    using var ips = File.OpenRead(Rom);
+                    var rom = RomPatch.CombineSMZ3Rom(sm, z3);
+                    RomPatch.ApplyIps(rom, ips);
+                    return rom;
                 });
             }
 
