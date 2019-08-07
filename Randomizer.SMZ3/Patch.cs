@@ -2,12 +2,29 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using static System.Linq.Enumerable;
 using Randomizer.SMZ3.Regions.Zelda;
 using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.RewardType;
+using static Randomizer.SMZ3.DropPrize;
 using Randomizer.SMZ3.Text;
 
 namespace Randomizer.SMZ3 {
+
+    enum DropPrize : byte {
+        Heart = 0xD8,
+        Green = 0xD9,
+        Blue = 0xDA,
+        Red = 0xDB,
+        Bomb1 = 0xDC,
+        Bomb4 = 0xDD,
+        Bomb8 = 0xDE,
+        Magic = 0xDF,
+        FullMagic = 0xE0,
+        Arrow5 = 0xE1,
+        Arrow10 = 0xE2,
+        Fairy = 0xE3,
+    }
 
     class Patch {
 
@@ -46,6 +63,8 @@ namespace Randomizer.SMZ3 {
             WritePyramidFairyChests();
 
             WriteDiggingGameRng();
+
+            WritePrizeShuffle(config.Difficulty);
 
             WriteOpenModeFlags();
 
@@ -262,6 +281,175 @@ namespace Randomizer.SMZ3 {
             };
         }
 
+        void WritePrizeShuffle(Difficulty difficulty) {
+            const int prizePackItems = 56;
+            const int treePullItems = 3;
+
+            IEnumerable<byte> bytes;
+            byte drop, final;
+
+            var pool = new DropPrize[] {
+                Heart, Heart, Heart, Heart, Green, Heart, Heart, Green,         // pack 1
+                Blue, Green, Blue, Red, Blue, Green, Blue, Blue,                // pack 2
+                FullMagic, Magic, Magic, Blue, FullMagic, Magic, Heart, Magic,  // pack 3
+                Bomb1, Bomb1, Bomb1, Bomb4, Bomb1, Bomb1, Bomb8, Bomb1,         // pack 4
+                Arrow5, Heart, Arrow5, Arrow10, Arrow5, Heart, Arrow5, Arrow10, // pack 5
+                Magic, Green, Heart, Arrow5, Magic, Bomb1, Green, Heart,        // pack 6
+                Heart, Fairy, FullMagic, Red, Bomb8, Heart, Red, Arrow10,       // pack 7
+                Green, Blue, Red, // from pull trees
+                Green, Red, // from prize crab
+                Green, // stunned prize
+                Red, // saved fish prize
+            }.AsEnumerable();
+
+            /* Hard+ does not allow fairy or full magic */
+            if (difficulty >= Difficulty.Hard) {
+                pool = pool.Select(prize =>
+                    prize == FullMagic ? Magic :
+                    prize == Fairy ? Heart : prize);
+            }
+
+            var prizes = pool.ToList().Shuffle(rnd).Cast<byte>();
+
+            /* prize pack drop order */
+            (bytes, prizes) = prizes.SplitOff(prizePackItems);
+            patches.Add((0x37A78, bytes.ToArray()));
+
+            /* tree pull prizes */
+            (bytes, prizes) = prizes.SplitOff(treePullItems);
+            patches.Add((0xEFBD4, bytes.ToArray()));
+
+            /* crab prizes */
+            (drop, final, prizes) = prizes;
+            patches.Add((0x329C8, new[] { drop }));
+            patches.Add((0x329C4, new[] { final }));
+
+            /* stun prize */
+            (drop, prizes) = prizes;
+            patches.Add((0x37993, new[] { drop }));
+
+            /* fish prize */
+            (drop, _) = prizes;
+            patches.Add((0xE82CC, new[] { drop }));
+
+            patches.AddRange(EnemyPrizePackDistribution());
+
+            /* Pack drop chance */
+            /* 0 => 100%, 1 => 50%, 3 => 25% */
+            const int nrPacks = 7;
+            var p = difficulty switch {
+                Difficulty.Easy => (byte)0,
+                Difficulty.Normal => (byte)1,
+                Difficulty.Hard => (byte)1,
+                _ => (byte)3,
+            };
+            patches.Add((0x37A62, Repeat(p, nrPacks).ToArray()));
+        }
+
+        IEnumerable<(int offset, byte[] bytes)> EnemyPrizePackDistribution() {
+            var (prizePacks, duplicatePacks) = EnemyPrizePacks();
+
+            var n = prizePacks.Sum(x => x.bytes.Length);
+            var randomization = PrizePackRandomization(n, 1);
+
+            var patches = prizePacks.Select(x => {
+                IEnumerable<byte> packs;
+                (packs, randomization) = randomization.SplitOff(x.bytes.Length);
+                return (x.offset, bytes: x.bytes.Zip(packs, (b, p) => (byte)(b | p)).ToArray());
+            }).ToList();
+
+            var duplicates =
+                from d in duplicatePacks
+                from p in patches
+                where p.offset == d.src
+                select (d.dest, p.bytes);
+            patches.AddRange(duplicates.ToList());
+
+            return patches;
+        }
+
+        /* Guarantees at least s of each prize pack, over a total of n packs.
+         * In each iteration, from the product n * m, use the guaranteed number
+         * at k, where k is the "row" (integer division by m), when k falls
+         * within the list boundary. Otherwise use the "column" (modulo by m)
+         * as the random element.
+         */
+        IEnumerable<byte> PrizePackRandomization(int n, int s) {
+            const int m = 7;
+            var g = Repeat(Range(0, m), s).SelectMany(x => x).ToList();
+
+            IEnumerable<int> randomization(int n) {
+                n = m * n;
+                while (n > 0) {
+                    var r = rnd.Next(n);
+                    var k = r / m;
+                    yield return k < g.Count ? g[k] : r % m;
+                    if (k < g.Count) g.RemoveAt(k);
+                    n -= m;
+                }
+            }
+
+            return randomization(n).Select(x => (byte)(x + 1)).ToList();
+        }
+
+        /* Todo: Deadrock turns into $8F Blob when powdered, but those "onion blobs" always drop prize pack 1. */
+        (IList<(int offset, byte[] bytes)>, IList<(int src, int dest)>) EnemyPrizePacks() {
+            const int offset = 0x6B632;
+            var patches = new[] {
+                /* sprite_prep */
+                (0x3088D, new byte[] { 0x00 }), // Keese DW
+                (0x308A8, new byte[] { 0x00 }), // Rope
+                (0x30967, new byte[] { 0x00, 0x00 }), // Crow/Dacto
+                (0x31125, new byte[] { 0x00, 0x00 }), // Red/Blue Hardhat Bettle
+                /* sprite properties */
+                (offset+0x01, new byte[] { 0x90 }), // Vulture
+                (offset+0x08, new byte[] { 0x00 }), // Octorok (One Way)
+                (offset+0x0A, new byte[] { 0x00 }), // Octorok (Four Way)
+                (offset+0x0D, new byte[] { 0x80, 0x90 }), // Buzzblob, Snapdragon
+                (offset+0x11, new byte[] { 0x90, 0x90, 0x00 }), // Hinox, Moblin, Mini Helmasaur
+                (offset+0x18, new byte[] { 0x90, 0x90 }), // Mini Moldorm, Poe/Hyu
+                (offset+0x20, new byte[] { 0x00 }), // Sluggula
+                (offset+0x22, new byte[] { 0x80, 0x00, 0x00 }), // Ropa, Red Bari, Blue Bari
+                // Blue Soldier/Tarus, Green Soldier, Red Spear Soldier
+                // Blue Assault Soldier, Red Assault Spear Soldier/Tarus
+                // Blue Archer, Green Archer
+                // Red Javelin Soldier, Red Bush Javelin Soldier
+                // Red Bomb Soldiers, Green Soldier Recruits,
+                // Geldman, Toppo
+                (offset+0x41, new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x10, 0x90, 0x90, 0x80 }),
+                (offset+0x4F, new byte[] { 0x80 }), // Popo 2
+                (offset+0x51, new byte[] { 0x80 }), // Armos
+                (offset+0x55, new byte[] { 0x00, 0x00 }), // Ku, Zora
+                (offset+0x58, new byte[] { 0x90 }), // Crab
+                (offset+0x64, new byte[] { 0x80 }), // Devalant (Shooter)
+                (offset+0x6A, new byte[] { 0x90, 0x90 }), // Ball N' Chain Trooper, Cannon Soldier
+                (offset+0x6D, new byte[] { 0x80, 0x80 }), // Rat/Buzz, (Stal)Rope
+                (offset+0x71, new byte[] { 0x80 }), // Leever
+                (offset+0x7C, new byte[] { 0x90 }), // Initially Floating Stal
+                (offset+0x81, new byte[] { 0xC0 }), // Hover
+                // Green Eyegore/Mimic, Red Eyegore/Mimic
+                // Detached Stalfos Body, Kodongo
+                (offset+0x83, new byte[] { 0x10, 0x10, 0x10, 0x00 }),
+                (offset+0x8B, new byte[] { 0x10 }), // Gibdo
+                (offset+0x8E, new byte[] { 0x00, 0x00 }), // Terrorpin, Blob
+                (offset+0x91, new byte[] { 0x10 }), // Stalfos Knight
+                (offset+0x99, new byte[] { 0x10 }), // Pengator
+                (offset+0x9B, new byte[] { 0x10 }), // Wizzrobe
+                // Blue Zazak, Red Zazak, Stalfos
+                // Green Zirro, Blue Zirro, Pikit
+                (offset+0xA5, new byte[] { 0x10, 0x10, 0x10, 0x80, 0x80, 0x80 }),
+                (offset+0xC7, new byte[] { 0x10 }), // Hokku-Bokku
+                (offset+0xC9, new byte[] { 0x10 }), // Tektite
+                (offset+0xD0, new byte[] { 0x10 }), // Lynel
+                (offset+0xD3, new byte[] { 0x00 }), // Stal
+            };
+            var duplicates = new[] {
+                /* Popo2 -> Popo. Popo is not used in vanilla Z3, but we duplicate from Popo2 just to be sure */
+                (offset + 0x4F, offset + 0x4E),
+            };
+            return (patches, duplicates);
+        }
+
         void WriteStringTable() {
             patches.Add((ComboOffset(0xE0000), stringTable.GetPaddedBytes()));
         }
@@ -372,7 +560,7 @@ namespace Randomizer.SMZ3 {
         }
 
         void WriteRngBlock() {
-            patches.Add((0x178000, Enumerable.Range(0, 1024).Select(x => (byte)rnd.Next(0x100)).ToArray()));
+            patches.Add((0x178000, Range(0, 1024).Select(x => (byte)rnd.Next(0x100)).ToArray()));
         }
 
         void WriteSmithyQuickItemGive() {
