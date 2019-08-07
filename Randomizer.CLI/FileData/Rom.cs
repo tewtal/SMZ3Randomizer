@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Randomizer.CLI {
+namespace Randomizer.CLI.FileData {
 
-    static class RomPatch {
+    static class Rom {
 
         public static byte[] CombineSMZ3Rom(Stream smRom, Stream z3Rom) {
             int pos;

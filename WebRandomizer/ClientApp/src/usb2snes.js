@@ -1,4 +1,6 @@
-﻿let ws = null;
+﻿import { readAsArrayBuffer } from './file_handling';
+
+let ws = null;
 let busy = false;
 
 export function get_ws() {
@@ -84,7 +86,7 @@ export async function sendBin(msg, size) {
 
         ws.onmessage = async (event) => {
             try {
-                let buf = await readBlobAsArrayBuffer(event.data);
+                let buf = await readAsArrayBuffer(event.data);
                 let arrayBuffer = new Uint8Array(buf);
 
                 if (outputBuffer === null) {
@@ -137,22 +139,6 @@ export async function runCmd(data) {
         } catch (err) {
             reject(err);
         }
-    });
-}
-
-function readBlobAsArrayBuffer(blob) {
-    const fileReader = new FileReader();
-    return new Promise((resolve, reject) => {
-        fileReader.onerror = () => {
-            fileReader.abort();
-            reject(new DOMException("Error parsing data"));
-        };
-
-        fileReader.onload = function (e) {
-            resolve(e.target.result);
-        };
-
-        fileReader.readAsArrayBuffer(blob);
     });
 }
 

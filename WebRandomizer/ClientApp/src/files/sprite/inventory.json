@@ -1,0 +1,54 @@
+{
+  "z3": [
+    {
+      "title": "Birb",
+      "path": "z3/birb.1.z3.rdc"
+    },
+    {
+      "title": "Cheep Cheep",
+      "path": "z3/cheepcheep.1.z3.rdc"
+    },
+    {
+      "title": "Dragonite",
+      "path": "z3/dragonite.1.z3.rdc"
+    },
+    {
+      "title": "Eggplant",
+      "path": "z3/eggplant.1.z3.rdc"
+    },
+    {
+      "title": "Megaman X",
+      "path": "z3/megaman-x.2.z3.rdc"
+    },
+    {
+      "title": "Parallel Worlds Link",
+      "path": "z3/parallelworldslink.1.z3.rdc"
+    },
+    {
+      "title": "Samus (Classic)",
+      "path": "z3/samus_classic.1.z3.rdc"
+    },
+    {
+      "title": "The Pug",
+      "path": "z3/pug.1.z3.rdc"
+    },
+    {
+      "title": "Zero Suit Samus",
+      "path": "z3/zerosuitsamus.2.z3.rdc"
+    }
+  ],
+  "sm": [
+    {
+      "title": "Galactic Federation Trooper",
+      "path": "sm/fed_trooper.sm.rdc"
+    },
+    {
+      "title": "Justin Bailey",
+      "path": "sm/bailey.sm.rdc"
+    },
+    {
+      "title": "Mega Man X",
+      "path": "sm/megaman-x.sm.rdc"
+    }
+  ]
+}
