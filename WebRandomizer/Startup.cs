@@ -62,6 +62,7 @@ namespace WebRandomizer {
 
             var provider = new FileExtensionContentTypeProvider();
             provider.Mappings[".ips"] = "application/octet-stream";
+            provider.Mappings[".rdc"] = "application/octet-stream";
 
             app.UseStaticFiles(new StaticFileOptions {
                 ContentTypeProvider = provider

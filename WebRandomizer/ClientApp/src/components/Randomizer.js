@@ -102,7 +102,7 @@ export class Randomizer extends Component {
                     <Col md="8">
                         <Card>
                             <CardHeader className="bg-primary text-white">
-                                New Randomized Game - SMZ3 Multiworld 0.3
+                                New Randomized Game - SMZ3 Multiworld 0.4
                             </CardHeader>
                             <CardBody>
                                 <Form onSubmit={this.createGame}>
