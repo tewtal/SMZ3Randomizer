@@ -10,7 +10,7 @@ import { readAsArrayBuffer, applyIps, applySeed } from '../file_handling';
 import { parse_rdc } from '../file_handling/rdc';
 
 import sprites from '../files/sprite/inventory.json';
-import baseIps from '../files/zsm_190803.ips';
+import baseIps from '../files/zsm_190808.ips';
 import spriteEngineIps from '../files/zsm_sm_sprite_engine.ips';
 
 // through bootstrap "$input-btn-padding-x"
