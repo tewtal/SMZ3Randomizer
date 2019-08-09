@@ -41,12 +41,19 @@ export class Patch extends Component {
     constructor(props) {
         super(props);
         this.localForage = require('localforage');
-        this.state = { patchState: 'upload' };
         this.sprites = {
             z3: [{ title: 'Link' }, ...sprites.z3],
-            sm: [{ title: 'Samus' }, ...sprites.sm],
+            sm: [
+                { title: 'Samus', vanilla: true },
+                { title: 'Revised Samus' },
+                ...sprites.sm
+            ],
         };
-
+        this.state = {
+            patchState: 'upload',
+            z3_sprite: this.sprites.z3[0],
+            sm_sprite: this.sprites.sm[0],
+        };
     }
 
     async componentDidMount() {
@@ -87,22 +94,26 @@ export class Patch extends Component {
     }
 
     async prepareRom(world_patch) {
+        const { z3_sprite, sm_sprite } = this.state;
+        const vanilla_sprite = sm_sprite.vanilla == true;
+
         const rom_blob = await this.localForage.getItem("baseRomCombo");
         const rom = new Uint8Array(await readAsArrayBuffer(rom_blob));
         const base_patch = new Uint8Array(await (await fetch(baseIps)).arrayBuffer());
-        const sprite_patch = new Uint8Array(await (await fetch(spriteEngineIps)).arrayBuffer());
+        const sprite_patch = vanilla_sprite ? null : new Uint8Array(await (await fetch(spriteEngineIps)).arrayBuffer());
         world_patch = Uint8Array.from(atob(world_patch), c => c.charCodeAt(0));
 
         applyIps(rom, base_patch);
-        applyIps(rom, sprite_patch);
-        await this.applySprite(rom, 'link_sprite', this.state.z3_sprite);
-        await this.applySprite(rom, 'samus_sprite', this.state.sm_sprite);
+        if (!vanilla_sprite)
+            applyIps(rom, sprite_patch);
+        await this.applySprite(rom, 'link_sprite', z3_sprite);
+        await this.applySprite(rom, 'samus_sprite', sm_sprite);
         applySeed(rom, world_patch);
 
         return rom;
     }
 
-    async applySprite(rom, block, sprite = {}) {
+    async applySprite(rom, block, sprite) {
         if (sprite.path) {
             const url = `${process.env.PUBLIC_URL}/sprites/${sprite.path}`;
             const rdc = new Uint8Array(await (await fetch(url)).arrayBuffer());
