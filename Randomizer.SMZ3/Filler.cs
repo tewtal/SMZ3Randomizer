@@ -31,8 +31,7 @@ namespace Randomizer.SMZ3 {
         }
 
         public void Fill() {
-
-            var initialFillItems = InitialFill(DungeonItems, Worlds);
+            InitialFill(DungeonItems, Worlds);
 
             foreach (var world in Worlds) {
                 var dungeon = DungeonItems.Where(x => x.World == world).ToList();
@@ -71,10 +70,28 @@ namespace Randomizer.SMZ3 {
             AssumedFill(ProgressionItems, new List<Item>(), Worlds);
             FastFill(NiceItems, Worlds);
             FastFill(JunkItems, Worlds);
-
         }
 
-        public void AssumedFill(List<Item> items, List<Item> baseItems, IEnumerable<World> worlds) {
+        void InitialFill(List<Item> itemPool, List<World> worlds) {
+            foreach (var world in worlds) {
+
+                /* Place Swamp Palace Key */
+                if (!Config.Keysanity) {
+                    var spKey = itemPool.Find(x => x.World == world && x.Type == ItemType.KeySP);
+                    world.Locations.Get("Swamp Palace - Entrance").Item = spKey;
+                    world.Items.Add(spKey);
+                    itemPool.Remove(spKey);
+                }
+
+                /* Place Skull Woods Pinball Key */
+                var swKey = itemPool.Find(x => x.World == world && x.Type == ItemType.KeySW);
+                world.Locations.Get("Skull Woods - Pinball Room").Item = swKey;
+                world.Items.Add(swKey);
+                itemPool.Remove(swKey);
+            }
+        }
+
+        void AssumedFill(List<Item> items, List<Item> baseItems, IEnumerable<World> worlds) {
             var assumedItems = new List<Item>(items);
             var locations = worlds.SelectMany(w => w.Locations).Empty().ToList();
 
@@ -109,7 +126,7 @@ namespace Randomizer.SMZ3 {
             }
         }
 
-        public IEnumerable<Item> CollectItems(IEnumerable<Item> items, IEnumerable<World> worlds) {
+        IEnumerable<Item> CollectItems(IEnumerable<Item> items, IEnumerable<World> worlds) {
             var assumedItems = new List<Item>(items);
             var remainingLocations = worlds.SelectMany(l => l.Locations).Filled().ToList();
             while(true) {
@@ -125,22 +142,22 @@ namespace Randomizer.SMZ3 {
             return assumedItems;
         }
 
-        public void FastFill(List<Item> items, List<World> worlds) {
-            while (items.Count > 0) {
-                var item = items.Shuffle(Rnd).First();
-                var location = worlds.SelectMany(x => x.Locations.Empty()).Shuffle(Rnd).First();
-                if (location != null) {
-                    location.Item = item;
-                    location.Region.World.Items.Add(item);
-                    items.Remove(item);
-                }
-                else {
-                    throw new Exception($"Tried to fill item: {item.Name}, but no locations was available");
-                }
+        void FrontFillItemInWorld(World world, List<Item> itemPool, ItemType itemType, bool restrictWorld = false) {
+            /* Get a shuffled list of available locations to place this item in */
+            Item item = restrictWorld ? itemPool.Get(itemType, world) : itemPool.Get(itemType);
+            var availableLocations = world.Locations.Empty().Available(world.Items).Shuffle(Rnd);
+            if (availableLocations.Count > 0) {
+                var locationToFill = availableLocations.First();
+                locationToFill.Item = item;
+                itemPool.Remove(item);
+                world.Items.Add(item);
+            }
+            else {
+                throw new Exception($"No location to place item: {item.Name}");
             }
         }
 
-        public void FastFillLocations(List<Item> items, List<Location> locations) {
+        void FastFillLocations(List<Item> items, List<Location> locations) {
             while (locations.Empty().Count() > 0) {
                 var item = items.Shuffle(Rnd).First();
                 var location = locations.Empty().Shuffle(Rnd).First();
@@ -155,39 +172,18 @@ namespace Randomizer.SMZ3 {
             }
         }
 
-        public List<Item> InitialFill(List<Item> itemPool, List<World> worlds) {
-            foreach (var world in worlds) {
-
-                /* Place Swamp Palace Key */
-                if (!Config.Keysanity) {
-                    var spKey = itemPool.Find(x => x.World == world && x.Type == ItemType.KeySP);
-                    world.Locations.Get("Swamp Palace - Entrance").Item = spKey;
-                    world.Items.Add(spKey);
-                    itemPool.Remove(spKey);
+        void FastFill(List<Item> items, List<World> worlds) {
+            while (items.Count > 0) {
+                var item = items.Shuffle(Rnd).First();
+                var location = worlds.SelectMany(x => x.Locations.Empty()).Shuffle(Rnd).First();
+                if (location != null) {
+                    location.Item = item;
+                    location.Region.World.Items.Add(item);
+                    items.Remove(item);
                 }
-
-                /* Place Skull Woods Pinball Key */
-                var swKey = itemPool.Find(x => x.World == world && x.Type == ItemType.KeySW);
-                world.Locations.Get("Skull Woods - Pinball Room").Item = swKey;
-                world.Items.Add(swKey);
-                itemPool.Remove(swKey);
-            }
-
-            return worlds.SelectMany(x => x.Items).ToList();
-        }
-
-        private void FrontFillItemInWorld(World world, List<Item> itemPool, ItemType itemType, bool restrictWorld = false) {
-            /* Get a shuffled list of available locations to place this item in */
-            Item item = restrictWorld ? itemPool.Get(itemType, world) : itemPool.Get(itemType);
-            var availableLocations = world.Locations.Empty().Available(world.Items).Shuffle(Rnd);
-            if (availableLocations.Count > 0) {
-                var locationToFill = availableLocations.First();
-                locationToFill.Item = item;
-                itemPool.Remove(item);
-                world.Items.Add(item);
-            }
-            else {
-                throw new Exception($"No location to place item: {item.Name}");
+                else {
+                    throw new Exception($"Tried to fill item: {item.Name}, but no locations was available");
+                }
             }
         }
 
