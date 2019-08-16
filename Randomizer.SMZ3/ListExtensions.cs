@@ -4,24 +4,17 @@ using System.Linq;
 
 namespace Randomizer.SMZ3 {
 
-    public static class ListExtensions {
+    static class EnumerableExtensions {
 
-        public static List<T> Shuffle<T>(this IList<T> list, Random random) {
-            var shuffledList = new List<T>(list);
-            var n = shuffledList.Count;
-            while (n > 1) {
-                n -= 1;
-                var k = random.Next(n + 1);
-                var value = shuffledList[k];
-                shuffledList[k] = shuffledList[n];
-                shuffledList[n] = value;
+        public static List<T> Shuffle<T>(this IEnumerable<T> list, Random rnd) {
+            var copy = new List<T>(list);
+            var n = copy.Count;
+            while ((n -= 1) > 0) {
+                var k = rnd.Next(n + 1);
+                (copy[n], copy[k]) = (copy[k], copy[n]);
             }
-            return shuffledList;
+            return copy;
         }
-
-    }
-
-    public static class EnumerableExtensions {
 
         public static (IEnumerable<T>, IEnumerable<T>) SplitOff<T>(this IEnumerable<T> list, int count) {
             var head = list.Take(count);

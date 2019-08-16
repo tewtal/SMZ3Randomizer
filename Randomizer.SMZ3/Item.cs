@@ -357,14 +357,20 @@ namespace Randomizer.SMZ3 {
 
     }
 
-    static class ItemListExtensions {
+    static class ItemsExtensions {
 
-        public static Item Get(this List<Item> items, ItemType itemType) {
-            return items.Find(i => i.Type == itemType);
+        public static Item Get(this IEnumerable<Item> items, ItemType itemType) {
+            var item = items.FirstOrDefault(i => i.Type == itemType);
+            if (item == null)
+                throw new InvalidOperationException($"Could not find an item of type {itemType}");
+            return item;
         }
 
-        public static Item Get(this List<Item> items, ItemType itemType, World world) {
-            return items.Find(i => i.Type == itemType && i.World == world);
+        public static Item Get(this IEnumerable<Item> items, ItemType itemType, World world) {
+            var item = items.FirstOrDefault(i => i.Type == itemType && i.World == world);
+            if (item == null)
+                throw new InvalidOperationException($"Could not find an item of type {itemType} in world {world.Id}");
+            return item;
         }
 
     }

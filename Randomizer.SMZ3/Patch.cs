@@ -307,7 +307,7 @@ namespace Randomizer.SMZ3 {
                     prize == Fairy ? Heart : prize);
             }
 
-            var prizes = pool.ToList().Shuffle(rnd).Cast<byte>();
+            var prizes = pool.Shuffle(rnd).Cast<byte>();
 
             /* prize pack drop order */
             (bytes, prizes) = prizes.SplitOff(prizePackItems);

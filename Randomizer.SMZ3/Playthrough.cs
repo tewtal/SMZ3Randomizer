@@ -21,7 +21,7 @@ namespace Randomizer.SMZ3 {
             while (items.Count < totalItemCount) {
                 var sphere = new Dictionary<string, string>();
 
-                var allLocations = worlds.SelectMany(w => w.Locations.Available(items.Where(i => i.World == w).ToList()));
+                var allLocations = worlds.SelectMany(w => w.Locations.Available(items.Where(i => i.World == w)));
                 var newLocations = allLocations.Except(locations).ToList();
                 var newItems = newLocations.Select(l => l.Item).ToList();
                 locations.AddRange(newLocations);

@@ -19,8 +19,8 @@ namespace Randomizer.SMZ3 {
             Config = config;
             Rnd = rnd;
 
-            /* Populate item pools and setup each world */
-            /* The order of the dungeon pool is significant */
+            /* Populate item pools and setup each world.
+             * The order of items in the dungeon pool is significant. */
             foreach (var world in worlds) {
                 DungeonItems.AddRange(Item.CreateDungeonPool(world));
                 ProgressionItems.AddRange(Item.CreateProgressionPool(world).Shuffle(Rnd));
@@ -39,7 +39,9 @@ namespace Randomizer.SMZ3 {
                 var progression = ProgressionItems.Where(x => x.World == world).ToList();
                 AssumedFill(dungeon, progression, new[] { world });
 
-                /* We place a PB and Super in Sphere 1 to make sure the filler doesn't start locking items behind this when there are a high chance of the trash fill actually making them available */
+                /* We place a PB and Super in Sphere 1 to make sure the filler
+                 * doesn't start locking items behind this when there are a
+                 * high chance of the trash fill actually making them available */
                 FrontFillItemInWorld(world, ProgressionItems, ItemType.Super, true);
                 FrontFillItemInWorld(world, ProgressionItems, ItemType.PowerBomb, true);
             }
@@ -49,7 +51,7 @@ namespace Randomizer.SMZ3 {
             var pearls = ProgressionItems.Where(x => x.Type == ItemType.MoonPearl).ToList();
             ProgressionItems.RemoveAll(x => x.Type == ItemType.MoonPearl);
             foreach (var pearl in pearls) {
-                ProgressionItems.Insert(ProgressionItems.Count - Rnd.Next(ProgressionItems.Count >> 1), pearl);
+                ProgressionItems.Insert(ProgressionItems.Count - Rnd.Next(ProgressionItems.Count / 2), pearl);
             }
 
             /* Place morph balls randomly in the last 25% of items to be placed to move it to an early game item */
@@ -57,12 +59,12 @@ namespace Randomizer.SMZ3 {
             var morphs = ProgressionItems.Where(x => x.Type == ItemType.Morph).ToList();
             ProgressionItems.RemoveAll(x => x.Type == ItemType.Morph);
             foreach(var morph in morphs) {
-                ProgressionItems.Insert(ProgressionItems.Count - Rnd.Next(ProgressionItems.Count >> 2), morph);
+                ProgressionItems.Insert(ProgressionItems.Count - Rnd.Next(ProgressionItems.Count / 4), morph);
             }
 
             /* GT Trash fill */
-            var gtLocations = Worlds.SelectMany(x => x.Locations).Where(x => x.Region is Regions.Zelda.GanonTower).ToList().Empty().Shuffle(Rnd);
-            var gtTrashLocations = gtLocations.Take((int)(gtLocations.Count() * 0.5)).ToList();
+            var gtLocations = Worlds.SelectMany(x => x.Locations).Where(x => x.Region is Regions.Zelda.GanonTower).Empty().Shuffle(Rnd);
+            var gtTrashLocations = gtLocations.Take(gtLocations.Count() / 2).ToList();
             FastFillLocations(JunkItems, gtTrashLocations);
 
             /* Next up we do assumed filling of progression items cross-world */
@@ -74,7 +76,7 @@ namespace Randomizer.SMZ3 {
 
         public void AssumedFill(List<Item> items, List<Item> baseItems, IEnumerable<World> worlds) {
             var assumedItems = new List<Item>(items);
-            var locations = worlds.SelectMany(w => w.Locations).ToList().Empty();
+            var locations = worlds.SelectMany(w => w.Locations).Empty().ToList();
 
             /* Place items until progression item pool is empty */
             while (assumedItems.Count > 0) {
@@ -86,8 +88,8 @@ namespace Randomizer.SMZ3 {
                 assumedItems.Remove(itemToPlace);
 
                 /* Get a location */
-                var inventory = CollectItems(assumedItems.Concat(baseItems).ToList(), worlds).ToList();
-                var locationsToPlace = locations.CanFillWithinWorld(itemToPlace, inventory);
+                var inventory = CollectItems(assumedItems.Concat(baseItems), worlds);
+                var locationsToPlace = locations.CanFillWithinWorld(itemToPlace, inventory).ToList();
 
                 if (locationsToPlace.Count == 0) {
                     assumedItems.Add(itemToPlace);
@@ -107,48 +109,48 @@ namespace Randomizer.SMZ3 {
             }
         }
 
-        public List<Item> CollectItems(List<Item> items, IEnumerable<World> worlds) {
-            var myItems = new List<Item>(items);
-            var availableLocations = worlds.SelectMany(l => l.Locations).Where(x => x.Item != null).ToList();
+        public IEnumerable<Item> CollectItems(IEnumerable<Item> items, IEnumerable<World> worlds) {
+            var assumedItems = new List<Item>(items);
+            var remainingLocations = worlds.SelectMany(l => l.Locations).Filled().ToList();
             while(true) {
-                var searchLocations = availableLocations.AvailableWithinWorld(myItems);
-                availableLocations = availableLocations.Except(searchLocations).ToList();
-                var foundItems = searchLocations.Select(x => x.Item).ToList();
+                var availableLocations = remainingLocations.AvailableWithinWorld(assumedItems);
+                remainingLocations = remainingLocations.Except(availableLocations).ToList();
+                var foundItems = availableLocations.Select(x => x.Item).ToList();
                 if (foundItems.Count == 0)
                     break;
 
-                myItems = myItems.Concat(foundItems).ToList();
+                assumedItems.AddRange(foundItems);
             }
 
-            return myItems;
+            return assumedItems;
         }
 
         public void FastFill(List<Item> items, List<World> worlds) {
             while (items.Count > 0) {
                 var item = items.Shuffle(Rnd).First();
-                var location = worlds.SelectMany(x => x.Locations.Empty()).ToList().Shuffle(Rnd).First();
+                var location = worlds.SelectMany(x => x.Locations.Empty()).Shuffle(Rnd).First();
                 if (location != null) {
                     location.Item = item;
                     location.Region.World.Items.Add(item);
                     items.Remove(item);
                 }
                 else {
-                    throw new Exception("Tried to fill item: " + item.Name + ", but no locations was available");
+                    throw new Exception($"Tried to fill item: {item.Name}, but no locations was available");
                 }
             }
         }
 
         public void FastFillLocations(List<Item> items, List<Location> locations) {
-            while (locations.Empty().Count > 0) {
+            while (locations.Empty().Count() > 0) {
                 var item = items.Shuffle(Rnd).First();
-                var location = locations.Empty().ToList().Shuffle(Rnd).First();
+                var location = locations.Empty().Shuffle(Rnd).First();
                 if (location != null) {
                     location.Item = item;
                     location.Region.World.Items.Add(item);
                     items.Remove(item);
                 }
                 else {
-                    throw new Exception("Tried to fill item: " + item.Name + ", but no locations was available");
+                    throw new Exception($"Tried to fill item: {item.Name}, but no locations was available");
                 }
             }
         }
@@ -185,7 +187,7 @@ namespace Randomizer.SMZ3 {
                 world.Items.Add(item);
             }
             else {
-                throw new Exception("No location to place item:" + item.Name);
+                throw new Exception($"No location to place item: {item.Name}");
             }
         }
 
