@@ -74,17 +74,7 @@ namespace Randomizer.SMZ3 {
 
         void InitialFill(List<Item> itemPool, List<World> worlds) {
             foreach (var world in worlds) {
-
-                /* Place Swamp Palace Key */
-                if (!Config.Keysanity) {
-                    var spKey = itemPool.Find(x => x.World == world && x.Type == ItemType.KeySP);
-                    world.Locations.Get("Swamp Palace - Entrance").Item = spKey;
-                    world.Items.Add(spKey);
-                    itemPool.Remove(spKey);
-                }
-
-                /* Place Skull Woods Pinball Key */
-                var swKey = itemPool.Find(x => x.World == world && x.Type == ItemType.KeySW);
+                var swKey = itemPool.Get(ItemType.KeySW, world);
                 world.Locations.Get("Skull Woods - Pinball Room").Item = swKey;
                 world.Items.Add(swKey);
                 itemPool.Remove(swKey);
