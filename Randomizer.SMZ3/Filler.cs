@@ -8,7 +8,6 @@ namespace Randomizer.SMZ3 {
 
         List<World> Worlds { get; set; }
         Config Config { get; set; }
-        List<Item> DungeonItems { get; set; } = new List<Item>();
         List<Item> ProgressionItems { get; set; } = new List<Item>();
         List<Item> NiceItems { get; set; } = new List<Item>();
         List<Item> JunkItems { get; set; } = new List<Item>();
@@ -19,10 +18,8 @@ namespace Randomizer.SMZ3 {
             Config = config;
             Rnd = rnd;
 
-            /* Populate item pools and setup each world.
-             * The order of items in the dungeon pool is significant. */
+            /* Populate item pools and setup each world. */
             foreach (var world in worlds) {
-                DungeonItems.AddRange(Item.CreateDungeonPool(world));
                 ProgressionItems.AddRange(Item.CreateProgressionPool(world).Shuffle(Rnd));
                 NiceItems.AddRange(Item.CreateNicePool(world).Shuffle(Rnd));
                 JunkItems.AddRange(Item.CreateJunkPool(world).Shuffle(Rnd));
@@ -31,11 +28,12 @@ namespace Randomizer.SMZ3 {
         }
 
         public void Fill() {
-            InitialFill(DungeonItems, Worlds);
-
             foreach (var world in Worlds) {
-                var dungeon = DungeonItems.Where(x => x.World == world).ToList();
+                /* The dungeon pool order is significant, don't shuffle */
+                var dungeon = Item.CreateDungeonPool(world);
                 var progression = ProgressionItems.Where(x => x.World == world).ToList();
+
+                InitialFillInOwnWorld(dungeon, world);
                 AssumedFill(dungeon, progression, new[] { world });
 
                 /* We place a PB and Super in Sphere 1 to make sure the filler
@@ -72,13 +70,11 @@ namespace Randomizer.SMZ3 {
             FastFill(JunkItems, Worlds);
         }
 
-        void InitialFill(List<Item> itemPool, List<World> worlds) {
-            foreach (var world in worlds) {
-                var swKey = itemPool.Get(ItemType.KeySW, world);
-                world.Locations.Get("Skull Woods - Pinball Room").Item = swKey;
-                world.Items.Add(swKey);
-                itemPool.Remove(swKey);
-            }
+        void InitialFillInOwnWorld(List<Item> items, World world) {
+            var swKey = items.Get(ItemType.KeySW);
+            world.Locations.Get("Skull Woods - Pinball Room").Item = swKey;
+            world.Items.Add(swKey);
+            items.Remove(swKey);
         }
 
         void AssumedFill(List<Item> items, List<Item> baseItems, IEnumerable<World> worlds) {
