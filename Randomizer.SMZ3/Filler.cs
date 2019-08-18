@@ -41,8 +41,8 @@ namespace Randomizer.SMZ3 {
                 /* We place a PB and Super in Sphere 1 to make sure the filler
                  * doesn't start locking items behind this when there are a
                  * high chance of the trash fill actually making them available */
-                FrontFillItemInWorld(world, ProgressionItems, ItemType.Super, true);
-                FrontFillItemInWorld(world, ProgressionItems, ItemType.PowerBomb, true);
+                FrontFillItemInWorld(world, ProgressionItems, ItemType.Super);
+                FrontFillItemInWorld(world, ProgressionItems, ItemType.PowerBomb);
             }
 
             /* Place moon pearls randomly in the last 50% of items to be placed to move it to a early-mid game item*/
@@ -142,9 +142,9 @@ namespace Randomizer.SMZ3 {
             return assumedItems;
         }
 
-        void FrontFillItemInWorld(World world, List<Item> itemPool, ItemType itemType, bool restrictWorld = false) {
+        void FrontFillItemInWorld(World world, List<Item> itemPool, ItemType itemType) {
             /* Get a shuffled list of available locations to place this item in */
-            Item item = restrictWorld ? itemPool.Get(itemType, world) : itemPool.Get(itemType);
+            Item item = itemPool.Get(itemType, world);
             var availableLocations = world.Locations.Empty().Available(world.Items).Shuffle(Rnd);
             if (availableLocations.Count > 0) {
                 var locationToFill = availableLocations.First();
