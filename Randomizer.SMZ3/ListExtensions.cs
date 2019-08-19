@@ -6,8 +6,13 @@ namespace Randomizer.SMZ3 {
 
     static class EnumerableExtensions {
 
-        public static List<T> Shuffle<T>(this IEnumerable<T> list, Random rnd) {
-            var copy = new List<T>(list);
+        public static T Random<T>(this IEnumerable<T> source, Random rnd) {
+            var list = source.ToList();
+            return list.ElementAt(rnd.Next(list.Count));
+        }
+
+        public static List<T> Shuffle<T>(this IEnumerable<T> source, Random rnd) {
+            var copy = new List<T>(source);
             var n = copy.Count;
             while ((n -= 1) > 0) {
                 var k = rnd.Next(n + 1);
@@ -16,9 +21,9 @@ namespace Randomizer.SMZ3 {
             return copy;
         }
 
-        public static (IEnumerable<T>, IEnumerable<T>) SplitOff<T>(this IEnumerable<T> list, int count) {
-            var head = list.Take(count);
-            var tail = list.Skip(count);
+        public static (IEnumerable<T>, IEnumerable<T>) SplitOff<T>(this IEnumerable<T> source, int count) {
+            var head = source.Take(count);
+            var tail = source.Skip(count);
             return (head, tail);
         }
 

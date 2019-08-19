@@ -20,7 +20,6 @@ namespace Randomizer.SMZ3 {
 
             /* Populate item pools and setup each world. */
             foreach (var world in worlds) {
-                ProgressionItems.AddRange(Item.CreateProgressionPool(world).Shuffle(Rnd));
                 NiceItems.AddRange(Item.CreateNicePool(world).Shuffle(Rnd));
                 JunkItems.AddRange(Item.CreateJunkPool(world).Shuffle(Rnd));
                 world.Setup(Rnd);
@@ -31,7 +30,7 @@ namespace Randomizer.SMZ3 {
             foreach (var world in Worlds) {
                 /* The dungeon pool order is significant, don't shuffle */
                 var dungeon = Item.CreateDungeonPool(world);
-                var progression = ProgressionItems.Where(x => x.World == world).ToList();
+                var progression = Item.CreateProgressionPool(world);
 
                 InitialFillInOwnWorld(dungeon, world);
                 AssumedFill(dungeon, progression, new[] { world });
@@ -39,8 +38,10 @@ namespace Randomizer.SMZ3 {
                 /* We place a PB and Super in Sphere 1 to make sure the filler
                  * doesn't start locking items behind this when there are a
                  * high chance of the trash fill actually making them available */
-                FrontFillItemInWorld(world, ProgressionItems, ItemType.Super);
-                FrontFillItemInWorld(world, ProgressionItems, ItemType.PowerBomb);
+                FrontFillItemInOwnWorld(progression, ItemType.Super, world);
+                FrontFillItemInOwnWorld(progression, ItemType.PowerBomb, world);
+
+                ProgressionItems.AddRange(progression.Shuffle(Rnd));
             }
 
             /* Place moon pearls randomly in the last 50% of items to be placed to move it to a early-mid game item*/
@@ -128,19 +129,14 @@ namespace Randomizer.SMZ3 {
             return assumedItems;
         }
 
-        void FrontFillItemInWorld(World world, List<Item> itemPool, ItemType itemType) {
-            /* Get a shuffled list of available locations to place this item in */
-            Item item = itemPool.Get(itemType, world);
-            var availableLocations = world.Locations.Empty().Available(world.Items).Shuffle(Rnd);
-            if (availableLocations.Count > 0) {
-                var locationToFill = availableLocations.First();
-                locationToFill.Item = item;
-                itemPool.Remove(item);
-                world.Items.Add(item);
-            }
-            else {
-                throw new Exception($"No location to place item: {item.Name}");
-            }
+        void FrontFillItemInOwnWorld(List<Item> itemPool, ItemType itemType, World world) {
+            var item = itemPool.Get(itemType);
+            var location = world.Locations.Empty().Available(world.Items).Random(Rnd);
+            if (location == null)
+                throw new InvalidOperationException($"Tried to front fill {item.Name} in, but no location was available");
+            location.Item = item;
+            world.Items.Add(item);
+            itemPool.Remove(item);
         }
 
         void FastFillLocations(List<Item> items, List<Location> locations) {
