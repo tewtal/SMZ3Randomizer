@@ -8,8 +8,6 @@ namespace Randomizer.SMZ3 {
 
         List<World> Worlds { get; set; }
         Config Config { get; set; }
-        List<Item> ProgressionItems { get; set; } = new List<Item>();
-        List<Item> NiceItems { get; set; } = new List<Item>();
         Random Rnd { get; set; }
 
         public Filler(List<World> worlds, Config config, Random rnd) {
@@ -17,14 +15,14 @@ namespace Randomizer.SMZ3 {
             Config = config;
             Rnd = rnd;
 
-            /* Populate item pools and setup each world. */
             foreach (var world in worlds) {
-                NiceItems.AddRange(Item.CreateNicePool(world).Shuffle(Rnd));
                 world.Setup(Rnd);
             }
         }
 
         public void Fill() {
+            var progressionItems = new List<Item>();
+
             foreach (var world in Worlds) {
                 /* The dungeon pool order is significant, don't shuffle */
                 var dungeon = Item.CreateDungeonPool(world);
@@ -41,25 +39,26 @@ namespace Randomizer.SMZ3 {
                 FrontFillItemInOwnWorld(progression, ItemType.Super, world);
                 FrontFillItemInOwnWorld(progression, ItemType.PowerBomb, world);
 
-                ProgressionItems.AddRange(progression);
+                progressionItems.AddRange(progression);
             }
 
-            ProgressionItems = ProgressionItems.Shuffle(Rnd);
+            progressionItems = progressionItems.Shuffle(Rnd);
+            var niceItems = Worlds.SelectMany(world => Item.CreateNicePool(world)).Shuffle(Rnd);
             var junkItems = Worlds.SelectMany(world => Item.CreateJunkPool(world)).Shuffle(Rnd);
 
             /* Place moonpearls and morphs in last 25%/50% of the pool so that
              * they will tend to place in earlier locations.
              * Prefer morphs being pushed too far up the list than moonpearls,
              * so start with morph, followed by moonpearls */
-            ReorderItems(ProgressionItems, ItemType.Morph, n => n - Rnd.Next(n / 4));
-            ReorderItems(ProgressionItems, ItemType.MoonPearl, n => n - Rnd.Next(n / 2));
+            ReorderItems(progressionItems, ItemType.Morph, n => n - Rnd.Next(n / 4));
+            ReorderItems(progressionItems, ItemType.MoonPearl, n => n - Rnd.Next(n / 2));
 
             GanonTowerFill(junkItems);
 
             var locations = Worlds.SelectMany(x => x.Locations).Empty().Shuffle(Rnd);
 
-            AssumedFill(ProgressionItems, new List<Item>(), locations, Worlds);
-            FastFill(NiceItems, locations);
+            AssumedFill(progressionItems, new List<Item>(), locations, Worlds);
+            FastFill(niceItems, locations);
             FastFill(junkItems, locations);
         }
 
