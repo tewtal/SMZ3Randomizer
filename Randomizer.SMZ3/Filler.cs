@@ -10,7 +10,6 @@ namespace Randomizer.SMZ3 {
         Config Config { get; set; }
         List<Item> ProgressionItems { get; set; } = new List<Item>();
         List<Item> NiceItems { get; set; } = new List<Item>();
-        List<Item> JunkItems { get; set; } = new List<Item>();
         Random Rnd { get; set; }
 
         public Filler(List<World> worlds, Config config, Random rnd) {
@@ -21,7 +20,6 @@ namespace Randomizer.SMZ3 {
             /* Populate item pools and setup each world. */
             foreach (var world in worlds) {
                 NiceItems.AddRange(Item.CreateNicePool(world).Shuffle(Rnd));
-                JunkItems.AddRange(Item.CreateJunkPool(world).Shuffle(Rnd));
                 world.Setup(Rnd);
             }
         }
@@ -45,6 +43,7 @@ namespace Randomizer.SMZ3 {
             }
 
             ProgressionItems = ProgressionItems.Shuffle(Rnd);
+            var junkItems = Worlds.SelectMany(world => Item.CreateJunkPool(world)).Shuffle(Rnd);
 
             /* Place moonpearls and morphs in last 25%/50% of the pool so that
              * they will tend to place in earlier locations.
@@ -53,15 +52,12 @@ namespace Randomizer.SMZ3 {
             ReorderItems(ProgressionItems, ItemType.Morph, n => n - Rnd.Next(n / 4));
             ReorderItems(ProgressionItems, ItemType.MoonPearl, n => n - Rnd.Next(n / 2));
 
-            /* GT Trash fill */
-            var gtLocations = Worlds.SelectMany(x => x.Locations).Where(x => x.Region is Regions.Zelda.GanonTower).Empty().Shuffle(Rnd);
-            var gtTrashLocations = gtLocations.Take(gtLocations.Count() / 2).ToList();
-            FastFillLocations(JunkItems, gtTrashLocations);
+            GanonTowerFill(junkItems);
 
             /* Next up we do assumed filling of progression items cross-world */
             AssumedFill(ProgressionItems, new List<Item>(), Worlds);
             FastFill(NiceItems, Worlds);
-            FastFill(JunkItems, Worlds);
+            FastFill(junkItems, Worlds);
         }
 
         void InitialFillInOwnWorld(List<Item> items, World world) {
@@ -140,33 +136,23 @@ namespace Randomizer.SMZ3 {
             }
         }
 
-        void FastFillLocations(List<Item> items, List<Location> locations) {
-            while (locations.Empty().Count() > 0) {
-                var item = items.Shuffle(Rnd).First();
-                var location = locations.Empty().Shuffle(Rnd).First();
-                if (location != null) {
-                    location.Item = item;
-                    location.Region.World.Items.Add(item);
-                    items.Remove(item);
-                }
-                else {
-                    throw new Exception($"Tried to fill item: {item.Name}, but no locations was available");
-                }
-            }
+        void GanonTowerFill(List<Item> itemPool) {
+            var locations = Worlds
+                .SelectMany(x => x.Locations)
+                .Where(x => x.Region is Regions.Zelda.GanonTower)
+                .Empty().Shuffle(Rnd);
+            FastFill(itemPool, locations.Take(locations.Count / 2));
         }
 
-        void FastFill(List<Item> items, List<World> worlds) {
-            while (items.Count > 0) {
-                var item = items.Shuffle(Rnd).First();
-                var location = worlds.SelectMany(x => x.Locations.Empty()).Shuffle(Rnd).First();
-                if (location != null) {
-                    location.Item = item;
-                    location.Region.World.Items.Add(item);
-                    items.Remove(item);
-                }
-                else {
-                    throw new Exception($"Tried to fill item: {item.Name}, but no locations was available");
-                }
+        void FastFill(List<Item> itemPool, List<World> worlds) {
+            FastFill(itemPool, worlds.SelectMany(x => x.Locations).Shuffle(Rnd));
+        }
+
+        void FastFill(List<Item> itemPool, IEnumerable<Location> locations) {
+            foreach (var (location, item) in locations.Empty().Zip(itemPool, (l, i) => (l, i)).ToList()) {
+                location.Item = item;
+                location.Region.World.Items.Add(item);
+                itemPool.Remove(item);
             }
         }
 
