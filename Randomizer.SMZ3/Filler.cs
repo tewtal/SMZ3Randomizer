@@ -30,8 +30,10 @@ namespace Randomizer.SMZ3 {
 
                 InitialFillInOwnWorld(dungeon, world);
 
-                var worldLocations = world.Locations.Empty().Shuffle(Rnd);
-                AssumedFill(dungeon, progression, worldLocations, new[] { world });
+                if (Config.Keysanity == false) {
+                    var worldLocations = world.Locations.Empty().Shuffle(Rnd);
+                    AssumedFill(dungeon, progression, worldLocations, new[] { world });
+                }
 
                 /* We place a PB and Super in Sphere 1 to make sure the filler
                  * doesn't start locking items behind this when there are a
@@ -39,6 +41,7 @@ namespace Randomizer.SMZ3 {
                 FrontFillItemInOwnWorld(progression, ItemType.Super, world);
                 FrontFillItemInOwnWorld(progression, ItemType.PowerBomb, world);
 
+                progressionItems.AddRange(dungeon);
                 progressionItems.AddRange(progression);
             }
 
