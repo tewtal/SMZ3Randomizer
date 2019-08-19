@@ -56,10 +56,17 @@ namespace Randomizer.SMZ3 {
             GanonTowerFill(junkItems);
 
             var locations = Worlds.SelectMany(x => x.Locations).Empty().Shuffle(Rnd);
+            if (Worlds.Count == 1)
+                locations = ApplyWeighting(locations).ToList();
 
             AssumedFill(progressionItems, new List<Item>(), locations, Worlds);
             FastFill(niceItems, locations);
             FastFill(junkItems, locations);
+        }
+
+        IEnumerable<Location> ApplyWeighting(IEnumerable<Location> locations) {
+            return from location in locations.Select((x, i) => (x, i: i - x.Weight))
+                   orderby location.i select location.x;
         }
 
         void InitialFillInOwnWorld(List<Item> items, World world) {

@@ -37,6 +37,7 @@ namespace Randomizer.SMZ3 {
         public virtual string Area { get; }
         public List<Location> Locations { get; set; }
         public World World { get; set; }
+        public int Weight { get; set; } = 0;
 
         protected Config Config { get; set; }
         protected IList<ItemType> RegionItems { get; set; } = new List<ItemType>();

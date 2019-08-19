@@ -9,6 +9,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
         public override string Area => "Brinstar";
 
         public Green(World world, Config config) : base(world, config) {
+            Weight = -6;
+
             Locations = new List<Location> {
                 new Location(this, 13, 0xC784AC, LocationType.Chozo, "Power Bomb (green Brinstar bottom)", Logic switch {
                     _ => new Requirement(items => items.CanUsePowerBombs())

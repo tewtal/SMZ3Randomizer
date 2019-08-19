@@ -25,12 +25,17 @@ namespace Randomizer.SMZ3 {
         public string Name { get; set; }
         public LocationType Type { get; set; }
         public int Address { get; set; }
-        public Region Region { get; set; }
         public Item Item { get; set; }
+        public Region Region { get; set; }
+
+        public int Weight {
+            get { return weight ?? Region.Weight; }
+        }
 
         readonly Requirement canAccess;
         Verification alwaysAllow;
         Verification allow;
+        int? weight;
 
         public ItemType ItemType {
             get { return Item?.Type ?? ItemType.Nothing; }
@@ -49,6 +54,11 @@ namespace Randomizer.SMZ3 {
             canAccess = access;
             alwaysAllow = (item, items) => false;
             allow = (item, items) => true;
+        }
+
+        public Location Weighted(int? weight) {
+            this.weight = weight;
+            return this;
         }
 
         public Location AlwaysAllow(Verification allow) {
