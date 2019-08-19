@@ -75,7 +75,6 @@ namespace Randomizer.SMZ3 {
         void InitialFillInOwnWorld(List<Item> items, World world) {
             var swKey = items.Get(ItemType.KeySW);
             world.Locations.Get("Skull Woods - Pinball Room").Item = swKey;
-            world.Items.Add(swKey);
             items.Remove(swKey);
         }
 
@@ -94,7 +93,6 @@ namespace Randomizer.SMZ3 {
                 }
 
                 location.Item = item;
-                location.Region.World.Items.Add(item);
                 itemPool.Remove(item);
             }
         }
@@ -122,7 +120,6 @@ namespace Randomizer.SMZ3 {
             if (location == null)
                 throw new InvalidOperationException($"Tried to front fill {item.Name} in, but no location was available");
             location.Item = item;
-            world.Items.Add(item);
             itemPool.Remove(item);
         }
 
@@ -145,7 +142,6 @@ namespace Randomizer.SMZ3 {
         void FastFill(List<Item> itemPool, IEnumerable<Location> locations) {
             foreach (var (location, item) in locations.Empty().Zip(itemPool, (l, i) => (l, i)).ToList()) {
                 location.Item = item;
-                location.Region.World.Items.Add(item);
                 itemPool.Remove(item);
             }
         }
