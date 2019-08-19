@@ -41,24 +41,17 @@ namespace Randomizer.SMZ3 {
                 FrontFillItemInOwnWorld(progression, ItemType.Super, world);
                 FrontFillItemInOwnWorld(progression, ItemType.PowerBomb, world);
 
-                ProgressionItems.AddRange(progression.Shuffle(Rnd));
+                ProgressionItems.AddRange(progression);
             }
 
-            /* Place moon pearls randomly in the last 50% of items to be placed to move it to a early-mid game item*/
-            /* Temporary test hack */
-            var pearls = ProgressionItems.Where(x => x.Type == ItemType.MoonPearl).ToList();
-            ProgressionItems.RemoveAll(x => x.Type == ItemType.MoonPearl);
-            foreach (var pearl in pearls) {
-                ProgressionItems.Insert(ProgressionItems.Count - Rnd.Next(ProgressionItems.Count / 2), pearl);
-            }
+            ProgressionItems = ProgressionItems.Shuffle(Rnd);
 
-            /* Place morph balls randomly in the last 25% of items to be placed to move it to an early game item */
-            /* Temporary test hack */
-            var morphs = ProgressionItems.Where(x => x.Type == ItemType.Morph).ToList();
-            ProgressionItems.RemoveAll(x => x.Type == ItemType.Morph);
-            foreach(var morph in morphs) {
-                ProgressionItems.Insert(ProgressionItems.Count - Rnd.Next(ProgressionItems.Count / 4), morph);
-            }
+            /* Place moonpearls and morphs in last 25%/50% of the pool so that
+             * they will tend to place in earlier locations.
+             * Prefer morphs being pushed too far up the list than moonpearls,
+             * so start with morph, followed by moonpearls */
+            ReorderItems(ProgressionItems, ItemType.Morph, n => n - Rnd.Next(n / 4));
+            ReorderItems(ProgressionItems, ItemType.MoonPearl, n => n - Rnd.Next(n / 2));
 
             /* GT Trash fill */
             var gtLocations = Worlds.SelectMany(x => x.Locations).Where(x => x.Region is Regions.Zelda.GanonTower).Empty().Shuffle(Rnd);
@@ -137,6 +130,14 @@ namespace Randomizer.SMZ3 {
             location.Item = item;
             world.Items.Add(item);
             itemPool.Remove(item);
+        }
+
+        void ReorderItems(List<Item> itemPool, ItemType itemType, Func<int, int> index) {
+            var items = itemPool.Where(x => x.Type == itemType).ToList();
+            itemPool.RemoveAll(x => x.Type == itemType);
+            foreach (var item in items) {
+                itemPool.Insert(index(itemPool.Count), item);
+            }
         }
 
         void FastFillLocations(List<Item> items, List<Location> locations) {
