@@ -31,7 +31,9 @@ namespace Randomizer.SMZ3 {
                 var progression = Item.CreateProgressionPool(world);
 
                 InitialFillInOwnWorld(dungeon, world);
-                AssumedFill(dungeon, progression, new[] { world });
+
+                var worldLocations = world.Locations.Empty().Shuffle(Rnd);
+                AssumedFill(dungeon, progression, worldLocations, new[] { world });
 
                 /* We place a PB and Super in Sphere 1 to make sure the filler
                  * doesn't start locking items behind this when there are a
@@ -54,10 +56,11 @@ namespace Randomizer.SMZ3 {
 
             GanonTowerFill(junkItems);
 
-            /* Next up we do assumed filling of progression items cross-world */
-            AssumedFill(ProgressionItems, new List<Item>(), Worlds);
-            FastFill(NiceItems, Worlds);
-            FastFill(junkItems, Worlds);
+            var locations = Worlds.SelectMany(x => x.Locations).Empty().Shuffle(Rnd);
+
+            AssumedFill(ProgressionItems, new List<Item>(), locations, Worlds);
+            FastFill(NiceItems, locations);
+            FastFill(junkItems, locations);
         }
 
         void InitialFillInOwnWorld(List<Item> items, World world) {
@@ -67,45 +70,31 @@ namespace Randomizer.SMZ3 {
             items.Remove(swKey);
         }
 
-        void AssumedFill(List<Item> items, List<Item> baseItems, IEnumerable<World> worlds) {
-            var assumedItems = new List<Item>(items);
-            var locations = worlds.SelectMany(w => w.Locations).Empty().ToList();
-
-            /* Place items until progression item pool is empty */
+        void AssumedFill(List<Item> itemPool, List<Item> baseItems, IEnumerable<Location> locations, IEnumerable<World> worlds) {
+            var assumedItems = new List<Item>(itemPool);
             while (assumedItems.Count > 0) {
+                /* Try placing next item */
+                var item = assumedItems.First();
+                assumedItems.Remove(item);
 
-                /* Get a candidate item from the pool */
-                var itemToPlace = assumedItems.First();
-
-                /* Remove it from the pool */
-                assumedItems.Remove(itemToPlace);
-
-                /* Get a location */
                 var inventory = CollectItems(assumedItems.Concat(baseItems), worlds);
-                var locationsToPlace = locations.CanFillWithinWorld(itemToPlace, inventory).ToList();
-
-                if (locationsToPlace.Count == 0) {
-                    assumedItems.Add(itemToPlace);
+                var location = locations.Empty().CanFillWithinWorld(item, inventory).FirstOrDefault();
+                if (location == null) {
+                    assumedItems.Add(item);
                     continue;
                 }
 
-                var locationToPlace = locationsToPlace.Shuffle(Rnd).First();
-
-                /* Get the world from the location */
-                var world = locationToPlace.Region.World;
-
-                /* Place item at location */
-                locationToPlace.Item = itemToPlace;
-                world.Items.Add(itemToPlace);
-                items.Remove(itemToPlace);
-                locations.Remove(locationToPlace);
+                location.Item = item;
+                location.Region.World.Items.Add(item);
+                itemPool.Remove(item);
             }
         }
 
         IEnumerable<Item> CollectItems(IEnumerable<Item> items, IEnumerable<World> worlds) {
             var assumedItems = new List<Item>(items);
             var remainingLocations = worlds.SelectMany(l => l.Locations).Filled().ToList();
-            while(true) {
+
+            while (true) {
                 var availableLocations = remainingLocations.AvailableWithinWorld(assumedItems);
                 remainingLocations = remainingLocations.Except(availableLocations).ToList();
                 var foundItems = availableLocations.Select(x => x.Item).ToList();
@@ -142,10 +131,6 @@ namespace Randomizer.SMZ3 {
                 .Where(x => x.Region is Regions.Zelda.GanonTower)
                 .Empty().Shuffle(Rnd);
             FastFill(itemPool, locations.Take(locations.Count / 2));
-        }
-
-        void FastFill(List<Item> itemPool, List<World> worlds) {
-            FastFill(itemPool, worlds.SelectMany(x => x.Locations).Shuffle(Rnd));
         }
 
         void FastFill(List<Item> itemPool, IEnumerable<Location> locations) {
