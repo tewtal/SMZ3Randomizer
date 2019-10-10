@@ -8,6 +8,7 @@
     "file-saver": "^2.0.1",
     "jquery": "3.3.1",
     "localforage": "^1.7.3",
+    "pako": "^1.0.10",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router-bootstrap": "^0.24.4",

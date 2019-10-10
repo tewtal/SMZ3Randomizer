@@ -2,6 +2,7 @@
 import { Form, Row, Col, Card, CardBody, Button, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import styled from 'styled-components';
 import { saveAs } from 'file-saver';
+import { inflate } from 'pako';
 
 import DropdownSelect from './primitives/DropdownSelect';
 import { Upload } from './Upload';
@@ -10,8 +11,8 @@ import { readAsArrayBuffer, applyIps, applySeed } from '../file_handling';
 import { parse_rdc } from '../file_handling/rdc';
 
 import sprites from '../files/sprite/inventory.json';
-import baseIps from '../files/zsm_190808.ips';
-import spriteEngineIps from '../files/zsm_sm_sprite_engine.ips';
+import baseIps from '../files/zsm_190808.ips.gz';
+import spriteEngineIps from '../files/zsm_sm_sprite_engine.ips.gz';
 
 // through bootstrap "$input-btn-padding-x"
 const inputPaddingX = '.75rem';
@@ -86,11 +87,19 @@ export class Patch extends Component {
         }
     }
 
+    checkDecompress(data) {
+        if (data[0] === 0x1f && data[1] === 0x8b) {
+            return inflate(data);
+        } else {
+            return data;
+        }
+    }
+
     async prepareRom(world_patch) {
         const rom_blob = await this.localForage.getItem("baseRomCombo");
         const rom = new Uint8Array(await readAsArrayBuffer(rom_blob));
-        const base_patch = new Uint8Array(await (await fetch(baseIps)).arrayBuffer());
-        const sprite_patch = new Uint8Array(await (await fetch(spriteEngineIps)).arrayBuffer());
+        const base_patch = this.checkDecompress(new Uint8Array(await (await fetch(baseIps)).arrayBuffer()));
+        const sprite_patch = this.checkDecompress(new Uint8Array(await (await fetch(spriteEngineIps)).arrayBuffer()));
         world_patch = Uint8Array.from(atob(world_patch), c => c.charCodeAt(0));
 
         applyIps(rom, base_patch);
@@ -105,7 +114,7 @@ export class Patch extends Component {
     async applySprite(rom, block, sprite = {}) {
         if (sprite.path) {
             const url = `${process.env.PUBLIC_URL}/sprites/${sprite.path}`;
-            const rdc = new Uint8Array(await (await fetch(url)).arrayBuffer());
+            const rdc = this.checkDecompress(new Uint8Array(await (await fetch(url)).arrayBuffer()));
             // Todo: do something with the author field
             const [author, blocks] = parse_rdc(rdc);
             blocks[block] && blocks[block](rom);

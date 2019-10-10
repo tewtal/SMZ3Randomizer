@@ -40,15 +40,15 @@
   "sm": [
     {
       "title": "Galactic Federation Trooper",
-      "path": "sm/fed_trooper.sm.rdc"
+      "path": "sm/fed_trooper.sm.rdc.gz"
     },
     {
       "title": "Justin Bailey",
-      "path": "sm/bailey.sm.rdc"
+      "path": "sm/bailey.sm.rdc.gz"
     },
     {
       "title": "Mega Man X",
-      "path": "sm/megaman-x.sm.rdc"
+      "path": "sm/megaman-x.sm.rdc.gz"
     }
   ]
 }
