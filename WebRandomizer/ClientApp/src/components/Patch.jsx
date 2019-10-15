@@ -11,8 +11,8 @@ import { readAsArrayBuffer, applyIps, applySeed } from '../file_handling';
 import { parse_rdc } from '../file_handling/rdc';
 
 import sprites from '../files/sprite/inventory.json';
-import baseIps from '../files/zsm_190808.ips.gz';
-import spriteEngineIps from '../files/zsm_sm_sprite_engine.ips.gz';
+import baseIps from '../files/zsm_191015.ips.gz';
+//import spriteEngineIps from '../files/zsm_sm_sprite_engine.ips.gz';
 
 // through bootstrap "$input-btn-padding-x"
 const inputPaddingX = '.75rem';
@@ -99,11 +99,11 @@ export class Patch extends Component {
         const rom_blob = await this.localForage.getItem("baseRomCombo");
         const rom = new Uint8Array(await readAsArrayBuffer(rom_blob));
         const base_patch = this.checkDecompress(new Uint8Array(await (await fetch(baseIps)).arrayBuffer()));
-        const sprite_patch = this.checkDecompress(new Uint8Array(await (await fetch(spriteEngineIps)).arrayBuffer()));
+        //const sprite_patch = this.checkDecompress(new Uint8Array(await (await fetch(spriteEngineIps)).arrayBuffer()));
         world_patch = Uint8Array.from(atob(world_patch), c => c.charCodeAt(0));
 
         applyIps(rom, base_patch);
-        applyIps(rom, sprite_patch);
+        //applyIps(rom, sprite_patch);
         await this.applySprite(rom, 'link_sprite', this.state.z3_sprite);
         await this.applySprite(rom, 'samus_sprite', this.state.sm_sprite);
         applySeed(rom, world_patch);

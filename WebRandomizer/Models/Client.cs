@@ -25,6 +25,7 @@ namespace WebRandomizer.Models {
         public string ConnectionId { get; set; }
         public int SessionId { get; set; }
         public int WorldId { get; set; }
+        public List<Event> Events { get; set; }
     }
 
 }

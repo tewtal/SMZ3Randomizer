@@ -13,6 +13,7 @@ namespace WebRandomizer.Models {
         public DbSet<Client> Clients { get; set; }
         public DbSet<Seed> Seeds { get; set; }
         public DbSet<World> Worlds { get; set; }
+        public DbSet<Event> Events { get; set; }
 
     }
 }
