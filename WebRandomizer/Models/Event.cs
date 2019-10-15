@@ -15,13 +15,10 @@ namespace WebRandomizer.Models {
     public class Event {
         public int Id { get; set; }
 
-        [ConcurrencyCheck]
         public int ClientId { get; set; }
 
-        [ConcurrencyCheck] 
         public EventType Type { get; set; }
         
-        [ConcurrencyCheck]
         public int SequenceNum { get; set; }
         
         public int PlayerId { get; set; }

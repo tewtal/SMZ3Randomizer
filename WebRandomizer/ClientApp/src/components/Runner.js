@@ -112,18 +112,16 @@ export class Runner extends Component {
             0x2F: "GreenContent",
             0x30: "BlueContent",
             0x0E: "BeeContent"
-        };
+        }
     }
 
     componentDidMount() {
         this.setState({ gameStatus: "Detecting game...", gameState: 0 });
-        this.props.hubConnection.on("ReceiveItem", this.receiveItem);
         this.timerHandle = setTimeout(this.eventLoop, 200);
     }
 
     componentWillUnmount() {
         clearTimeout(this.timerHandle);
-        this.props.hubConnection.off("ReceiveItem", this.receiveItem);
     }
 
     async eventLoop() {
@@ -205,14 +203,15 @@ export class Runner extends Component {
 
             /* Ask the server for all items from our last known item sequence */
             let events = await this.props.hubConnection.invoke("GetEvents", this.props.sessionData.guid, "ItemReceived", parseInt(this.itemOutPtr, 10));
-            events.forEach(async (event) => {
+            for (let i = 0; i < events.length; i++) {
+                let event = events[i];
                 let message = [event.playerId & 0xFF, (event.playerId >> 8) & 0xFF, event.itemId & 0xFF, (event.itemId >> 8) & 0xFF];
                 let ok = await this.sendItemMessage(message);
                 if (!ok) {
                     console.log("Error when writing item resync");
                     return;
                 }
-            });
+            }
         } catch (err) {
             console.log(err);
             return;

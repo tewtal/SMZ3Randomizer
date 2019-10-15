@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,6 +26,14 @@ namespace WebRandomizer.Models {
         public string ConnectionId { get; set; }
         public int SessionId { get; set; }
         public int WorldId { get; set; }
+        
+        [ConcurrencyCheck]
+        public int RecievedSeq { get; set; }
+        
+        [ConcurrencyCheck]
+        public int SentSeq { get; set; }
+        
+        [ConcurrencyCheck]
         public List<Event> Events { get; set; }
     }
 

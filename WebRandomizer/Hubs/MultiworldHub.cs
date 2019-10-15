@@ -99,6 +99,9 @@ namespace WebRandomizer.Hubs {
                                     SequenceNum = sequenceId
                                 });
 
+                                fromClient.SentSeq = sequenceId;
+                                toClient.RecievedSeq += 1;
+
                                 /* Create item received event */
                                 toClient.Events.Add(new Event {
                                     ClientId = toClient.Id,
@@ -107,9 +110,9 @@ namespace WebRandomizer.Hubs {
                                     PlayerId = fromClient.WorldId,
                                     TimeStamp = DateTime.Now,
                                     Type = EventType.ItemReceived,
-                                    SequenceNum = toClient.Events.Count > 0 ? toClient.Events.Max(x => x.SequenceNum) + 1 : 1
+                                    SequenceNum = toClient.RecievedSeq
                                 });
-
+                                
                                 context.Clients.Update(fromClient);
                                 context.Clients.Update(toClient);
                                 await context.SaveChangesAsync();
