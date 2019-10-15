@@ -367,9 +367,13 @@ export class Runner extends Component {
 
     render() {
         const sentItems = [];
+
+        /*
+        
         const itemNames = [];
         const playerNames = [];
 
+        
         let lastEvents = this.state.outEvents.reverse();
         for (let i = 0; i < this.state.outEvents.length; i++) {
             sentItems.push(<tr><td>{this.props.sessionData.seed.worlds[lastEvents[i][0]].player}</td><td>{this.itemNames[lastEvents[i][1]]}</td><td><Button data-world={lastEvents[i][0]} data-itemid={lastEvents[i][1]} color="primary" onClick={this.resend}>Resend item</Button></td></tr>); 
@@ -382,6 +386,7 @@ export class Runner extends Component {
         for (let i = 0; i < this.props.sessionData.seed.players; i++) {
             playerNames.push(<option key={"send-player-" + i} data-world={i}>{this.props.sessionData.seed.worlds[i].player}</option>);
         }
+        */
 
         return (
             <div className="container">
@@ -408,21 +413,6 @@ export class Runner extends Component {
                                                     <th></th>
                                                 </tr>
                                                 {sentItems}
-                                                <tr>
-                                                    <td>
-                                                        <select id="send-player" ref={this.sendPlayerRef}>
-                                                            {playerNames}
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <select id="send-item" ref={this.sendItemRef}>
-                                                            {itemNames}
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <Button onClick={this.sendSelectedItem} color="danger">Send</Button>
-                                                    </td>
-                                                </tr>
                                             </tbody>
                                         </table>
                                     </Col>
