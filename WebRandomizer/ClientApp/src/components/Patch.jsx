@@ -12,7 +12,6 @@ import { Upload } from './Upload';
 
 import { readAsArrayBuffer, applyIps, applySeed } from '../file_handling';
 import { parse_rdc } from '../file_handling/rdc';
-import { saveAs } from 'file-saver';
 
 import sprites from '../files/sprite/inventory.json';
 import baseIps from '../files/zsm_191016_3.ips.gz';
@@ -111,6 +110,10 @@ export class Patch extends Component {
         }
     }
 
+    enableSeparateSpinjumps(rom) {
+        rom[0x34F500] = 0x01;
+    }
+
     async prepareRom(world_patch) {
         const rom_blob = await this.localForage.getItem("baseRomCombo");
         const rom = new Uint8Array(await readAsArrayBuffer(rom_blob));
@@ -120,7 +123,7 @@ export class Patch extends Component {
         applyIps(rom, base_patch);
         await this.applySprite(rom, 'link_sprite', this.state.z3_sprite);
         await this.applySprite(rom, 'samus_sprite', this.state.sm_sprite);
-        this.state.spinjumps && enableSeparateSpinjumps(rom);
+        this.state.spinjumps && this.enableSeparateSpinjumps(rom);
         applySeed(rom, world_patch);
 
         return rom;
@@ -136,9 +139,6 @@ export class Patch extends Component {
         }
     }
 
-    enableSeparateSpinjumps(rom) {
-        rom[0x34F500] = 0x01;
-    }
 
     handleSubmit = (e) => e.preventDefault()
 
