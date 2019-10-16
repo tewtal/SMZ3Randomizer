@@ -128,11 +128,13 @@ namespace Randomizer.CLI.Verbs {
             using var g = Graphics.FromImage(montage);
             g.Clear(Color.Transparent);
 
+            var offset = -1;
+
             using var linkResource = ManifestResource.EmbeddedStreamFor("Resources.link.png");
             using var link = new Bitmap(linkResource);
             g.DrawImage(link, 0, 0);
+            offset += 1;
 
-            var offset = 0;
             foreach (var path in paths) {
                 offset += 1;
                 using var stream = File.OpenRead(path);
@@ -168,11 +170,13 @@ namespace Randomizer.CLI.Verbs {
             using var g = Graphics.FromImage(montage);
             g.Clear(Color.Transparent);
 
+            var offset = -1;
+
             using var samusResource = ManifestResource.EmbeddedStreamFor("Resources.samus.png");
             using var samus = new Bitmap(samusResource);
             g.DrawImage(samus, 0, 0);
+            offset += 1;
 
-            var offset = 0;
             var poseOffset = 6 * 1024;
             foreach (var path in paths) {
                 offset += 1;
