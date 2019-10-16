@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebRandomizer.Models;
@@ -9,9 +10,10 @@ using WebRandomizer.Models;
 namespace WebRandomizer.Migrations
 {
     [DbContext(typeof(RandomizerContext))]
-    partial class RandomizerContextModelSnapshot : ModelSnapshot
+    [Migration("20191014085218_ConcurrencyCheck")]
+    partial class ConcurrencyCheck
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,14 +39,6 @@ namespace WebRandomizer.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
-
-                    b.Property<int>("RecievedSeq")
-                        .IsConcurrencyToken()
-                        .HasColumnType("integer");
-
-                    b.Property<int>("SentSeq")
-                        .IsConcurrencyToken()
-                        .HasColumnType("integer");
 
                     b.Property<int>("SessionId")
                         .HasColumnType("integer");
@@ -78,13 +72,11 @@ namespace WebRandomizer.Migrations
                     b.Property<int>("ItemId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ItemIndex")
-                        .HasColumnType("integer");
-
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
 
                     b.Property<int>("SequenceNum")
+                        .IsConcurrencyToken()
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("TimeStamp")

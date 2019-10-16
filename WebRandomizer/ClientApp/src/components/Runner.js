@@ -11,14 +11,16 @@ export class Runner extends Component {
         this.state = { inEvents: [], outEvents: [] };
         this.writeQueue = [];
         this.eventLoop = this.eventLoop.bind(this);
-        this.readMessages = this.readMessages.bind(this);
+        this.syncSentItems = this.syncSentItems.bind(this);
+        this.syncReceivedItems = this.syncReceivedItems.bind(this);
         this.handleMessage = this.handleMessage.bind(this);
+        this.handleItemMessage = this.handleItemMessage.bind(this);
         this.sendMessage = this.sendMessage.bind(this);
+        this.sendItemMessage = this.sendItemMessage.bind(this);
         this.detectGame = this.detectGame.bind(this);
-        this.receiveItem = this.receiveItem.bind(this);
         this.sendItem = this.sendItem.bind(this);
-        this.resend = this.resend.bind(this);
-        this.sendSelectedItem = this.sendSelectedItem.bind(this);
+        //this.resend = this.resend.bind(this);
+        //this.sendSelectedItem = this.sendSelectedItem.bind(this);
 
         this.sendItemRef = React.createRef();
         this.sendPlayerRef = React.createRef();
@@ -26,7 +28,10 @@ export class Runner extends Component {
         this.timerHandle = 0;
         this.inPtr = -1;
         this.outPtr = -1;
+        this.itemInPtr = -1;
+        this.itemOutPtr = -1;
         this.MessageBaseAddress = 0xE03700;
+        this.ItemsBaseAddress = 0xE04000;
         this.itemNames = {
             0x60: "ProgressiveTunic",
             0x5F: "ProgressiveShield",
@@ -107,26 +112,24 @@ export class Runner extends Component {
             0x2F: "GreenContent",
             0x30: "BlueContent",
             0x0E: "BeeContent"
-        };
+        }
     }
 
     componentDidMount() {
         this.setState({ gameStatus: "Detecting game...", gameState: 0 });
-        this.props.hubConnection.on("ReceiveItem", this.receiveItem);
         this.timerHandle = setTimeout(this.eventLoop, 200);
     }
 
     componentWillUnmount() {
         clearTimeout(this.timerHandle);
-        this.props.hubConnection.off("ReceiveItem", this.receiveItem);
     }
 
     async eventLoop() {
         if (this.props.hubState === 1 && this.props.connState === 1) {
             if (this.state.gameState === 1) {
-                await this.readMessages();
-                await this.handleWriteQueue();
-                this.timerHandle = setTimeout(this.eventLoop, 200);
+                await this.syncSentItems();
+                await this.syncReceivedItems();
+                this.timerHandle = setTimeout(this.eventLoop, 500);
                 return;
             } else {
                 /* Try to detect the game by looking at the specific hashes */
@@ -147,6 +150,7 @@ export class Runner extends Component {
         let clientGuid = String.fromCharCode.apply(null, seedData.slice(0x30, 0x50));
         if (seedGuid === this.props.sessionData.seed.guid && clientGuid === this.props.clientData.guid) {
             this.MessageBaseAddress = 0xE03700;
+            this.ItemsBaseAddress = 0xE04000;
             this.setState({
                 gameState: 1, gameStatus: "Game detected, have fun!"
             });
@@ -159,6 +163,7 @@ export class Runner extends Component {
         clientGuid = String.fromCharCode.apply(null, seedData.slice(0x30, 0x50));
         if (seedGuid === this.props.sessionData.seed.guid && clientGuid === this.props.clientData.guid) {
             this.MessageBaseAddress = 0xE03700;
+            this.ItemsBaseAddress = 0xE04000;
             this.setState({
                 gameState: 1, gameStatus: "Game detected, have fun!"
             });
@@ -171,6 +176,7 @@ export class Runner extends Component {
         clientGuid = String.fromCharCode.apply(null, seedData.slice(0x30, 0x50));
         if (seedGuid === this.props.sessionData.seed.guid && clientGuid === this.props.clientData.guid) {
             this.MessageBaseAddress = 0x717700;
+            this.ItemsBaseAddress = 0x726000;
             this.setState({
                 gameState: 1, gameStatus: "Game detected, have fun!"
             });
@@ -179,40 +185,78 @@ export class Runner extends Component {
 
     }
 
-    receiveItem(worldId, itemId) {
-        /* Push a message into the writeQueue to be written later by the main event loop */
-        let message = [0x11, 0x10, worldId & 0xFF, (worldId << 8) & 0xFF, itemId & 0xFF, (itemId << 8) & 0xFF];
-        this.writeQueue.push(message);
-    }
-
-    async sendItem(worldId, itemId) {
+    async sendItem(worldId, itemId, itemIndex, seq) {
         try {
-            return await this.props.hubConnection.invoke("SendItem", this.props.sessionData.guid, parseInt(worldId, 10), parseInt(itemId, 10));
+            return await this.props.hubConnection.invoke("SendItem", this.props.sessionData.guid, parseInt(worldId, 10), parseInt(itemId, 10), parseInt(itemIndex, 10), parseInt(seq, 10));
         } catch (err) {
             console.log("Error sending item to player", err);
             return false;
         }            
     }
 
-    async handleWriteQueue() {
-        if (this.props.hubState === 1 && this.props.connState === 1) {
-            while (this.writeQueue.length > 0) {
-                let message = this.writeQueue.pop();
-                try {
-                    let ok = await this.sendMessage(message);
-                    if (!ok) {
-                        /* if there's an error while writing, push this message back and return completely */
-                        this.writeQueue.push(message);
-                        return;
-                    }
-                } catch (err) {
-                    /* if there's an error while writing, push this message back and return completely */
-                    this.writeQueue.push(message);
+    async syncReceivedItems() {
+        try {
+
+            /* Make sure we're synced to the SNES */
+            const snesItemSendPtrs = await readData(this.ItemsBaseAddress + 0x600, 0x04);
+            this.itemOutPtr = snesItemSendPtrs[0x02] + (snesItemSendPtrs[0x03] << 8);
+
+            /* Ask the server for all items from our last known item sequence */
+            let events = await this.props.hubConnection.invoke("GetEvents", this.props.sessionData.guid, "ItemReceived", parseInt(this.itemOutPtr, 10));
+            for (let i = 0; i < events.length; i++) {
+                let event = events[i];
+                let message = [event.playerId & 0xFF, (event.playerId >> 8) & 0xFF, event.itemId & 0xFF, (event.itemId >> 8) & 0xFF];
+                let ok = await this.sendItemMessage(message);
+                if (!ok) {
+                    console.log("Error when writing item resync");
                     return;
                 }
             }
+        } catch (err) {
+            console.log(err);
+            return;
         }
     }
+
+    async syncSentItems() {
+        /* Checks for new outgoing items in the multiworld item list */
+        try {
+            const snesItemSendPtrs = await readData(this.ItemsBaseAddress + 0x680, 0x04);
+
+            this.itemInPtr = snesItemSendPtrs[0x00] + (snesItemSendPtrs[0x01] << 8);
+            let snesItemOutPtr = snesItemSendPtrs[0x02] + (snesItemSendPtrs[0x03] << 8);
+
+            while (this.itemInPtr < snesItemOutPtr) {
+                let itemAddress = (this.itemInPtr * 0x08);
+                let message = await readData(this.ItemsBaseAddress + 0x700 + itemAddress, 0x08);
+                try {
+                    let ok = await this.handleItemMessage(message);
+                    if (ok) {
+                        this.itemInPtr++;
+                        await writeData(this.ItemsBaseAddress + 0x680, new Uint8Array([this.itemInPtr]));
+                    } else {
+                        /* if handling a message fails, bail out completely and retry next time */
+                        return;
+                    }
+                } catch (err) {
+                    console.log(err);
+                    return;
+                }
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    async handleItemMessage(message) {
+        let worldId = message[0x00] + (message[0x01] << 8);
+        let itemId = message[0x02] + (message[0x03] << 8);
+        let itemIndex = message[0x04] + (message[0x05] << 8);
+        let seq = this.itemInPtr;
+
+        return await this.sendItem(worldId, itemId, itemIndex, seq);
+    }
+
 
     async readMessages() {
         /* Reads messages from the SNES message outbox */
@@ -270,20 +314,23 @@ export class Runner extends Component {
     async handleMessage(msg) {
         const msgType = msg[0] + (msg[1] << 8);
         switch (msgType) {
-            case 0x1001:
-                {
-                    /* 0x1001 = Send multiworld item to player */
-                    let itemId = (msg[2] + (msg[3] << 8));
-                    let worldId = (msg[4] + (msg[5] << 8));
-
-                    let result = await this.sendItem(worldId, itemId);
-                    return result;
-                }
             default:
                 {
                     /* Invalid message, ignore and move on */
                     return true;
                 }
+        }
+    }
+
+    async sendItemMessage(data) {
+        try {
+            await writeData(this.ItemsBaseAddress + (this.itemOutPtr * 0x04), new Uint8Array(data));
+            this.itemOutPtr++;
+            await writeData(this.ItemsBaseAddress + 0x602, new Uint8Array([this.itemOutPtr]));
+
+            return true;
+        } catch (err) {
+            return false;
         }
     }
 
@@ -302,27 +349,31 @@ export class Runner extends Component {
         }
     }
 
-    async resend(e) {
-        let worldId = e.target.dataset.world;
-        let itemId = e.target.dataset.itemid;
-        await this.sendItem(worldId, itemId);
-    }
+    //async resend(e) {
+    //    let worldId = e.target.dataset.world;
+    //    let itemId = e.target.dataset.itemid;
+    //    await this.sendItem(worldId, itemId);
+    //}
 
-    async sendSelectedItem(e) {
-        let selectedPlayer = this.sendPlayerRef.current.options[this.sendPlayerRef.current.selectedIndex];
-        let selectedItem = this.sendItemRef.current.options[this.sendItemRef.current.selectedIndex];
+    //async sendSelectedItem(e) {
+    //    let selectedPlayer = this.sendPlayerRef.current.options[this.sendPlayerRef.current.selectedIndex];
+    //    let selectedItem = this.sendItemRef.current.options[this.sendItemRef.current.selectedIndex];
 
-        let worldId = selectedPlayer.dataset.world;
-        let itemId = selectedItem.dataset.itemid;
+    //    let worldId = selectedPlayer.dataset.world;
+    //    let itemId = selectedItem.dataset.itemid;
 
-        await this.sendItem(worldId, itemId);
-    }
+    //    await this.sendItem(worldId, itemId);
+    //}
 
     render() {
         const sentItems = [];
+
+        /*
+        
         const itemNames = [];
         const playerNames = [];
 
+        
         let lastEvents = this.state.outEvents.reverse();
         for (let i = 0; i < this.state.outEvents.length; i++) {
             sentItems.push(<tr><td>{this.props.sessionData.seed.worlds[lastEvents[i][0]].player}</td><td>{this.itemNames[lastEvents[i][1]]}</td><td><Button data-world={lastEvents[i][0]} data-itemid={lastEvents[i][1]} color="primary" onClick={this.resend}>Resend item</Button></td></tr>); 
@@ -335,6 +386,7 @@ export class Runner extends Component {
         for (let i = 0; i < this.props.sessionData.seed.players; i++) {
             playerNames.push(<option key={"send-player-" + i} data-world={i}>{this.props.sessionData.seed.worlds[i].player}</option>);
         }
+        */
 
         return (
             <div className="container">
@@ -361,21 +413,6 @@ export class Runner extends Component {
                                                     <th></th>
                                                 </tr>
                                                 {sentItems}
-                                                <tr>
-                                                    <td>
-                                                        <select id="send-player" ref={this.sendPlayerRef}>
-                                                            {playerNames}
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <select id="send-item" ref={this.sendItemRef}>
-                                                            {itemNames}
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <Button onClick={this.sendSelectedItem} color="danger">Send</Button>
-                                                    </td>
-                                                </tr>
                                             </tbody>
                                         </table>
                                     </Col>

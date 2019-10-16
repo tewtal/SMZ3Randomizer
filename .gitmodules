@@ -1,0 +1,4 @@
+[submodule "alttp_sm_combo_randomizer_rom"]
+	path = alttp_sm_combo_randomizer_rom
+	url = https://github.com/tewtal/alttp_sm_combo_randomizer_rom.git
+	branch = multiworld

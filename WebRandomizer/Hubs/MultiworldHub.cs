@@ -16,25 +16,125 @@ namespace WebRandomizer.Hubs {
             this.context = context;
         }
 
-        public async Task<bool> SendItem(string sessionGuid, int worldId, int itemId) {
-            
+
+        public async Task<List<int>> GetSequences(string sessionGuid) {
             /* Check that the session is valid and grab it from the database */
-            var session = await context.Sessions.Include(x => x.Clients).SingleOrDefaultAsync(x => x.Guid == sessionGuid);
+            var session = await context.Sessions.Include(x => x.Clients).ThenInclude(x => x.Events).SingleOrDefaultAsync(x => x.Guid == sessionGuid);
+            if (session != null) {
+                /* Check that the sender is a client in the session */
+                var client = session.Clients.SingleOrDefault(x => x.ConnectionId == this.Context.ConnectionId);
+                if (client != null) {
+                    return new List<int> { client.Events.Where(x => x.Type == EventType.ItemSent)?.Max(x => x.SequenceNum) ?? 0, client.Events.Where(x => x.Type == EventType.ItemReceived)?.Max(x => x.SequenceNum) ?? 0 };
+                }
+            }
+
+            return null;
+        }
+
+        public async Task<List<Event>> GetEvents(string sessionGuid, string eventTypeStr, int fromSequence) {
+            var session = await context.Sessions.Include(x => x.Clients).ThenInclude(x => x.Events).SingleOrDefaultAsync(x => x.Guid == sessionGuid);
+            if (session != null) {
+                /* Check that the sender is a client in the session */
+                var client = session.Clients.SingleOrDefault(x => x.ConnectionId == this.Context.ConnectionId);
+                if (client != null) {
+                    if (Enum.TryParse(eventTypeStr, out EventType eventType)) {
+                        return client.Events.Where(x => x.Type == eventType && x.SequenceNum > fromSequence)?.OrderBy(x => x.SequenceNum).ToList() ?? null;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public async Task<bool> CreateEvent(string sessionGuid, Event ev) {
+            var session = await context.Sessions.Include(x => x.Clients).ThenInclude(x => x.Events).SingleOrDefaultAsync(x => x.Guid == sessionGuid);
+            if (session != null) {
+                /* Check that the sender is a client in the session */
+                var client = session.Clients.SingleOrDefault(x => x.ConnectionId == this.Context.ConnectionId);
+                if (client != null) {
+                    while (true) {
+                        try {
+                            client.Events.Add(ev);
+                            await context.SaveChangesAsync();
+                            return true;
+                        } catch (DbUpdateConcurrencyException) {
+                            continue;
+                        } catch {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public async Task<bool> SendItem(string sessionGuid, int worldId, int itemId, int itemIndex, int sequenceId) {            
+            /* Check that the session is valid and grab it from the database */
+            var session = await context.Sessions.Include(x => x.Clients).ThenInclude(x => x.Events).SingleOrDefaultAsync(x => x.Guid == sessionGuid);
             if(session != null) {
                 
                 /* Check that the sender is a client in the session */
                 var fromClient = session.Clients.SingleOrDefault(x => x.ConnectionId == this.Context.ConnectionId);
                 if(fromClient != null) {
-
+                    
+                    /* If we're seeing a repeat item index it means we're getting a dupe item (snes was reset/player died)
+                     * We just accept it without creating a new event here since the target player should hopefully already have the item */
+                    if(fromClient.Events.Any(x => x.ItemIndex == itemIndex)) {
+                        return true;
+                    }
+                    
                     /* Get the receiving client */
                     var toClient = session.Clients.SingleOrDefault(x => x.WorldId == worldId);
                     if(toClient != null) {
-                        await this.Clients.Client(toClient.ConnectionId).SendAsync("ReceiveItem", fromClient.WorldId, itemId);
-                        return true;
+                        while(true) { 
+                            try {
+                                /* Create a item sent event */
+                                fromClient.Events.Add(new Event {
+                                    ClientId = fromClient.Id,
+                                    Description = $"{fromClient.Name} sent item {itemId} to {toClient.Name}",
+                                    ItemId = itemId,
+                                    ItemIndex = itemIndex,
+                                    PlayerId = worldId,
+                                    TimeStamp = DateTime.Now,
+                                    Type = EventType.ItemSent,
+                                    SequenceNum = sequenceId
+                                });
+
+                                fromClient.SentSeq = sequenceId;
+                                toClient.RecievedSeq += 1;
+
+                                /* Create item received event */
+                                toClient.Events.Add(new Event {
+                                    ClientId = toClient.Id,
+                                    Description = $"Received item {itemId} from {fromClient.Name}",
+                                    ItemId = itemId,
+                                    ItemIndex = itemIndex,
+                                    PlayerId = fromClient.WorldId,
+                                    TimeStamp = DateTime.Now,
+                                    Type = EventType.ItemReceived,
+                                    SequenceNum = toClient.RecievedSeq
+                                });
+                                
+                                context.Clients.Update(fromClient);
+                                context.Clients.Update(toClient);
+                                await context.SaveChangesAsync();
+                                return true;
+
+                            } catch (DbUpdateConcurrencyException) {
+                                /* Concurrency fault trying to create events (possible ID conflict due to asynchronous updates) */
+                                /* re-read session and client data to get the new latest events */
+                                session = await context.Sessions.Include(x => x.Clients).SingleOrDefaultAsync(x => x.Guid == sessionGuid);
+                                fromClient = session.Clients.SingleOrDefault(x => x.ConnectionId == this.Context.ConnectionId);
+                                toClient = session.Clients.SingleOrDefault(x => x.WorldId == worldId);
+                                continue;
+                            } catch {
+                                break;
+                            }
+                        }                        
                     }
                 }
             }
-
             return false;
         }
 
