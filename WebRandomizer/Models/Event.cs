@@ -24,6 +24,8 @@ namespace WebRandomizer.Models {
         public int PlayerId { get; set; }
         
         public int ItemId { get; set; }
+
+        public int ItemIndex { get; set; }
         
         public DateTime TimeStamp { get; set; }
         

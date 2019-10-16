@@ -69,7 +69,7 @@ namespace WebRandomizer.Hubs {
             return false;
         }
 
-        public async Task<bool> SendItem(string sessionGuid, int worldId, int itemId, int sequenceId) {            
+        public async Task<bool> SendItem(string sessionGuid, int worldId, int itemId, int itemIndex, int sequenceId) {            
             /* Check that the session is valid and grab it from the database */
             var session = await context.Sessions.Include(x => x.Clients).ThenInclude(x => x.Events).SingleOrDefaultAsync(x => x.Guid == sessionGuid);
             if(session != null) {
@@ -78,8 +78,9 @@ namespace WebRandomizer.Hubs {
                 var fromClient = session.Clients.SingleOrDefault(x => x.ConnectionId == this.Context.ConnectionId);
                 if(fromClient != null) {
                     
-                    if(fromClient.Events.Any(x => x.SequenceNum == sequenceId)) {
-                        /* This item has already been sent, just accept it and move on for now */
+                    /* If we're seeing a repeat item index it means we're getting a dupe item (snes was reset/player died)
+                     * We just accept it without creating a new event here since the target player should hopefully already have the item */
+                    if(fromClient.Events.Any(x => x.ItemIndex == itemIndex)) {
                         return true;
                     }
                     
@@ -93,6 +94,7 @@ namespace WebRandomizer.Hubs {
                                     ClientId = fromClient.Id,
                                     Description = $"{fromClient.Name} sent item {itemId} to {toClient.Name}",
                                     ItemId = itemId,
+                                    ItemIndex = itemIndex,
                                     PlayerId = worldId,
                                     TimeStamp = DateTime.Now,
                                     Type = EventType.ItemSent,
@@ -107,6 +109,7 @@ namespace WebRandomizer.Hubs {
                                     ClientId = toClient.Id,
                                     Description = $"Received item {itemId} from {fromClient.Name}",
                                     ItemId = itemId,
+                                    ItemIndex = itemIndex,
                                     PlayerId = fromClient.WorldId,
                                     TimeStamp = DateTime.Now,
                                     Type = EventType.ItemReceived,

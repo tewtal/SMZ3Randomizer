@@ -19,8 +19,8 @@ export class Runner extends Component {
         this.sendItemMessage = this.sendItemMessage.bind(this);
         this.detectGame = this.detectGame.bind(this);
         this.sendItem = this.sendItem.bind(this);
-        this.resend = this.resend.bind(this);
-        this.sendSelectedItem = this.sendSelectedItem.bind(this);
+        //this.resend = this.resend.bind(this);
+        //this.sendSelectedItem = this.sendSelectedItem.bind(this);
 
         this.sendItemRef = React.createRef();
         this.sendPlayerRef = React.createRef();
@@ -185,9 +185,9 @@ export class Runner extends Component {
 
     }
 
-    async sendItem(worldId, itemId, seq) {
+    async sendItem(worldId, itemId, itemIndex, seq) {
         try {
-            return await this.props.hubConnection.invoke("SendItem", this.props.sessionData.guid, parseInt(worldId, 10), parseInt(itemId, 10), parseInt(seq, 10));
+            return await this.props.hubConnection.invoke("SendItem", this.props.sessionData.guid, parseInt(worldId, 10), parseInt(itemId, 10), parseInt(itemIndex, 10), parseInt(seq, 10));
         } catch (err) {
             console.log("Error sending item to player", err);
             return false;
@@ -221,19 +221,19 @@ export class Runner extends Component {
     async syncSentItems() {
         /* Checks for new outgoing items in the multiworld item list */
         try {
-            const snesItemSendPtrs = await readData(this.ItemsBaseAddress + 0xd00, 0x04);
+            const snesItemSendPtrs = await readData(this.ItemsBaseAddress + 0x680, 0x04);
 
             this.itemInPtr = snesItemSendPtrs[0x00] + (snesItemSendPtrs[0x01] << 8);
             let snesItemOutPtr = snesItemSendPtrs[0x02] + (snesItemSendPtrs[0x03] << 8);
 
             while (this.itemInPtr < snesItemOutPtr) {
-                let itemAddress = (this.itemInPtr * 0x04);
-                let message = await readData(this.ItemsBaseAddress + 0x700 + itemAddress, 0x04);
+                let itemAddress = (this.itemInPtr * 0x08);
+                let message = await readData(this.ItemsBaseAddress + 0x700 + itemAddress, 0x08);
                 try {
                     let ok = await this.handleItemMessage(message);
                     if (ok) {
                         this.itemInPtr++;
-                        await writeData(this.ItemsBaseAddress + 0xd00, new Uint8Array([this.itemInPtr]));
+                        await writeData(this.ItemsBaseAddress + 0x680, new Uint8Array([this.itemInPtr]));
                     } else {
                         /* if handling a message fails, bail out completely and retry next time */
                         return;
@@ -251,9 +251,10 @@ export class Runner extends Component {
     async handleItemMessage(message) {
         let worldId = message[0x00] + (message[0x01] << 8);
         let itemId = message[0x02] + (message[0x03] << 8);
+        let itemIndex = message[0x04] + (message[0x05] << 8);
         let seq = this.itemInPtr;
 
-        return await this.sendItem(worldId, itemId, seq);
+        return await this.sendItem(worldId, itemId, itemIndex, seq);
     }
 
 
@@ -348,21 +349,21 @@ export class Runner extends Component {
         }
     }
 
-    async resend(e) {
-        let worldId = e.target.dataset.world;
-        let itemId = e.target.dataset.itemid;
-        await this.sendItem(worldId, itemId);
-    }
+    //async resend(e) {
+    //    let worldId = e.target.dataset.world;
+    //    let itemId = e.target.dataset.itemid;
+    //    await this.sendItem(worldId, itemId);
+    //}
 
-    async sendSelectedItem(e) {
-        let selectedPlayer = this.sendPlayerRef.current.options[this.sendPlayerRef.current.selectedIndex];
-        let selectedItem = this.sendItemRef.current.options[this.sendItemRef.current.selectedIndex];
+    //async sendSelectedItem(e) {
+    //    let selectedPlayer = this.sendPlayerRef.current.options[this.sendPlayerRef.current.selectedIndex];
+    //    let selectedItem = this.sendItemRef.current.options[this.sendItemRef.current.selectedIndex];
 
-        let worldId = selectedPlayer.dataset.world;
-        let itemId = selectedItem.dataset.itemid;
+    //    let worldId = selectedPlayer.dataset.world;
+    //    let itemId = selectedItem.dataset.itemid;
 
-        await this.sendItem(worldId, itemId);
-    }
+    //    await this.sendItem(worldId, itemId);
+    //}
 
     render() {
         const sentItems = [];
