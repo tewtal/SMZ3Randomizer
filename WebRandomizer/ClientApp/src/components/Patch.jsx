@@ -14,7 +14,7 @@ import { readAsArrayBuffer, applyIps, applySeed } from '../file_handling';
 import { parse_rdc } from '../file_handling/rdc';
 
 import sprites from '../files/sprite/inventory.json';
-import baseIps from '../files/zsm_191016_3.ips.gz';
+import baseIps from '../files/zsm_191016_4.ips.gz';
 
 // through bootstrap "$input-btn-padding-x"
 const inputPaddingX = '.75rem';
@@ -80,7 +80,7 @@ export class Patch extends Component {
     }
 
     onSpinjumps = () => {
-        this.setState({ spinjumps: !this.state.spinjumps });
+        this.setState((state, props) => ({ spinjumps: !state.spinjumps }));
     }
 
     handleDownloadRom = async () => {
@@ -123,7 +123,9 @@ export class Patch extends Component {
         applyIps(rom, base_patch);
         await this.applySprite(rom, 'link_sprite', this.state.z3_sprite);
         await this.applySprite(rom, 'samus_sprite', this.state.sm_sprite);
-        this.state.spinjumps && this.enableSeparateSpinjumps(rom);
+        if (this.state.spinjumps) {
+            this.enableSeparateSpinjumps(rom);
+        }
         applySeed(rom, world_patch);
 
         return rom;
