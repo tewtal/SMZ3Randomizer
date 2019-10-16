@@ -1,0 +1,21 @@
+name: Create and publish docker image
+
+on:
+  push:
+    branches: 
+      - docker-integration
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1 
+      with:
+        submodules: true   
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: tewtal/webrandomizer
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
