@@ -16,6 +16,7 @@ jobs:
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
-        name: tewtal/webrandomizer
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+        name: combo-randomizer/webrandomizer-beta:latest
+        username: ${{ secrets.GCR_USERNAME }}
+        password: ${{ secrets.GCR_PASSWORD }}
+        registry: gcr.io
