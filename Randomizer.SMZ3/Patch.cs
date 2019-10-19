@@ -468,7 +468,7 @@ namespace Randomizer.SMZ3 {
         }
 
         void WriteSeedData() {
-            patches.Add((SMSnes(0xC07F50), UintBytes(myWorld.Id)));
+            patches.Add((SMSnes(0xC07F50), UshortBytes(myWorld.Id)));
             /* Seed configuration bitfield */
             patches.Add((SMSnes(0xC07F52), UintBytes(0)));
             patches.Add((SMSnes(0xC07F60), AsciiBytes(seedGuid)));
