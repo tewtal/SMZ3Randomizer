@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using CommandLine;
 using Newtonsoft.Json;
@@ -70,6 +71,17 @@ namespace Randomizer.CLI.Verbs {
         public abstract IRandomizer NewRandomizer();
         public abstract byte[] BaseRom();
 
+        protected Stream OpenReadInnerStream(string filename) {
+            Stream file = File.OpenRead(filename);
+            if (Path.GetExtension(filename).ToLower() != ".gz")
+                return file;
+
+            using var source = new GZipStream(file, CompressionMode.Decompress);
+            var stream = new MemoryStream();
+            source.CopyTo(stream);
+            return stream;
+        }
+
     }
 
     [Verb("sm", HelpText = "Generate Super Metroid seeds")]
@@ -79,7 +91,7 @@ namespace Randomizer.CLI.Verbs {
 
         public SMSeedOptions() {
             smRom = new Lazy<byte[]>(() => {
-                using var ips = File.OpenRead(Ips.First());
+                using var ips = OpenReadInnerStream(Ips.First());
                 var rom = File.ReadAllBytes(smFile);
                 FileData.Rom.ApplyIps(rom, ips);
                 return rom;
@@ -100,7 +112,7 @@ namespace Randomizer.CLI.Verbs {
             smz3Rom = new Lazy<byte[]>(() => {
                 using var sm = File.OpenRead(smFile);
                 using var z3 = File.OpenRead(z3File);
-                using var ips = File.OpenRead(Ips.First());
+                using var ips = OpenReadInnerStream(Ips.First());
                 var rom = FileData.Rom.CombineSMZ3Rom(sm, z3);
                 FileData.Rom.ApplyIps(rom, ips);
                 return rom;
