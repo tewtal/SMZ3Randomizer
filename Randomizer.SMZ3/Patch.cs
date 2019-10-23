@@ -468,9 +468,17 @@ namespace Randomizer.SMZ3 {
         }
 
         void WriteSeedData() {
+            var configField =
+                ((int)myWorld.Config.Z3Logic << 10) |
+                ((int)myWorld.Config.SMLogic << 8) |
+                (Randomizer.version.Major << 4) |
+                (Randomizer.version.Minor << 0);
+
             patches.Add((SMSnes(0xC07F50), UshortBytes(myWorld.Id)));
-            /* Seed configuration bitfield */
-            patches.Add((SMSnes(0xC07F52), UintBytes(0)));
+            patches.Add((SMSnes(0xC07F52), UshortBytes(configField)));
+            patches.Add((SMSnes(0xC07F54), UintBytes(seed)));
+            /* Reserve the rest of the space for future use */
+            patches.Add((SMSnes(0xC07F58), Repeat<byte>(0x00, 8).ToArray()));
             patches.Add((SMSnes(0xC07F60), AsAscii(seedGuid)));
             patches.Add((SMSnes(0xC07F80), AsAscii(myWorld.Guid)));
         }

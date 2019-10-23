@@ -6,7 +6,7 @@ namespace Randomizer.SMZ3 {
 
     public class Randomizer : IRandomizer {
 
-        public const string version = "11.0";
+        public static readonly Version version = new Version(11, 0);
 
         public ISeedData GenerateSeed(IDictionary<string, string> options, string seed) {
             int randoSeed;
