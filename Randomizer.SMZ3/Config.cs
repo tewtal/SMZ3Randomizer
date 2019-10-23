@@ -2,9 +2,8 @@
 
     enum SMLogic {
         Casual,
-        Tournament,
-        Normal,
-        Hard,
+        Basic,
+        Advanced,
     }
 
     enum Difficulty {
@@ -24,7 +23,7 @@
 
     class Config {
 
-        public SMLogic SMLogic { get; set; } = SMLogic.Tournament;
+        public SMLogic SMLogic { get; set; } = SMLogic.Advanced;
         public Difficulty Difficulty { get; set; } = Difficulty.Normal;
         public bool Keysanity { get; set; } = false;
         public GanonInvincible GanonInvincible { get; set; } = GanonInvincible.BeforeCrystals;

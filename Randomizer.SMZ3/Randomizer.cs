@@ -13,12 +13,12 @@ namespace Randomizer.SMZ3 {
 
             var rnd = new Random(int.Parse(seed));
 
-            var logic = SMLogic.Tournament;
+            var logic = SMLogic.Advanced;
             if (options.ContainsKey("logic")) {
                 logic = options["logic"] switch {
                     "casual" => SMLogic.Casual,
-                    "tournament" => SMLogic.Tournament,
-                    _ => SMLogic.Tournament
+                    "tournament" => SMLogic.Advanced,
+                    _ => SMLogic.Advanced
                 };
             }
 
