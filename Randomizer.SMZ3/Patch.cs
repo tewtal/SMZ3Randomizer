@@ -31,9 +31,10 @@ namespace Randomizer.SMZ3 {
         readonly List<World> allWorlds;
         readonly World myWorld;
         readonly string seedGuid;
+        readonly int seed;
         readonly Random rnd;
         StringTable stringTable;
-        List<(int, byte[])> patches;
+        List<(int offset, byte[] bytes)> patches;
 
         #region Whishing Well room data
 
@@ -41,10 +42,11 @@ namespace Randomizer.SMZ3 {
 
         #endregion
 
-        public Patch(World myWorld, List<World> allWorlds, string seedGuid, Random rnd) {
+        public Patch(World myWorld, List<World> allWorlds, string seedGuid, int seed, Random rnd) {
             this.myWorld = myWorld;
             this.allWorlds = allWorlds;
             this.seedGuid = seedGuid;
+            this.seed = seed;
             this.rnd = rnd;
         }
 
@@ -85,8 +87,9 @@ namespace Randomizer.SMZ3 {
 
             WritePlayerNames();
             WriteSeedData();
+            WriteGameTitle();
 
-            return patches.ToDictionary(x => x.Item1, x => x.Item2);
+            return patches.ToDictionary(x => x.offset, x => x.bytes);
         }
 
         void WriteMedallions() {
@@ -470,6 +473,22 @@ namespace Randomizer.SMZ3 {
             patches.Add((SMSnes(0xC07F52), UintBytes(0)));
             patches.Add((SMSnes(0xC07F60), AsAscii(seedGuid)));
             patches.Add((SMSnes(0xC07F80), AsAscii(myWorld.Guid)));
+        }
+
+        void WriteGameTitle() {
+            var z3Glitch = myWorld.Config.Z3Logic switch {
+                Z3Logic.Mg => "M",
+                Z3Logic.Owg => "G",
+                _ => "N",
+            };
+            var smGlitch = myWorld.Config.SMLogic switch {
+                SMLogic.Advanced => "A",
+                SMLogic.Basic => "B",
+                _ => "C",
+            };
+            var title = AsAscii($"ZSM{Randomizer.version}{z3Glitch}{smGlitch}{seed:X8}".PadRight(21)[..21]);
+            patches.Add((Z3Snes(0x007FC0), title));
+            patches.Add((SMSnes(0xC07FC0), title));
         }
 
         void WriteWishingWellRoomData() {

@@ -6,12 +6,18 @@ namespace Randomizer.SMZ3 {
 
     public class Randomizer : IRandomizer {
 
+        public const string version = "11.0";
+
         public ISeedData GenerateSeed(IDictionary<string, string> options, string seed) {
-            if (seed == "") {
-                seed = new Random().Next().ToString();
+            int randoSeed;
+            if (string.IsNullOrEmpty(seed)) {
+                randoSeed = new Random().Next();
+                seed = randoSeed.ToString();
+            } else {
+                randoSeed = int.Parse(seed);
             }
 
-            var rnd = new Random(int.Parse(seed));
+            var randoRnd = new Random(randoSeed);
 
             var logic = SMLogic.Advanced;
             if (options.ContainsKey("logic")) {
@@ -30,7 +36,7 @@ namespace Randomizer.SMZ3 {
                 worlds.Add(new World(config, options[$"player-{p}"], p, new HexGuid()));
             }
 
-            var filler = new Filler(worlds, config, rnd);
+            var filler = new Filler(worlds, config, randoRnd);
             filler.Fill();
 
             var playthrough = new Playthrough(worlds);
@@ -46,10 +52,10 @@ namespace Randomizer.SMZ3 {
             };
 
             /* Make sure RNG is the same when applying patches to the ROM to have consistent RNG for seed identifer etc */
-            int patchSeed = rnd.Next();
+            int patchSeed = randoRnd.Next();
             foreach (var world in worlds) {
                 var patchRnd = new Random(patchSeed);
-                var patch = new Patch(world, worlds, seedData.Guid, patchRnd);
+                var patch = new Patch(world, worlds, seedData.Guid, randoSeed, patchRnd);
                 var worldData = new WorldData {
                     Id = world.Id,
                     Guid = world.Guid,

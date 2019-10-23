@@ -1,5 +1,11 @@
 ﻿namespace Randomizer.SMZ3 {
 
+    enum Z3Logic {
+        Nmg,
+        Owg,
+        Mg,
+    }
+
     enum SMLogic {
         Casual,
         Basic,
@@ -23,6 +29,7 @@
 
     class Config {
 
+        public Z3Logic Z3Logic { get; set; } = Z3Logic.Nmg;
         public SMLogic SMLogic { get; set; } = SMLogic.Advanced;
         public Difficulty Difficulty { get; set; } = Difficulty.Normal;
         public bool Keysanity { get; set; } = false;
