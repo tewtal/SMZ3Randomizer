@@ -24,11 +24,15 @@ export class Multiworld extends Component {
             clientData: null,
             connState: 0,
             connInfo: [""],
+            deviceList: null,
+            deviceSelect: false,
+            deviceSelected: null
         };
 
 
         this.handleRegisterPlayer = this.handleRegisterPlayer.bind(this);
         this.handleConnect = this.handleConnect.bind(this);
+        this.handleDevice = this.handleDevice.bind(this);
     }
 
     async componentDidMount() {
@@ -128,29 +132,20 @@ export class Multiworld extends Component {
                 return;
             }
 
-            try {
-                let ok = await send(create_message("Attach", [firstDevice]), true, 500);
-                if (ok === true) {
-                    let result = await send(create_message("Info", []));
-                    let info = JSON.parse(result.data);
-                    ok = await send(create_message("Name", ["Randomizer.live [" + firstDevice + "]"]), true);
-
-                    info.Results.isSnes = (firstDevice.includes("COM") || firstDevice.includes("SD2SNES"));
-                    this.state.clientData.device = firstDevice;
-                    this.state.clientData.state = 5;
-                    this.setState({ connState: 1, clientData: this.state.clientData, connInfo: info.Results });
-
-                    let client = await this.connection.invoke("UpdateClient", this.state.clientData);
-                    if (client) {
-                        this.state.clientData = client;
-                        this.setState({ clientData: this.state.clientData });
+            if (devices.Results.length === 1) {
+                await this.attachDevice(firstDevice);
+            } else {
+                if (!this.state.deviceSelect) {
+                    this.setState({
+                        deviceSelect: true, deviceList: devices, deviceSelected: firstDevice
+                    });
+                } else {
+                    if (this.state.deviceSelected !== null) {
+                        if (await this.attachDevice(this.state.deviceSelected)) {
+                            this.setState({ deviceSelect: false, deviceList: null, deviceSelected: null });
+                        }
                     }
                 }
-            } catch (err) {
-                console.log("Couldn't attach to device:", err);
-                this.state.connState = 1;
-                this.socket.close();
-                return;
             }
         }
         catch (err) {
@@ -158,6 +153,39 @@ export class Multiworld extends Component {
             this.setState({ connState: 0, connDevice: "None" });
             setTimeout(this.handleConnect, 5000);
         }
+    }
+
+    async handleDevice(e) {
+        this.setState({ deviceSelected: e.target.value });
+    }
+
+    async attachDevice(device) {
+        try {
+            let ok = await send(create_message("Attach", [device]), true, 500);
+            if (ok === true) {
+                let result = await send(create_message("Info", []));
+                let info = JSON.parse(result.data);
+                ok = await send(create_message("Name", ["Randomizer.live [" + device + "]"]), true);
+
+                info.Results.isSnes = (device.includes("COM") || device.includes("SD2SNES"));
+                this.state.clientData.device = device;
+                this.state.clientData.state = 5;
+                this.setState({ connState: 1, clientData: this.state.clientData, connInfo: info.Results });
+
+                let client = await this.connection.invoke("UpdateClient", this.state.clientData);
+                if (client) {
+                    this.state.clientData = client;
+                    this.setState({ clientData: this.state.clientData });
+                }
+
+                return true;
+            }
+        } catch (err) {
+            console.log("Couldn't attach to device:", err);
+            this.state.connState = 1;
+            this.socket.close();
+        }
+        return false;
     }
 
     async startSession() {
@@ -236,7 +264,7 @@ export class Multiworld extends Component {
                 <br />
                 {this.state.clientData !== null ? (<Patch sessionData={this.state.sessionData} clientData={this.state.clientData} fileName={this.state.sessionData.seed.gameName + " - " + this.state.sessionData.seed.seedNumber + " - " + this.state.clientData.name + ".sfc"} />) : ""}
                 <br />
-                {this.state.clientData !== null ? (<Connection connState={this.state.connState} clientData={this.state.clientData} connInfo={this.state.connInfo} onConnectClick={this.handleConnect} />) : ""}
+                {this.state.clientData !== null ? (<Connection connState={this.state.connState} clientData={this.state.clientData} connInfo={this.state.connInfo} deviceList={this.state.deviceList} deviceSelect={this.state.deviceSelect} onConnectClick={this.handleConnect} onDeviceSelect={this.handleDevice} />) : ""}
                 <br />
                 {this.state.connState === 1 ? (<Runner connState={this.state.connState} sessionData={this.state.sessionData} clientData={this.state.clientData} hubState={this.state.hubState} hubConnection={this.state.hubConnection} connInfo={this.state.connInfo} />) : ""}
                 <br />
