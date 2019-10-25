@@ -175,8 +175,8 @@ export class Runner extends Component {
         seedGuid = String.fromCharCode.apply(null, seedData.slice(0x10, 0x30));
         clientGuid = String.fromCharCode.apply(null, seedData.slice(0x30, 0x50));
         if (seedGuid === this.props.sessionData.seed.guid && clientGuid === this.props.clientData.guid) {
-            this.MessageBaseAddress = 0x717700;
-            this.ItemsBaseAddress = 0x726000;
+            this.MessageBaseAddress = 0x703700;
+            this.ItemsBaseAddress = 0x704000;
             this.setState({
                 gameState: 1, gameStatus: "Game detected, have fun!"
             });
