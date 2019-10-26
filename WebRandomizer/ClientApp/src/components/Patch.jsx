@@ -14,7 +14,7 @@ import { readAsArrayBuffer, applyIps, applySeed } from '../file_handling';
 import { parse_rdc } from '../file_handling/rdc';
 
 import sprites from '../files/sprite/inventory.json';
-import baseIps from '../files/zsm_191016_4.ips.gz';
+import baseIps from '../files/zsm.ips.gz';
 
 // through bootstrap "$input-btn-padding-x"
 const inputPaddingX = '.75rem';
@@ -117,7 +117,7 @@ export class Patch extends Component {
     async prepareRom(world_patch) {
         const rom_blob = await this.localForage.getItem("baseRomCombo");
         const rom = new Uint8Array(await readAsArrayBuffer(rom_blob));
-        const base_patch = this.checkDecompress(new Uint8Array(await (await fetch(baseIps)).arrayBuffer()));
+        const base_patch = this.checkDecompress(new Uint8Array(await (await fetch(baseIps, { cache: "no-store" })).arrayBuffer()));
         world_patch = Uint8Array.from(atob(world_patch), c => c.charCodeAt(0));
 
         applyIps(rom, base_patch);

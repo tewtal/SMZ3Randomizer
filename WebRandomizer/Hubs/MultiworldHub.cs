@@ -80,7 +80,7 @@ namespace WebRandomizer.Hubs {
                     
                     /* If we're seeing a repeat item index it means we're getting a dupe item (snes was reset/player died)
                      * We just accept it without creating a new event here since the target player should hopefully already have the item */
-                    if(fromClient.Events.Any(x => x.ItemIndex == itemIndex)) {
+                    if(fromClient.Events.Any(x => x.Type == EventType.ItemSent && x.ItemIndex == itemIndex)) {
                         return true;
                     }
                     
