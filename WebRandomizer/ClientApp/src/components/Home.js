@@ -11,7 +11,7 @@ To start a new multiworld session, go to the [Create Randomized Game](/randomize
 
 *Please note that this is still in beta and being under constant developement, so things might not work or the site might have some downtime.*
 
-Looking for people to play with, need support or just anything else related to the randomizer, please join the [Discord](https://discord.gg/PMKcDPQ).
+Looking for people to play with, need support or just anything else related to the randomizer, please join the [Multiworld Discord](https://discord.gg/K4V6V2B).
 
 `;
 
