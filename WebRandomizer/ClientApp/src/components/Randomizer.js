@@ -102,7 +102,7 @@ export class Randomizer extends Component {
                     <Col md="8">
                         <Card>
                             <CardHeader className="bg-primary text-white">
-                                New Randomized Game - SMZ3 Multiworld 1.0-beta1
+                                New Randomized Game - SMZ3 Multiworld 1.0-beta2
                             </CardHeader>
                             <CardBody>
                                 <Form onSubmit={this.createGame}>
@@ -140,14 +140,6 @@ export class Randomizer extends Component {
                                         {playerInputs}
                                     </Row>
                                     <Row className="form-group">
-                                        <Col md="6">
-                                            <InputGroup>
-                                                <InputGroupAddon addonType="prepend">
-                                                    <InputGroupText>Password</InputGroupText>
-                                                </InputGroupAddon>
-                                                <Input id="password" defaultValue={this.state.password} onChange={this.updatePassword} />
-                                            </InputGroup>
-                                        </Col>
                                         <Col md="6">
                                             <Button color="success" type="submit">Create Multiworld Game</Button>
                                         </Col>
