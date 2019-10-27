@@ -399,27 +399,6 @@ export class Runner extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="col-sm-8">
-                        <div className="card">
-                            <div className="card-body">
-                                <Row>
-                                    <Col>
-                                    <h5 className="card-title">Sent items</h5>
-                                        <table>
-                                            <tbody>
-                                                <tr>
-                                                    <th>Player</th>
-                                                    <th>Item</th>
-                                                    <th></th>
-                                                </tr>
-                                                {sentItems}
-                                            </tbody>
-                                        </table>
-                                    </Col>
-                                </Row>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         );
