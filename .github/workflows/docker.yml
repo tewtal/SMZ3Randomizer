@@ -3,7 +3,7 @@ name: Create and publish docker image
 on:
   push:
     branches: 
-      - docker-integration
+      - master
 
 jobs:
   build:
