@@ -129,12 +129,12 @@ export class Runner extends Component {
             if (this.state.gameState === 1) {
                 await this.syncSentItems();
                 await this.syncReceivedItems();
-                this.timerHandle = setTimeout(this.eventLoop, 500);
+                this.timerHandle = setTimeout(this.eventLoop, 1000);
                 return;
             } else {
                 /* Try to detect the game by looking at the specific hashes */
                 await this.detectGame();
-                this.timerHandle = setTimeout(this.eventLoop, 500);
+                this.timerHandle = setTimeout(this.eventLoop, 1000);
                 return;
             }
         } else {
