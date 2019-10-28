@@ -84,54 +84,60 @@ namespace WebRandomizer.Hubs {
                         return true;
                     }
                     
-                    /* Get the receiving client */
+                    /* Get the receiving client */                    
                     var toClient = session.Clients.SingleOrDefault(x => x.WorldId == worldId);
-                    if(toClient != null) {
-                        while(true) { 
+                    if (toClient != null) {
+                        while (true) {
                             try {
-                                /* Create a item sent event */
-                                fromClient.Events.Add(new Event {
-                                    ClientId = fromClient.Id,
-                                    Description = $"{fromClient.Name} sent item {itemId} to {toClient.Name}",
-                                    ItemId = itemId,
-                                    ItemIndex = itemIndex,
-                                    PlayerId = worldId,
-                                    TimeStamp = DateTime.Now,
-                                    Type = EventType.ItemSent,
-                                    SequenceNum = sequenceId
-                                });
-
-                                fromClient.SentSeq = sequenceId;
                                 toClient.RecievedSeq += 1;
-
-                                /* Create item received event */
-                                toClient.Events.Add(new Event {
-                                    ClientId = toClient.Id,
-                                    Description = $"Received item {itemId} from {fromClient.Name}",
-                                    ItemId = itemId,
-                                    ItemIndex = itemIndex,
-                                    PlayerId = fromClient.WorldId,
-                                    TimeStamp = DateTime.Now,
-                                    Type = EventType.ItemReceived,
-                                    SequenceNum = toClient.RecievedSeq
-                                });
-                                
-                                context.Clients.Update(fromClient);
+                                fromClient.SentSeq = sequenceId;
                                 context.Clients.Update(toClient);
+                                context.Clients.Update(fromClient);
                                 await context.SaveChangesAsync();
-                                return true;
-
-                            } catch (DbUpdateConcurrencyException) {
-                                /* Concurrency fault trying to create events (possible ID conflict due to asynchronous updates) */
-                                /* re-read session and client data to get the new latest events */
-                                session = await context.Sessions.Include(x => x.Clients).SingleOrDefaultAsync(x => x.Guid == sessionGuid);
-                                fromClient = session.Clients.SingleOrDefault(x => x.ConnectionId == this.Context.ConnectionId);
-                                toClient = session.Clients.SingleOrDefault(x => x.WorldId == worldId);
-                                continue;
-                            } catch {
                                 break;
                             }
-                        }                        
+                            catch (DbUpdateConcurrencyException) {
+                                toClient = session.Clients.SingleOrDefault(x => x.WorldId == worldId);
+                                fromClient = session.Clients.SingleOrDefault(x => x.ConnectionId == this.Context.ConnectionId);
+                                continue;
+                            }
+                            catch {
+                                return false;
+                            }
+                        }
+
+                        try {
+                            /* Create a item sent event */
+                            var fromEvent = new Event {
+                                ClientId = fromClient.Id,
+                                Description = $"{fromClient.Name} sent item {itemId} to {toClient.Name}",
+                                ItemId = itemId,
+                                ItemIndex = itemIndex,
+                                PlayerId = worldId,
+                                TimeStamp = DateTime.Now,
+                                Type = EventType.ItemSent,
+                                SequenceNum = sequenceId
+                            };
+
+                            /* Create item received event */
+                            var toEvent = new Event {
+                                ClientId = toClient.Id,
+                                Description = $"Received item {itemId} from {fromClient.Name}",
+                                ItemId = itemId,
+                                ItemIndex = itemIndex,
+                                PlayerId = fromClient.WorldId,
+                                TimeStamp = DateTime.Now,
+                                Type = EventType.ItemReceived,
+                                SequenceNum = toClient.RecievedSeq
+                            };
+                                
+                            context.Events.Add(fromEvent);
+                            context.Events.Add(toEvent);
+                            await context.SaveChangesAsync();
+                            return true;
+                        } catch {
+                            return false;
+                        }
                     }
                 }
             }
