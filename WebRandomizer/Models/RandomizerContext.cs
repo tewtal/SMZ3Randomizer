@@ -9,6 +9,10 @@ namespace WebRandomizer.Models {
         public RandomizerContext(DbContextOptions<RandomizerContext> options)
             : base(options) { }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder) {
+            modelBuilder.Entity<Client>().UseXminAsConcurrencyToken();
+        }
+
         public DbSet<Session> Sessions { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Seed> Seeds { get; set; }
