@@ -58,6 +58,7 @@ namespace WebRandomizer.Hubs {
                             await context.SaveChangesAsync();
                             return true;
                         } catch (DbUpdateConcurrencyException) {
+                            System.Threading.Thread.Sleep(1);
                             continue;
                         } catch {
                             break;
@@ -87,23 +88,18 @@ namespace WebRandomizer.Hubs {
                     /* Get the receiving client */                    
                     var toClient = session.Clients.SingleOrDefault(x => x.WorldId == worldId);
                     if (toClient != null) {
-                        while (true) {
-                            try {
-                                toClient.RecievedSeq += 1;
-                                fromClient.SentSeq = sequenceId;
-                                context.Clients.Update(toClient);
-                                context.Clients.Update(fromClient);
-                                await context.SaveChangesAsync();
-                                break;
-                            }
-                            catch (DbUpdateConcurrencyException) {
-                                toClient = session.Clients.SingleOrDefault(x => x.WorldId == worldId);
-                                fromClient = session.Clients.SingleOrDefault(x => x.ConnectionId == this.Context.ConnectionId);
-                                continue;
-                            }
-                            catch {
-                                return false;
-                            }
+                        try {
+                            toClient.RecievedSeq += 1;
+                            fromClient.SentSeq = sequenceId;
+                            context.Clients.Update(toClient);
+                            context.Clients.Update(fromClient);
+                            await context.SaveChangesAsync();
+                        }
+                        catch (DbUpdateConcurrencyException) {
+                            return false;
+                        }
+                        catch {
+                            return false;
                         }
 
                         try {
