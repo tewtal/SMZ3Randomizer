@@ -1,7 +1,7 @@
 ﻿import React, { useState } from 'react';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import styled, { createGlobalStyle } from 'styled-components';
-import { cast_array } from '../../util';
+import castArray from 'lodash/castArray';
 
 // through bootstrap "$input-btn-border-width" -> "$border-width"
 const inputBorderWidth = '1px';
@@ -91,7 +91,7 @@ const menu_modifiers = {
 
 export default function DropdownSelect(props) {
     const { initialIndex, onIndexChange } = props;
-    const children = cast_array(props.children);
+    const children = castArray(props.children);
 
     const [open, setOpen] = useState(false);
     const [index, setIndex] = useState(initialIndex != null ? initialIndex : null);
