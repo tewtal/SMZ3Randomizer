@@ -38,9 +38,9 @@ export class Randomizer extends Component {
             let data = await response.json();
             this.setState({ showGeneratingDialog: false });
             this.props.history.push('/multiworld/' + data.guid);
-        } catch (err) {
+        } catch (error) {
             this.setState({ showGeneratingDialog: false });
-            console.log("Error:", err);
+            console.log("Error:", error);
         }
     }
 

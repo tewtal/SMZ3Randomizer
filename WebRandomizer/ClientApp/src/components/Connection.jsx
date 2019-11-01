@@ -1,62 +1,39 @@
-﻿import React, { Component } from 'react';
+﻿import React from 'react';
 import { Card, CardBody, CardHeader, Button, Input } from 'reactstrap';
+import classNames from 'classnames';
 
-export class Connection extends Component {
-    static displayName = Connection.name;
+export function Connection(props) {
+    const { clientData, connState, connInfo, deviceList, deviceSelect } = props;
+    const { onDeviceSelect, onConnect } = props;
 
-    constructor(props) {
-        super(props);
-        this.handleConnect = this.handleConnect.bind(this);
-    }
-
-    handleConnect(e) {
-        this.props.onConnectClick(e);
-    }
-
-    getStateName() {
-        return ["Disconnected", "Connected"][this.props.connState];
-    }
-
-    getStatus() {
-        if (this.props.connState === 0) {
-            return "bg-danger text-white";
-        } else {
-            return "bg-success text-white";
-        }
-    }
-
-    handleDeviceSelect(e) {
-        this.props.onDeviceSelect(e);
-    }
-
-    renderDeviceSelect() {
-        let renderDevices = [];
-        for (let i = 0; i < this.props.deviceList.Results.length; i++) {
-            renderDevices.push(<option key={"device-" + i}>{this.props.deviceList.Results[i]}</option>);
-        }
-
-        return (
-            <div>
-                Multiple USB2SNES Devices detected, please select one below:<br />
-                <Input type="select" id="device" onChange={(e) => this.handleDeviceSelect(e)}>
-                    {renderDevices}
-                </Input>
-            </div>
-        );
-    }
-
-    render() {       
-        return (
-            <Card>
-                <CardHeader className={this.getStatus()}>Game Connection</CardHeader>
-                <CardBody>
-                    Status: {this.getStateName()}
-                    <br />
-                    {this.props.deviceSelect === false ? (<div>Device: {this.props.clientData.device}</div>) : this.renderDeviceSelect()}
-                    Version: {this.props.connInfo[0]}                    
-                    {this.props.connState === 0 ? (<div><br /><Button color="primary" onClick={this.handleConnect}>Connect</Button></div>) : ""}
-                </CardBody>
-            </Card>
-        );
-    }
+    return (
+        <Card>
+            <CardHeader
+                className={classNames({
+                        'bg-danger': connState === 0,
+                        'bg-success': connState !== 0,
+                    }, 'text-white'
+                )}>
+                Game Connection
+            </CardHeader>
+            <CardBody>
+                Status: {['Disconnected', 'Connected'][connState]}<br />
+                {!deviceSelect ?
+                    <div>Device: {clientData.device}</div> :
+                    <div>
+                        Multiple USB2SNES Devices detected, please select one below:<br />
+                        <Input type="select" onChange={(e) => onDeviceSelect(e.target.value)}>
+                            {deviceList.Results.map((result, i) =>
+                                <option key={`device-${i}`}>{result}</option>
+                            )}
+                        </Input>
+                    </div>
+                }
+                Version: {connInfo[0]}
+                {connState === 0 &&
+                    <div><br /><Button color="primary" onClick={onConnect}>Connect</Button></div>
+                }
+            </CardBody>
+        </Card>
+    );
 }

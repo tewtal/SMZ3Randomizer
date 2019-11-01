@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 const ReactMarkdown = require('react-markdown');
 const homeMarkdown =
 `
@@ -15,12 +15,6 @@ Looking for people to play with, need support or just anything else related to t
 
 `;
 
-export class Home extends Component {
-  static displayName = Home.name;
-
-  render () {
-    return (
-      <ReactMarkdown source={homeMarkdown} />
-    );
-  }
+export function Home() {
+    return <ReactMarkdown source={homeMarkdown} />;
 }

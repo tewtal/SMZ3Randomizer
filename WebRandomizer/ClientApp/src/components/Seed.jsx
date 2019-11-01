@@ -1,82 +1,43 @@
-﻿import React, { Component } from 'react';
-import { Row, Col, Card, CardHeader, CardBody, Button } from 'reactstrap'
+﻿import React from 'react';
+import { Row, Col, Card, CardHeader, CardBody, Button } from 'reactstrap';
+import classNames from 'classnames';
 
-export class Seed extends Component {
-    static displayName = Seed.name;
+export function Seed(props) {
+    const { sessionId, sessionState, sessionInfo, sessionData } = props;
+    const { seed, clients } = sessionData || {};
 
-    constructor(props) {
-        super(props);
-        this.state = {}
-        this.handleRegisterPlayer = this.handleRegisterPlayer.bind(this);
-    }
+    const onRegisterPlayer = props.onRegisterPlayer;
 
-    handleRegisterPlayer(e) {
-        this.props.onRegisterPlayer(e.target.dataset["player"]);
-    }
-
-    render() {
-        const playerInfo = [];
-
-        if (this.props.sessionState > 0) {
-            for (let p = 0; p < this.props.sessionData.seed.players; p++) {
-            /* find a potential client that matches this */
-                let client = null;
-                for (let c = 0; c < this.props.sessionData.clients.length; c++) {
-                    if (this.props.sessionData.clients[c].guid === this.props.sessionData.seed.worlds[p].guid) {
-                        client = this.props.sessionData.clients[c];
-                        break;
-                    }
-                }
-                if (client == null) {
-                    playerInfo.push(
-                        <Col key={"player-" + p} md="3">
-                            <h5>{this.props.sessionData.seed.worlds[p].player}</h5>
-                            <Button key={"player-" + p} data-player={this.props.sessionData.seed.worlds[p].guid} color="primary" onClick={this.handleRegisterPlayer}>Register as this player</Button>
+    return (
+        <Card>
+            <CardHeader
+                className={classNames({
+                        'bg-danger': sessionState === 0,
+                        'bg-success': sessionState !== 0,
+                    }, 'text-white'
+                )}>
+                Session: {sessionId}<br />
+                Game: {sessionState > 0 ? seed.gameName : 'Loading...'}<br />
+                Status: {sessionInfo}
+            </CardHeader>
+            <CardBody>
+                <Row>
+                    {sessionState > 0 && seed.worlds.map((world, i) => {
+                        const client = clients.find(client => client.guid === world.guid);
+                        return <Col key={`player-${i}`} md="3">
+                            <h5>{world.player}</h5>
+                            {client == null ?
+                                <Button color="primary" onClick={() => onRegisterPlayer(world.guid)}>Register as this player</Button> :
+                                <Button disabled color={
+                                    client.state < 5 ? 'secondary' : client.state === 5 ? 'warning' : 'success'
+                                }>
+                                    {client.state < 5 ? 'Registered' : cliest.state === 5 ? 'Connected' : 'Ready'}
+                                </Button>
+                            }
                         </Col>
-                    );
-                } else {
-
-                    let playerState = "";
-                    let playerColor = "secondary";
-
-                    if (client.state < 5) {
-                        playerState = "Registered";
-                        playerColor = "secondary";
-                    }
-                    else if (client.state === 5) {
-                        playerState = "Connected";
-                        playerColor = "warning";
-                    }
-                    else {
-                        playerState = "Ready";
-                        playerColor = "success";
-                    }
-
-                    playerInfo.push(
-                        <Col key={"player-" + p} md="3">
-                            <h5>{this.props.sessionData.seed.worlds[p].player}</h5>
-                            <Button key={"player-" + p} color={playerColor} disabled>{playerState}</Button>
-                        </Col>
-                    );
-                }
-            }
-        }
-
-        let headerColor = this.props.sessionState === 0 ? "bg-danger text-white" : "bg-success text-white";
-
-        return (
-            <Card>
-                <CardHeader className={headerColor}>
-                    Session: {this.props.sessionId}<br />
-                    Game: {this.props.sessionState > 0 ? this.props.sessionData.seed.gameName : "Loading..."}<br />
-                    Status: {this.props.sessionInfo}
-                </CardHeader>
-                <CardBody>
-                    <Row>
-                        {playerInfo}
-                    </Row>
-                </CardBody>
-            </Card>
-        );
-    }
+                    })}
+                </Row>
+            </CardBody>
+        </Card>
+    );
 }

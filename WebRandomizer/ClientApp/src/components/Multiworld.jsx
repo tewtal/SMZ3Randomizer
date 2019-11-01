@@ -155,8 +155,8 @@ export class Multiworld extends Component {
         }
     }
 
-    async handleDevice(e) {
-        this.setState({ deviceSelected: e.target.value });
+    async handleDevice(device) {
+        this.setState({ deviceSelected: device });
     }
 
     async attachDevice(device) {
@@ -264,7 +264,7 @@ export class Multiworld extends Component {
                 <br />
                 {this.state.clientData !== null ? (<Patch sessionData={this.state.sessionData} clientData={this.state.clientData} fileName={this.state.sessionData.seed.gameName + " - " + this.state.sessionData.seed.seedNumber + " - " + this.state.clientData.name + ".sfc"} />) : ""}
                 <br />
-                {this.state.clientData !== null ? (<Connection connState={this.state.connState} clientData={this.state.clientData} connInfo={this.state.connInfo} deviceList={this.state.deviceList} deviceSelect={this.state.deviceSelect} onConnectClick={this.handleConnect} onDeviceSelect={this.handleDevice} />) : ""}
+                {this.state.clientData !== null ? (<Connection connState={this.state.connState} clientData={this.state.clientData} connInfo={this.state.connInfo} deviceList={this.state.deviceList} deviceSelect={this.state.deviceSelect} onConnect={this.handleConnect} onDeviceSelect={this.handleDevice} />) : ""}
                 <br />
                 {this.state.connState === 1 ? (<Runner connState={this.state.connState} sessionData={this.state.sessionData} clientData={this.state.clientData} hubState={this.state.hubState} hubConnection={this.state.hubConnection} connInfo={this.state.connInfo} />) : ""}
                 <br />

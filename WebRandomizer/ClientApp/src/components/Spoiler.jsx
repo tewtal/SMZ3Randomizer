@@ -1,57 +1,32 @@
-﻿import React, { Component } from 'react';
-import { Card, CardHeader, CardBody, Button } from 'reactstrap'
+﻿import React, { useState } from 'react';
+import { Card, CardHeader, CardBody, Button } from 'reactstrap';
 
-export class Spoiler extends Component {
-    static displayName = Spoiler.name;
+import flatMap from 'lodash/flatMap';
+import map from 'lodash/map';
 
-    constructor(props) {
-        super(props);
-        this.state = { showSpoiler: false }
-        this.handleShowSpoiler = this.handleShowSpoiler.bind(this);
-    }
+export function Spoiler(props) {
+    const [show, setShow] = useState(false);
 
-    handleShowSpoiler(e) {
-        this.setState({
-            showSpoiler: !this.state.showSpoiler
-        });
-    }
+    if (props.sessionData == null)
+        return null;
+    else if (!show)
+        return <Button onClick={() => setShow(true)}>Show spoiler</Button>;
 
-    render() {
-        if (this.props.sessionData === null) {
-            return "";
-        }
-
-        let spoiler = JSON.parse(this.props.sessionData.seed.spoiler);
-
-        const playthrough = [];
-        for (let i = 0; i < spoiler.length; i++) {
-            let sphere = spoiler[i];
-            for (let location in sphere)
-            {
-                playthrough.push(<li>{location} - {sphere[location]}</li>);
-            }
-        }
-
-        if (this.state.showSpoiler === true) {
-            return (
-                <div>
-                    <Button onClick={this.handleShowSpoiler} color="primary">Hide spoiler</Button>
-                    <Card>
-                        <CardHeader>
-                            Seed Playthrough
-                    </CardHeader>
-                        <CardBody>
-                            <ul>
-                                {playthrough}
-                            </ul>
-                        </CardBody>
-                    </Card>
-                </div>
-            );
-        } else {
-            return (
-                <Button onClick={this.handleShowSpoiler}>Show spoiler</Button>
-            );
-        }
-    }
+    return (
+        <div>
+            <Button color="primary" onClick={() => setShow(false)}>Hide spoiler</Button>
+            <Card>
+                <CardHeader>Seed Playthrough</CardHeader>
+                <CardBody>
+                    <ul>
+                        {flatMap(JSON.parse(props.sessionData.seed.spoiler), sphere =>
+                            map(sphere, (item, location) =>
+                                <li>{location} - {item}</li>
+                            )
+                        )}
+                    </ul>
+                </CardBody>
+            </Card>
+        </div>
+    );
 }

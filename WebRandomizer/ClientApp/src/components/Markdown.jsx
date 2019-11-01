@@ -1,29 +1,21 @@
-import React, { Component } from 'react';
-const ReactMarkdown = require('react-markdown');
+import React, { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 
-export class Markdown extends Component {
-  static displayName = Markdown.name;
-  constructor(props) {
-      super(props);
-      this.state = {helpText: ""};
-  }
+import attempt from 'lodash/attempt';
 
-  async componentDidMount() 
-  {
-    try {
-        let response = await fetch(this.props.mdLink);
-        let text = await response.text();
-        this.setState({helpText: text});
-    } catch (err) {
-        this.setState({helpText: "Could not load help text: " + err});
-    }
-  }
+export function Markdown(props) {
+    const [helpText, setHelpText] = useState('');
 
-  render () {
-    return (
-      <div>
-          <ReactMarkdown source={this.state.helpText} />
-      </div>
-    );
-  }
+    useEffect(() => {
+        attempt(async () => {
+            try {
+                const response = await fetch(props.mdLink);
+                setHelpText(await response.text());
+            } catch (error) {
+                setHelpText(`Could not load help text because: ${error}`);
+            }
+        });
+    }, [props.mdLink]);
+
+    return <ReactMarkdown source={helpText} />;
 }
