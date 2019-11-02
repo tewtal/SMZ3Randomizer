@@ -4,18 +4,18 @@ import ReactMarkdown from 'react-markdown';
 import attempt from 'lodash/attempt';
 
 export default function Markdown(props) {
-    const [helpText, setHelpText] = useState('');
+    const [text, setText] = useState('');
 
     useEffect(() => {
         attempt(async () => {
             try {
-                const response = await fetch(props.mdLink);
-                setHelpText(await response.text());
+                const response = await fetch(props.source);
+                setText(await response.text());
             } catch (error) {
-                setHelpText(`Could not load help text because: ${error}`);
+                setText(`Could not load text because: ${error}`);
             }
         });
-    }, [props.mdLink]);
+    }, [props.source]);
 
-    return <ReactMarkdown source={helpText} />;
+    return <ReactMarkdown source={text} />;
 }
