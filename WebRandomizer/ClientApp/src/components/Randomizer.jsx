@@ -1,7 +1,7 @@
 ﻿import React, { useState } from 'react';
 import { Container, Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
-import { Form, Button, Input, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
-import { Modal, ModalHeader, ModalBody, Progress } from 'reactstrap';
+import { Form, Button, Input, Modal, ModalHeader, ModalBody, Progress } from 'reactstrap';
+import InputGroup from './util/PrefixInputGroup';
 
 import times from 'lodash/times';
 import fromPairs from 'lodash/fromPairs';
@@ -57,27 +57,18 @@ export default function Randomizer(props) {
         <Form onSubmit={(e) => { e.preventDefault(); createGame(); }}>
             <Row className="form-group">
                 <Col md="3">
-                    <InputGroup>
-                        <InputGroupAddon addonType="prepend">
-                            <InputGroupText>Players</InputGroupText>
-                        </InputGroupAddon>
+                    <InputGroup prefix="Players">
                         <Input value={worlds} onChange={onPlayerCountChange} />
                     </InputGroup>
                 </Col>
                 <Col md="3">
-                    <InputGroup>
-                        <InputGroupAddon addonType="prepend">
-                            <InputGroupText>Seed</InputGroupText>
-                        </InputGroupAddon>
+                    <InputGroup prefix="Seed">
                         <Input value={seed} onChange={(e) => setSeed(e.target.value)} />
                     </InputGroup>
                 </Col>
                 <Col md="1" />
                 <Col md="5">
-                    <InputGroup>
-                        <InputGroupAddon addonType="prepend">
-                            <InputGroupText>Logic</InputGroupText>
-                        </InputGroupAddon>
+                    <InputGroup prefix="Logic">
                         <Input type="select" value={logic} onChange={(e) => setLogic(e.target.value)}>
                             <option value="casual">Casual</option>
                             <option value="tournament">Tournament</option>
@@ -88,10 +79,7 @@ export default function Randomizer(props) {
             <Row className="form-group">
                 {players.slice(0, worlds).map((name, i) =>
                     <Col key={`player${i}`} md={{ span: 5, offset: (1 - (i % 2)) }}>
-                        <InputGroup>
-                            <InputGroupAddon addonType="prepend">
-                                <InputGroupText>Name {i + 1}</InputGroupText>
-                            </InputGroupAddon>
+                        <InputGroup prefix={`Name ${i + 1}`}>
                             <Input value={name} onChange={(e) => onPlayerChange(e, i)} />
                         </InputGroup>
                     </Col>

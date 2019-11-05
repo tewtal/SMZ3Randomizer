@@ -1,7 +1,8 @@
 ﻿import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Form, Row, Col, Card, CardBody } from 'reactstrap';
-import { Label, Button, Input, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
+import { Label, Button, Input, InputGroupAddon, InputGroupText } from 'reactstrap';
+import InputGroup from './util/PrefixInputGroup';
 import DropdownSelect from './util/DropdownSelect';
 import Upload from './Upload';
 
@@ -88,10 +89,7 @@ export default function Patch(props) {
         <Form onSubmit={(e) => e.preventDefault()}>
             <Row className="mb-3">
                 <Col md="8">
-                    <InputGroup className="flex-nowrap">
-                        <InputGroupAddon addonType="prepend">
-                            <InputGroupText>Play as</InputGroupText>
-                        </InputGroupAddon>
+                    <InputGroup className="flex-nowrap" prefix="Play as">
                         <DropdownSelect placeholder="Select Z3 sprite" initialIndex={0} onIndexChange={onZ3SpriteChange}>
                             {sprites.z3.map(({ title }, i) => <SpriteOption key={title}><Z3Sprite index={i} />{title}</SpriteOption>)}
                         </DropdownSelect>
