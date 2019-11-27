@@ -24,7 +24,7 @@ RUN cp /asar/asar-1.71/asar/asar-standalone resources/asar \
  && python3.7 create_ips.py 00.sfc ff.sfc ../build/zsm.ips \
  && cd ../build/ \ 
  && gzip zsm.ips \
- && cp zsm.ips.gz /app/WebRandomizer/ClientApp/src/files/
+ && cp zsm.ips.gz /app/WebRandomizer/ClientApp/src/resources/
 
 # Build and publish .NET app
 WORKDIR /app

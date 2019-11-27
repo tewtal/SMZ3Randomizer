@@ -5,8 +5,8 @@ import Randomizer from './components/Randomizer';
 import Multiworld from './components/Multiworld';
 
 import Markdown from './components/Markdown';
-import homeMd from './files/markdown/home.md';
-import instructionsMd from './files/markdown/instructions.md';
+import homeMd from './resources/markdown/home.md';
+import instructionsMd from './resources/markdown/instructions.md';
 
 export default function App() {
     return (

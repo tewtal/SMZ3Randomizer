@@ -15,8 +15,8 @@ import { inflate } from 'pako';
 
 import attempt from 'lodash/attempt';
 
-import inventory from '../files/sprite/inventory.json';
-import baseIps from '../files/zsm.ips.gz';
+import inventory from '../resources/sprite/inventory.json';
+import baseIps from '../resources/zsm.ips.gz';
 
 const SpriteOption = styled.div`
     display: flex;
