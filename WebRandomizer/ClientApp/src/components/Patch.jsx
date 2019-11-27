@@ -6,8 +6,9 @@ import InputGroup from './util/PrefixInputGroup';
 import DropdownSelect from './util/DropdownSelect';
 import Upload from './Upload';
 
-import { readAsArrayBuffer, applyIps, applySeed } from '../file_handling';
-import { parse_rdc } from '../file_handling/rdc';
+import { readAsArrayBuffer } from '../file/util';
+import { applyIps, applySeed } from '../file/rom';
+import { parse_rdc } from '../file/rdc';
 
 import localForage from 'localforage';
 import { saveAs } from 'file-saver';

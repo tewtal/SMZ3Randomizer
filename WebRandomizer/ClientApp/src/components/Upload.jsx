@@ -1,6 +1,7 @@
 ﻿import React, { useRef } from 'react';
 import { Form, Row, Col, Button } from 'reactstrap';
-import { readAsArrayBuffer, mergeRoms } from '../file_handling';
+import { readAsArrayBuffer } from '../file/util';
+import { mergeRoms } from '../file/rom';
 
 import localForage from 'localforage';
 
