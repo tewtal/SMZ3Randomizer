@@ -15,7 +15,7 @@ export default class Multiworld extends Component {
         this.socket = null;
 
         this.state = {
-            sessionId: this.props.match.params.session_id,
+            sessionGuid: this.props.match.params.session_guid,
             sessionState: 0,
             sessionInfo: "",
             sessionData: null,
@@ -58,8 +58,8 @@ export default class Multiworld extends Component {
             }
         });
 
-        if (this.state.sessionId) {
-            localStorage.setItem("sessionGuid", this.state.sessionId);
+        if (this.state.sessionGuid) {
+            localStorage.setItem("sessionGuid", this.state.sessionGuid);
             this.startSession();
         }
     }
@@ -69,7 +69,7 @@ export default class Multiworld extends Component {
         localStorage.setItem("clientGuid", clientGuid);
         if (this.state.clientData !== null) {
             try {
-                let response = await this.connection.invoke("UnregisterPlayer", this.state.sessionId, this.state.clientData.guid);
+                let response = await this.connection.invoke("UnregisterPlayer", this.state.sessionGuid, this.state.clientData.guid);
                 if (response === false) {
                     console.log("Could not unregister session");
                     return;
@@ -84,7 +84,7 @@ export default class Multiworld extends Component {
 
         try {
             /* Register our session, returns a the specific client data for us */
-            let client = await this.connection.invoke("RegisterPlayer", this.state.sessionId, clientGuid);
+            let client = await this.connection.invoke("RegisterPlayer", this.state.sessionGuid, clientGuid);
             if (client === null) {
                 console.log("Could not register client, try reloading the page.");
                 return;
@@ -195,7 +195,7 @@ export default class Multiworld extends Component {
         });       
 
         try {
-            let response = await fetch("/api/multiworld/session/" + this.state.sessionId);
+            let response = await fetch("/api/multiworld/session/" + this.state.sessionGuid);
             if (response.status !== 200) {
                 this.setState({
                     sessionState: 0,
@@ -225,7 +225,7 @@ export default class Multiworld extends Component {
             this.setState({ hubState: 0 });
             await this.connection.start();
 
-            let registered = await this.connection.invoke("RegisterConnection", this.state.sessionId);
+            let registered = await this.connection.invoke("RegisterConnection", this.state.sessionGuid);
             if (registered) {
                 this.setState({
                     hubState: 1,
@@ -236,9 +236,9 @@ export default class Multiworld extends Component {
                 if (this.state.clientData === null) {
                     let clientGuid = localStorage.getItem("clientGuid");
                     let sessionGuid = localStorage.getItem("sessionGuid");
-                    if (sessionGuid === this.state.sessionId && clientGuid !== null && clientGuid !== "") {
+                    if (sessionGuid === this.state.sessionGuid && clientGuid !== null && clientGuid !== "") {
                         /* The stored session matches and we have a client id, register as this player */
-                        let client = await this.connection.invoke("RegisterPlayer", this.state.sessionId, clientGuid);
+                        let client = await this.connection.invoke("RegisterPlayer", this.state.sessionGuid, clientGuid);
                         if (client !== null) {
                             this.setState({ clientData: client, sessionInfo: "Session found, registered as player: " + client.name });
                         }
@@ -260,7 +260,7 @@ export default class Multiworld extends Component {
     render() {
         return (
             <div>
-                {this.state.sessionId ? (<Seed onRegisterPlayer={this.handleRegisterPlayer} sessionState={this.state.sessionState} sessionInfo={this.state.sessionInfo} sessionId={this.state.sessionId} sessionData={this.state.sessionData} />) : ""}
+                {this.state.sessionGuid ? (<Seed onRegisterPlayer={this.handleRegisterPlayer} sessionState={this.state.sessionState} sessionInfo={this.state.sessionInfo} sessionGuid={this.state.sessionGuid} sessionData={this.state.sessionData} />) : ""}
                 <br />
                 {this.state.clientData !== null ? (<Patch sessionData={this.state.sessionData} clientData={this.state.clientData} fileName={this.state.sessionData.seed.gameName + " - " + this.state.sessionData.seed.seedNumber + " - " + this.state.clientData.name + ".sfc"} />) : ""}
                 <br />

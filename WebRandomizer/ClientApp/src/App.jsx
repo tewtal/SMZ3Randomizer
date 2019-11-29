@@ -14,7 +14,7 @@ export default function App() {
             <Route exact path="/" render={(props) => <Markdown {...props} source={homeMd} />} />
             <Route path="/randomizer" component={Randomizer} />
             <Route path="/instructions" render={(props) => <Markdown {...props} source={instructionsMd} />} />
-            <Route path="/multiworld/:session_id" component={Multiworld} />
+            <Route path="/multiworld/:session_guid" component={Multiworld} />
         </Layout>
     );
 }

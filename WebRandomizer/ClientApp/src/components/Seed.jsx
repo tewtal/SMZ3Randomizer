@@ -3,7 +3,7 @@ import { Row, Col, Card, CardHeader, CardBody, Button } from 'reactstrap';
 import classNames from 'classnames';
 
 export default function Seed(props) {
-    const { sessionId, sessionState, sessionInfo, sessionData } = props;
+    const { sessionGuid, sessionState, sessionInfo, sessionData } = props;
     const { seed, clients } = sessionData || {};
 
     const onRegisterPlayer = props.onRegisterPlayer;
@@ -16,7 +16,7 @@ export default function Seed(props) {
                         'bg-success': sessionState !== 0,
                     }, 'text-white'
                 )}>
-                Session: {sessionId}<br />
+                Session: {sessionGuid}<br />
                 Game: {sessionState > 0 ? seed.gameName : 'Loading...'}<br />
                 Status: {sessionInfo}
             </CardHeader>
