@@ -6,13 +6,10 @@ import InputGroup from './util/PrefixInputGroup';
 import DropdownSelect from './util/DropdownSelect';
 import Upload from './Upload';
 
-import { readAsArrayBuffer } from '../file/util';
-import { applyIps, applySeed } from '../file/rom';
-import { parse_rdc } from '../file/rdc';
+import { prepareRom } from '../file/rom';
 
 import localForage from 'localforage';
 import { saveAs } from 'file-saver';
-import { inflate } from 'pako';
 
 import attempt from 'lodash/attempt';
 
@@ -72,7 +69,9 @@ export default function Patch(props) {
             const worlds = props.sessionData.seed.worlds;
             const world = worlds.find(world => world.worldId === props.clientData.worldId);
             if (world != null) {
-                downloadRom(world, { z3Sprite, smSprite, spinjumps }, props.fileName);
+                const settings = { z3Sprite, smSprite, spinjumps };
+                const patchedData = await prepareRom(world.patch, settings, baseIps);
+                saveAs(new Blob([patchedData]), props.fileName);
             }
         } catch (error) {
             console.log(error);
@@ -121,46 +120,4 @@ export default function Patch(props) {
             </CardBody>
         </Card>
     );
-}
-
-async function downloadRom(world, settings, fileName) {
-    const patchedData = await prepareRom(world.patch, settings);
-    saveAs(new Blob([patchedData]), fileName);
-}
-
-async function prepareRom(world_patch, settings) {
-    const rom_blob = await localForage.getItem('baseRomCombo');
-    const rom = new Uint8Array(await readAsArrayBuffer(rom_blob));
-    const base_patch = maybeCompressed(new Uint8Array(await (await fetch(baseIps, { cache: 'no-store' })).arrayBuffer()));
-    world_patch = Uint8Array.from(atob(world_patch), c => c.charCodeAt(0));
-
-    applyIps(rom, base_patch);
-    await applySprite(rom, 'link_sprite', settings.z3Sprite);
-    await applySprite(rom, 'samus_sprite', settings.smSprite);
-    if (settings.spinjumps) {
-        enableSeparateSpinjumps(rom);
-    }
-    applySeed(rom, world_patch);
-
-    return rom;
-}
-
-function enableSeparateSpinjumps(rom) {
-    rom[0x34F500] = 0x01;
-}
-
-async function applySprite(rom, block, sprite) {
-    if (sprite.path) {
-        const url = `${process.env.PUBLIC_URL}/sprites/${sprite.path}`;
-        const rdc = maybeCompressed(new Uint8Array(await (await fetch(url)).arrayBuffer()));
-        // Todo: do something with the author field
-        const [author, blocks] = parse_rdc(rdc);
-        blocks[block] && blocks[block](rom);
-    }
-}
-
-function maybeCompressed(data) {
-    const big = false;
-    const isGzip = new DataView(data.buffer).getUint16(0, big) == 0x1f8b;
-    return isGzip ? inflate(data) : data;
 }

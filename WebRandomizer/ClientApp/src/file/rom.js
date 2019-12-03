@@ -1,3 +1,46 @@
+import { readAsArrayBuffer } from '../file/util';
+import { parse_rdc } from '../file/rdc';
+import { inflate } from 'pako';
+
+import localForage from 'localforage';
+
+export const prepareRom = async (world_patch, settings, baseIps) => {
+    const rom_blob = await localForage.getItem('baseRomCombo');
+    const rom = new Uint8Array(await readAsArrayBuffer(rom_blob));
+    const base_patch = maybeCompressed(new Uint8Array(await (await fetch(baseIps, { cache: 'no-store' })).arrayBuffer()));
+    world_patch = Uint8Array.from(atob(world_patch), c => c.charCodeAt(0));
+
+    applyIps(rom, base_patch);
+    await applySprite(rom, 'link_sprite', settings.z3Sprite);
+    await applySprite(rom, 'samus_sprite', settings.smSprite);
+    if (settings.spinjumps) {
+        enableSeparateSpinjumps(rom);
+    }
+    applySeed(rom, world_patch);
+
+    return rom;
+};
+
+function enableSeparateSpinjumps(rom) {
+    rom[0x34F500] = 0x01;
+}
+
+async function applySprite(rom, block, sprite) {
+    if (sprite.path) {
+        const url = `${process.env.PUBLIC_URL}/sprites/${sprite.path}`;
+        const rdc = maybeCompressed(new Uint8Array(await (await fetch(url)).arrayBuffer()));
+        // Todo: do something with the author field
+        const [author, blocks] = parse_rdc(rdc);
+        blocks[block] && blocks[block](rom);
+    }
+}
+
+function maybeCompressed(data) {
+    const big = false;
+    const isGzip = new DataView(data.buffer).getUint16(0, big) === 0x1f8b;
+    return isGzip ? inflate(data) : data;
+}
+
 export const mergeRoms = (sm_rom, z3_rom) => {
     const data = new Uint8Array(0x600000);
 
@@ -21,7 +64,7 @@ export const mergeRoms = (sm_rom, z3_rom) => {
     return new Blob([data]);
 };
 
-export const applyIps = (rom, patch) => {
+function applyIps(rom, patch) {
     const big = false;
     let offset = 5;
     const footer = 3;
@@ -40,9 +83,9 @@ export const applyIps = (rom, patch) => {
             offset += 3;
         }
     }
-};
+}
 
-export const applySeed = (rom, patch) => {
+function applySeed (rom, patch) {
     const little = true;
     let offset = 0;
     const view = new DataView(patch.buffer);
@@ -53,4 +96,4 @@ export const applySeed = (rom, patch) => {
         rom.set(patch.slice(offset, offset + length), dest);
         offset += length;
     }
-};
+}
