@@ -1,6 +1,6 @@
 import { HubConnectionBuilder } from '@microsoft/signalr';
 
-import { create_message, connect, send, clearBusy, readData, writeData } from '../usb2snes';
+import { create_message, connect, send, clearBusy, readData, writeData } from '../snes/usb2snes';
 
 export default function network(sessionGuid, react) {
     const methods = {};

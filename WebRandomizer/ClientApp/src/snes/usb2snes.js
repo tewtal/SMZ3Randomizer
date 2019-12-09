@@ -1,4 +1,4 @@
-import { readAsArrayBuffer } from './file/util';
+import { readAsArrayBuffer } from '../file/util';
 
 let ws = null;
 let busy = false;
