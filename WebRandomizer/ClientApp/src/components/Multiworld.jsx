@@ -57,7 +57,6 @@ export default function Multiworld(props) {
             {clientData != null && <Patch
                 sessionData={session.data}
                 clientData={clientData}
-                fileName={`${session.data.seed.gameName} - ${session.data.seed.seedNumber} - ${clientData.name}.sfc`}
             />}
             <br />
             {clientData != null && <Connection

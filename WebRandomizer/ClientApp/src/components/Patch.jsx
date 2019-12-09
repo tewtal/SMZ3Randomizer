@@ -66,12 +66,13 @@ export default function Patch(props) {
 
     async function onDownloadRom() {
         try {
-            const worlds = props.sessionData.seed.worlds;
-            const world = worlds.find(world => world.worldId === props.clientData.worldId);
+            const { sessionData: { seed }, clientData } = props;
+            const world = seed.worlds.find(world => world.worldId === clientData.worldId);
             if (world != null) {
                 const settings = { z3Sprite, smSprite, spinjumps };
                 const patchedData = await prepareRom(world.patch, settings, baseIps);
-                saveAs(new Blob([patchedData]), props.fileName);
+                const fileName = `${seed.gameName} - ${seed.seedNumber} - ${clientData.name}.sfc`;
+                saveAs(new Blob([patchedData]), fileName);
             }
         } catch (error) {
             console.log(error);
