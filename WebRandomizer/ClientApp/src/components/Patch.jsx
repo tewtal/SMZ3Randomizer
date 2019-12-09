@@ -2,7 +2,7 @@
 import styled from 'styled-components';
 import { Form, Row, Col, Card, CardBody } from 'reactstrap';
 import { Label, Button, Input, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
-import DropdownSelect from './primitives/DropdownSelect';
+import DropdownSelect from './util/DropdownSelect';
 import { Upload } from './Upload';
 
 import { readAsArrayBuffer, applyIps, applySeed } from '../file_handling';
