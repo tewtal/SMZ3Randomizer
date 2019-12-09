@@ -3,8 +3,8 @@ import { Row, Col, Card, CardHeader, CardBody, Button } from 'reactstrap';
 import classNames from 'classnames';
 
 export default function Seed(props) {
-    const { sessionGuid, sessionState, sessionInfo, sessionData } = props;
-    const { seed, clients } = sessionData || {};
+    const { session, sessionStatus } = props;
+    const { seed, clients } = session.data || {};
 
     const onRegisterPlayer = props.onRegisterPlayer;
 
@@ -12,17 +12,17 @@ export default function Seed(props) {
         <Card>
             <CardHeader
                 className={classNames({
-                        'bg-danger': sessionState === 0,
-                        'bg-success': sessionState !== 0,
+                        'bg-success': session.state > 0,
+                        'bg-danger': session.state === 0,
                     }, 'text-white'
                 )}>
-                Session: {sessionGuid}<br />
-                Game: {sessionState > 0 ? seed.gameName : 'Loading...'}<br />
-                Status: {sessionInfo}
+                Session: {session.guid}<br />
+                Game: {session.state > 0 ? seed.gameName : 'Loading...'}<br />
+                Status: {sessionStatus}
             </CardHeader>
             <CardBody>
                 <Row>
-                    {sessionState > 0 && seed.worlds.map((world, i) => {
+                    {session.state > 0 && seed.worlds.map((world, i) => {
                         const client = clients.find(client => client.guid === world.guid);
                         return <Col key={`player-${i}`} md="3">
                             <h5>{world.player}</h5>
