@@ -1,13 +1,13 @@
 ﻿import React, { Component } from 'react';
-import { Seed } from './Seed';
-import { Patch } from './Patch';
+import Seed from './Seed';
+import Patch from './Patch';
 import { HubConnectionBuilder } from '@microsoft/signalr';
-import { Connection } from './Connection';
-import { Runner } from './Runner';
-import { Spoiler } from './Spoiler';
+import Connection from './Connection';
+import Runner from './Runner';
+import Spoiler from './Spoiler';
 import { create_message, connect, send, clearBusy } from '../usb2snes';
 
-export class Multiworld extends Component {
+export default class Multiworld extends Component {
     static displayName = Multiworld.name;
     constructor(props) {
         super(props);

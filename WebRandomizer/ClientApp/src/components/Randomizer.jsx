@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { Container, Row, Col, Card, CardHeader, CardBody, Button, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Modal, ModalHeader, ModalBody, Progress } from 'reactstrap';
 
-export class Randomizer extends Component {
+export default class Randomizer extends Component {
     static displayName = Randomizer.name;
     constructor(props) {
         super(props);

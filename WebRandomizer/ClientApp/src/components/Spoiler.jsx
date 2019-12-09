@@ -4,7 +4,7 @@ import { Card, CardHeader, CardBody, Button } from 'reactstrap';
 import flatMap from 'lodash/flatMap';
 import map from 'lodash/map';
 
-export function Spoiler(props) {
+export default function Spoiler(props) {
     const [show, setShow] = useState(false);
 
     if (props.sessionData == null)

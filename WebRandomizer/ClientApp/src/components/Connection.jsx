@@ -2,7 +2,7 @@
 import { Card, CardBody, CardHeader, Button, Input } from 'reactstrap';
 import classNames from 'classnames';
 
-export function Connection(props) {
+export default function Connection(props) {
     const { clientData, connState, connInfo, deviceList, deviceSelect } = props;
     const { onDeviceSelect, onConnect } = props;
 

@@ -1,11 +1,11 @@
 import React from 'react';
 import { Route } from 'react-router';
-import { Layout } from './components/Layout';
-import { Home } from './components/Home';
-import { Randomizer } from './components/Randomizer';
-import { Multiworld } from './components/Multiworld';
+import Layout from './components/Layout';
+import Home from './components/Home';
+import Randomizer from './components/Randomizer';
+import Multiworld from './components/Multiworld';
 
-import { Markdown } from './components/Markdown';
+import Markdown from './components/Markdown';
 import instructionsMd from './files/markdown/instructions.md';
 
 export default function App() {

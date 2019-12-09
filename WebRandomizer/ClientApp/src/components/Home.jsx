@@ -15,6 +15,6 @@ Looking for people to play with, need support or just anything else related to t
 
 `;
 
-export function Home() {
+export default function Home() {
     return <ReactMarkdown source={homeMarkdown} />;
 }

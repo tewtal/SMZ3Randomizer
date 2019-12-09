@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Form, Row, Col, Card, CardBody } from 'reactstrap';
 import { Label, Button, Input, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import DropdownSelect from './util/DropdownSelect';
-import { Upload } from './Upload';
+import Upload from './Upload';
 
 import { readAsArrayBuffer, applyIps, applySeed } from '../file_handling';
 import { parse_rdc } from '../file_handling/rdc';
@@ -46,7 +46,7 @@ const JumpSprite = styled.span`
     background-image: url(${process.env.PUBLIC_URL}/sprites/jump_${props => props.which}.png);
 `;
 
-export function Patch(props) {
+export default function Patch(props) {
     const [mode, setMode] = useState('upload');
     const [z3Sprite, setZ3Sprite] = useState({});
     const [smSprite, setSMSprite] = useState({});

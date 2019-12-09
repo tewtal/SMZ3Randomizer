@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { readData, writeData } from '../usb2snes';
 import { Button, Row, Col } from 'reactstrap';
 
-export class Runner extends Component {
+export default class Runner extends Component {
     static displayName = Runner.name;
 
     constructor(props) {

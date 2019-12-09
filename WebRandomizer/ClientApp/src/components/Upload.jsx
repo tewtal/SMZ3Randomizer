@@ -4,7 +4,7 @@ import { readAsArrayBuffer, mergeRoms } from '../file_handling';
 
 import localForage from 'localforage';
 
-export function Upload(props) {
+export default function Upload(props) {
     const fileInputSM = useRef(null);
     const fileInputZ3 = useRef(null);
 

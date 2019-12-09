@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import './NavMenu.css';
 
-export function NavMenu() {
+export default function NavMenu() {
     const [collapsed, setCollapsed] = useState(true);
 
     return (

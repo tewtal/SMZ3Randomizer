@@ -2,7 +2,7 @@
 import { Row, Col, Card, CardHeader, CardBody, Button } from 'reactstrap';
 import classNames from 'classnames';
 
-export function Seed(props) {
+export default function Seed(props) {
     const { sessionId, sessionState, sessionInfo, sessionData } = props;
     const { seed, clients } = sessionData || {};
 

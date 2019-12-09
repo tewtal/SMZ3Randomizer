@@ -3,7 +3,7 @@ import ReactMarkdown from 'react-markdown';
 
 import attempt from 'lodash/attempt';
 
-export function Markdown(props) {
+export default function Markdown(props) {
     const [helpText, setHelpText] = useState('');
 
     useEffect(() => {
