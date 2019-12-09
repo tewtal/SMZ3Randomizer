@@ -2,7 +2,7 @@
 import React from 'react';
 import { Container, Row, Col, Card, CardBody, CardTitle, CardText } from 'reactstrap';
 
-export default function Runner(props) {
+export default function Game(props) {
     return (
         <Container>
             <Row>

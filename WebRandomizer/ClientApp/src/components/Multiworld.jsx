@@ -2,7 +2,7 @@
 import Seed from './Seed';
 import Patch from './Patch';
 import Connection from './Connection';
-import Runner from './Runner';
+import Game from './Game';
 import Spoiler from './Spoiler';
 
 import create_network from '../network';
@@ -67,7 +67,7 @@ export default function Multiworld(props) {
                 onDeviceSelect={onDeviceSelect}
             />}
             <br />
-            {device.state === 1 && <Runner
+            {device.state === 1 && <Game
                 gameStatus={gameStatus}
                 network={network.current}
             />}
