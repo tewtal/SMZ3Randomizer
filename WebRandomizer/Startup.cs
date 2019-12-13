@@ -72,8 +72,9 @@ namespace WebRandomizer {
                 ".lua",
             };
 
+            var path = $"ClientApp/{(env.IsProduction() ? "build" : "public")}";
             app.UseStaticFiles(new StaticFileOptions {
-                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "ClientApp/public")),
+                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, path)),
                 ContentTypeProvider = provider,
                 OnPrepareResponse = ctx => {
                     var ext = Path.GetExtension(ctx.File.Name);
