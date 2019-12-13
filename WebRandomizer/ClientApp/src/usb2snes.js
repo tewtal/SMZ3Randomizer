@@ -105,7 +105,7 @@ export async function sendBin(msg, size) {
                 }
             } catch (err) {
                 busy = false;
-                resolve(err);
+                reject(err);
             }
         };
 
