@@ -12,6 +12,7 @@ import localForage from 'localforage';
 import { saveAs } from 'file-saver';
 
 import attempt from 'lodash/attempt';
+import set from 'lodash/set';
 
 import inventory from '../resources/sprite/inventory.json';
 import baseIps from '../resources/zsm.ips.gz';
@@ -49,7 +50,7 @@ export default function Patch(props) {
     const [mode, setMode] = useState('upload');
     const [z3Sprite, setZ3Sprite] = useState({});
     const [smSprite, setSMSprite] = useState({});
-    const [spinjumps, setSpinjumps] = useState(true);
+    const [spinjumps, setSpinjumps] = useState(false);
 
     const sprites = {
         z3: [{ title: 'Link' }, ...inventory.z3],
@@ -63,6 +64,16 @@ export default function Patch(props) {
                 setMode('download');
         });
     }, [mode]);
+
+    useEffect(() => {
+        let settings;
+        if ((settings = restore())) {
+            const { z3, sm, spinjumps } = settings.sprites || {};
+            setZ3Sprite(sprites.z3.find(x => x.title === z3) || {});
+            setSMSprite(sprites.sm.find(x => x.title === sm) || {});
+            setSpinjumps(spinjumps);
+        }
+    }, []);
 
     async function onDownloadRom() {
         try {
@@ -81,9 +92,29 @@ export default function Patch(props) {
 
     const onUploadRoms = () => setMode('download');
 
-    const onZ3SpriteChange = (i) => setZ3Sprite(sprites.z3[i]);
-    const onSMSpriteChange = (i) => setSMSprite(sprites.sm[i]);
+    const onZ3SpriteChange = (i) => {
+        setZ3Sprite(sprites.z3[i]);
+        persist(set(restore() || {}, 'sprites.z3', sprites.z3[i].title));
+    };
+    const onSMSpriteChange = (i) => {
+        setSMSprite(sprites.sm[i]);
+        persist(set(restore() || {}, 'sprites.sm', sprites.sm[i].title));
+    };
+    const onSpinjumpToggle = () => {
+        setSpinjumps(!spinjumps);
+        persist(set(restore() || {}, 'sprites.spinjumps', !spinjumps));
+    };
 
+    function restore() {
+        let value = localStorage.getItem('persist');
+        return value && JSON.parse(value);
+    }
+
+    function persist(values) {
+        localStorage.setItem('persist', JSON.stringify(values));
+    }
+
+    let value;
     const component = mode === 'upload' ? (
         <Upload onUpload={onUploadRoms} />
     ) : (
@@ -91,15 +122,21 @@ export default function Patch(props) {
             <Row className="mb-3">
                 <Col md="8">
                     <InputGroup className="flex-nowrap" prefix="Play as">
-                        <DropdownSelect placeholder="Select Z3 sprite" initialIndex={0} onIndexChange={onZ3SpriteChange}>
+                        <DropdownSelect
+                            placeholder="Select Z3 sprite"
+                            index={(value = sprites.z3.findIndex(x => x.title === z3Sprite.title)) < 0 ? 0 : value}
+                            onIndexChange={onZ3SpriteChange}>
                             {sprites.z3.map(({ title }, i) => <SpriteOption key={title}><Z3Sprite index={i} />{title}</SpriteOption>)}
                         </DropdownSelect>
-                        <DropdownSelect placeholder="Select SM sprite" initialIndex={0} onIndexChange={onSMSpriteChange}>
+                        <DropdownSelect
+                            placeholder="Select SM sprite"
+                            index={(value = sprites.sm.findIndex(x => x.title === smSprite.title)) < 0 ? 0 : value}
+                            onIndexChange={onSMSpriteChange}>
                             {sprites.sm.map(({ title }, i) => <SpriteOption key={title}><SMSprite index={i} />{title}</SpriteOption>)}
                         </DropdownSelect>
                         <InputGroupAddon addonType="append">
                             <InputGroupText tag={Label} title="Enable separate space/screw jump animations">
-                                <Input type="checkbox" addon={true} checked={spinjumps} onChange={() => setSpinjumps(!spinjumps)} />{' '}
+                                <Input type="checkbox" addon={true} checked={spinjumps} onChange={onSpinjumpToggle} />{' '}
                                 <JumpSprite which="space" /> / <JumpSprite which="screw" />
                             </InputGroupText>
                         </InputGroupAddon>

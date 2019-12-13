@@ -91,15 +91,13 @@ const menu_modifiers = {
 };
 
 export default function DropdownSelect(props) {
-    const { initialIndex, onIndexChange } = props;
-
     const [open, setOpen] = useState(false);
-    const [index, setIndex] = useState(initialIndex != null ? initialIndex : null);
 
+    const { index, onIndexChange } = props;
     const children = castArray(props.children);
 
     const toggle = () => setOpen(!open);
-    const select = (i) => { setIndex(i); onIndexChange && onIndexChange(i); };
+    const select = (i) => { onIndexChange && onIndexChange(i); };
 
     return (
         <>
