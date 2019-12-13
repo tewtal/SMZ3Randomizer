@@ -356,8 +356,7 @@ export default function network(sessionGuid, react) {
 
     async function sendItem(worldId, itemId, itemIndex, seq) {
         try {
-            return await connection.invoke('SendItem', session.data.guid,
-                parseInt(worldId, 10), parseInt(itemId, 10), parseInt(itemIndex, 10), parseInt(seq, 10));
+            return await connection.invoke('SendItem', session.data.guid, worldId, itemId, itemIndex, seq);
         } catch (error) {
             console.log('Error sending item to player', error);
             return false;
@@ -371,7 +370,7 @@ export default function network(sessionGuid, react) {
             itemOutPtr = ushort_le_value(snesItemSendPtrs, 0x02);
 
             /* Ask the server for all items from our last known item sequence */
-            const events = await connection.invoke('GetEvents', session.data.guid, 'ItemReceived', parseInt(itemOutPtr, 10));
+            const events = await connection.invoke('GetEvents', session.data.guid, 'ItemReceived', itemOutPtr);
             for (let i = 0; i < events.length; i++) {
                 const { playerId, itemId } = events[i];
                 const msg = [...ushort_le_bytes(playerId), ...ushort_le_bytes(itemId)];
