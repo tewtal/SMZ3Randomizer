@@ -1,7 +1,7 @@
 ﻿import React, { useState } from 'react';
 import { Card, CardHeader, CardBody, Button } from 'reactstrap';
 
-import flatMap from 'lodash/flatMap';
+import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 
 export default function Spoiler(props) {
@@ -18,13 +18,17 @@ export default function Spoiler(props) {
             <Card>
                 <CardHeader>Seed Playthrough</CardHeader>
                 <CardBody>
-                    <ul>
-                        {flatMap(JSON.parse(props.sessionData.seed.spoiler), sphere =>
-                            map(sphere, (item, location) =>
-                                <li>{location} - {item}</li>
-                            )
-                        )}
-                    </ul>
+                    {JSON.parse(props.sessionData.seed.spoiler).filter(sphere => !isEmpty(sphere)).map(sphere =>
+                        <Card>
+                            <CardBody>
+                                <ul>
+                                    {map(sphere, (item, location) =>
+                                        <li>{location} - {item}</li>
+                                    )}
+                                </ul>
+                            </CardBody>
+                        </Card>
+                    )}
                 </CardBody>
             </Card>
         </div>
