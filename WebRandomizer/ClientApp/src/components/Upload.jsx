@@ -1,11 +1,14 @@
-﻿import React, { useRef } from 'react';
+﻿import React, { useState, useRef } from 'react';
 import { Form, Row, Col, Button } from 'reactstrap';
 import { readAsArrayBuffer } from '../file/util';
 import { mergeRoms } from '../file/rom';
 
 import localForage from 'localforage';
 
+import hasIn from 'lodash/hasIn';
+
 export default function Upload(props) {
+    const [canUpload, setCanUpload] = useState(false);
     const fileInputSM = useRef(null);
     const fileInputZ3 = useRef(null);
 
@@ -42,17 +45,24 @@ export default function Upload(props) {
         props.onUpload();
     }
 
+    const onFileSelect = () => {
+        setCanUpload(
+            hasIn(fileInputSM.current, 'files[0]') &&
+            hasIn(fileInputZ3.current, 'files[0]')
+        );
+    }
+
     return (
         <Form onSubmit={(e) => { e.preventDefault(); onSubmitRom(); }}>
             <h6>No ROM uploaded, please upload a valid ROM file.</h6>
             <Row className="justify-content-between">
-                <Col md="6">SM ROM: <input type="file" ref={fileInputSM} /></Col>
-                <Col md="6">ALTTP ROM: <input type="file" ref={fileInputZ3} /></Col>
+                <Col md="6">SM ROM: <input type="file" ref={fileInputSM} onChange={onFileSelect} /></Col>
+                <Col md="6">ALTTP ROM: <input type="file" ref={fileInputZ3} onChange={onFileSelect} /></Col>
             </Row>
             <Row>
                 <Col md="2">
                     <br />
-                    <Button type="submit" color="primary">Upload Files</Button>
+                    <Button type="submit" color="primary" disabled={!canUpload}>Upload Files</Button>
                 </Col>
             </Row>
         </Form>
