@@ -1,4 +1,3 @@
-
 # Multiworld Beta Instructions
 
 This page will help you get setup and ready to play SMZ3 Multiworld.
@@ -6,15 +5,13 @@ This page will help you get setup and ready to play SMZ3 Multiworld.
 The first step will be to download and prepare the proper tools and software, and then creating and
 playing in a multiworld session.
 
-&nbsp;
-
 ## Required tools and software
 
 Since the required software and other tools are different depending on if you're playing on console
 with sd2snes or playing on emulator, skip ahead to the section that decribes the setup you will be
 playing on.
 
-&nbsp;
+### Console
 
 #### SD2SNES
 
@@ -33,24 +30,20 @@ playing on.
    communication.
 4. You should now be ready and setup to play.
 
-&nbsp;
-
-#### Emulators
+### Emulators
 
 ##### Required software:
 
 * QUSB2SNES v0.7.11 [[Download](https://github.com/Skarsnik/QUsb2snes/releases/download/v0.7.11/QUsb2Snes-v0.7.11.7z)]
 
-&nbsp;
-
-##### Snes9x
+#### Snes9x
 
 If you want to play using Snes9x you'll need the following additional software:
 
 * Snes9x-rr-1.55-multitroid2-r4 [[Download](https://drive.google.com/open?id=1xFw994dDl_yhwj0f0d1_nC9ZmX6wUFiE)]
 * Multibridge_smz3_r2.lua [[Download](/lua/multibridge_smz3_r2.lua)]
 
-###### Instructions:
+##### Instructions:
 
 1. Unzip QUSB2SNES and then run "QUSB2SNES.exe" to start the QUSB2SNES tray app.
 2. Right click on the QUSB2SNES tray icon and under "Devices" select "Enable Lua bridge (snes9x-rr)"
@@ -59,15 +52,13 @@ If you want to play using Snes9x you'll need the following additional software:
    script and keep the lua window open.
 5. When ready, load the ROM you get from the randomizer.
 
-&nbsp;
-
-##### Retroarch
+#### Retroarch
 
 If you want to play using Retroarch, you will need version 1.8.0.
 
 * RetroArch 1.8.0 [[Download](https://www.retroarch.com/?page=platforms)]
 
-###### Instructions:
+##### Instructions:
 
 1. Unzip QUSB2SNES and then run "QUSB2SNES.exe" to start the QUSB2SNES tray app.
 2. Right click on the QUSB2SNES tray icon and under "Devices" select "Enable RetroArch virtual device"
@@ -76,8 +67,6 @@ If you want to play using Retroarch, you will need version 1.8.0.
 5. Under Main Menu, go to (Load core > Download a Core) and install "Nintendo - SNES / Famicom
    (bsnes-mercury-balanced)"
 6. When loading the multiworld ROM, make sure to load it using the bsnes-mercury-balanced core.
-
-&nbsp;
 
 ## Starting a multiworld session
 
@@ -89,8 +78,6 @@ If you want to play using Retroarch, you will need version 1.8.0.
    created multiworld session.
 4. Copy the link of the page you got redirected to and share with the people you want to play with
    so they can join your session.
-
-&nbsp;
 
 ## Playing in a multiworld session
 

@@ -1,4 +1,4 @@
-﻿### Super Metroid and A Link to the Past Crossover Randomizer - Multiworld Beta
+﻿## Super Metroid and A Link to the Past Crossover Randomizer - Multiworld Beta
 
 Welcome to the beta version of the Multiworld-edition of the randomizer.
 
