@@ -2,10 +2,19 @@
 import { Form, Row, Col, Button } from 'reactstrap';
 import { readAsArrayBuffer } from '../file/util';
 import { mergeRoms } from '../file/rom';
+import { h32 } from 'xxhashjs';
 
 import localForage from 'localforage';
 
+import some from 'lodash/some';
+import map from 'lodash/map';
+import compact from 'lodash/compact';
 import hasIn from 'lodash/hasIn';
+
+/* "SMZ3" as UTF8 in big-endian */
+const HashSeed = 0x534D5A33;
+const Z3Hash = 0x8AC8FD15; 
+const SMHash = 0xCADB4883;
 
 export default function Upload(props) {
     const [canUpload, setCanUpload] = useState(false);
@@ -18,9 +27,11 @@ export default function Upload(props) {
 
         let fileDataSM = null;
         let fileDataZ3 = null;
+        const mismatch = {};
 
         try {
             fileDataSM = new Uint8Array(await readAsArrayBuffer(smFile));
+            mismatch.SM = h32(fileDataSM.buffer, HashSeed).toNumber() !== SMHash;
         } catch (error) {
             console.log("Could not read uploaded SM file data:", error);
             return;
@@ -28,8 +39,15 @@ export default function Upload(props) {
 
         try {
             fileDataZ3 = new Uint8Array(await readAsArrayBuffer(z3File));
+            mismatch.ALTTP = h32(fileDataZ3.buffer, HashSeed).toNumber() !== Z3Hash;
         } catch (error) {
             console.log("Could not read uploaded ALTTP file data:", error);
+            return;
+        }
+
+        if (some(mismatch)) {
+            const games = compact(map(mismatch, (truth, name) => truth ? name : null));
+            alert(`Incorrect ${games.join(', ')} rom file(s)`);
             return;
         }
 

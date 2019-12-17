@@ -19,7 +19,8 @@
     "react-scripts": "^3.3.0",
     "reactstrap": "^6.5.0",
     "rimraf": "^2.7.1",
-    "styled-components": "^5.0.0-regexrehydrate"
+    "styled-components": "^5.0.0-regexrehydrate",
+    "xxhashjs": "^0.2.2"
   },
   "devDependencies": {
     "ajv": "^6.10.2",
