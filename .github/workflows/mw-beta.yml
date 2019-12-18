@@ -1,4 +1,4 @@
-name: Create and publish docker image
+name: Create and publish docker image (mw-beta)
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: Create and publish docker image
+name: Build and deploy image
 
 on:
   push:
@@ -13,9 +13,25 @@ jobs:
     - uses: actions/checkout@v1 
       with:
         submodules: true   
+    
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: tewtal/webrandomizer
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+    
+    - uses: Azure/setup-kubectl@v1
+      id: install
+
+    - uses: Azure/k8s-set-context@v1
+      with:
+        kubeconfig: ${{ secrets.KUBE_CONFIG }}
+
+    - uses: Azure/k8s-deploy@v1
+      with:
+        manifests: |
+          .github/manifests/deployment.yml
+          .github/manifests/service.yml
+        images: |
+          tewtal/webrandomizer:latest      
