@@ -30,11 +30,11 @@ namespace Randomizer.SMZ3 {
 
         readonly List<World> allWorlds;
         readonly World myWorld;
-        readonly string myWorldGuid;
         readonly string seedGuid;
+        readonly int seed;
         readonly Random rnd;
         StringTable stringTable;
-        List<(int, byte[])> patches;
+        List<(int offset, byte[] bytes)> patches;
 
         #region Whishing Well room data
 
@@ -42,11 +42,11 @@ namespace Randomizer.SMZ3 {
 
         #endregion
 
-        public Patch(World myWorld, List<World> allWorlds, string seedGuid, Random rnd) {
+        public Patch(World myWorld, List<World> allWorlds, string seedGuid, int seed, Random rnd) {
             this.myWorld = myWorld;
             this.allWorlds = allWorlds;
-            myWorldGuid = myWorld.Guid.Replace("-", "");
-            this.seedGuid = seedGuid.Replace("-", "");
+            this.seedGuid = seedGuid;
+            this.seed = seed;
             this.rnd = rnd;
         }
 
@@ -80,8 +80,6 @@ namespace Randomizer.SMZ3 {
             WriteSaveAndQuitFromBossRoom();
             WriteWorldOnAgahnimDeath();
 
-            patches = RemapComboOffsets(patches);
-
             WriteSMLocations(myWorld.Regions.OfType<SMRegion>().SelectMany(x => x.Locations));
             WriteZ3Locations(myWorld.Regions.OfType<Z3Region>().SelectMany(x => x.Locations));
 
@@ -89,8 +87,9 @@ namespace Randomizer.SMZ3 {
 
             WritePlayerNames();
             WriteSeedData();
+            WriteGameTitle();
 
-            return patches.ToDictionary(x => x.Item1, x => x.Item2);
+            return patches.ToDictionary(x => x.offset, x => x.bytes);
         }
 
         void WriteMedallions() {
@@ -114,8 +113,8 @@ namespace Randomizer.SMZ3 {
                 var x => throw new InvalidOperationException($"Tried using {x} in place of Misery Mire medallion")
             };
 
-            patches.AddRange(turtleRockAddresses.Zip(turtleRockValues, (i, b) => (i, new byte[] { b })));
-            patches.AddRange(miseryMireAddresses.Zip(miseryMireValues, (i, b) => (i, new byte[] { b })));
+            patches.AddRange(turtleRockAddresses.Zip(turtleRockValues, (i, b) => (Z3Snes(i), new byte[] { b })));
+            patches.AddRange(miseryMireAddresses.Zip(miseryMireValues, (i, b) => (Z3Snes(i), new byte[] { b })));
         }
 
         void WriteRewards() {
@@ -139,7 +138,7 @@ namespace Randomizer.SMZ3 {
             var addresses = regions.Select(RewardAddresses);
             var values = rewards.Select(rewardValues);
             var associations = addresses.Zip(values, (a, v) => (a, v));
-            return associations.SelectMany(x => x.a.Zip(x.v, (i, b) => (i, new byte[] { b })));
+            return associations.SelectMany(x => x.a.Zip(x.v, (i, b) => (Z3Snes(i), new byte[] { b })));
         }
 
         int[] RewardAddresses(IReward region) {
@@ -189,7 +188,7 @@ namespace Randomizer.SMZ3 {
                     var x => throw new InvalidOperationException($"Location {location.Name} should not have the type {x}")
                 };
 
-                patches.Add((0x80000 + location.Address, locationValue));
+                patches.Add((SMSnes(location.Address), locationValue));
                 patches.Add(ItemTablePatch(location, (byte)location.Item.Type));
             }
         }
@@ -197,24 +196,24 @@ namespace Randomizer.SMZ3 {
         void WriteZ3Locations(IEnumerable<Location> locations) {
             foreach (var location in locations) {
                 if (location.Type == LocationType.HeraStandingKey) {
-                    patches.Add((ComboOffset(0x4E3BB), location.Item.Type == KeyTH ? new byte[] { 0xE4 } : new byte[] { 0xEB }));
+                    patches.Add((Z3Snes(0x4E3BB), location.Item.Type == KeyTH ? new byte[] { 0xE4 } : new byte[] { 0xEB }));
                 } else if (new[] { LocationType.Pedestal, LocationType.Ether, LocationType.Bombos }.Contains(location.Type)) {
                     var text = Texts.ItemTextbox(location.Item);
                     var dialog = Dialog.Simple(text);
                     if (location.Type == LocationType.Pedestal) {
                         stringTable.SetPedestalText(text);
-                        patches.Add((ComboOffset(0x180300), dialog));
+                        patches.Add((Z3Snes(0x180300), dialog));
                     }
                     else if (location.Type == LocationType.Ether) {
                         stringTable.SetEtherText(text);
-                        patches.Add((ComboOffset(0x180F00), dialog));
+                        patches.Add((Z3Snes(0x180F00), dialog));
                     }
                     else if (location.Type == LocationType.Bombos) {
                         stringTable.SetBombosText(text);
-                        patches.Add((ComboOffset(0x181000), dialog));
+                        patches.Add((Z3Snes(0x181000), dialog));
                     }
                 }
-                patches.Add((ComboOffset(location.Address), new byte[] { (byte)(location.Id - 256) }));
+                patches.Add((Z3Snes(location.Address), new byte[] { (byte)(location.Id - 256) }));
                 patches.Add(ItemTablePatch(location, GetZ3ItemId(location.Item.Type)));
             }
         }
@@ -233,8 +232,7 @@ namespace Randomizer.SMZ3 {
         (int, byte[]) ItemTablePatch(Location location, byte itemId) {
             var type = location.Item.World == location.Region.World ? 0 : 1;
             var owner = location.Item.World.Id;
-            var extra = 0;
-            return (0x386000 + (location.Id * 8), new[] { type, itemId, owner, extra }.SelectMany(UshortBytes).ToArray());
+            return (0x386000 + (location.Id * 8), new[] { type, itemId, owner, 0 }.SelectMany(UshortBytes).ToArray());
         }
 
         void WriteDungeonMusic(bool keysanity) {
@@ -262,7 +260,7 @@ namespace Randomizer.SMZ3 {
         IEnumerable<(int, byte[])> MusicPatches(IEnumerable<IReward> regions, IEnumerable<byte> music) {
             var addresses = regions.Select(MusicAddresses);
             var associations = addresses.Zip(music, (a, b) => (a, b));
-            return associations.SelectMany(x => x.a.Select(i => (i, new byte[] { x.b })));
+            return associations.SelectMany(x => x.a.Select(i => (Z3Snes(i), new byte[] { x.b })));
         }
 
         int[] MusicAddresses(IReward region) {
@@ -313,24 +311,24 @@ namespace Randomizer.SMZ3 {
 
             /* prize pack drop order */
             (bytes, prizes) = prizes.SplitOff(prizePackItems);
-            patches.Add((0x37A78, bytes.ToArray()));
+            patches.Add((Z3Snes(0x37A78), bytes.ToArray()));
 
             /* tree pull prizes */
             (bytes, prizes) = prizes.SplitOff(treePullItems);
-            patches.Add((0xEFBD4, bytes.ToArray()));
+            patches.Add((Z3Snes(0xEFBD4), bytes.ToArray()));
 
             /* crab prizes */
             (drop, final, prizes) = prizes;
-            patches.Add((0x329C8, new[] { drop }));
-            patches.Add((0x329C4, new[] { final }));
+            patches.Add((Z3Snes(0x329C8), new[] { drop }));
+            patches.Add((Z3Snes(0x329C4), new[] { final }));
 
             /* stun prize */
             (drop, prizes) = prizes;
-            patches.Add((0x37993, new[] { drop }));
+            patches.Add((Z3Snes(0x37993), new[] { drop }));
 
             /* fish prize */
             (drop, _) = prizes;
-            patches.Add((0xE82CC, new[] { drop }));
+            patches.Add((Z3Snes(0xE82CC), new[] { drop }));
 
             patches.AddRange(EnemyPrizePackDistribution());
 
@@ -343,10 +341,10 @@ namespace Randomizer.SMZ3 {
                 Difficulty.Hard => (byte)1,
                 _ => (byte)3,
             };
-            patches.Add((0x37A62, Repeat(p, nrPacks).ToArray()));
+            patches.Add((Z3Snes(0x37A62), Repeat(p, nrPacks).ToArray()));
         }
 
-        IEnumerable<(int offset, byte[] bytes)> EnemyPrizePackDistribution() {
+        IEnumerable<(int, byte[])> EnemyPrizePackDistribution() {
             var (prizePacks, duplicatePacks) = EnemyPrizePacks();
 
             var n = prizePacks.Sum(x => x.bytes.Length);
@@ -365,7 +363,7 @@ namespace Randomizer.SMZ3 {
                 select (d.dest, p.bytes);
             patches.AddRange(duplicates.ToList());
 
-            return patches;
+            return patches.Select(x => (Z3Snes(x.offset), x.bytes));
         }
 
         /* Guarantees at least s of each prize pack, over a total of n packs.
@@ -451,7 +449,7 @@ namespace Randomizer.SMZ3 {
         }
 
         void WriteStringTable() {
-            patches.Add((ComboOffset(0xE0000), stringTable.GetPaddedBytes()));
+            patches.Add((Z3Snes(0xE0000), stringTable.GetPaddedBytes()));
         }
 
         void WritePlayerNames() {
@@ -466,42 +464,66 @@ namespace Randomizer.SMZ3 {
                 name = name.PadLeft(name.Length + (int)Math.Ceiling(pad));
                 name = name.PadRight(name.Length + (int)Math.Floor(pad));
             }
-            return AsciiBytes(name.ToUpper()).Concat(new byte[] { 0x00, 0x00, 0x00, 0x00 }).ToArray();
+            return AsAscii(name.ToUpper()).Concat(UintBytes(0)).ToArray();
         }
 
         void WriteSeedData() {
-            patches.Add((0x00FF50, UintBytes(myWorld.Id)));
-            /* Seed configuration bitfield */
-            patches.Add((0x00FF52, UintBytes(0)));
-            patches.Add((0x00FF60, AsciiBytes(seedGuid)));
-            patches.Add((0x00FF80, AsciiBytes(myWorldGuid)));
+            var configField =
+                ((int)myWorld.Config.Z3Logic << 10) |
+                ((int)myWorld.Config.SMLogic << 8) |
+                (Randomizer.version.Major << 4) |
+                (Randomizer.version.Minor << 0);
+
+            patches.Add((SMSnes(0xC07F50), UshortBytes(myWorld.Id)));
+            patches.Add((SMSnes(0xC07F52), UshortBytes(configField)));
+            patches.Add((SMSnes(0xC07F54), UintBytes(seed)));
+            /* Reserve the rest of the space for future use */
+            patches.Add((SMSnes(0xC07F58), Repeat<byte>(0x00, 8).ToArray()));
+            patches.Add((SMSnes(0xC07F60), AsAscii(seedGuid)));
+            patches.Add((SMSnes(0xC07F80), AsAscii(myWorld.Guid)));
+        }
+
+        void WriteGameTitle() {
+            var z3Glitch = myWorld.Config.Z3Logic switch {
+                Z3Logic.Mg => "M",
+                Z3Logic.Owg => "G",
+                _ => "N",
+            };
+            var smGlitch = myWorld.Config.SMLogic switch {
+                SMLogic.Advanced => "A",
+                SMLogic.Basic => "B",
+                _ => "C",
+            };
+            var title = AsAscii($"ZSM{Randomizer.version}{z3Glitch}{smGlitch}{seed:X8}".PadRight(21)[..21]);
+            patches.Add((Z3Snes(0x007FC0), title));
+            patches.Add((SMSnes(0xC07FC0), title));
         }
 
         void WriteWishingWellRoomData() {
-            patches.Add((0x1F714, wishingWellRoomData));
+            patches.Add((Z3Snes(0x1F714), wishingWellRoomData));
         }
 
         void WriteWishingWellChests() {
-            patches.Add((0xE9AE, new byte[] { 0x14, 0x01 }));
-            patches.Add((0xE9CF, new byte[] { 0x14, 0x01 }));
+            patches.Add((Z3Snes(0xE9AE), new byte[] { 0x14, 0x01 }));
+            patches.Add((Z3Snes(0xE9CF), new byte[] { 0x14, 0x01 }));
         }
 
         void WritePyramidFairyChests() {
-            patches.Add((0x1FC16, new byte[] { 0xB1, 0xC6, 0xF9, 0xC9, 0xC6, 0xF9 }));
+            patches.Add((Z3Snes(0x1FC16), new byte[] { 0xB1, 0xC6, 0xF9, 0xC9, 0xC6, 0xF9 }));
         }
 
         void WriteDiggingGameRng() {
             byte digs = (byte)(rnd.Next(30) + 1);
-            patches.Add((0x180020, new byte[] { digs }));
-            patches.Add((0xEFD95, new byte[] { digs }));
+            patches.Add((Z3Snes(0x180020), new byte[] { digs }));
+            patches.Add((Z3Snes(0xEFD95), new byte[] { digs }));
         }
 
         void WriteOpenModeFlags() {
             patches.AddRange(new[] {
-                (0x180032, new byte[] { 0x01 }),
-                (0x180038, new byte[] { 0x00 }),
-                (0x180039, new byte[] { 0x00 }),
-                (0x18003A, new byte[] { 0x00 }),
+                (Z3Snes(0x180032), new byte[] { 0x01 }),
+                (Z3Snes(0x180038), new byte[] { 0x00 }),
+                (Z3Snes(0x180039), new byte[] { 0x00 }),
+                (Z3Snes(0x18003A), new byte[] { 0x00 }),
             });
         }
 
@@ -510,42 +532,42 @@ namespace Randomizer.SMZ3 {
         void WriteRemoveEquipmentFromUncle(Item item) {
             if (item.Type != ProgressiveSword) {
                 patches.AddRange(new[] {
-                    (0x6D263, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
-                    (0x6D26B, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
-                    (0x6D293, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
-                    (0x6D29B, new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x00, 0x0E }),
-                    (0x6D2B3, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x02, 0x0E }),
-                    (0x6D2BB, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x02, 0x0E }),
-                    (0x6D2E3, new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x02, 0x0E }),
-                    (0x6D2EB, new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x02, 0x0E }),
-                    (0x6D31B, new byte[] { 0x00, 0x00, 0xE4, 0xFF, 0x08, 0x0E }),
-                    (0x6D323, new byte[] { 0x00, 0x00, 0xE4, 0xFF, 0x08, 0x0E }),
+                    (Z3Snes(0x6D263), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (Z3Snes(0x6D26B), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (Z3Snes(0x6D293), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (Z3Snes(0x6D29B), new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x00, 0x0E }),
+                    (Z3Snes(0x6D2B3), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x02, 0x0E }),
+                    (Z3Snes(0x6D2BB), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x02, 0x0E }),
+                    (Z3Snes(0x6D2E3), new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x02, 0x0E }),
+                    (Z3Snes(0x6D2EB), new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x02, 0x0E }),
+                    (Z3Snes(0x6D31B), new byte[] { 0x00, 0x00, 0xE4, 0xFF, 0x08, 0x0E }),
+                    (Z3Snes(0x6D323), new byte[] { 0x00, 0x00, 0xE4, 0xFF, 0x08, 0x0E }),
                 });
             }
             if (item.Type != ProgressiveShield) {
                 patches.AddRange(new[] {
-                    (0x6D253, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
-                    (0x6D25B, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
-                    (0x6D283, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
-                    (0x6D28B, new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x00, 0x0E }),
-                    (0x6D2CB, new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x02, 0x0E }),
-                    (0x6D2FB, new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x02, 0x0E }),
-                    (0x6D313, new byte[] { 0x00, 0x00, 0xE4, 0xFF, 0x08, 0x0E }),
+                    (Z3Snes(0x6D253), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (Z3Snes(0x6D25B), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (Z3Snes(0x6D283), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (Z3Snes(0x6D28B), new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x00, 0x0E }),
+                    (Z3Snes(0x6D2CB), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x02, 0x0E }),
+                    (Z3Snes(0x6D2FB), new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x02, 0x0E }),
+                    (Z3Snes(0x6D313), new byte[] { 0x00, 0x00, 0xE4, 0xFF, 0x08, 0x0E }),
                 });
             }
         }
 
         void WriteLockAgahnimDoorInEscape() {
-            patches.Add((0x180169, new byte[] { 0x01 }));
+            patches.Add((Z3Snes(0x180169), new byte[] { 0x01 }));
         }
 
         void WriteWishingWellUpgradeFalse() {
-            patches.Add((0x348DB, new byte[] { 0x2A }));
-            patches.Add((0x348EB, new byte[] { 0x05 }));
+            patches.Add((Z3Snes(0x348DB), new byte[] { 0x2A }));
+            patches.Add((Z3Snes(0x348EB), new byte[] { 0x05 }));
         }
 
         void WriteRestrictFairyPonds() {
-            patches.Add((0x18017E, new byte[] { 0x01 }));
+            patches.Add((Z3Snes(0x18017E), new byte[] { 0x01 }));
         }
 
         void WriteGanonInvicible(GanonInvincible invincible) {
@@ -556,59 +578,60 @@ namespace Randomizer.SMZ3 {
                 GanonInvincible.BeforeCrystals => 0x03,
                 var x => throw new ArgumentException($"Unknown Ganon invincible value {x}", nameof(invincible))
             };
-            patches.Add((0x18003E, new byte[] { (byte)value }));
+            patches.Add((Z3Snes(0x18003E), new byte[] { (byte)value }));
         }
 
         void WriteRngBlock() {
-            patches.Add((0x178000, Range(0, 1024).Select(x => (byte)rnd.Next(0x100)).ToArray()));
+            patches.Add((Z3Snes(0x178000), Range(0, 1024).Select(x => (byte)rnd.Next(0x100)).ToArray()));
         }
 
         void WriteSmithyQuickItemGive() {
-            patches.Add((0x180029, new byte[] { 0x01 }));
+            patches.Add((Z3Snes(0x180029), new byte[] { 0x01 }));
         }
 
         void WriteSaveAndQuitFromBossRoom() {
-            patches.Add((0x180042, new byte[] { 0x01 }));
+            patches.Add((Z3Snes(0x180042), new byte[] { 0x01 }));
         }
 
         void WriteWorldOnAgahnimDeath() {
-            patches.Add((0x1800A3, new byte[] { 0x01 }));
+            patches.Add((Z3Snes(0x1800A3), new byte[] { 0x01 }));
         }
 
-        List<(int, byte[])> RemapComboOffsets(List<(int, byte[])> patches) {
-            return patches.Select(x => (ComboOffset(x.Item1), x.Item2)).ToList();
-        }
-
-        int ComboOffset(int offset) {
-            offset = offset switch {
-                /* Convert LoROM to HiROM mapping and then apply the ExHiROM offset */
-                _ when offset < 0x170000 =>
-                    0x400000 + offset + (0x8000 * ((int)Math.Floor((decimal)offset / 0x8000) + 1)),
-                /* Change 0x180000 access into ExHiROM bank 40 */
-                _ when (offset & 0xff0000) == 0x180000 =>
-                    0x400000 + (offset & 0x00ffff),
+        int Z3Snes(int addr) {
+            addr = addr switch {
+                _ when addr < 0x170000 => LoSnesAsExHiPc(addr),
+                /* Place $180000 access into ExHiROM bank 40 */
+                _ when (addr & 0xFF0000) == 0x180000 => 0x400000 | (addr & 0xFFFF),
                 /* Repoint RNG Block */
-                _ when offset == 0x178000 => 0x420000,
-                /* SM ExHiROM Header */
-                _ when (offset & 0xff0000) == 0xff0000 => offset & 0x00ffff,
-                _ => throw new InvalidOperationException($"Unmapped combo offset source {offset}"),
+                _ when addr == 0x178000 => 0x420000,
+                _ => throw new InvalidOperationException($"Unmapped Z3 snes address source ${addr:X}"),
             };
-            if (offset > 0x600000)
-                throw new InvalidOperationException($"Unmapped combo offset target {offset}");
-            return offset;
+            if (addr > 0x600000)
+                throw new InvalidOperationException($"Unmapped pc address target ${addr:X}");
+            return addr;
         }
 
-        byte[] UintBytes(int value) {
-            return BitConverter.GetBytes((uint)value);
+        int SMSnes(int addr) {
+            addr = addr switch {
+                _ when addr >= 0x800000 => LoSnesAsExHiPc(addr),
+                _ => throw new InvalidOperationException($"Unmapped SM snes address source ${addr:X}"),
+            };
+            if (addr > 0x600000)
+                throw new InvalidOperationException($"Unmapped pc address target ${addr:X}");
+            return addr;
         }
 
-        byte[] UshortBytes(int value) {
-            return BitConverter.GetBytes((ushort)value);
+        int LoSnesAsExHiPc(int addr) {
+            var ex = (addr & 0x800000) == 0 ? 0x400000 : 0;
+            var pc = ((addr << 1) & 0x3F0000) | 0x8000 | (addr & 0x7FFF);
+            return ex | pc;
         }
 
-        byte[] AsciiBytes(string s) {
-            return Encoding.ASCII.GetBytes(s);
-        }
+        byte[] UintBytes(int value) => BitConverter.GetBytes((uint)value);
+
+        byte[] UshortBytes(int value) => BitConverter.GetBytes((ushort)value);
+
+        byte[] AsAscii(string text) => Encoding.ASCII.GetBytes(text);
 
     }
 

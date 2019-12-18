@@ -26,7 +26,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                 new Location(this, 256+151, 0xE9FE, LocationType.Regular, "Skull Woods - Bridge Room",
                     items => items.Firerod),
                 new Location(this, 256+152, 0x180155, LocationType.Regular, "Skull Woods - Mothula",
-                    items => items.Firerod && items.Sword && items.Has(KeySW, 3)),
+                    items => items.Firerod && items.Sword && items.KeySW >= 3),
             };
         }
 

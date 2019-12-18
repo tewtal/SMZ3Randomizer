@@ -6,40 +6,44 @@ namespace Randomizer.SMZ3 {
 
     public class Randomizer : IRandomizer {
 
+        public static readonly Version version = new Version(11, 0);
+
         public ISeedData GenerateSeed(IDictionary<string, string> options, string seed) {
-            if (seed == "") {
-                seed = new Random().Next().ToString();
+            int randoSeed;
+            if (string.IsNullOrEmpty(seed)) {
+                randoSeed = new Random().Next();
+                seed = randoSeed.ToString();
+            } else {
+                randoSeed = int.Parse(seed);
             }
 
-            var rnd = new Random(int.Parse(seed));
+            var randoRnd = new Random(randoSeed);
 
-            var logic = Logic.Tournament;
+            var logic = SMLogic.Advanced;
             if (options.ContainsKey("logic")) {
                 logic = options["logic"] switch {
-                    "casual" => Logic.Casual,
-                    "tournament" => Logic.Tournament,
-                    _ => Logic.Tournament
+                    "casual" => SMLogic.Casual,
+                    "tournament" => SMLogic.Advanced,
+                    _ => SMLogic.Advanced
                 };
             }
 
-            var config = new Config { Logic = logic };
+            var config = new Config { SMLogic = logic };
             var worlds = new List<World>();
 
             int players = options.ContainsKey("worlds") ? int.Parse(options["worlds"]) : 1;
             for (int p = 0; p < players; p++) {
-                worlds.Add(new World(config, options[$"player-{p}"], p));
+                worlds.Add(new World(config, options[$"player-{p}"], p, new HexGuid()));
             }
 
-            var guid = Guid.NewGuid().ToString();
-
-            var filler = new Filler(worlds, config, rnd);
+            var filler = new Filler(worlds, config, randoRnd);
             filler.Fill();
 
             var playthrough = new Playthrough(worlds);
             var spheres = playthrough.Generate();
 
             var seedData = new SeedData {
-                Guid = guid.Replace("-", ""),
+                Guid = new HexGuid(),
                 Seed = seed,
                 Game = "SMAlttP Combo Randomizer",
                 Logic = logic.ToString(),
@@ -48,13 +52,13 @@ namespace Randomizer.SMZ3 {
             };
 
             /* Make sure RNG is the same when applying patches to the ROM to have consistent RNG for seed identifer etc */
-            int patchSeed = rnd.Next();
+            int patchSeed = randoRnd.Next();
             foreach (var world in worlds) {
                 var patchRnd = new Random(patchSeed);
-                var patch = new Patch(world, worlds, seedData.Guid, patchRnd);
+                var patch = new Patch(world, worlds, seedData.Guid, randoSeed, patchRnd);
                 var worldData = new WorldData {
                     Id = world.Id,
-                    Guid = world.Guid.Replace("-", ""),
+                    Guid = world.Guid,
                     Player = world.Player,
                     Patches = patch.Create(config)
                 };

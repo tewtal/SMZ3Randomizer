@@ -15,11 +15,11 @@ namespace Randomizer.SMZ3 {
         public string Guid { get; set; }
         public int Id { get; set; }
 
-        public World(Config config, string player, int id) {
+        public World(Config config, string player, int id, string guid) {
             Config = config;
             Player = player;
             Id = id;
-            Guid = System.Guid.NewGuid().ToString();
+            Guid = guid;
 
             Regions = new List<Region> {
                 new Regions.Zelda.CastleTower(this, Config),

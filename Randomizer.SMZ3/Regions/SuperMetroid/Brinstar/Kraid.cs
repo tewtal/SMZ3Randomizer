@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
 
@@ -12,11 +11,11 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
 
         public Kraid(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
-                new Location(this, 43, 0x7899C, LocationType.Hidden, "Energy Tank, Kraid",
-                    items => !Config.Keysanity || items.Has(KraidKey)),
-                new Location(this, 48, 0x78ACA, LocationType.Chozo, "Varia Suit",
-                    items => !Config.Keysanity || items.Has(KraidKey)),
-                new Location(this, 44, 0x789EC, LocationType.Hidden, "Missile (Kraid)", Config.Logic switch {
+                new Location(this, 43, 0xC7899C, LocationType.Hidden, "Energy Tank, Kraid",
+                    items => !Config.Keysanity || items.KraidKey),
+                new Location(this, 48, 0xC78ACA, LocationType.Chozo, "Varia Suit",
+                    items => !Config.Keysanity || items.KraidKey),
+                new Location(this, 44, 0xC789EC, LocationType.Hidden, "Missile (Kraid)", Logic switch {
                     _ => new Requirement(items => items.CanUsePowerBombs())
                 }),
             };

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain {
 
@@ -21,7 +20,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain {
                 new Location(this, 256+11, 0xEB30, LocationType.Regular, "Paradox Cave Lower - Right"),
                 new Location(this, 256+12, 0xEB33, LocationType.Regular, "Paradox Cave Lower - Far Right"),
                 new Location(this, 256+13, 0xE9C5, LocationType.Regular, "Mimic Cave",
-                    items => items.Mirror && items.Has(KeyTR, 2) && World.CanEnter("Turtle Rock", items)),
+                    items => items.Mirror && items.KeyTR >= 2 && World.CanEnter("Turtle Rock", items)),
             };
         }
 

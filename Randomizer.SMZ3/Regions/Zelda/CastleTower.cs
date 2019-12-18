@@ -16,7 +16,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
             Locations = new List<Location> {
                 new Location(this, 256+101, 0xEAB5, LocationType.Regular, "Castle Tower - Foyer"),
                 new Location(this, 256+102, 0xEAB2, LocationType.Regular, "Castle Tower - Dark Maze",
-                    items => items.Lamp && items.Has(KeyCT)),
+                    items => items.Lamp && items.KeyCT >= 1),
             };
         }
 
@@ -25,7 +25,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         }
 
         public bool CanComplete(Progression items) {
-            return CanEnter(items) && items.Lamp && items.Has(KeyCT, 2) && items.Sword;
+            return CanEnter(items) && items.Lamp && items.KeyCT >= 2 && items.Sword;
         }
 
     }
