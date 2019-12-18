@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { Seed } from './Seed';
 import { Patch } from './Patch';
-import { HubConnectionBuilder } from '@aspnet/signalr';
+import { HubConnectionBuilder } from '@microsoft/signalr';
 import { Connection } from './Connection';
 import { Runner } from './Runner';
 import { Spoiler } from './Spoiler';

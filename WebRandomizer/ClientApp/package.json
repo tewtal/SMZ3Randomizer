@@ -3,32 +3,30 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@aspnet/signalr": "^1.1.2",
-    "bootstrap": "^4.3.1",
+    "@microsoft/signalr": "^3.1.0",
+    "bootstrap": "^4.4.1",
     "file-saver": "^2.0.1",
-    "jquery": "3.3.1",
+    "jquery": "^3.4.1",
     "localforage": "^1.7.3",
     "pako": "^1.0.10",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
     "react-markdown": "^4.2.2",
     "react-router-bootstrap": "^0.24.4",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "^1.1.5",
+    "react-scripts": "^3.3.0",
     "reactstrap": "^6.5.0",
-    "rimraf": "^2.6.3",
-    "styled-components": "^5.0.0-beta.8"
+    "rimraf": "^2.7.1",
+    "styled-components": "^5.0.0-regexrehydrate"
   },
   "devDependencies": {
     "ajv": "^6.10.2",
-    "babel-eslint": "^7.2.3",
-    "cross-env": "^5.2.0",
-    "eslint": "^4.1.1",
+    "cross-env": "^5.2.1",
     "eslint-config-react-app": "^2.1.0",
     "eslint-plugin-flowtype": "^2.50.3",
-    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-import": "^2.19.1",
     "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.14.3"
+    "eslint-plugin-react": "^7.17.0"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -39,5 +37,17 @@
     "test": "cross-env CI=true react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "eslint ./src/"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

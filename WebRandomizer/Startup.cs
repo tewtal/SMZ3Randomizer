@@ -73,8 +73,10 @@ namespace WebRandomizer {
                 ContentTypeProvider = provider
             });
 
-            app.UseSignalR(routes => {
-                routes.MapHub<MultiworldHub>("/multiworldHub");
+            app.UseRouting();
+            app.UseEndpoints(endpoints => 
+            {
+                endpoints.MapHub<MultiworldHub>("/multiworldHub");
             });
 
             app.UseMvc(routes => {
