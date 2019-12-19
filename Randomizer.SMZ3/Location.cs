@@ -10,6 +10,7 @@ namespace Randomizer.SMZ3 {
         Pedestal,
         Ether,
         Bombos,
+        NotInDungeon,
 
         Visible,
         Chozo,
@@ -25,12 +26,17 @@ namespace Randomizer.SMZ3 {
         public string Name { get; set; }
         public LocationType Type { get; set; }
         public int Address { get; set; }
-        public Region Region { get; set; }
         public Item Item { get; set; }
+        public Region Region { get; set; }
+
+        public int Weight {
+            get { return weight ?? Region.Weight; }
+        }
 
         readonly Requirement canAccess;
         Verification alwaysAllow;
         Verification allow;
+        int? weight;
 
         public ItemType ItemType {
             get { return Item?.Type ?? ItemType.Nothing; }
@@ -49,6 +55,11 @@ namespace Randomizer.SMZ3 {
             canAccess = access;
             alwaysAllow = (item, items) => false;
             allow = (item, items) => true;
+        }
+
+        public Location Weighted(int? weight) {
+            this.weight = weight;
+            return this;
         }
 
         public Location AlwaysAllow(Verification allow) {
@@ -74,41 +85,42 @@ namespace Randomizer.SMZ3 {
         }
     }
 
-    public static class LocationListExtensions {
+    static class LocationsExtensions {
 
-        internal static Location Get(this List<Location> locations, string name) {
-            var location = locations.Find(l => l.Name == name);
+        public static Location Get(this IEnumerable<Location> locations, string name) {
+            var location = locations.FirstOrDefault(l => l.Name == name);
             if (location == null)
                 throw new ArgumentException($"Could not find location name {name}", nameof(name));
             return location;
         }
 
-        internal static List<Location> Empty(this List<Location> locations) {
-            return locations.Where(l => l.Item == null).ToList();
+        public static IEnumerable<Location> Empty(this IEnumerable<Location> locations) {
+            return locations.Where(l => l.Item == null);
         }
 
-        internal static List<Location> AvailableWithinWorld(this List<Location> locations, List<Item> items) {
-            var availableLocations = new List<Location>();
-            foreach (var world in locations.Select(x => x.Region.World).Distinct()) {
-                var progression = new Progression(items.Where(i => i.World == world));
-                availableLocations.AddRange(locations.Where(l => l.Region.World == world && l.Available(progression)).ToList());
-            }
-            return availableLocations;
+        public static IEnumerable<Location> Filled(this IEnumerable<Location> locations) {
+            return locations.Where(l => l.Item != null);
         }
 
-        internal static List<Location> Available(this List<Location> locations, List<Item> items) {
+        public static IEnumerable<Location> AvailableWithinWorld(this IEnumerable<Location> locations, IEnumerable<Item> items) {
+            return locations.Select(x => x.Region.World).Distinct().SelectMany(world =>
+                locations.Where(l => l.Region.World == world).Available(items.Where(i => i.World == world)));
+        }
+
+        public static IEnumerable<Location> Available(this IEnumerable<Location> locations, IEnumerable<Item> items) {
             var progression = new Progression(items);
-            return locations.Where(l => l.Available(progression)).ToList();
+            return locations.Where(l => l.Available(progression));
         }
 
-        internal static List<Location> CanFillWithinWorld(this List<Location> locations, Item item, List<Item> items) {
+        public static IEnumerable<Location> CanFillWithinWorld(this IEnumerable<Location> locations, Item item, IEnumerable<Item> items) {
             var itemWorldProgression = new Progression(items.Where(i => i.World == item.World).Append(item));
-            var availableLocations = new List<Location>();
-            foreach (var world in locations.Select(x => x.Region.World).Distinct()) {
+            return locations.Select(x => x.Region.World).Distinct().SelectMany(world => {
                 var progression = new Progression(items.Where(i => i.World == world));
-                availableLocations.AddRange(locations.Where(l => l.Region.World == world && l.CanFill(item, progression) && item.World.Locations.Find(ll => ll.Id == l.Id).Available(itemWorldProgression)).ToList());
-            }
-            return availableLocations;
+                return locations.Where(l =>
+                    l.Region.World == world &&
+                    l.CanFill(item, progression) &&
+                    item.World.Locations.Find(ll => ll.Id == l.Id).Available(itemWorldProgression));
+            });
         }
 
     }

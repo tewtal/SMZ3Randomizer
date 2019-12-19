@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace Randomizer.SMZ3 {
 
-    public enum ItemType {
+    public enum ItemType : byte {
         Nothing,
 
         MapHC = 0x7F,
@@ -57,6 +57,11 @@ namespace Randomizer.SMZ3 {
         KeyMM = 0xA7,
         KeyTR = 0xAC,
         KeyGT = 0xAD,
+
+        Key = 0x24,
+        Compass = 0x25,
+        BigKey = 0x32,
+        Map = 0x33,
 
         ProgressiveTunic = 0x60,
         ProgressiveShield = 0x5F,
@@ -154,10 +159,14 @@ namespace Randomizer.SMZ3 {
         public World World { get; set; }
 
         static readonly Regex dungeon = new Regex("^(BigKey|Key|Map|Compass)");
+        static readonly Regex bigKey = new Regex("^BigKey");
+        static readonly Regex key = new Regex("^Key");
         static readonly Regex map = new Regex("^Map");
         static readonly Regex compass = new Regex("^Compass");
 
         public bool IsDungeonItem => dungeon.IsMatch(Type.ToString());
+        public bool IsBigKey => bigKey.IsMatch(Type.ToString());
+        public bool IsKey => key.IsMatch(Type.ToString());
         public bool IsMap => map.IsMatch(Type.ToString());
         public bool IsCompass => compass.IsMatch(Type.ToString());
 
@@ -357,14 +366,20 @@ namespace Randomizer.SMZ3 {
 
     }
 
-    static class ItemListExtensions {
+    static class ItemsExtensions {
 
-        public static Item Get(this List<Item> items, ItemType itemType) {
-            return items.Find(i => i.Type == itemType);
+        public static Item Get(this IEnumerable<Item> items, ItemType itemType) {
+            var item = items.FirstOrDefault(i => i.Type == itemType);
+            if (item == null)
+                throw new InvalidOperationException($"Could not find an item of type {itemType}");
+            return item;
         }
 
-        public static Item Get(this List<Item> items, ItemType itemType, World world) {
-            return items.Find(i => i.Type == itemType && i.World == world);
+        public static Item Get(this IEnumerable<Item> items, ItemType itemType, World world) {
+            var item = items.FirstOrDefault(i => i.Type == itemType && i.World == world);
+            if (item == null)
+                throw new InvalidOperationException($"Could not find an item of type {itemType} in world {world.Id}");
+            return item;
         }
 
     }

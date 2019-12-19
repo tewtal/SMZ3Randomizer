@@ -9,11 +9,14 @@ namespace Randomizer.SMZ3 {
 
         public List<Location> Locations { get; set; }
         public List<Region> Regions { get; set; }
-        public List<Item> Items { get; set; }
         public Config Config { get; set; }
         public string Player { get; set; }
         public string Guid { get; set; }
         public int Id { get; set; }
+
+        public IEnumerable<Item> Items {
+            get { return Locations.Select(l => l.Item).Where(i => i != null); }
+        }
 
         public World(Config config, string player, int id, string guid) {
             Config = config;
@@ -65,7 +68,6 @@ namespace Randomizer.SMZ3 {
             };
 
             Locations = Regions.SelectMany(x => x.Locations).ToList();
-            Items = new List<Item>();
         }
 
         public bool CanEnter(string regionName, Progression items) {

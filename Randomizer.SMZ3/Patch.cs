@@ -214,18 +214,20 @@ namespace Randomizer.SMZ3 {
                     }
                 }
                 patches.Add((Z3Snes(location.Address), new byte[] { (byte)(location.Id - 256) }));
-                patches.Add(ItemTablePatch(location, GetZ3ItemId(location.Item.Type)));
+                patches.Add(ItemTablePatch(location, GetZ3ItemId(location)));
             }
         }
 
-        byte GetZ3ItemId(ItemType item) {
-            var value = (int)item switch {
-                var id when id >= 0x72 && id <= 0x7F => 0x33,
-                var id when id >= 0x82 && id <= 0x8D => 0x25,
-                var id when id >= 0x92 && id <= 0x9D => 0x32,
-                var id when id >= 0xA0 && id <= 0xAD => 0x24,
-                var id => id,
-            };
+        byte GetZ3ItemId(Location location) {
+            var item = location.Item;
+            var value = location.Type == LocationType.NotInDungeon ||
+                !(item.IsDungeonItem && location.Region.IsRegionItem(item)) ? item.Type : item switch {
+                    _ when item.IsKey => Key,
+                    _ when item.IsBigKey => BigKey,
+                    _ when item.IsMap => Map,
+                    _ when item.IsCompass => Compass,
+                    _ => throw new InvalidOperationException($"Tried replacing {item} with a dungeon region item"),
+                };
             return (byte)value;
         }
 
@@ -307,7 +309,7 @@ namespace Randomizer.SMZ3 {
                     prize == Fairy ? Heart : prize);
             }
 
-            var prizes = pool.ToList().Shuffle(rnd).Cast<byte>();
+            var prizes = pool.Shuffle(rnd).Cast<byte>();
 
             /* prize pack drop order */
             (bytes, prizes) = prizes.SplitOff(prizePackItems);

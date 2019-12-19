@@ -24,15 +24,19 @@ namespace Randomizer.SMZ3 {
                 logic = options["logic"] switch {
                     "casual" => SMLogic.Casual,
                     "tournament" => SMLogic.Advanced,
-                    _ => SMLogic.Advanced
+                    _ => SMLogic.Advanced,
                 };
             }
 
-            var config = new Config { SMLogic = logic };
-            var worlds = new List<World>();
+            var players = options.ContainsKey("worlds") ? int.Parse(options["worlds"]) : 1;
 
-            int players = options.ContainsKey("worlds") ? int.Parse(options["worlds"]) : 1;
-            for (int p = 0; p < players; p++) {
+            var config = new Config {
+                Multiworld = players > 1,
+                SMLogic = logic,
+            };
+
+            var worlds = new List<World>();
+            for (var p = 0; p < players; p++) {
                 worlds.Add(new World(config, options[$"player-{p}"], p, new HexGuid()));
             }
 
@@ -48,11 +52,11 @@ namespace Randomizer.SMZ3 {
                 Game = "SMAlttP Combo Randomizer",
                 Logic = logic.ToString(),
                 Playthrough = spheres,
-                Worlds = new List<IWorldData>()
+                Worlds = new List<IWorldData>(),
             };
 
             /* Make sure RNG is the same when applying patches to the ROM to have consistent RNG for seed identifer etc */
-            int patchSeed = randoRnd.Next();
+            var patchSeed = randoRnd.Next();
             foreach (var world in worlds) {
                 var patchRnd = new Random(patchSeed);
                 var patch = new Patch(world, worlds, seedData.Guid, randoSeed, patchRnd);
@@ -60,7 +64,7 @@ namespace Randomizer.SMZ3 {
                     Id = world.Id,
                     Guid = world.Guid,
                     Player = world.Player,
-                    Patches = patch.Create(config)
+                    Patches = patch.Create(config),
                 };
 
                 seedData.Worlds.Add(worldData);

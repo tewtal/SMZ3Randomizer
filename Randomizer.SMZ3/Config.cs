@@ -29,10 +29,11 @@
 
     class Config {
 
+        public bool Multiworld { get; set; } = false;
+        public bool Keysanity { get; set; } = false;
         public Z3Logic Z3Logic { get; set; } = Z3Logic.Nmg;
         public SMLogic SMLogic { get; set; } = SMLogic.Advanced;
         public Difficulty Difficulty { get; set; } = Difficulty.Normal;
-        public bool Keysanity { get; set; } = false;
         public GanonInvincible GanonInvincible { get; set; } = GanonInvincible.BeforeCrystals;
 
     }

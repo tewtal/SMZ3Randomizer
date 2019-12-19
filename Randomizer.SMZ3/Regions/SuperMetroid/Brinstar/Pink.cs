@@ -9,6 +9,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
         public override string Area => "Brinstar";
 
         public Pink(World world, Config config) : base(world, config) {
+            Weight = -4;
+
             Locations = new List<Location> {
                 new Location(this, 14, 0xC784E4, LocationType.Chozo, "Super Missile (pink Brinstar)", Logic switch {
                     _ => new Requirement(items => items.CanPassBombPassages() && items.Super)
