@@ -24,9 +24,9 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                     items => items.Lamp),
                 new Location(this, 256+96, 0xEB0C, LocationType.Regular, "Hyrule Castle - Map Chest").Weighted(sphereOne),
                 new Location(this, 256+97, 0xE974, LocationType.Regular, "Hyrule Castle - Boomerang Chest",
-                    items => items.KeyHC),
+                    items => items.KeyHC).Weighted(sphereOne),
                 new Location(this, 256+98, 0xEB09, LocationType.Regular, "Hyrule Castle - Zelda's Cell",
-                    items => items.KeyHC),
+                    items => items.KeyHC).Weighted(sphereOne),
                 new Location(this, 256+99, 0x2DF45, LocationType.NotInDungeon, "Link's Uncle")
                     .Allow((item, items) => Config.Keysanity || !item.IsDungeonItem).Weighted(sphereOne),
                 new Location(this, 256+100, 0xE971, LocationType.NotInDungeon, "Secret Passage")
