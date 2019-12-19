@@ -34,4 +34,6 @@ jobs:
           .github/manifests/deployment.yml
           .github/manifests/service.yml
         images: |
-          tewtal/webrandomizer:latest      
+          tewtal/webrandomizer:latest
+        imagepullsecrets: |
+          dockerhubcred
