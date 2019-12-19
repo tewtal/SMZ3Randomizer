@@ -1,4 +1,4 @@
-name: PR Build with .NET Core 3.0
+name: PR Build with .NET Core 3.1
 
 on:
   pull_request:
@@ -15,6 +15,6 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '3.1.000'
+        dotnet-version: '3.1.100'
     - name: Build with dotnet
       run: dotnet build --configuration Release
