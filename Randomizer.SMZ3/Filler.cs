@@ -49,17 +49,19 @@ namespace Randomizer.SMZ3 {
             var niceItems = Worlds.SelectMany(world => Item.CreateNicePool(world)).Shuffle(Rnd);
             var junkItems = Worlds.SelectMany(world => Item.CreateJunkPool(world)).Shuffle(Rnd);
 
-            /* Place moonpearls and morphs in last 25%/50% of the pool so that
-             * they will tend to place in earlier locations.
-             * Prefer morphs being pushed too far up the list than moonpearls,
-             * so start with morph, followed by moonpearls */
-            ReorderItems(progressionItems, ItemType.Morph, n => n - Rnd.Next(n / 4));
-            ReorderItems(progressionItems, ItemType.MoonPearl, n => n - Rnd.Next(n / 2));
+            if (Config.Multiworld == true) {
+                /* Place moonpearls and morphs in last 25%/50% of the pool so that
+                 * they will tend to place in earlier locations.
+                 * Prefer morphs being pushed too far up the list than moonpearls,
+                 * so start with morph, followed by moonpearls */
+                ReorderItems(progressionItems, ItemType.Morph, n => n - Rnd.Next(n / 4));
+                ReorderItems(progressionItems, ItemType.MoonPearl, n => n - Rnd.Next(n / 2));
+            }
 
             GanonTowerFill(junkItems);
 
             var locations = Worlds.SelectMany(x => x.Locations).Empty().Shuffle(Rnd);
-            if (Worlds.Count == 1)
+            if (Config.Multiworld == false)
                 locations = ApplyWeighting(locations).ToList();
 
             AssumedFill(progressionItems, new List<Item>(), locations, Worlds);
