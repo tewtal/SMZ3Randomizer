@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Randomizer.Contracts;
@@ -15,20 +16,20 @@ namespace WebRandomizer.Controllers {
     public class RandomizerController : Controller {
 
         private readonly RandomizerContext context;
+        private readonly List<IRandomizer> randomizers;
 
         public RandomizerController(RandomizerContext context) {
             this.context = context;
+            randomizers = new List<IRandomizer> {
+                new Randomizer.SMZ3.Randomizer(),
+                new Randomizer.SuperMetroid.Randomizer()
+            };
         }
 
-        private byte[] ConvertPatch(Dictionary<int, byte[]> patches) {
-            var bytes = new List<byte>();
-            foreach(var patch in patches) {
-                bytes.AddRange(BitConverter.GetBytes(patch.Key));
-                bytes.AddRange(BitConverter.GetBytes((ushort)patch.Value.Length));
-                bytes.AddRange(patch.Value);
-            }
-
-            return bytes.ToArray();
+        [HttpGet("[action]")]
+        [ProducesResponseType(typeof(List<IRandomizer>), StatusCodes.Status200OK)]
+        public IActionResult List() {
+            return new OkObjectResult(randomizers);
         }
 
         [HttpPost("[action]")]
@@ -89,7 +90,16 @@ namespace WebRandomizer.Controllers {
                 return new StatusCodeResult(500);
             }
         }
+        private byte[] ConvertPatch(Dictionary<int, byte[]> patches) {
+            var bytes = new List<byte>();
+            foreach (var patch in patches) {
+                bytes.AddRange(BitConverter.GetBytes(patch.Key));
+                bytes.AddRange(BitConverter.GetBytes((ushort)patch.Value.Length));
+                bytes.AddRange(patch.Value);
+            }
 
+            return bytes.ToArray();
+        }
     }
 
     public class Option {

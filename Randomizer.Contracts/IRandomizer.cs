@@ -20,7 +20,27 @@ namespace Randomizer.Contracts {
     }
 
     public interface IRandomizer {
+        string Id { get; }
+        string Name { get; }
+        string Version { get; }
+        List<IRandomizerOption> Options { get; }
         ISeedData GenerateSeed(IDictionary<string, string> options, string seed);
+    }
+
+    public enum RandomizerOptionType
+    {
+        Input,
+        Dropdown,
+        Checkbox,
+        Players
+    };
+
+    public interface IRandomizerOption
+    {
+        string Key { get; }
+        string Description { get; }
+        RandomizerOptionType Type { get; }
+        Dictionary<string, string> Values { get; }
     }
 
 }

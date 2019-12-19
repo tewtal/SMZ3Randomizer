@@ -1,12 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using Randomizer.Contracts;
+using static Randomizer.Contracts.RandomizerOptionType;
 
 namespace Randomizer.SMZ3 {
 
     public class Randomizer : IRandomizer {
 
         public static readonly Version version = new Version(11, 0);
+
+        public string Id => "smz3";
+        public string Name => "Super Metroid & A Link to the Past Combo Randomizer";
+
+        public string Version => version.ToString();
+
+        public List<IRandomizerOption> Options => new List<IRandomizerOption> {
+            new RandomizerOption {
+                Key = "players", Description = "Players", Type = Players
+            },
+            new RandomizerOption {
+                Key = "seed", Description = "Seed", Type = Input
+            },
+            new RandomizerOption {
+                Key = "logic", Description = "Logic", Type = Dropdown,
+                Values = new Dictionary<string, string>() {
+                    ["casual"] = "Normal",
+                    ["tournament"] = "Hard"
+                }
+            }
+        };
 
         public ISeedData GenerateSeed(IDictionary<string, string> options, string seed) {
             int randoSeed;
@@ -73,6 +95,13 @@ namespace Randomizer.SMZ3 {
             return seedData;
         }
 
+    }
+
+    public class RandomizerOption : IRandomizerOption { 
+        public string Key { get; set; }
+        public string Description { get; set; }
+        public RandomizerOptionType Type { get; set; }
+        public Dictionary<string, string> Values { get; set; }
     }
 
     public class SeedData : ISeedData {

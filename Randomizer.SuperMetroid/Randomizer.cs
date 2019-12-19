@@ -2,11 +2,35 @@
 using System.Collections.Generic;
 using System.Linq;
 using Randomizer.Contracts;
+using static Randomizer.Contracts.RandomizerOptionType;
 
 namespace Randomizer.SuperMetroid {
 
     public class Randomizer : IRandomizer {
+        
+        public static readonly Version version = new Version(3, 0);
 
+        public string Id => "sm";
+
+        public string Name => "Super Metroid Item Randomizer";
+
+        public string Version => version.ToString();
+
+        public List<IRandomizerOption> Options => new List<IRandomizerOption> {
+            new RandomizerOption {
+                Key = "players", Description = "Players", Type = Players
+            },
+            new RandomizerOption {
+                Key = "seed", Description = "Seed", Type = Input
+            },
+            new RandomizerOption {
+                Key = "logic", Description = "Logic", Type = Dropdown,
+                Values = new Dictionary<string, string>() {
+                    ["casual"] = "Normal",
+                    ["tournament"] = "Hard"
+                }
+            }
+        };
         public ISeedData GenerateSeed(IDictionary<string, string> options, string seed) {
             if (seed == "") {
                 seed = new Random().Next(0, int.MaxValue).ToString();
@@ -62,6 +86,13 @@ namespace Randomizer.SuperMetroid {
 
             return seedData;
         }
+    }
+
+    public class RandomizerOption : IRandomizerOption {
+        public string Key { get; set; }
+        public string Description { get; set; }
+        public RandomizerOptionType Type { get; set; }
+        public Dictionary<string, string> Values { get; set; }
     }
 
     public class SeedData : ISeedData {
