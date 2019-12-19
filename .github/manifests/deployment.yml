@@ -26,3 +26,5 @@ spec:
               name: webrandomizer-dbconfig
               key: connectionstring
         imagePullPolicy: Always
+      imagePullSecrets:
+      - name: dockerhubcred
