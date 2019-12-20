@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Randomizer.Contracts {
 
@@ -29,9 +30,13 @@ namespace Randomizer.Contracts {
 
     public enum RandomizerOptionType
     {
+        [EnumMember(Value = "input")]
         Input,
+        [EnumMember(Value = "dropdown")]
         Dropdown,
+        [EnumMember(Value = "checkbox")]
         Checkbox,
+        [EnumMember(Value = "players")]
         Players
     };
 
@@ -41,6 +46,7 @@ namespace Randomizer.Contracts {
         string Description { get; }
         RandomizerOptionType Type { get; }
         Dictionary<string, string> Values { get; }
+        string Default { get; }
     }
 
 }

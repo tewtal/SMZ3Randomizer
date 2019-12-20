@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Randomizer.Contracts;
 using WebRandomizer.Models;
 using Newtonsoft.Json;
+using static WebRandomizer.Controllers.Helpers;
 
 namespace WebRandomizer.Controllers {
 
-    [Route("api/[controller]")]
+    [Route("api/randomizers/")]
 
     public class RandomizerController : Controller {
 
@@ -26,24 +26,35 @@ namespace WebRandomizer.Controllers {
             };
         }
 
-        [HttpGet("[action]")]
-        [ProducesResponseType(typeof(List<IRandomizer>), StatusCodes.Status200OK)]
-        public IActionResult List() {
-            return new OkObjectResult(randomizers);
+        [HttpGet]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        public IActionResult Get() {
+            return new OkObjectResult(SerializeEnumAsString(randomizers));
         }
 
-        [HttpPost("[action]")]
+        [HttpGet("{randomizerId}")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        public IActionResult GetRandomizer(string randomizerId) {
+            return new OkObjectResult(SerializeEnumAsString(randomizers.FirstOrDefault(x => x.Id == randomizerId)));
+        }
+
+        [HttpPost("{randomizerId}/[action]")]
         [ProducesResponseType(typeof(ISeedData), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Generate([FromBody] Option option) {
+        public async Task<IActionResult> Generate(string randomizerId, [FromBody] Option option) {
             if (option == null || option.options.Count < 1) {
                 return new StatusCodeResult(400);
             }
 
             try {
                 /* Initialize the randomizer and generate a seed with the given options */
-                IRandomizer randomizer = new Randomizer.SMZ3.Randomizer();
+                IRandomizer randomizer = randomizers.FirstOrDefault(x => x.Id == randomizerId);
+                
+                if(randomizer == null) {
+                    return new StatusCodeResult(400);
+                }
+
                 var seedData = randomizer.GenerateSeed(option.options, option.options["seed"]);
 
                 /* Store this seed to the database */

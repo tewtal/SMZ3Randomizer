@@ -18,13 +18,13 @@ namespace Randomizer.SuperMetroid {
 
         public List<IRandomizerOption> Options => new List<IRandomizerOption> {
             new RandomizerOption {
-                Key = "players", Description = "Players", Type = Players
+                Key = "players", Description = "Players", Type = Players, Default = "1"
             },
             new RandomizerOption {
                 Key = "seed", Description = "Seed", Type = Input
             },
             new RandomizerOption {
-                Key = "logic", Description = "Logic", Type = Dropdown,
+                Key = "logic", Description = "Logic", Type = Dropdown, Default = "casual",
                 Values = new Dictionary<string, string>() {
                     ["casual"] = "Normal",
                     ["tournament"] = "Hard"
@@ -93,6 +93,7 @@ namespace Randomizer.SuperMetroid {
         public string Description { get; set; }
         public RandomizerOptionType Type { get; set; }
         public Dictionary<string, string> Values { get; set; }
+        public string Default { get; set; }
     }
 
     public class SeedData : ISeedData {
