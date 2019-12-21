@@ -5,7 +5,7 @@ import Connection from './Connection';
 import Game from './Game';
 import Spoiler from './Spoiler';
 
-import create_network from '../network';
+import Network from '../network';
 
 export default function Multiworld(props) {
     const network = useRef(null);
@@ -15,7 +15,7 @@ export default function Multiworld(props) {
 
     useEffect(() => {
         const sessionGuid = props.match.params.session_guid;
-        network.current = create_network(sessionGuid, {
+        network.current = new Network(sessionGuid, {
             state: setState,
             sessionStatus: setSessionStatus,
             gameStatus: setGameStatus,
