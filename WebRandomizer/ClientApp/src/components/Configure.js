@@ -72,7 +72,7 @@ export function Configure(props) {
             switch (opt.type) {
                 case 'input':
                     inputElement = (
-                        <Col key={opt.key} md="4">
+                        <Col key={opt.key} md="6">
                             <InputGroup>
                                 <InputGroupAddon addonType="prepend">
                                     <InputGroupText>{opt.description}</InputGroupText>
@@ -84,7 +84,7 @@ export function Configure(props) {
                     break;
                 case 'dropdown':
                     inputElement = (
-                        <Col key={opt.key} md="4">
+                        <Col key={opt.key} md="6">
                             <InputGroup>
                                 <InputGroupAddon addonType="prepend">
                                     <InputGroupText>{opt.description}</InputGroupText>
@@ -101,7 +101,7 @@ export function Configure(props) {
             return inputElement;
         });
 
-        const formOptionGroups = chunk(formOptions, 3);
+        const formOptionGroups = chunk(formOptions, 2);
 
         return (
             <Container>

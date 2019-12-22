@@ -19,19 +19,19 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
                     _ => new Requirement(items => items.CanPassBombPassages() && items.CanOpenRedDoors())
                 }),
                 new Location(this, 16, 0xC7851E, LocationType.Visible, "Super Missile (green Brinstar top)", Logic switch {
-                    Casual => items => items.CanOpenRedDoors() && items.SpeedBooster,
+                    Normal => items => items.CanOpenRedDoors() && items.SpeedBooster,
                     _ => new Requirement(items => items.CanOpenRedDoors() && (items.Morph || items.SpeedBooster))
                 }),
                 new Location(this, 17, 0xC7852C, LocationType.Chozo, "Reserve Tank, Brinstar", Logic switch {
-                    Casual => items => items.CanOpenRedDoors() && items.SpeedBooster,
+                    Normal => items => items.CanOpenRedDoors() && items.SpeedBooster,
                     _ => new Requirement(items => items.CanOpenRedDoors() && (items.Morph || items.SpeedBooster))
                 }),
                 new Location(this, 18, 0xC78532, LocationType.Hidden, "Missile (green Brinstar behind missile)", Logic switch {
-                    Casual => items => items.SpeedBooster && items.CanPassBombPassages() && items.CanOpenRedDoors(),
+                    Normal => items => items.SpeedBooster && items.CanPassBombPassages() && items.CanOpenRedDoors(),
                     _ => new Requirement(items => (items.CanPassBombPassages() || items.Morph && items.ScrewAttack) && items.CanOpenRedDoors())
                 }),
                 new Location(this, 19, 0xC78538, LocationType.Visible, "Missile (green Brinstar behind reserve tank)", Logic switch {
-                    Casual => items => items.SpeedBooster && items.CanOpenRedDoors() && items.Morph,
+                    Normal => items => items.SpeedBooster && items.CanOpenRedDoors() && items.Morph,
                     _ => new Requirement(items => items.CanOpenRedDoors() && items.Morph)
                 }),
                 new Location(this, 30, 0xC787C2, LocationType.Visible, "Energy Tank, Etecoons", Logic switch {

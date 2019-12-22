@@ -593,7 +593,7 @@ namespace Randomizer.SMZ3 {
 
         public static bool CanAccessDarkWorldPortal(this Progression items, Config config) {
             return config.SMLogic switch {
-                Casual =>
+                Normal =>
                     items.CanUsePowerBombs() && items.Super && items.Gravity && items.SpeedBooster,
                 _ =>
                     items.CanUsePowerBombs() && items.Super &&
@@ -605,7 +605,7 @@ namespace Randomizer.SMZ3 {
 
         public static bool CanAccessMiseryMirePortal(this Progression items, Config config) {
             return config.SMLogic switch {
-                Casual =>
+                Normal =>
                     items.Varia && items.Super && (items.Gravity && items.SpaceJump) && items.CanUsePowerBombs(),
                 _ =>
                     items.Varia && items.Super && (items.Gravity || items.HiJump) && items.CanUsePowerBombs()
@@ -658,7 +658,7 @@ namespace Randomizer.SMZ3 {
 
         public static bool CanAccessMaridiaPortal(this Progression items, World world) {
             return world.Config.SMLogic switch {
-                Casual =>
+                Normal =>
                     items.MoonPearl && items.Flippers &&
                     items.Gravity && items.Morph &&
                     (world.CanAquire(items, Agahnim) || items.Hammer && items.CanLiftLight() || items.CanLiftHeavy()),

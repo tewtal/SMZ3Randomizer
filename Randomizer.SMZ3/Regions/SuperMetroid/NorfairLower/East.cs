@@ -13,19 +13,19 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
         public East(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 73, 0xC78F30, LocationType.Visible, "Missile (Mickey Mouse room)", Logic switch {
-                    Casual => new Requirement(items => true),
+                    Normal => new Requirement(items => true),
                     _ => items => items.Morph && items.CanDestroyBombWalls()
                 }),
                 new Location(this, 74, 0xC78FCA, LocationType.Visible, "Missile (lower Norfair above fire flea room)"),
                 new Location(this, 75, 0xC78FD2, LocationType.Visible, "Power Bomb (lower Norfair above fire flea room)", Logic switch {
-                    Casual => new Requirement(items => true),
+                    Normal => new Requirement(items => true),
                     _ => items => items.CanPassBombPassages()
                 }),
                 new Location(this, 76, 0xC790C0, LocationType.Visible, "Power Bomb (Power Bombs of shame)", Logic switch {
                     _ => new Requirement(items => items.CanUsePowerBombs())
                 }),
                 new Location(this, 77, 0xC79100, LocationType.Visible, "Missile (lower Norfair near Wave Beam)", Logic switch {
-                    Casual => new Requirement(items => true),
+                    Normal => new Requirement(items => true),
                     _ => items => items.Morph && items.CanDestroyBombWalls()
                 }),
                 new Location(this, 78, 0xC79108, LocationType.Hidden, "Energy Tank, Ridley", Logic switch {
@@ -37,7 +37,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
 
         public override bool CanEnter(Progression items) {
             return Logic switch {
-                Casual =>
+                Normal =>
                     items.Varia && (
                         World.CanEnter("Norfair Upper East", items) && items.CanUsePowerBombs() && items.SpaceJump && items.Gravity ||
                         items.CanAccessNorfairLowerPortal() && items.CanDestroyBombWalls() && items.Super && items.CanUsePowerBombs() && items.CanFly()),

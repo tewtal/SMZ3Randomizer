@@ -72,7 +72,7 @@ namespace WebRandomizer.Controllers {
                     var world = new World {
                         WorldId = seedWorld.Id,
                         Guid = seedWorld.Guid,
-                        Logic = option.options["logic"],
+                        Logic = seedData.Logic,
                         Player = seedWorld.Player,
                         Patch = ConvertPatch(seedWorld.Patches)
                     };

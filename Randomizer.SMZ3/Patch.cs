@@ -487,14 +487,14 @@ namespace Randomizer.SMZ3 {
 
         void WriteGameTitle() {
             var z3Glitch = myWorld.Config.Z3Logic switch {
-                Z3Logic.Mg => "M",
-                Z3Logic.Owg => "G",
-                _ => "N",
+                Z3Logic.Nmg => "N",
+                Z3Logic.Owg => "O",
+                _ => "C",
             };
             var smGlitch = myWorld.Config.SMLogic switch {
-                SMLogic.Advanced => "A",
-                SMLogic.Basic => "B",
-                _ => "C",
+                SMLogic.Normal => "N",
+                SMLogic.Hard => "H",
+                _ => "X",
             };
             var title = AsAscii($"ZSM{Randomizer.version}{z3Glitch}{smGlitch}{seed:X8}".PadRight(21)[..21]);
             patches.Add((Z3Snes(0x007FC0), title));
