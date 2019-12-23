@@ -16,6 +16,7 @@ namespace Randomizer.Contracts {
         string Seed { get; }
         string Game { get; }
         string Logic { get; }
+        string Mode { get; }
         List<IWorldData> Worlds { get; }
         List<Dictionary<string, string>> Playthrough { get; }
     }

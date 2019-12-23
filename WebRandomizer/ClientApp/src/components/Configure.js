@@ -1,4 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
+import { encode } from 'slugid';
 import { Container, Row, Col, Card, CardHeader, CardBody, Button, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Modal, ModalHeader, ModalBody, Progress } from 'reactstrap';
 
 export function Configure(props) {
@@ -36,19 +37,23 @@ export function Configure(props) {
         options["worlds"] = "1";
         options["player-0"] = "Player 1";
 
-        let response = await fetch(`/api/randomizers/${randomizer_id}/generate`,
-            {
-                method: "POST",
-                cache: "no-cache",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ options: options })
-            });
-        let data = await response.json();
-        // TODO: Temp, write spoiler to console log
-        console.log(data.spoiler);
-        setModal(false);
+        try {
+            let response = await fetch(`/api/randomizers/${randomizer_id}/generate`,
+                {
+                    method: "POST",
+                    cache: "no-cache",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ options: options })
+                });
+            let data = await response.json();
+            setModal(false);
+            props.history.push('/seed/' + encode(data.guid));
+        } catch (error) {
+            console.log(error);
+            setModal(false);
+        }
     }
 
     function updateOption(e, key) {

@@ -6,6 +6,13 @@ using Randomizer.Contracts;
 
 namespace Randomizer.SMZ3 {
 
+    enum GameMode {
+        [Description("Single player")]
+        Normal,
+        [Description("Multiworld")]
+        Multiworld
+    }
+
     enum Z3Logic {
         [Description("Normal")]
         Normal,
@@ -61,7 +68,7 @@ namespace Randomizer.SMZ3 {
     }
 
     class Config {
-
+        public GameMode GameMode { get; set; } = GameMode.Normal;
         public Z3Logic Z3Logic { get; set; } = Z3Logic.Normal;
         public SMLogic SMLogic { get; set; } = SMLogic.Normal;
         public Difficulty Difficulty { get; set; } = Difficulty.Normal;
@@ -72,6 +79,7 @@ namespace Randomizer.SMZ3 {
         public GanonInvincible GanonInvincible { get; set; } = GanonInvincible.BeforeCrystals;
 
         public Config(IDictionary<string, string> options) {
+            GameMode = ParseOption(options, GameMode.Normal);
             Z3Logic = ParseOption(options, Z3Logic.Normal);
             SMLogic = ParseOption(options, SMLogic.Normal);
             Difficulty = ParseOption(options, Difficulty.Normal);
@@ -101,8 +109,8 @@ namespace Randomizer.SMZ3 {
                 Key = enumType.Name.ToLower(),
                 Description = description,
                 Type = RandomizerOptionType.Dropdown,
-                Default = string.IsNullOrEmpty(defaultOption) ? values.First().ToString().ToLower() : defaultOption,
-                Values = values.ToDictionary(k => k.ToString().ToLower(), v => v.GetDescription())
+                Default = string.IsNullOrEmpty(defaultOption) ? values.First().ToLString() : defaultOption,
+                Values = values.ToDictionary(k => k.ToLString(), v => v.GetDescription())
             };
         }
 

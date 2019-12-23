@@ -28,7 +28,7 @@ namespace WebRandomizer.Controllers {
 
         [HttpGet]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        public IActionResult Get() {
+        public IActionResult Index() {
             return new OkObjectResult(SerializeEnumAsString(randomizers));
         }
 
@@ -64,7 +64,7 @@ namespace WebRandomizer.Controllers {
                     Players = seedData.Worlds.Count,
                     SeedNumber = seedData.Seed,
                     Spoiler = JsonConvert.SerializeObject(seedData.Playthrough),
-                    Type = "multiworld",
+                    Type = seedData.Mode,
                     Worlds = new List<World>()
                 };
 

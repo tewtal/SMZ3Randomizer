@@ -50,5 +50,9 @@ namespace Randomizer.SMZ3 {
             }
             return GenericEnum.ToString();
         }
+
+        public static string ToLString(this Enum enumValue) {
+            return enumValue.ToString().ToLower();
+        }
     }
 }

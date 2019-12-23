@@ -24,6 +24,8 @@ namespace Randomizer.SMZ3 {
             new RandomizerOption {
                 Key = "seed", Description = "Seed", Type = Input
             },
+            Config.GetRandomizerOption<GameMode>("Game mode"),
+
             new RandomizerOption {
                 Key = "players", Description = "Players", Type = Players, Default = "1"
             },
@@ -57,10 +59,11 @@ namespace Randomizer.SMZ3 {
             var seedData = new SeedData {
                 Guid = new HexGuid(),
                 Seed = seed,
-                Game = "SMAlttP Combo Randomizer",
-                Logic = $"{config.SMLogic.ToString()}|{config.Z3Logic.ToString()}",
+                Game = Name,
+                Mode = config.GameMode.ToLString(),
+                Logic = $"{config.SMLogic.ToLString()}|{config.Z3Logic.ToLString()}",
                 Playthrough = spheres,
-                Worlds = new List<IWorldData>()
+                Worlds = new List<IWorldData>(),
             };
 
             /* Make sure RNG is the same when applying patches to the ROM to have consistent RNG for seed identifer etc */
@@ -97,6 +100,7 @@ namespace Randomizer.SMZ3 {
         public string Seed { get; set; }
         public string Game { get; set; }
         public string Logic { get; set; }
+        public string Mode { get; set; }
         public List<IWorldData> Worlds { get; set; }
         public List<Dictionary<string, string>> Playthrough { get; set; }
 

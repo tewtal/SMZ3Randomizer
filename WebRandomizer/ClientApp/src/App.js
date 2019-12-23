@@ -6,6 +6,7 @@ import { Markdown } from './components/Markdown';
 import { Randomizer } from './components/Randomizer';
 import { Multiworld } from './components/Multiworld';
 import { Configure } from './components/Configure';
+import { Permalink } from './components/Permalink';
 
 import instructionsMd from './files/markdown/instructions.md';
 
@@ -20,6 +21,7 @@ export default class App extends Component {
             <Route path='/configure/:randomizer_id' component={Configure} />
             <Route path='/instructions' render={(props) => <Markdown {...props} mdLink={instructionsMd} />} />
             <Route path='/multiworld/:session_id' component={Multiworld} />
+            <Route path='/seed/:seed_id' component={Permalink} />
       </Layout>
     );
   }
