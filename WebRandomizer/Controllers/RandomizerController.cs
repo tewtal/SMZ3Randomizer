@@ -42,8 +42,8 @@ namespace WebRandomizer.Controllers {
         [ProducesResponseType(typeof(ISeedData), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Generate(string randomizerId, [FromBody] Option option) {
-            if (option == null || option.options.Count < 1) {
+        public async Task<IActionResult> Generate(string randomizerId, [FromBody] Dictionary<string, string> options) {
+            if (options.Count < 1) {
                 return new StatusCodeResult(400);
             }
 
@@ -55,7 +55,7 @@ namespace WebRandomizer.Controllers {
                     return new StatusCodeResult(400);
                 }
 
-                var seedData = randomizer.GenerateSeed(option.options, option.options["seed"]);
+                var seedData = randomizer.GenerateSeed(options, options["seed"]);
 
                 /* Store this seed to the database */
                 var seed = new Seed {
@@ -112,9 +112,4 @@ namespace WebRandomizer.Controllers {
             return bytes.ToArray();
         }
     }
-
-    public class Option {
-        public Dictionary<string, string> options;
-    }
-
 }

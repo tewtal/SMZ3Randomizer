@@ -17,19 +17,16 @@ namespace Randomizer.SuperMetroid {
         public string Version => version.ToString();
 
         public List<IRandomizerOption> Options => new List<IRandomizerOption> {
-            new RandomizerOption {
-                Key = "players", Description = "Players", Type = Players, Default = "1"
-            },
+            Config.GetRandomizerOption<Logic>("Logic"),
+            Config.GetRandomizerOption<Goal>("Goal"),
+            Config.GetRandomizerOption<GameMode>("Game mode"),
+
             new RandomizerOption {
                 Key = "seed", Description = "Seed", Type = Input
             },
             new RandomizerOption {
-                Key = "logic", Description = "Logic", Type = Dropdown, Default = "casual",
-                Values = new Dictionary<string, string>() {
-                    ["casual"] = "Normal",
-                    ["tournament"] = "Hard"
-                }
-            }
+                Key = "players", Description = "Players", Type = Players, Default = "1"
+            },
         };
         public ISeedData GenerateSeed(IDictionary<string, string> options, string seed) {
             if (seed == "") {
@@ -37,22 +34,18 @@ namespace Randomizer.SuperMetroid {
             }
 
             var rnd = new Random(int.Parse(seed));
-
-            var logic = Logic.Tournament;
-            if(options.ContainsKey("logic")) {
-                logic = options["logic"] switch
-                {
-                    "casual" => Logic.Casual,
-                    "tournament" => Logic.Tournament,
-                    _ => Logic.Tournament
-                };
-            }
+            var config = new Config(options);
 
             int players = options.ContainsKey("worlds") ? int.Parse(options["worlds"]) : 1;
             var worlds = new List<World>();
 
-            for (int p = 0; p < players; p++) {
-                worlds.Add(new World(logic, options[$"player-{p}"], p));
+            if (config.GameMode == GameMode.Normal || players == 1) {
+                worlds.Add(new World(config.Logic, "Player", 0));
+            }
+            else {
+                for (int p = 0; p < players; p++) {
+                    worlds.Add(new World(config.Logic, options[$"player-{p}"], p));
+                }
             }
 
             var guid = Guid.NewGuid().ToString();
@@ -66,9 +59,10 @@ namespace Randomizer.SuperMetroid {
             var seedData = new SeedData {
                 Guid = guid.Replace("-", ""),
                 Seed = seed,
-                Game = "Super Metroid Item Randomizer",
-                Logic = logic.ToString(),
+                Game = Name,
+                Logic = config.Logic.ToLString(),
                 Playthrough = spheres,
+                Mode = config.GameMode.ToLString(),
                 Worlds = new List<IWorldData>()
             };
 

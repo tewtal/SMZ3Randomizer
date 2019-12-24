@@ -32,11 +32,6 @@ export function Configure(props) {
         e.preventDefault();
         setModal(true);
 
-        // temp fix        
-        options["mode"] = "multiworld";
-        options["worlds"] = "1";
-        options["player-0"] = "Player 1";
-
         try {
             let response = await fetch(`/api/randomizers/${randomizer_id}/generate`,
                 {
@@ -45,7 +40,7 @@ export function Configure(props) {
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ options: options })
+                    body: JSON.stringify(options)
                 });
             let data = await response.json();
             setModal(false);

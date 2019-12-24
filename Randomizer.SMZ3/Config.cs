@@ -6,6 +6,7 @@ using Randomizer.Contracts;
 
 namespace Randomizer.SMZ3 {
 
+    [DefaultValue(Normal)]
     enum GameMode {
         [Description("Single player")]
         Normal,
@@ -13,6 +14,7 @@ namespace Randomizer.SMZ3 {
         Multiworld
     }
 
+    [DefaultValue(Normal)]
     enum Z3Logic {
         [Description("Normal")]
         Normal,
@@ -22,6 +24,7 @@ namespace Randomizer.SMZ3 {
         Owg,
     }
 
+    [DefaultValue(Normal)]
     enum SMLogic {
         [Description("Normal")]
         Normal,
@@ -29,6 +32,7 @@ namespace Randomizer.SMZ3 {
         Hard,
     }
 
+    [DefaultValue(Randomized)]
     enum SwordLocation {
         [Description("Randomized")]
         Randomized,
@@ -36,6 +40,7 @@ namespace Randomizer.SMZ3 {
         Uncle
     }
 
+    [DefaultValue(Randomized)]
     enum MorphLocation {
         [Description("Randomized")]
         Randomized,
@@ -43,11 +48,13 @@ namespace Randomizer.SMZ3 {
         Vanilla
     }
 
+    [DefaultValue(DefeatBoth)]
     enum Goal {
         [Description("Defeat Ganon and Mother Brain")]
         DefeatBoth,
     }
 
+    [DefaultValue(Normal)]
     enum Difficulty {
         Easy = -1,
         Normal = 0,
@@ -93,8 +100,7 @@ namespace Randomizer.SMZ3 {
         private TEnum ParseOption<TEnum>(IDictionary<string, string> options, TEnum defaultValue) where TEnum: Enum {
             string enumKey = typeof(TEnum).Name.ToLower();
             if (options.ContainsKey(enumKey)) {
-                object enumValue;
-                if (Enum.TryParse(typeof(TEnum), options[enumKey], true, out enumValue)) {
+                if (Enum.TryParse(typeof(TEnum), options[enumKey], true, out object enumValue)) {
                     return (TEnum)enumValue;
                 }
             }
@@ -109,10 +115,19 @@ namespace Randomizer.SMZ3 {
                 Key = enumType.Name.ToLower(),
                 Description = description,
                 Type = RandomizerOptionType.Dropdown,
-                Default = string.IsNullOrEmpty(defaultOption) ? values.First().ToLString() : defaultOption,
+                Default = string.IsNullOrEmpty(defaultOption) ? GetDefaultValue<T>().ToLString() : defaultOption,
                 Values = values.ToDictionary(k => k.ToLString(), v => v.GetDescription())
             };
         }
-
+        public static TEnum GetDefaultValue<TEnum>() where TEnum : Enum {
+            Type t = typeof(TEnum);
+            var attributes = (DefaultValueAttribute[])t.GetCustomAttributes(typeof(DefaultValueAttribute), false);
+            if ((attributes?.Length ?? 0) > 0) {
+                return (TEnum)attributes.First().Value;
+            }
+            else {
+                return default;
+            }
+        }
     }
 }
