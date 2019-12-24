@@ -148,13 +148,8 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         }
 
         public override bool CanFill(Item item) {
-            if (Config.Multiworld == true) {
-                /* Never cross-world fill GT */
-                if (item.World != World)
-                    return false;
-
-                /* TODO: Temporary fix, disallow progression items completely from GT */
-                if (item.Progression)
+            if (Config.GameMode == GameMode.Multiworld) {
+                if (item.World != World || item.Progression)
                     return false;
             }
 

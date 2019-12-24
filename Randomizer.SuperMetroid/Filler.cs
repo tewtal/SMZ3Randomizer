@@ -31,10 +31,10 @@ namespace Randomizer.SuperMetroid {
             var initialItems = InitialFill(ProgressionItems, Worlds);
 
             /* Priority fill items that needs to be placed first (will be placed in random order out of all items matching the types) */
-            PriorityFill(new[] { Varia, Gravity }, ProgressionItems, initialItems, Worlds);
+            PriorityFill(new[] { Varia, Gravity }, ProgressionItems, new List<Item>(), Worlds);
 
             /* Next up we do assumed filling of progression items cross-world */
-            AssumedFill(ProgressionItems, initialItems, Worlds);
+            AssumedFill(ProgressionItems, new List<Item>(), Worlds);
 
             /* Fast fill (no logic) the rest of the world */
             FastFill(NiceItems, Worlds);
@@ -56,18 +56,19 @@ namespace Randomizer.SuperMetroid {
                 priorityItems.Remove(itemToPlace);
 
                 /* Get a location */
-                var locationToPlace = Config.Placement switch
+                var inventory = CollectItems(assumedItems.Concat(initialItems).ToList(), worlds).ToList();
+                var locationsToPlace = Config.Placement switch
                 {
-                    Placement.Split => locations.Where(x => x.Class == itemToPlace.Class).ToList().Available(priorityItems.Concat(assumedItems.Concat(initialItems)).ToList(), true).Shuffle(Rnd).First(),
-                    _ => locations.Available(priorityItems.Concat(assumedItems.Concat(initialItems)).ToList(), true).Shuffle(Rnd).First()
+                    Placement.Split => locations.Where(x => x.Class == itemToPlace.Class).ToList().CanFillWithinWorld(itemToPlace, inventory),
+                    _ => locations.CanFillWithinWorld(itemToPlace, inventory)
                 };
 
-
-                /* If we can't place this item, put the item back and try again */
-                if (!CanPlaceAtLocation(locationToPlace, itemToPlace.Type)) {
+                if (locationsToPlace.Count == 0) {
                     priorityItems.Add(itemToPlace);
                     continue;
                 }
+
+                var locationToPlace = locationsToPlace.Shuffle(Rnd).First();
 
                 /* Get the world from the location */
                 var world = locationToPlace.Region.World;
@@ -75,8 +76,6 @@ namespace Randomizer.SuperMetroid {
                 /* Place item at location */
                 locationToPlace.Item = itemToPlace;
                 world.Items.Add(itemToPlace);
-
-                /* Remove item and location from their respective pools */
                 items.Remove(itemToPlace);
                 locations.Remove(locationToPlace);
             }
@@ -90,7 +89,7 @@ namespace Randomizer.SuperMetroid {
             while (assumedItems.Count > 0) {
 
                 /* Get a candidate item from the pool */
-                var itemToPlace = assumedItems.First();
+                var itemToPlace = assumedItems.Shuffle(Rnd).First();
 
                 /* Remove it from the pool */
                 assumedItems.Remove(itemToPlace);
@@ -140,7 +139,12 @@ namespace Randomizer.SuperMetroid {
         public void FastFill(List<Item> items, List<World> worlds) {
             while (items.Count > 0) {
                 var item = items.Shuffle(Rnd).First();
-                var location = worlds.SelectMany(x => x.Locations.Empty()).ToList().Shuffle(Rnd).First();
+                var location = Config.Placement switch
+                {
+                    Placement.Split => worlds.SelectMany(x => x.Locations.Where(x => x.Class == item.Class).ToList().Empty()).ToList().Shuffle(Rnd).FirstOrDefault(),
+                    _ => worlds.SelectMany(x => x.Locations.Empty()).ToList().Shuffle(Rnd).FirstOrDefault()
+                };
+
                 if (location != null) {
                     location.Item = item;
                     location.Region.World.Items.Add(item);
@@ -159,9 +163,10 @@ namespace Randomizer.SuperMetroid {
 
                 /* Place missile or super */
                 FrontFillItemInWorld(world, items, Rnd.Next(2) == 0 ? Missile : Super, true);
-                
+
                 /* Place a way to break bomb blocks */
-                FrontFillItemInWorld(world, items, Rnd.Next(8) switch {
+                FrontFillItemInWorld(world, items, Rnd.Next(8) switch
+                {
                     0 => ScrewAttack,
                     1 => SpeedBooster,
                     2 => Bombs,

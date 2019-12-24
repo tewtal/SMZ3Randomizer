@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using static Randomizer.SuperMetroid.ItemType;
 using static Randomizer.SuperMetroid.Logic;
+using static Randomizer.SuperMetroid.ItemClass;
 
 namespace Randomizer.SuperMetroid {
 
@@ -39,12 +40,9 @@ namespace Randomizer.SuperMetroid {
 
         public string Name { get; set; }
         public ItemType Type { get; set; }
-        public ItemClass Class {get; set;}
+        public ItemClass Class { get; set; } = Major;
         public World World { get; set; }
 
-        public Item() {
-            Class = (Type == Missile || Type == Super || Type == PowerBomb) ? ItemClass.Minor : ItemClass.Major;
-        }
 
         public static List<Item> CreateProgressionPool(World world, Random rnd) {
             return new List<Item>
@@ -64,10 +62,10 @@ namespace Randomizer.SuperMetroid {
                 new Item() { Name = "Plasma Beam", Type = Plasma, World = world},
                 new Item() { Name = "Charge Beam", Type = Charge, World = world},
 
-                new Item() { Name = "Progression Missile", Type = Missile, World = world},
-                new Item() { Name = "Progression Super", Type = Super, World = world},
-                new Item() { Name = "Progression Power Bomb", Type = PowerBomb, World = world},
-                new Item() { Name = "Progression Power Bomb", Type = PowerBomb, World = world},
+                new Item() { Name = "Progression Missile", Type = Missile, World = world, Class = Minor},
+                new Item() { Name = "Progression Super", Type = Super, World = world, Class = Minor},
+                new Item() { Name = "Progression Power Bomb", Type = PowerBomb, World = world, Class = Minor},
+                new Item() { Name = "Progression Power Bomb", Type = PowerBomb, World = world, Class = Minor},
                 new Item() { Name = "Progression Energy Tank", Type = ETank, World = world},
                 new Item() { Name = "Progression Energy Tank", Type = ETank, World = world},
                 new Item() { Name = "Progression Energy Tank", Type = ETank, World = world},
@@ -97,9 +95,9 @@ namespace Randomizer.SuperMetroid {
             for (int i = 0; i < 62; i++) {
                 itemPool.Add(rnd.Next(7) switch
                 {
-                    int r when r < 3 => new Item() { Type = Missile, Name = "Missile", World = world },
-                    int r when r >= 3 && r < 6 => new Item() { Type = Super, Name = "Super Missile", World = world },
-                    _ => new Item() { Type = PowerBomb, Name = "Power Bomb", World = world }
+                    int r when r < 3 => new Item() { Type = Missile, Name = "Missile", World = world, Class = Minor },
+                    int r when r >= 3 && r < 6 => new Item() { Type = Super, Name = "Super Missile", World = world, Class = Minor },
+                    _ => new Item() { Type = PowerBomb, Name = "Power Bomb", World = world, Class = Minor }
                 });
             }
 

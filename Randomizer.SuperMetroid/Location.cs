@@ -49,6 +49,13 @@ namespace Randomizer.SuperMetroid {
             return Region.CanEnter(items) && canAccess(items);
         }
 
+        public bool CanFill(Item item, List<Item> items) {
+            var oldItem = Item;
+            Item = item;
+            bool fillable = Available(items);
+            Item = oldItem;
+            return fillable;
+        }
     }
 
     public static class LocationListExtensions {
@@ -58,7 +65,7 @@ namespace Randomizer.SuperMetroid {
             var availableLocations = new List<Location>();
             foreach (var world in locations.Select(x => x.Region.World).Distinct()) {
                 var progression = items.Where(i => i.World == world).ToList();
-                availableLocations.AddRange(locations.Available(items).Where(l => l.Region.World == world && item.World.Locations.Find(ll => ll.Id == l.Id).Available(itemWorld)).ToList());
+                availableLocations.AddRange(locations.Where(l => l.Region.World == world && l.CanFill(item, progression) && item.World.Locations.Find(ll => ll.Id == l.Id).Available(itemWorld)).ToList());
             }
             return availableLocations;
         }
@@ -66,7 +73,7 @@ namespace Randomizer.SuperMetroid {
         internal static List<Location> AvailableWithinWorld(this List<Location> locations, List<Item> items) {
             var availableLocations = new List<Location>();
             foreach (var world in locations.Select(x => x.Region.World).Distinct()) {
-                availableLocations.AddRange(locations.Where(l => l.Region.World == world && l.Available(items)).ToList());
+                availableLocations.AddRange(locations.Where(l => l.Region.World == world && l.Available(items.Where(x => x.World == world).ToList())).ToList());
             }
             return availableLocations;
         }

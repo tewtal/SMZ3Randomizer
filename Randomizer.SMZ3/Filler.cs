@@ -49,7 +49,7 @@ namespace Randomizer.SMZ3 {
             var niceItems = Worlds.SelectMany(world => Item.CreateNicePool(world)).Shuffle(Rnd);
             var junkItems = Worlds.SelectMany(world => Item.CreateJunkPool(world)).Shuffle(Rnd);
 
-            if (Config.Multiworld == true) {
+            if (Config.GameMode == GameMode.Multiworld) {
                 /* Place moonpearls and morphs in last 25%/50% of the pool so that
                  * they will tend to place in earlier locations.
                  * Prefer morphs being pushed too far up the list than moonpearls,
@@ -61,7 +61,7 @@ namespace Randomizer.SMZ3 {
             GanonTowerFill(junkItems);
 
             var locations = Worlds.SelectMany(x => x.Locations).Empty().Shuffle(Rnd);
-            if (Config.Multiworld == false)
+            if (Config.GameMode != GameMode.Multiworld)
                 locations = ApplyWeighting(locations).ToList();
 
             AssumedFill(progressionItems, new List<Item>(), locations, Worlds);
