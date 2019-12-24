@@ -18,27 +18,30 @@ namespace Randomizer.SuperMetroid {
         public int Id { get; set; }
         public string Name { get; set; }
         public LocationType Type { get; set; }
+        public ItemClass Class { get; set; }
         public int Address { get; set; }
         public Region Region { get; set; }
         public Item Item { get; set; }
 
         private readonly Requirement canAccess;
 
-        public Location(Region region, int id, string name, LocationType type, int address) {
+        public Location(Region region, int id, string name, LocationType type, ItemClass locationClass, int address) {
             Region = region;
             Id = id;
             Name = name;
             Type = type;
             Address = address;
+            Class = locationClass;
             canAccess = items => true;
         }
 
-        public Location(Region region, int id, string name, LocationType type, int address, Requirement access) {
+        public Location(Region region, int id, string name, LocationType type, ItemClass locationClass, int address, Requirement access) {
             Region = region;
             Id = id;
             Name = name;
             Type = type;
             Address = address;
+            Class = locationClass;
             canAccess = access;
         }
 
@@ -49,6 +52,24 @@ namespace Randomizer.SuperMetroid {
     }
 
     public static class LocationListExtensions {
+
+        internal static List<Location> CanFillWithinWorld(this List<Location> locations, Item item, List<Item> items) {
+            var itemWorld = items.Where(i => i.World == item.World).Append(item).ToList();
+            var availableLocations = new List<Location>();
+            foreach (var world in locations.Select(x => x.Region.World).Distinct()) {
+                var progression = items.Where(i => i.World == world).ToList();
+                availableLocations.AddRange(locations.Available(items).Where(l => l.Region.World == world && item.World.Locations.Find(ll => ll.Id == l.Id).Available(itemWorld)).ToList());
+            }
+            return availableLocations;
+        }
+
+        internal static List<Location> AvailableWithinWorld(this List<Location> locations, List<Item> items) {
+            var availableLocations = new List<Location>();
+            foreach (var world in locations.Select(x => x.Region.World).Distinct()) {
+                availableLocations.AddRange(locations.Where(l => l.Region.World == world && l.Available(items)).ToList());
+            }
+            return availableLocations;
+        }
 
         internal static List<Location> Available(this List<Location> locations, List<Item> items, bool restrictWorld = false) {
             if (restrictWorld) {

@@ -11,10 +11,12 @@ namespace Randomizer.SuperMetroid {
         List<Item> NiceItems { get; set; } = new List<Item>();
         List<Item> JunkItems { get; set; } = new List<Item>();
         Random Rnd { get; set; }
+        Config Config { get; set; }
 
-        public Filler(List<World> worlds, Random rnd) {
+        public Filler(List<World> worlds, Config config, Random rnd) {
             Worlds = worlds;
             Rnd = rnd;
+            Config = config;
 
             /* Populate filler item pool with items for each world */
             foreach (var world in worlds) {
@@ -43,7 +45,7 @@ namespace Randomizer.SuperMetroid {
             var assumedItems = new List<Item>(items.Where(x => !itemTypes.Contains(x.Type)));
             var priorityItems = new List<Item>(items.Where(x => itemTypes.Contains(x.Type)));
             var locations = worlds.SelectMany(w => w.Locations).ToList().Empty();
-            
+
             /* Place items until priority item pool is empty */
             while (priorityItems.Count > 0) {
 
@@ -54,7 +56,12 @@ namespace Randomizer.SuperMetroid {
                 priorityItems.Remove(itemToPlace);
 
                 /* Get a location */
-                var locationToPlace = locations.Available(priorityItems.Concat(assumedItems.Concat(initialItems)).ToList(), true).Shuffle(Rnd).First();
+                var locationToPlace = Config.Placement switch
+                {
+                    Placement.Split => locations.Where(x => x.Class == itemToPlace.Class).ToList().Available(priorityItems.Concat(assumedItems.Concat(initialItems)).ToList(), true).Shuffle(Rnd).First(),
+                    _ => locations.Available(priorityItems.Concat(assumedItems.Concat(initialItems)).ToList(), true).Shuffle(Rnd).First()
+                };
+
 
                 /* If we can't place this item, put the item back and try again */
                 if (!CanPlaceAtLocation(locationToPlace, itemToPlace.Type)) {
@@ -83,19 +90,25 @@ namespace Randomizer.SuperMetroid {
             while (assumedItems.Count > 0) {
 
                 /* Get a candidate item from the pool */
-                var itemToPlace = assumedItems.Shuffle(Rnd).First();
+                var itemToPlace = assumedItems.First();
 
                 /* Remove it from the pool */
                 assumedItems.Remove(itemToPlace);
 
                 /* Get a location */
-                var locationToPlace = locations.Available(assumedItems.Concat(initialItems).ToList(), true).Shuffle(Rnd).First();
+                var inventory = CollectItems(assumedItems.Concat(initialItems).ToList(), worlds).ToList();
+                var locationsToPlace = Config.Placement switch
+                {
+                    Placement.Split => locations.Where(x => x.Class == itemToPlace.Class).ToList().CanFillWithinWorld(itemToPlace, inventory),
+                    _ => locations.CanFillWithinWorld(itemToPlace, inventory)
+                };
 
-                /* If we can't place this item, put the item back and try again */
-                if (!CanPlaceAtLocation(locationToPlace, itemToPlace.Type)) {
+                if (locationsToPlace.Count == 0) {
                     assumedItems.Add(itemToPlace);
                     continue;
                 }
+
+                var locationToPlace = locationsToPlace.Shuffle(Rnd).First();
 
                 /* Get the world from the location */
                 var world = locationToPlace.Region.World;
@@ -105,7 +118,23 @@ namespace Randomizer.SuperMetroid {
                 world.Items.Add(itemToPlace);
                 items.Remove(itemToPlace);
                 locations.Remove(locationToPlace);
+            }           
+        }
+
+        public List<Item> CollectItems(List<Item> items, IEnumerable<World> worlds) {
+            var myItems = new List<Item>(items);
+            var availableLocations = worlds.SelectMany(l => l.Locations).Where(x => x.Item != null).ToList();
+            while (true) {
+                var searchLocations = availableLocations.AvailableWithinWorld(myItems);
+                availableLocations = availableLocations.Except(searchLocations).ToList();
+                var foundItems = searchLocations.Select(x => x.Item).ToList();
+                if (foundItems.Count == 0)
+                    break;
+
+                myItems = myItems.Concat(foundItems).ToList();
             }
+
+            return myItems;
         }
 
         public void FastFill(List<Item> items, List<World> worlds) {
@@ -130,7 +159,7 @@ namespace Randomizer.SuperMetroid {
 
                 /* Place missile or super */
                 FrontFillItemInWorld(world, items, Rnd.Next(2) == 0 ? Missile : Super, true);
-
+                
                 /* Place a way to break bomb blocks */
                 FrontFillItemInWorld(world, items, Rnd.Next(8) switch {
                     0 => ScrewAttack,
@@ -138,6 +167,20 @@ namespace Randomizer.SuperMetroid {
                     2 => Bombs,
                     _ => PowerBomb
                 }, true);
+
+                /* With split placement, we'll run into problem with placement if progression minors aren't available from the start */
+                if (Config.Placement == Placement.Split) {
+                    /* If missile was placed, also place a super */
+                    if (!world.Items.Exists(x => x.Type == Super)) {
+                        FrontFillItemInWorld(world, items, Super, true);
+                    }
+
+                    /* If no power bomb was placed, place one */
+                    if (!world.Items.Exists(x => x.Type == PowerBomb)) {
+                        FrontFillItemInWorld(world, items, PowerBomb, true);
+                    }
+                }
+
             }
 
             return worlds.SelectMany(w => w.Items).ToList();
@@ -146,7 +189,11 @@ namespace Randomizer.SuperMetroid {
         private void FrontFillItemInWorld(World world, List<Item> itemPool, ItemType itemType, bool restrictWorld = false) {
             /* Get a shuffled list of available locations to place this item in */
             Item item = restrictWorld ? itemPool.Get(itemType, world) : itemPool.Get(itemType);
-            var availableLocations = world.Locations.Empty().Available(world.Items).Shuffle(Rnd);
+            var availableLocations = Config.Placement switch {
+                Placement.Split => world.Locations.Empty().Where(x => x.Class == item.Class).ToList().Available(world.Items).Shuffle(Rnd),
+                _ => world.Locations.Empty().Available(world.Items).Shuffle(Rnd)
+            };
+
             if (availableLocations.Count > 0) {
                 var locationToFill = availableLocations.First();
                 locationToFill.Item = item;

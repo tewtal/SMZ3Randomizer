@@ -19,11 +19,11 @@ namespace Randomizer.SuperMetroid {
         public List<IRandomizerOption> Options => new List<IRandomizerOption> {
             Config.GetRandomizerOption<Logic>("Logic"),
             Config.GetRandomizerOption<Goal>("Goal"),
-            Config.GetRandomizerOption<GameMode>("Game mode"),
-
+            Config.GetRandomizerOption<Placement>("Item Placement"),
             new RandomizerOption {
                 Key = "seed", Description = "Seed", Type = Input
             },
+            Config.GetRandomizerOption<GameMode>("Game mode"),
             new RandomizerOption {
                 Key = "players", Description = "Players", Type = Players, Default = "1"
             },
@@ -40,17 +40,17 @@ namespace Randomizer.SuperMetroid {
             var worlds = new List<World>();
 
             if (config.GameMode == GameMode.Normal || players == 1) {
-                worlds.Add(new World(config.Logic, "Player", 0));
+                worlds.Add(new World(config, "Player", 0));
             }
             else {
                 for (int p = 0; p < players; p++) {
-                    worlds.Add(new World(config.Logic, options[$"player-{p}"], p));
+                    worlds.Add(new World(config, options[$"player-{p}"], p));
                 }
             }
 
             var guid = Guid.NewGuid().ToString();
 
-            var filler = new Filler(worlds, rnd);
+            var filler = new Filler(worlds, config, rnd);
             filler.Fill();
 
             var playthrough = new Playthrough(worlds);

@@ -12,11 +12,20 @@ namespace Randomizer.SuperMetroid {
         [Description("Casual")]
         Casual,
         [Description("Tournament")]
-        Tournament,
-        [Description("Normal")]
-        Normal,
-        [Description("Hard")]
-        Hard
+        Tournament
+        // TODO: Implement these
+        //[Description("Normal")]
+        //Normal,
+        //[Description("Hard")]
+        //Hard 
+    }
+    
+    [DefaultValue(Split)]
+    enum Placement {
+        [Description("Full randomization")]
+        Full,
+        [Description("Major/Minor split")]
+        Split
     }
 
     [DefaultValue(Normal)]
@@ -37,12 +46,14 @@ namespace Randomizer.SuperMetroid {
         public GameMode GameMode { get; set; } = GameMode.Normal;
         public Logic Logic { get; set; } = Logic.Tournament;
         public Goal Goal { get; set; } = Goal.DefeatMB;
+        public Placement Placement { get; set; } = Placement.Split;
         public bool Keysanity { get; set; } = false;
 
         public Config(IDictionary<string, string> options) {
             GameMode = ParseOption(options, GameMode.Normal);
             Logic = ParseOption(options, Logic.Tournament);
             Goal = ParseOption(options, Goal.DefeatMB);
+            Placement = ParseOption(options, Placement.Split);
             Keysanity = false;
         }
 

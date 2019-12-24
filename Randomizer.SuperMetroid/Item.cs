@@ -30,11 +30,21 @@ namespace Randomizer.SuperMetroid {
         SpeedBooster = 8
     }
 
+    enum ItemClass {
+        Minor,
+        Major
+    }
+
     class Item {
 
         public string Name { get; set; }
         public ItemType Type { get; set; }
+        public ItemClass Class {get; set;}
         public World World { get; set; }
+
+        public Item() {
+            Class = (Type == Missile || Type == Super || Type == PowerBomb) ? ItemClass.Minor : ItemClass.Major;
+        }
 
         public static List<Item> CreateProgressionPool(World world, Random rnd) {
             return new List<Item>
@@ -155,7 +165,7 @@ namespace Randomizer.SuperMetroid {
             return logic switch
             {
                 Casual => items.Has(SpeedBooster),
-                _ => items.Has(Ice) || items.Has(SpeedBooster)
+                _ => items.Has(Ice) || (items.Has(SpeedBooster) && items.Has(Gravity))
             };
         }
 

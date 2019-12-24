@@ -11,7 +11,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
         public Central(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 0, 0xC781CC, LocationType.Visible, "Power Bomb (Crateria surface)", Logic switch {
-                    _ => new Requirement(items => items.CanUsePowerBombs() && items.SpeedBooster && items.CanFly())
+                    _ => new Requirement(items => items.CanUsePowerBombs() && (items.SpeedBooster || items.CanFly()))
                 }),
                 new Location(this, 12, 0xC78486, LocationType.Visible, "Missile (Crateria middle)", Logic switch {
                     _ => new Requirement(items => items.CanPassBombPassages())

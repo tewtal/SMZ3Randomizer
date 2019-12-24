@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using static Randomizer.SuperMetroid.ItemType;
+using static Randomizer.SuperMetroid.ItemClass;
 
 namespace Randomizer.SuperMetroid.Regions.Brinstar {
 
@@ -10,9 +11,9 @@ namespace Randomizer.SuperMetroid.Regions.Brinstar {
 
         public Kraid(World world, Logic logic) : base(world, logic) {
             Locations = new List<Location> {
-                new Location(this, 43, "Energy Tank, Kraid", LocationType.Hidden, 0x7899C),
-                new Location(this, 48, "Varia Suit", LocationType.Chozo, 0x78ACA),
-                new Location(this, 44, "Missile (Kraid)", LocationType.Hidden, 0x789EC, Logic switch {
+                new Location(this, 43, "Energy Tank, Kraid", LocationType.Hidden, Major, 0x7899C),
+                new Location(this, 48, "Varia Suit", LocationType.Chozo, Major, 0x78ACA),
+                new Location(this, 44, "Missile (Kraid)", LocationType.Hidden, Minor, 0x789EC, Logic switch {
                     _ => new Requirement(items => items.CanUsePowerBombs())
                 }),
             };
