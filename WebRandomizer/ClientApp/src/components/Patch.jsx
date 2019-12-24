@@ -116,7 +116,7 @@ export default function Patch(props) {
 
     let value;
     const component = mode === 'upload' ? (
-        <Upload onUpload={onUploadRoms} />
+        <Upload gameId={props.gameId} onUpload={onUploadRoms} />
     ) : (
         <Form onSubmit={(e) => e.preventDefault()}>
             <Row className="mb-3">

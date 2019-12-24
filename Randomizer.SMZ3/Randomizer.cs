@@ -45,9 +45,14 @@ namespace Randomizer.SMZ3 {
             var config = new Config(options);
             var worlds = new List<World>();
 
-            int players = options.ContainsKey("worlds") ? int.Parse(options["worlds"]) : 1;
-            for (int p = 0; p < players; p++) {
-                worlds.Add(new World(config, options[$"player-{p}"], p, new HexGuid()));
+            if (config.GameMode == GameMode.Normal) {
+                worlds.Add(new World(config, "Player", 0, new HexGuid()));
+            }
+            else {
+                int players = options.ContainsKey("worlds") ? int.Parse(options["worlds"]) : 1;
+                for (int p = 0; p < players; p++) {
+                    worlds.Add(new World(config, options[$"player-{p}"], p, new HexGuid()));
+                }
             }
 
             var filler = new Filler(worlds, config, randoRnd);

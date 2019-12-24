@@ -50,7 +50,7 @@ export class Randomizer extends Component {
 
         for (let p = 0; p < this.state.players; p++) {
             if (playerNames[p] === undefined) {
-                playerNames[p] = ""
+                playerNames[p] = "";
             }
         }
 
@@ -123,7 +123,7 @@ export class Randomizer extends Component {
                                                 <Input id="seed" defaultValue={this.state.seedNumber} onChange={this.updateSeedNumber} />
                                             </InputGroup>
                                         </Col>
-                                        <Col md="1"></Col>
+                                        <Col md="1"/>
                                         <Col md="5">
                                             <InputGroup>
                                                 <InputGroupAddon addonType="prepend">

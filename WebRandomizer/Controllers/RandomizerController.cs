@@ -60,6 +60,7 @@ namespace WebRandomizer.Controllers {
                 /* Store this seed to the database */
                 var seed = new Seed {
                     GameName = seedData.Game,
+                    GameId = randomizer.Id,
                     Guid = seedData.Guid,
                     Players = seedData.Worlds.Count,
                     SeedNumber = seedData.Seed,

@@ -46,7 +46,7 @@ export function Permalink(props) {
                                     <Col>Type: {seed.type}</Col>
                                 </Row>
                                 <br />
-                                <Patch world={seed.worlds[0]} fileName={`${seed.gameName} - ${seed.seedNumber}.sfc`} />
+                                <Patch gameId={seed.gameId} world={seed.worlds[0]} fileName={`${seed.gameName} - ${seed.seedNumber}.sfc`} />
                             </CardBody>
                         </Card>
                     </Col>
