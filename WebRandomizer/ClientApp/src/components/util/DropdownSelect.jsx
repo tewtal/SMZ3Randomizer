@@ -1,7 +1,8 @@
 ﻿import React, { useState } from 'react';
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import styled, { createGlobalStyle } from 'styled-components';
-import { cast_array } from '../../util';
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+
+import castArray from 'lodash/castArray';
 
 // through bootstrap "$input-btn-border-width" -> "$border-width"
 const inputBorderWidth = '1px';
@@ -90,35 +91,39 @@ const menu_modifiers = {
 };
 
 export default function DropdownSelect(props) {
-    const { initialIndex, onIndexChange } = props;
-    const children = cast_array(props.children);
-
     const [open, setOpen] = useState(false);
-    const [index, setIndex] = useState(initialIndex != null ? initialIndex : null);
+
+    const { index, onIndexChange } = props;
+    const children = castArray(props.children);
 
     const toggle = () => setOpen(!open);
-    const select = (i) => { setIndex(i); onIndexChange && onIndexChange(i); };
+    const select = (i) => { onIndexChange && onIndexChange(i); };
 
-    return <React.Fragment>
-        <InputGroupDropdownStyling />
-        <Dropdown isOpen={open} toggle={toggle}>
-            <DropdownToggle
-                tag="div"
-                className="form-control"
-                data-toggle="dropdown"
-                aria-expanded={open}>
-                {!open && index != null ? children[index] :
-                    <Placeholder>{props.placeholder}</Placeholder>}
-                <Caret up={open} />
-            </DropdownToggle>
-            <DropdownMenu modifiers={menu_modifiers}>
-                {children.map((option, i) =>
-                    <DropdownItem key={i}
-                        active={i === index}
-                        onClick={() => select(i)}>
-                        {option}
-                    </DropdownItem>)}
-            </DropdownMenu>
-        </Dropdown>
-    </React.Fragment>;
+    return (
+        <>
+            <InputGroupDropdownStyling />
+            <Dropdown isOpen={open} toggle={toggle}>
+                <DropdownToggle
+                    tag="div"
+                    className="form-control"
+                    data-toggle="dropdown"
+                    aria-expanded={open}>
+                    {!open && index != null ?
+                        children[index] :
+                        <Placeholder>{props.placeholder}</Placeholder>
+                    }
+                    <Caret up={open} />
+                </DropdownToggle>
+                <DropdownMenu modifiers={menu_modifiers}>
+                    {children.map((option, i) =>
+                        <DropdownItem key={i}
+                            active={i === index}
+                            onClick={() => select(i)}>
+                            {option}
+                        </DropdownItem>
+                    )}
+                </DropdownMenu>
+            </Dropdown>
+        </>
+    );
 }

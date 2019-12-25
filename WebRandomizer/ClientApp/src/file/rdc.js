@@ -1,4 +1,4 @@
-﻿// [[rom addresses], length, entries = 1, entry offset = 0]
+// [[rom addresses], length, entries = 1, entry offset = 0]
 
 const link_manifest = [
     [[0x508000], 0x7000], // sprite
