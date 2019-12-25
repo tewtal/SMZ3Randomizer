@@ -14,8 +14,14 @@ import { saveAs } from 'file-saver';
 import attempt from 'lodash/attempt';
 import set from 'lodash/set';
 
-import inventory from '../resources/sprite/inventory.json';
-import baseIps from '../resources/zsm.ips.gz';
+import inventory from '../resources/sprite/inventory';
+import baseIpsSMZ3 from '../resources/zsm.ips.gz';
+import baseIpsSM from '../resources/base_190331_3.ips';
+
+const baseIps = {
+    "sm": baseIpsSM,
+    "smz3": baseIpsSMZ3
+};
 
 const SpriteOption = styled.div`
     display: flex;
@@ -54,14 +60,16 @@ export default function Patch(props) {
 
     const sprites = {
         z3: [{ title: 'Link' }, ...inventory.z3],
-        sm: [{ title: 'Samus' }, ...inventory.sm],
+        sm: [{ title: 'Samus' }, ...inventory.sm]
     };
 
     useEffect(() => {
         attempt(async () => {
-            const fileData = await localForage.getItem('baseRomCombo');
-            if (fileData != null)
+            const fileDataSM = await localForage.getItem('baseRomSM');
+            const fileDataLTTP = await localForage.getItem('baseRomLTTP');
+            if ((props.gameId === "sm" && fileDataSM !== null) || (fileDataSM !== null && fileDataLTTP !== null)) {
                 setMode('download');
+            }
         });
     }, [mode]);
 
@@ -77,12 +85,10 @@ export default function Patch(props) {
 
     async function onDownloadRom() {
         try {
-            const { sessionData: { seed }, clientData } = props;
-            const world = seed.worlds.find(world => world.worldId === clientData.worldId);
-            if (world != null) {
+            const { gameId, world, fileName } = props;
+            if (world !== null) {
                 const settings = { z3Sprite, smSprite, spinjumps };
-                const patchedData = await prepareRom(world.patch, settings, baseIps);
-                const fileName = `${seed.gameName} - ${seed.seedNumber} - ${clientData.name}.sfc`;
+                const patchedData = await prepareRom(world.patch, settings, baseIps[gameId], gameId);
                 saveAs(new Blob([patchedData]), fileName);
             }
         } catch (error) {
@@ -122,16 +128,10 @@ export default function Patch(props) {
             <Row className="mb-3">
                 <Col md="8">
                     <InputGroup className="flex-nowrap" prefix="Play as">
-                        <DropdownSelect
-                            placeholder="Select Z3 sprite"
-                            index={(value = sprites.z3.findIndex(x => x.title === z3Sprite.title)) < 0 ? 0 : value}
-                            onIndexChange={onZ3SpriteChange}>
+                        <DropdownSelect placeholder="Select Z3 sprite" index={(value = sprites.z3.findIndex(x => x.title === z3Sprite.title)) < 0 ? 0 : value} onIndexChange={onZ3SpriteChange}>
                             {sprites.z3.map(({ title }, i) => <SpriteOption key={title}><Z3Sprite index={i} />{title}</SpriteOption>)}
                         </DropdownSelect>
-                        <DropdownSelect
-                            placeholder="Select SM sprite"
-                            index={(value = sprites.sm.findIndex(x => x.title === smSprite.title)) < 0 ? 0 : value}
-                            onIndexChange={onSMSpriteChange}>
+                        <DropdownSelect placeholder="Select SM sprite" index={(value = sprites.sm.findIndex(x => x.title === smSprite.title)) < 0 ? 0 : value} onIndexChange={onSMSpriteChange}>
                             {sprites.sm.map(({ title }, i) => <SpriteOption key={title}><SMSprite index={i} />{title}</SpriteOption>)}
                         </DropdownSelect>
                         <InputGroupAddon addonType="append">

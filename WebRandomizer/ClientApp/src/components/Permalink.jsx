@@ -1,9 +1,9 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { Patch } from './Patch';
+import Patch from './Patch';
 import { decode } from 'slugid';
 import { Container, Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
 
-export function Permalink(props) {
+export default function Permalink(props) {
     const seedGuid = decode(props.match.params.seed_id).replace(/-/g,"");
     const [seed, setSeed] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);

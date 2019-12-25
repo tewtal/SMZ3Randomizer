@@ -1,4 +1,4 @@
-export const readAsArrayBuffer = async (blob) => {
+export async function readAsArrayBuffer(blob) {
     const fileReader = new FileReader();
     return new Promise((resolve, reject) => {
         fileReader.onerror = () => {
@@ -12,4 +12,4 @@ export const readAsArrayBuffer = async (blob) => {
 
         fileReader.readAsArrayBuffer(blob);
     });
-};
+}

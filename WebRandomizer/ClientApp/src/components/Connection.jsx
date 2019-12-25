@@ -11,7 +11,7 @@ export default function Connection(props) {
             <CardHeader
                 className={classNames({
                         'bg-danger': device.state === 0,
-                        'bg-success': device.state !== 0,
+                        'bg-success': device.state !== 0
                     }, 'text-white'
                 )}>
                 Game Connection

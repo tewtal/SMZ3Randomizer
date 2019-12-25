@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 const ReactMarkdown = require('react-markdown');
 const homeMarkdown =
 `
@@ -12,12 +12,8 @@ To generate a Super Metroid seed, go to the [Configure SM Game](/configure/sm) p
 
 `;
 
-export class Home extends Component {
-  static displayName = Home.name;
-
-  render () {
+export default function Home() {
     return (
-      <ReactMarkdown source={homeMarkdown} />
+        <ReactMarkdown source={homeMarkdown} />
     );
-  }
 }

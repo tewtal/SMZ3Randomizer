@@ -1,25 +1,33 @@
 import { readAsArrayBuffer } from '../file/util';
 import { parse_rdc } from '../file/rdc';
 import { inflate } from 'pako';
-
 import localForage from 'localforage';
 
-export const prepareRom = async (world_patch, settings, baseIps) => {
-    const rom_blob = await localForage.getItem('baseRomCombo');
+export async function prepareRom(world_patch, settings, baseIps, gameId) {
+    let rom_blob = null;
+    if (gameId === "sm") {
+        rom_blob = await localForage.getItem("baseRomSM");
+    } else {
+        const smRom = await readAsArrayBuffer(await localForage.getItem("baseRomSM"));
+        const lttpRom = await readAsArrayBuffer(await localForage.getItem("baseRomLTTP"));
+        rom_blob = mergeRoms(new Uint8Array(smRom), new Uint8Array(lttpRom));
+    }
     const rom = new Uint8Array(await readAsArrayBuffer(rom_blob));
     const base_patch = maybeCompressed(new Uint8Array(await (await fetch(baseIps, { cache: 'no-store' })).arrayBuffer()));
     world_patch = Uint8Array.from(atob(world_patch), c => c.charCodeAt(0));
 
     applyIps(rom, base_patch);
-    await applySprite(rom, 'link_sprite', settings.z3Sprite);
-    await applySprite(rom, 'samus_sprite', settings.smSprite);
-    if (settings.spinjumps) {
-        enableSeparateSpinjumps(rom);
+    if (gameId === "smz3") {
+        await applySprite(rom, 'link_sprite', settings.z3Sprite);
+        await applySprite(rom, 'samus_sprite', settings.smSprite);
+        if (settings.spinjumps) {
+            enableSeparateSpinjumps(rom);
+        }
     }
     applySeed(rom, world_patch);
 
     return rom;
-};
+}
 
 function enableSeparateSpinjumps(rom) {
     rom[0x34F500] = 0x01;
@@ -41,7 +49,7 @@ function maybeCompressed(data) {
     return isGzip ? inflate(data) : data;
 }
 
-export const mergeRoms = (sm_rom, z3_rom) => {
+function mergeRoms(sm_rom, z3_rom) {
     const data = new Uint8Array(0x600000);
 
     let pos = 0;
@@ -62,7 +70,7 @@ export const mergeRoms = (sm_rom, z3_rom) => {
     }
 
     return new Blob([data]);
-};
+}
 
 function applyIps(rom, patch) {
     const big = false;

@@ -2,7 +2,7 @@
 import { encode } from 'slugid';
 import { Container, Row, Col, Card, CardHeader, CardBody, Button, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Modal, ModalHeader, ModalBody, Progress } from 'reactstrap';
 
-export function Configure(props) {
+export default function Configure(props) {
     const [options, setOptions] = useState(null);
     const [names, setNames] = useState({});
     const [modal, setModal] = useState(false);
@@ -158,11 +158,11 @@ export function Configure(props) {
                                             {optionGroup}
                                         </Row>
                                     ))}
-                                    {options["gamemode"] === "multiworld" ? (
+                                    {options["gamemode"] === "multiworld" && (
                                         <Row className="form-group">
                                             {playerInputs}
                                         </Row>
-                                    ): ""}
+                                    )}
                                     <Row className="form-group">
                                         <Col md="6">
                                             <Button color="success" type="submit">Generate Game</Button>
