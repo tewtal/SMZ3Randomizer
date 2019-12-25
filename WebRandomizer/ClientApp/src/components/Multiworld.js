@@ -5,6 +5,7 @@ import { HubConnectionBuilder } from '@microsoft/signalr';
 import { Connection } from './Connection';
 import { Runner } from './Runner';
 import { Spoiler } from './Spoiler';
+import { decode } from 'slugid';
 import { create_message, connect, send, clearBusy } from '../usb2snes';
 
 export class Multiworld extends Component {
@@ -15,7 +16,7 @@ export class Multiworld extends Component {
         this.socket = null;
 
         this.state = {
-            sessionId: this.props.match.params.session_id,
+            sessionId: decode(this.props.match.params.session_id).replace(/-/g, ""),
             sessionState: 0,
             sessionInfo: "",
             sessionData: null,
@@ -50,7 +51,7 @@ export class Multiworld extends Component {
         });
 
         this.connection.on("UpdateClients", async (clients) => {
-            if (this.state.sessionData != null) {
+            if (this.state.sessionData !== null) {
                 this.state.sessionData.clients = clients;
                 this.setState({
                     sessionData: this.state.sessionData
@@ -116,7 +117,7 @@ export class Multiworld extends Component {
             console.log("Trying to reconnect");
         }
         this.setState({ connState: 0, connDevice: "None" });
-    };
+    }
 
     async handleConnect() {
         try {
@@ -278,7 +279,7 @@ export class Multiworld extends Component {
             <div>
                 {this.state.sessionId ? (<Seed onRegisterPlayer={this.handleRegisterPlayer} sessionState={this.state.sessionState} sessionInfo={this.state.sessionInfo} sessionId={this.state.sessionId} sessionData={this.state.sessionData} />) : ""}
                 <br />
-                {this.state.clientData !== null ? (<Patch world={this.state.world} fileName={this.state.sessionData.seed.gameName + " - " + this.state.sessionData.seed.seedNumber + " - " + this.state.clientData.name + ".sfc"} />) : ""}
+                {this.state.clientData !== null ? (<Patch gameId={this.state.sessionData.seed.gameId} world={this.state.world} fileName={this.state.sessionData.seed.gameName + " - " + this.state.sessionData.seed.seedNumber + " - " + this.state.clientData.name + ".sfc"} />) : ""}
                 <br />
                 {this.state.clientData !== null ? (<Connection connState={this.state.connState} clientData={this.state.clientData} connInfo={this.state.connInfo} deviceList={this.state.deviceList} deviceSelect={this.state.deviceSelect} onConnectClick={this.handleConnect} onDeviceSelect={this.handleDevice} />) : ""}
                 <br />

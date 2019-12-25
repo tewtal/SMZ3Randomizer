@@ -31,12 +31,12 @@ export function connect(url) {
         socket.onopen = function () {
             ws = socket;
             busy = false;
-            resolve(socket)
+            resolve(socket);
         };
 
         socket.onerror = function (err) {
             busy = false;
-            reject(err)
+            reject(err);
         };
     });
 }

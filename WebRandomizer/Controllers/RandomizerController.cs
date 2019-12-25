@@ -83,7 +83,7 @@ namespace WebRandomizer.Controllers {
                 context.Add(seed);
                 await context.SaveChangesAsync();
 
-                /* If this is a co-op seed, we also create a new multiworld session with the same session guid as the seed guid */
+                /* If this is a multiworld seed, we also create a new multiworld session with the same session guid as the seed guid */
                 if (seed.Players > 1) {
                     var session = new Session {
                         Clients = new List<Client>(),

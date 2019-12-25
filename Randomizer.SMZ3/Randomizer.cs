@@ -27,7 +27,7 @@ namespace Randomizer.SMZ3 {
             Config.GetRandomizerOption<GameMode>("Game mode"),
 
             new RandomizerOption {
-                Key = "players", Description = "Players", Type = Players, Default = "1"
+                Key = "players", Description = "Players", Type = Players, Default = "2"
             },
         };
 
@@ -49,7 +49,7 @@ namespace Randomizer.SMZ3 {
                 worlds.Add(new World(config, "Player", 0, new HexGuid()));
             }
             else {
-                int players = options.ContainsKey("worlds") ? int.Parse(options["worlds"]) : 1;
+                int players = options.ContainsKey("players") ? int.Parse(options["players"]) : 1;
                 for (int p = 0; p < players; p++) {
                     worlds.Add(new World(config, options[$"player-{p}"], p, new HexGuid()));
                 }

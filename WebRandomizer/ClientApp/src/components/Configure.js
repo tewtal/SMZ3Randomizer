@@ -4,6 +4,7 @@ import { Container, Row, Col, Card, CardHeader, CardBody, Button, Form, Input, I
 
 export function Configure(props) {
     const [options, setOptions] = useState(null);
+    const [names, setNames] = useState({});
     const [modal, setModal] = useState(false);
     const [randomizer, setRandomizer] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
@@ -33,6 +34,13 @@ export function Configure(props) {
         setModal(true);
 
         try {
+
+            if (options["gamemode"] === "multiworld") {
+                for (let p = 0; p < parseInt(options["players"]); p++) {
+                    options["player-" + p] = names[p];
+                }
+            }
+
             let response = await fetch(`/api/randomizers/${randomizer_id}/generate`,
                 {
                     method: "POST",
@@ -44,7 +52,11 @@ export function Configure(props) {
                 });
             let data = await response.json();
             setModal(false);
-            props.history.push('/seed/' + encode(data.guid));
+            if (options["gamemode"] === "multiworld") {
+                props.history.push('/multiworld/' + encode(data.guid));
+            } else {
+                props.history.push('/seed/' + encode(data.guid));
+            }
         } catch (error) {
             console.log(error);
             setModal(false);
@@ -96,12 +108,40 @@ export function Configure(props) {
                         </Col>
                     );
                     break;
+                case 'players':
+                    if (options["gamemode"] === "multiworld") {
+                        inputElement = (
+                            <Col key={opt.key} md="6">
+                                <InputGroup>
+                                    <InputGroupAddon addonType="prepend">
+                                        <InputGroupText>{opt.description}</InputGroupText>
+                                    </InputGroupAddon>
+                                    <Input id={opt.key} defaultValue={options[opt.key]} onChange={(e) => updateOption(e, opt.key)} />
+                                </InputGroup>
+                            </Col>
+                        );
+                    }
+                    break;
             }
 
             return inputElement;
         });
 
         const formOptionGroups = chunk(formOptions, 2);
+
+        const playerInputs = [];        
+        for (let p = 0; p < parseInt(options["players"]); p++) {
+            playerInputs.push(
+                <Col key={"playerInput" + p} md={{ size: 5, offset: 1 - (p%2) }}>
+                    <InputGroup>
+                        <InputGroupAddon addonType="prepend">
+                            <InputGroupText>Name {p + 1}</InputGroupText>
+                        </InputGroupAddon>
+                        <Input id={"player-" + p} defaultValue={names[p]} onChange={(e) => setNames({ ...names, [p]: e.target.value })} />
+                    </InputGroup>
+                </Col>
+            );
+        }
 
         return (
             <Container>
@@ -118,6 +158,11 @@ export function Configure(props) {
                                             {optionGroup}
                                         </Row>
                                     ))}
+                                    {options["gamemode"] === "multiworld" ? (
+                                        <Row className="form-group">
+                                            {playerInputs}
+                                        </Row>
+                                    ): ""}
                                     <Row className="form-group">
                                         <Col md="6">
                                             <Button color="success" type="submit">Generate Game</Button>
