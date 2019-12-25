@@ -32,8 +32,8 @@ namespace Randomizer.SuperMetroid {
     enum GameMode {
         [Description("Single player")]
         Normal,
-        [Description("Multiworld")]
-        Multiworld
+//        [Description("Multiworld")]
+//        Multiworld
     }
 
     [DefaultValue(DefeatMB)]
