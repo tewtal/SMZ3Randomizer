@@ -132,6 +132,7 @@ namespace Randomizer.CLI.Verbs {
 
             var optionList = new[] {
                 ("logic", opts.Logic),
+                ("gamemode", "multiworld"),
                 ("worlds", opts.Players.ToString()),
             };
             var players = from n in Enumerable.Range(0, opts.Players)

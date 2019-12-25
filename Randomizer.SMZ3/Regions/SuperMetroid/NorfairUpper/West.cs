@@ -11,11 +11,11 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
         public West(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 50, 0xC78B24, LocationType.Chozo, "Ice Beam", Logic switch {
-                    Casual => items => items.Super && items.CanPassBombPassages() && items.Varia && items.SpeedBooster,
+                    Normal => items => items.Super && items.CanPassBombPassages() && items.Varia && items.SpeedBooster,
                     _ => new Requirement(items => items.Super && items.Morph && (items.Varia || items.HasEnergyReserves(3)))
                 }),
                 new Location(this, 51, 0xC78B46, LocationType.Hidden, "Missile (below Ice Beam)", Logic switch {
-                    Casual => items => items.Super && items.CanUsePowerBombs() && items.Varia && items.SpeedBooster,
+                    Normal => items => items.Super && items.CanUsePowerBombs() && items.Varia && items.SpeedBooster,
                     _ => new Requirement(items => items.Super && items.CanUsePowerBombs() && (items.Varia || items.HasEnergyReserves(3)) ||
                         items.Varia && items.SpeedBooster && items.Super)
                 }),

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using static Randomizer.SuperMetroid.ItemType;
 using static Randomizer.SuperMetroid.Logic;
+using static Randomizer.SuperMetroid.LocationType;
+using static Randomizer.SuperMetroid.ItemClass;
 
 namespace Randomizer.SuperMetroid.Regions.NorfairLower {
 
@@ -11,17 +13,17 @@ namespace Randomizer.SuperMetroid.Regions.NorfairLower {
 
         public West(World world, Logic logic) : base(world, logic) {
             Locations = new List<Location> {
-                new Location(this, 70, "Missile (Gold Torizo)", LocationType.Visible, 0x78E6E, Logic switch {
+                new Location(this, 70, "Missile (Gold Torizo)", Visible, Minor, 0x78E6E, Logic switch {
                     Casual => items => items.CanUsePowerBombs() && items.Has(SpaceJump) && items.Has(Super),
                     _ => new Requirement(items => items.CanUsePowerBombs() && items.Has(SpaceJump) && items.Has(Varia) &&
                         (items.Has(HiJump) || items.Has(Gravity)))
                 }),
-                new Location(this, 71, "Super Missile (Gold Torizo)", LocationType.Hidden, 0x78E74, Logic switch {
+                new Location(this, 71, "Super Missile (Gold Torizo)", Hidden,  Minor, 0x78E74, Logic switch {
                     Casual => new Requirement(items => items.CanDestroyBombWalls() && (items.Has(Super) || items.Has(Charge)) &&
                         items.Has(SpaceJump) && items.CanUsePowerBombs()),
                     _ => new Requirement(items => items.CanDestroyBombWalls() && items.Has(Varia) && (items.Has(Super) || items.Has(Charge)))
                 }),
-                new Location(this, 79, "Screw Attack", LocationType.Chozo, 0x79110, Logic switch {
+                new Location(this, 79, "Screw Attack", Chozo, Major, 0x79110, Logic switch {
                     Casual => items => items.CanDestroyBombWalls() && items.Has(SpaceJump) && items.CanUsePowerBombs(),
                     _ => new Requirement(items => items.CanDestroyBombWalls() && items.Has(Varia))
                 }),

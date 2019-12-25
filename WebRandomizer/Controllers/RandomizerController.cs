@@ -7,52 +7,65 @@ using Microsoft.AspNetCore.Http;
 using Randomizer.Contracts;
 using WebRandomizer.Models;
 using Newtonsoft.Json;
+using static WebRandomizer.Controllers.Helpers;
 
 namespace WebRandomizer.Controllers {
 
-    [Route("api/[controller]")]
+    [Route("api/randomizers/")]
 
     public class RandomizerController : Controller {
 
         private readonly RandomizerContext context;
+        private readonly List<IRandomizer> randomizers;
 
         public RandomizerController(RandomizerContext context) {
             this.context = context;
+            randomizers = new List<IRandomizer> {
+                new Randomizer.SMZ3.Randomizer(),
+                new Randomizer.SuperMetroid.Randomizer()
+            };
         }
 
-        private byte[] ConvertPatch(Dictionary<int, byte[]> patches) {
-            var bytes = new List<byte>();
-            foreach(var patch in patches) {
-                bytes.AddRange(BitConverter.GetBytes(patch.Key));
-                bytes.AddRange(BitConverter.GetBytes((ushort)patch.Value.Length));
-                bytes.AddRange(patch.Value);
-            }
-
-            return bytes.ToArray();
+        [HttpGet]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        public IActionResult Index() {
+            return new OkObjectResult(SerializeEnumAsString(randomizers));
         }
 
-        [HttpPost("[action]")]
+        [HttpGet("{randomizerId}")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        public IActionResult GetRandomizer(string randomizerId) {
+            return new OkObjectResult(SerializeEnumAsString(randomizers.FirstOrDefault(x => x.Id == randomizerId)));
+        }
+
+        [HttpPost("{randomizerId}/[action]")]
         [ProducesResponseType(typeof(ISeedData), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Generate([FromBody] Option option) {
-            if (option == null || option.options.Count < 1) {
+        public async Task<IActionResult> Generate(string randomizerId, [FromBody] Dictionary<string, string> options) {
+            if (options.Count < 1) {
                 return new StatusCodeResult(400);
             }
 
             try {
                 /* Initialize the randomizer and generate a seed with the given options */
-                IRandomizer randomizer = new Randomizer.SMZ3.Randomizer();
-                var seedData = randomizer.GenerateSeed(option.options, option.options["seed"]);
+                IRandomizer randomizer = randomizers.FirstOrDefault(x => x.Id == randomizerId);
+                
+                if(randomizer == null) {
+                    return new StatusCodeResult(400);
+                }
+
+                var seedData = randomizer.GenerateSeed(options, options["seed"]);
 
                 /* Store this seed to the database */
                 var seed = new Seed {
                     GameName = seedData.Game,
+                    GameId = randomizer.Id,
                     Guid = seedData.Guid,
                     Players = seedData.Worlds.Count,
                     SeedNumber = seedData.Seed,
                     Spoiler = JsonConvert.SerializeObject(seedData.Playthrough),
-                    Type = "multiworld",
+                    Type = seedData.Mode,
                     Worlds = new List<World>()
                 };
 
@@ -60,7 +73,7 @@ namespace WebRandomizer.Controllers {
                     var world = new World {
                         WorldId = seedWorld.Id,
                         Guid = seedWorld.Guid,
-                        Logic = option.options["logic"],
+                        Logic = seedData.Logic,
                         Player = seedWorld.Player,
                         Patch = ConvertPatch(seedWorld.Patches)
                     };
@@ -70,7 +83,7 @@ namespace WebRandomizer.Controllers {
                 context.Add(seed);
                 await context.SaveChangesAsync();
 
-                /* If this is a co-op seed, we also create a new multiworld session with the same session guid as the seed guid */
+                /* If this is a multiworld seed, we also create a new multiworld session with the same session guid as the seed guid */
                 if (seed.Players > 1) {
                     var session = new Session {
                         Clients = new List<Client>(),
@@ -89,11 +102,15 @@ namespace WebRandomizer.Controllers {
                 return new StatusCodeResult(500);
             }
         }
+        private byte[] ConvertPatch(Dictionary<int, byte[]> patches) {
+            var bytes = new List<byte>();
+            foreach (var patch in patches) {
+                bytes.AddRange(BitConverter.GetBytes(patch.Key));
+                bytes.AddRange(BitConverter.GetBytes((ushort)patch.Value.Length));
+                bytes.AddRange(patch.Value);
+            }
 
+            return bytes.ToArray();
+        }
     }
-
-    public class Option {
-        public Dictionary<string, string> options;
-    }
-
 }

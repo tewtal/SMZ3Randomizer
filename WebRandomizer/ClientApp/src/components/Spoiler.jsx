@@ -7,7 +7,7 @@ import map from 'lodash/map';
 export default function Spoiler(props) {
     const [show, setShow] = useState(false);
 
-    if (props.sessionData == null)
+    if (props.sessionData === null)
         return null;
     else if (!show)
         return <Button onClick={() => setShow(true)}>Show spoiler</Button>;
@@ -18,7 +18,7 @@ export default function Spoiler(props) {
             <Card>
                 <CardHeader>Seed Playthrough</CardHeader>
                 <CardBody>
-                    {JSON.parse(props.sessionData.seed.spoiler).filter(sphere => !isEmpty(sphere)).map(sphere =>
+                    {JSON.parse(props.sessionData.seed.spoiler).filter(sphere => !isEmpty(sphere)).map(sphere => (
                         <Card>
                             <CardBody>
                                 <ul>
@@ -28,7 +28,7 @@ export default function Spoiler(props) {
                                 </ul>
                             </CardBody>
                         </Card>
-                    )}
+                    ))}
                 </CardBody>
             </Card>
         </div>

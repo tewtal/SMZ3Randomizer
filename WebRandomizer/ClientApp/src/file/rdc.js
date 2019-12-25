@@ -78,11 +78,11 @@ export function parse_rdc(rdc) {
     if (utf8.decode(rdc.slice(0, 18)) !== 'RETRODATACONTAINER')
         throw new Error("Could not find the RDC format header");
     if (rdc[18] !== version)
-        throw new Error(`RDC version ${rdc[18]} is not supported, expected version ${version}`)
+        throw new Error(`RDC version ${rdc[18]} is not supported, expected version ${version}`);
 
     let offset = 19;
     const view = new DataView(rdc.buffer);
-    const block_list = []
+    const block_list = [];
     let blocks = view.getUint32(offset, little);
     while (blocks > 0) {
         blocks -= 1;
@@ -130,7 +130,7 @@ function apply_block(rom, content, manifest) {
         const entry = content[index += 1];
         for (const addr of addrs) {
             for (let i = 0; i < n; i += 1) {
-                const dest = addr + (k[0] == null ? k * i : k[i]);
+                const dest = addr + (k[0] === null ? k * i : k[i]);
                 const src = length * i;
                 rom.set(entry.slice(src, src + length), dest);
             }

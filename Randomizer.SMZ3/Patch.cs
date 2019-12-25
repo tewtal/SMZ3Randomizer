@@ -181,16 +181,61 @@ namespace Randomizer.SMZ3 {
 
         void WriteSMLocations(IEnumerable<Location> locations) {
             foreach (var location in locations) {
-                var locationValue = location.Type switch {
-                    LocationType.Visible => UshortBytes(0xEFE0),
-                    LocationType.Chozo => UshortBytes(0xEFE4),
-                    LocationType.Hidden => UshortBytes(0xEFE8),
-                    var x => throw new InvalidOperationException($"Location {location.Name} should not have the type {x}")
+                if (myWorld.Config.GameMode == GameMode.Multiworld) {
+                    patches.Add((SMSnes(location.Address), UshortBytes(GetSMItemPLM(location))));
+                    patches.Add(ItemTablePatch(location, GetZ3ItemId(location)));
+                } else {
+                    ushort plmId = GetSMItemPLM(location);
+                    patches.Add((SMSnes(location.Address), UshortBytes(plmId)));
+                    if (plmId >= 0xefe0) {
+                        patches.Add((SMSnes(location.Address + 5), new byte[] { GetZ3ItemId(location) }));
+                    }
+                }
+            }
+        }
+
+        ushort GetSMItemPLM(Location location) {
+            int plmId = (myWorld.Config.GameMode == GameMode.Multiworld) 
+                ? 0xefe0 
+                : location.Item.Type switch {
+                    ETank => 0xeed7,
+                    Missile => 0xeedb,
+                    Super => 0xeedf,
+                    PowerBomb => 0xeee3,
+                    Bombs => 0xeee7,
+                    Charge => 0xeeeb,
+                    Ice => 0xeeef,
+                    HiJump => 0xeef3,
+                    SpeedBooster => 0xeef7,
+                    Wave => 0xeefb,
+                    Spazer => 0xeeff,
+                    SpringBall => 0xef03,
+                    Varia => 0xef07,
+                    Plasma => 0xef13,
+                    Grapple => 0xef17,
+                    Morph => 0xef23,
+                    ReserveTank => 0xef27,
+                    Gravity => 0xef0b,
+                    XRay => 0xef0f,
+                    SpaceJump => 0xef1b,
+                    ScrewAttack => 0xef1f,
+                    _ => 0xefe0
                 };
 
-                patches.Add((SMSnes(location.Address), locationValue));
-                patches.Add(ItemTablePatch(location, (byte)location.Item.Type));
-            }
+            plmId += plmId switch {
+                0xefe0 => location.Type switch {
+                    LocationType.Chozo => 4,
+                    LocationType.Hidden => 8,
+                    _ => 0
+                },
+                _ => location.Type switch {
+                    LocationType.Chozo => 0x54,
+                    LocationType.Hidden => 0xA8,
+                    _ => 0
+                }
+            };
+
+            return (ushort)plmId;
         }
 
         void WriteZ3Locations(IEnumerable<Location> locations) {
@@ -213,8 +258,13 @@ namespace Randomizer.SMZ3 {
                         patches.Add((Z3Snes(0x181000), dialog));
                     }
                 }
-                patches.Add((Z3Snes(location.Address), new byte[] { (byte)(location.Id - 256) }));
-                patches.Add(ItemTablePatch(location, GetZ3ItemId(location)));
+
+                if (myWorld.Config.GameMode == GameMode.Multiworld) {
+                    patches.Add((Z3Snes(location.Address), new byte[] { (byte)(location.Id - 256) }));
+                    patches.Add(ItemTablePatch(location, GetZ3ItemId(location)));
+                } else {
+                    patches.Add((Z3Snes(location.Address), new byte[] { GetZ3ItemId(location) }));
+                }
             }
         }
 
@@ -487,14 +537,14 @@ namespace Randomizer.SMZ3 {
 
         void WriteGameTitle() {
             var z3Glitch = myWorld.Config.Z3Logic switch {
-                Z3Logic.Mg => "M",
-                Z3Logic.Owg => "G",
-                _ => "N",
+                Z3Logic.Nmg => "N",
+                Z3Logic.Owg => "O",
+                _ => "C",
             };
             var smGlitch = myWorld.Config.SMLogic switch {
-                SMLogic.Advanced => "A",
-                SMLogic.Basic => "B",
-                _ => "C",
+                SMLogic.Normal => "N",
+                SMLogic.Hard => "H",
+                _ => "X",
             };
             var title = AsAscii($"ZSM{Randomizer.version}{z3Glitch}{smGlitch}{seed:X8}".PadRight(21)[..21]);
             patches.Add((Z3Snes(0x007FC0), title));

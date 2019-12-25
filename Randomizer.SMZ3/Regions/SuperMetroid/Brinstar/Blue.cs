@@ -18,7 +18,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
                     _ => new Requirement(items => items.Morph)
                 }),
                 new Location(this, 29, 0xC7879E, LocationType.Hidden, "Energy Tank, Brinstar Ceiling", Logic switch {
-                    Casual => items => items.CanFly() || items.HiJump ||items.SpeedBooster || items.Ice,
+                    Normal => items => items.CanFly() || items.HiJump ||items.SpeedBooster || items.Ice,
                     _ => new Requirement(items => true)
                 }),
                 new Location(this, 34, 0xC78802, LocationType.Chozo, "Missile (blue Brinstar bottom)", Logic switch {

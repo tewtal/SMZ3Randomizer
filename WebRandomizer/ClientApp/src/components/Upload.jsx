@@ -37,12 +37,14 @@ export default function Upload(props) {
             return;
         }
 
-        try {
-            fileDataZ3 = new Uint8Array(await readAsArrayBuffer(z3File));
-            mismatch.ALTTP = h32(fileDataZ3.buffer, HashSeed).toNumber() !== Z3Hash;
-        } catch (error) {
-            console.log("Could not read uploaded ALTTP file data:", error);
-            return;
+        if (props.gameId === "smz3") {
+            try {
+                fileDataZ3 = new Uint8Array(await readAsArrayBuffer(z3File));
+                mismatch.ALTTP = h32(fileDataZ3.buffer, HashSeed).toNumber() !== Z3Hash;
+            } catch (error) {
+                console.log("Could not read uploaded ALTTP file data:", error);
+                return;
+            }
         }
 
         if (some(mismatch)) {
@@ -51,10 +53,9 @@ export default function Upload(props) {
             return;
         }
 
-        const fileData = mergeRoms(fileDataSM, fileDataZ3);
-
         try {
-            await localForage.setItem('baseRomCombo', new Blob([fileData]));
+            await localForage.setItem('baseRomSM', new Blob([fileDataSM]));
+            await localForage.setItem('baseRomLTTP', new Blob([fileDataZ3]));
         } catch (error) {
             console.log("Could not store file to localforage:", error);
             return;
@@ -68,17 +69,17 @@ export default function Upload(props) {
             hasIn(fileInputSM.current, 'files[0]') &&
             hasIn(fileInputZ3.current, 'files[0]')
         );
-    }
+    };
 
     return (
         <Form onSubmit={(e) => { e.preventDefault(); onSubmitRom(); }}>
             <h6>No ROM uploaded, please upload a valid ROM file.</h6>
             <Row className="justify-content-between">
                 <Col md="6">SM ROM: <input type="file" ref={fileInputSM} onChange={onFileSelect} /></Col>
-                <Col md="6">ALTTP ROM: <input type="file" ref={fileInputZ3} onChange={onFileSelect} /></Col>
+                {props.gameId === "smz3" && <Col md="6">ALTTP ROM: <input type="file" ref={fileInputZ3} onChange={onFileSelect} /></Col>}
             </Row>
             <Row>
-                <Col md="2">
+                <Col md="6">
                     <br />
                     <Button type="submit" color="primary" disabled={!canUpload}>Upload Files</Button>
                 </Col>

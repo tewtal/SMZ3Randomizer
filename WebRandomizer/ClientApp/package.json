@@ -19,20 +19,13 @@
     "react-scripts": "^3.3.0",
     "reactstrap": "^6.5.0",
     "rimraf": "^2.7.1",
+    "slugid": "^2.0.0",
     "styled-components": "^5.0.0-regexrehydrate",
     "xxhashjs": "^0.2.2"
   },
   "devDependencies": {
     "ajv": "^6.10.2",
-    "cross-env": "^5.2.1",
-    "eslint-config-react-app": "^2.1.0",
-    "eslint-plugin-flowtype": "^2.50.3",
-    "eslint-plugin-import": "^2.19.1",
-    "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.17.0"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "cross-env": "^5.2.1"
   },
   "scripts": {
     "start": "rimraf ./build && react-scripts start",

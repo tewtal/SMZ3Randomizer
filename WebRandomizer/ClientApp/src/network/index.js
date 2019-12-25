@@ -1,5 +1,4 @@
 import { HubConnectionBuilder } from '@microsoft/signalr';
-
 import { create_message, connect, send, clearBusy, readData, writeData } from '../snes/usb2snes';
 
 export default class Network {
@@ -18,7 +17,7 @@ export default class Network {
         this.session = {
             guid: sessionGuid,
             state: 0,
-            data: null,
+            data: null
         };
         this.clientData = null;
         this.device = {
@@ -26,14 +25,14 @@ export default class Network {
             version: '',
             list: null,
             selecting: false,
-            selected: null,
+            selected: null
         };
         this.hub = { state: 0 };
         this.game = {
             state: 0,
             inEvents: [],
             outEvents: [],
-            writeQueue: [],
+            writeQueue: []
         };
 
         this.react = react;
@@ -46,20 +45,20 @@ export default class Network {
         return {
             session: {
                 ...this.session,
-                data: this.session.data && { ...this.session.data },
+                data: this.session.data && { ...this.session.data }
             },
             clientData: this.clientData && { ...this.clientData },
             device: {
                 ...this.device,
-                list: this.device.list && [...this.device.list],
+                list: this.device.list && [...this.device.list]
             },
             hub: { ...this.hub },
             game: {
                 ...this.game,
                 inEvents: [...this.game.inEvents],
                 outEvents: [...this.game.outEvents],
-                writeQueue: [...this.game.writeQueue],
-            },
+                writeQueue: [...this.game.writeQueue]
+            }
         };
     }
 
@@ -75,7 +74,7 @@ export default class Network {
         });
 
         this.connection.on('UpdateClients', clients => {
-            if (this.session.data != null) {
+            if (this.session.data !== null) {
                 this.session.data.clients = clients;
                 this.react.state(this.snapshot());
             }
@@ -137,10 +136,10 @@ export default class Network {
                 if (this.clientData === null) {
                     const clientGuid = localStorage.getItem('clientGuid');
                     const sessionGuid = localStorage.getItem('sessionGuid');
-                    if (sessionGuid === this.session.guid && clientGuid != null && clientGuid !== '') {
+                    if (sessionGuid === this.session.guid && clientGuid !== null && clientGuid !== '') {
                         /* The stored session matches and we have a client id, register as this player */
                         const client = await this.connection.invoke('RegisterPlayer', this.session.guid, clientGuid);
-                        if (client != null) {
+                        if (client !== null) {
                             this.clientData = client;
                             this.react.state(this.snapshot());
                             this.react.sessionStatus(`Session found, registered as player: ${client.name}`);
@@ -160,7 +159,7 @@ export default class Network {
 
     async onRegisterPlayer(clientGuid) {
         /* If we're already registered, unregister from the old world first */
-        if (this.clientData != null) {
+        if (this.clientData !== null) {
             try {
                 const response = await this.connection.invoke('UnregisterPlayer', this.session.guid, this.clientData.guid);
                 if (response === false) {
@@ -233,7 +232,7 @@ export default class Network {
             } else if (!this.device.selecting) {
                 this.device = { ...this.device, selecting: true, list: deviceList, selected: firstDevice };
                 this.react.state(this.snapshot());
-            } else if (this.device.selected != null) {
+            } else if (this.device.selected !== null) {
                 const attached = await this.attachDevice(this.device.selected);
                 if (attached) {
                     this.device = { ...this.device, selecting: false, list: null, selected: null };
@@ -257,7 +256,7 @@ export default class Network {
                 const deviceInfo = JSON.parse(response.data);
                 await send(create_message('Name', [`Randomizer.live [${device}]`]), true);
 
-                this.clientData = { ...this.clientData, device, state: 5, };
+                this.clientData = { ...this.clientData, device, state: 5 };
                 this.device = { ...this.device, state: 1, version: deviceInfo.Results[0] };
                 this.react.state(this.snapshot());
                 const client = await this.connection.invoke('UpdateClient', this.clientData);
@@ -301,7 +300,7 @@ export default class Network {
         const mappings = [
             [0x00FF50, 0xE03700, 0xE04000], /* SNES */
             [0x407F50, 0xE03700, 0xE04000], /* SNES9x */
-            [0xC0FF50, 0x703700, 0x704000], /* Retroarch */
+            [0xC0FF50, 0x703700, 0x704000]  /* Retroarch */
         ];
 
         /* Check platform mappings */
@@ -439,7 +438,7 @@ export default class Network {
                     const ok = await this.handleMessage(message);
                     if (ok) {
                         this.inPtr += 1;
-                        this.inPtr = this.inPtr === 8 ? 0 : this.inPtr
+                        this.inPtr = this.inPtr === 8 ? 0 : this.inPtr;
                         await writeData(this.MessageBaseAddress + 0x186, new Uint8Array([this.inPtr]));
                     } else {
                         /* if handling a message fails, bail out completely and retry next time */
@@ -469,7 +468,7 @@ export default class Network {
         try {
             await writeData(this.MessageBaseAddress + this.outPtr * 0x10, new Uint8Array(data));
             this.outPtr += 1;
-            this.outPtr = this.outPtr === 16 ? 0 : this.outPtr
+            this.outPtr = this.outPtr === 16 ? 0 : this.outPtr;
             await writeData(this.MessageBaseAddress + 0x0180, new Uint8Array([this.outPtr]));
             return true;
         } catch (error) {

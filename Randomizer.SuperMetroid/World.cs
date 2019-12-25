@@ -9,34 +9,34 @@ namespace Randomizer.SuperMetroid {
         public List<Location> Locations { get; set; }
         public List<Region> Regions { get; set; }
         public List<Item> Items { get; set; }
-        public Logic Logic { get; set; }
+        public Config Config { get; set; }
         public string Player { get; set; }
         public string Guid { get; set; }
         public int Id { get; set; }
 
-        public World(Logic logic, string player, int id) {
+        public World(Config config, string player, int id) {
             Id = id;
-            Logic = logic;
+            Config = config;
             Player = player;
             Guid = System.Guid.NewGuid().ToString();
 
             Regions = new List<Region> {
-                new Regions.Crateria.Central(this, Logic),
-                new Regions.Crateria.West(this, Logic),
-                new Regions.Crateria.East(this, Logic),
-                new Regions.Brinstar.Blue(this, Logic),
-                new Regions.Brinstar.Green(this, Logic),
-                new Regions.Brinstar.Kraid(this, Logic),
-                new Regions.Brinstar.Pink(this, Logic),
-                new Regions.Brinstar.Red(this, Logic),
-                new Regions.Maridia.Outer(this, Logic),
-                new Regions.Maridia.Inner(this, Logic),
-                new Regions.NorfairUpper.West(this, Logic),
-                new Regions.NorfairUpper.East(this, Logic),
-                new Regions.NorfairUpper.Crocomire(this, Logic),
-                new Regions.NorfairLower.West(this, Logic),
-                new Regions.NorfairLower.East(this, Logic),
-                new Regions.WreckedShip(this, Logic)
+                new Regions.Crateria.Central(this, Config.Logic),
+                new Regions.Crateria.West(this, Config.Logic),
+                new Regions.Crateria.East(this, Config.Logic),
+                new Regions.Brinstar.Blue(this, Config.Logic),
+                new Regions.Brinstar.Green(this, Config.Logic),
+                new Regions.Brinstar.Kraid(this, Config.Logic),
+                new Regions.Brinstar.Pink(this, Config.Logic),
+                new Regions.Brinstar.Red(this, Config.Logic),
+                new Regions.Maridia.Outer(this, Config.Logic),
+                new Regions.Maridia.Inner(this, Config.Logic),
+                new Regions.NorfairUpper.West(this, Config.Logic),
+                new Regions.NorfairUpper.East(this, Config.Logic),
+                new Regions.NorfairUpper.Crocomire(this, Config.Logic),
+                new Regions.NorfairLower.West(this, Config.Logic),
+                new Regions.NorfairLower.East(this, Config.Logic),
+                new Regions.WreckedShip(this, Config.Logic)
             };
 
             Locations = Regions.SelectMany(x => x.Locations).ToList();

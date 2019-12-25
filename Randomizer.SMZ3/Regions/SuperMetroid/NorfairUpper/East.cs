@@ -14,41 +14,41 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                     _ => new Requirement(items => items.Morph)
                 }),
                 new Location(this, 61, 0xC78C3E, LocationType.Chozo, "Reserve Tank, Norfair", Logic switch {
-                    Casual => items => items.Morph && (
+                    Normal => items => items.Morph && (
                         items.CanFly() || items.Grapple && (items.SpeedBooster || items.CanPassBombPassages()) ||
                         items.HiJump || items.Ice),
                     _ => new Requirement(items => items.Morph && items.Super)
                 }),
                 new Location(this, 62, 0xC78C44, LocationType.Hidden, "Missile (Norfair Reserve Tank)", Logic switch {
-                    Casual => items => items.Morph && (
+                    Normal => items => items.Morph && (
                         items.CanFly() || items.Grapple && (items.SpeedBooster || items.CanPassBombPassages()) ||
                         items.HiJump || items.Ice),
                     _ => new Requirement(items => items.Morph && items.Super)
                 }),
                 new Location(this, 63, 0xC78C52, LocationType.Visible, "Missile (bubble Norfair green door)", Logic switch {
-                    Casual => items => items.CanFly() ||
+                    Normal => items => items.CanFly() ||
                         items.Grapple && items.Morph && (items.SpeedBooster || items.CanPassBombPassages()) ||
                         items.HiJump || items.Ice,
                     _ => new Requirement(items => items.Super)
                 }),
                 new Location(this, 64, 0xC78C66, LocationType.Visible, "Missile (bubble Norfair)"),
                 new Location(this, 65, 0xC78C74, LocationType.Hidden, "Missile (Speed Booster)", Logic switch {
-                    Casual => items => items.CanFly() || items.Morph && (items.SpeedBooster || items.CanPassBombPassages()) ||
+                    Normal => items => items.CanFly() || items.Morph && (items.SpeedBooster || items.CanPassBombPassages()) ||
                         items.HiJump || items.Ice,
                     _ => new Requirement(items => items.Super)
                 }),
                 new Location(this, 66, 0xC78C82, LocationType.Chozo, "Speed Booster", Logic switch {
-                    Casual => items => items.CanFly() || items.Morph && (items.SpeedBooster || items.CanPassBombPassages()) ||
+                    Normal => items => items.CanFly() || items.Morph && (items.SpeedBooster || items.CanPassBombPassages()) ||
                         items.HiJump || items.Ice,
                     _ => new Requirement(items => items.Super)
                 }),
                 new Location(this, 67, 0xC78CBC, LocationType.Visible, "Missile (Wave Beam)", Logic switch {
-                    Casual => items => items.CanFly() || items.Morph && (items.SpeedBooster || items.CanPassBombPassages()) ||
+                    Normal => items => items.CanFly() || items.Morph && (items.SpeedBooster || items.CanPassBombPassages()) ||
                         items.HiJump || items.Ice,
                     _ => new Requirement(items => true)
                 }),
                 new Location(this, 68, 0xC78CCA, LocationType.Chozo, "Wave Beam", Logic switch {
-                    Casual => items => items.Morph && (
+                    Normal => items => items.Morph && (
                         items.CanFly() || items.Morph && (items.SpeedBooster || items.CanPassBombPassages()) ||
                         items.HiJump || items.Ice),
                     _ => new Requirement(items => items.CanOpenRedDoors() &&
@@ -59,7 +59,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
 
         public override bool CanEnter(Progression items) {
             return Logic switch {
-                Casual => (
+                Normal => (
                         (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
                         items.CanAccessNorfairUpperPortal()
                     ) &&

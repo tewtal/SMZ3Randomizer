@@ -14,20 +14,20 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
             Locations = new List<Location> {
                 new Location(this, 128, 0xC7C265, LocationType.Visible, "Missile (Wrecked Ship middle)"),
                 new Location(this, 129, 0xC7C2E9, LocationType.Chozo, "Reserve Tank, Wrecked Ship", Logic switch {
-                    Casual => items => CanUnlockShip(items) && items.SpeedBooster && items.CanUsePowerBombs() &&
+                    Normal => items => CanUnlockShip(items) && items.SpeedBooster && items.CanUsePowerBombs() &&
                         (items.Grapple || items.SpaceJump || items.Varia && items.HasEnergyReserves(2) || items.HasEnergyReserves(3)),
                     _ => new Requirement(items => CanUnlockShip(items) && items.CanUsePowerBombs() && items.SpeedBooster &&
                         (items.Varia || items.HasEnergyReserves(2)))
                 }),
                 new Location(this, 130, 0xC7C2EF, LocationType.Visible, "Missile (Gravity Suit)", Logic switch {
-                    Casual => items => CanUnlockShip(items) &&
+                    Normal => items => CanUnlockShip(items) &&
                         (items.Grapple || items.SpaceJump || items.Varia && items.HasEnergyReserves(2) || items.HasEnergyReserves(3)),
                     _ => new Requirement(items => CanUnlockShip(items) && (items.Varia || items.HasEnergyReserves(1)))
                 }),
                 new Location(this, 131, 0xC7C319, LocationType.Visible, "Missile (Wrecked Ship top)",
                     items => CanUnlockShip(items)),
                 new Location(this, 132, 0xC7C337, LocationType.Visible, "Energy Tank, Wrecked Ship", Logic switch {
-                    Casual => items => CanUnlockShip(items) &&
+                    Normal => items => CanUnlockShip(items) &&
                         (items.HiJump || items.SpaceJump || items.SpeedBooster || items.Gravity),
                     _ => new Requirement(items => CanUnlockShip(items) && (items.Bombs || items.PowerBomb || items.CanSpringBallJump() ||
                         items.HiJump || items.SpaceJump || items.SpeedBooster || items.Gravity))
@@ -37,7 +37,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
                 new Location(this, 134, 0xC7C365, LocationType.Visible, "Right Super, Wrecked Ship",
                     items => CanUnlockShip(items)),
                 new Location(this, 135, 0xC7C36D, LocationType.Chozo, "Gravity Suit", Logic switch {
-                    Casual => items => CanUnlockShip(items) &&
+                    Normal => items => CanUnlockShip(items) &&
                         (items.Grapple || items.SpaceJump || items.Varia && items.HasEnergyReserves(2) || items.HasEnergyReserves(3)),
                     _ => new Requirement(items => CanUnlockShip(items) && (items.Varia || items.HasEnergyReserves(1)))
                 })
@@ -50,7 +50,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
 
         public override bool CanEnter(Progression items) {
             return Logic switch {
-                Casual =>
+                Normal =>
                     items.Super && (
                         items.CanUsePowerBombs() && (items.SpeedBooster || items.Grapple || items.SpaceJump ||
                             items.Gravity && (items.CanFly() || items.HiJump)) ||

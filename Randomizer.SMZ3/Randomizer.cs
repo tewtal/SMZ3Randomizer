@@ -1,12 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Randomizer.Contracts;
+using static Randomizer.Contracts.RandomizerOptionType;
 
 namespace Randomizer.SMZ3 {
 
     public class Randomizer : IRandomizer {
 
         public static readonly Version version = new Version(11, 0);
+
+        public string Id => "smz3";
+        public string Name => "Super Metroid & A Link to the Past Combo Randomizer";
+
+        public string Version => version.ToString();
+
+        public List<IRandomizerOption> Options => new List<IRandomizerOption> {
+            Config.GetRandomizerOption<SMLogic>("Super Metroid Logic"),
+            Config.GetRandomizerOption<Z3Logic>("A Link to the Past Logic"),
+            Config.GetRandomizerOption<SwordLocation>("First Sword"),
+            Config.GetRandomizerOption<MorphLocation>("Morph Ball"),
+            Config.GetRandomizerOption<Goal>("Goal"),
+            new RandomizerOption {
+                Key = "seed", Description = "Seed", Type = Input
+            },
+            Config.GetRandomizerOption<GameMode>("Game mode"),
+
+            new RandomizerOption {
+                Key = "players", Description = "Players", Type = Players, Default = "2"
+            },
+        };
 
         public ISeedData GenerateSeed(IDictionary<string, string> options, string seed) {
             int randoSeed;
@@ -19,25 +42,17 @@ namespace Randomizer.SMZ3 {
 
             var randoRnd = new Random(randoSeed);
 
-            var logic = SMLogic.Advanced;
-            if (options.ContainsKey("logic")) {
-                logic = options["logic"] switch {
-                    "casual" => SMLogic.Casual,
-                    "tournament" => SMLogic.Advanced,
-                    _ => SMLogic.Advanced,
-                };
-            }
-
-            var players = options.ContainsKey("worlds") ? int.Parse(options["worlds"]) : 1;
-
-            var config = new Config {
-                Multiworld = players > 1,
-                SMLogic = logic,
-            };
-
+            var config = new Config(options);
             var worlds = new List<World>();
-            for (var p = 0; p < players; p++) {
-                worlds.Add(new World(config, options[$"player-{p}"], p, new HexGuid()));
+
+            if (config.GameMode == GameMode.Normal) {
+                worlds.Add(new World(config, "Player", 0, new HexGuid()));
+            }
+            else {
+                int players = options.ContainsKey("players") ? int.Parse(options["players"]) : 1;
+                for (int p = 0; p < players; p++) {
+                    worlds.Add(new World(config, options[$"player-{p}"], p, new HexGuid()));
+                }
             }
 
             var filler = new Filler(worlds, config, randoRnd);
@@ -49,14 +64,15 @@ namespace Randomizer.SMZ3 {
             var seedData = new SeedData {
                 Guid = new HexGuid(),
                 Seed = seed,
-                Game = "SMAlttP Combo Randomizer",
-                Logic = logic.ToString(),
+                Game = Name,
+                Mode = config.GameMode.ToLString(),
+                Logic = $"{config.SMLogic.ToLString()}|{config.Z3Logic.ToLString()}",
                 Playthrough = spheres,
                 Worlds = new List<IWorldData>(),
             };
 
             /* Make sure RNG is the same when applying patches to the ROM to have consistent RNG for seed identifer etc */
-            var patchSeed = randoRnd.Next();
+            int patchSeed = randoRnd.Next();
             foreach (var world in worlds) {
                 var patchRnd = new Random(patchSeed);
                 var patch = new Patch(world, worlds, seedData.Guid, randoSeed, patchRnd);
@@ -64,7 +80,7 @@ namespace Randomizer.SMZ3 {
                     Id = world.Id,
                     Guid = world.Guid,
                     Player = world.Player,
-                    Patches = patch.Create(config),
+                    Patches = patch.Create(config)
                 };
 
                 seedData.Worlds.Add(worldData);
@@ -75,12 +91,21 @@ namespace Randomizer.SMZ3 {
 
     }
 
+    public class RandomizerOption : IRandomizerOption { 
+        public string Key { get; set; }
+        public string Description { get; set; }
+        public RandomizerOptionType Type { get; set; }
+        public Dictionary<string, string> Values { get; set; }
+        public string Default { get; set; }
+    }
+
     public class SeedData : ISeedData {
 
         public string Guid { get; set; }
         public string Seed { get; set; }
         public string Game { get; set; }
         public string Logic { get; set; }
+        public string Mode { get; set; }
         public List<IWorldData> Worlds { get; set; }
         public List<Dictionary<string, string>> Playthrough { get; set; }
 
@@ -92,7 +117,6 @@ namespace Randomizer.SMZ3 {
         public string Guid { get; set; }
         public string Player { get; set; }
         public Dictionary<int, byte[]> Patches { get; set; }
-
     }
 
 }

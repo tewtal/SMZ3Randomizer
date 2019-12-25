@@ -1,4 +1,5 @@
 ﻿import React, { useState, useEffect, useRef } from 'react';
+import { decode } from 'slugid';
 import Seed from './Seed';
 import Patch from './Patch';
 import Connection from './Connection';
@@ -14,11 +15,11 @@ export default function Multiworld(props) {
     const [gameStatus, setGameStatus] = useState('');
 
     useEffect(() => {
-        const sessionGuid = props.match.params.session_guid;
+        const sessionGuid = decode(props.match.params.session_id).replace(/-/g, "");
         network.current = new Network(sessionGuid, {
             state: setState,
             sessionStatus: setSessionStatus,
-            gameStatus: setGameStatus,
+            gameStatus: setGameStatus
         });
 
         if (sessionGuid) {
@@ -42,36 +43,21 @@ export default function Multiworld(props) {
     }
 
     /* State will be delivered from network.start(), but we start out without anything */
-    if (state == null) return null;
+    if (state === null) return null;
 
     const { session, clientData, device } = state;
 
     return (
         <div>
-            {session.guid && <Seed
-                session={session}
-                sessionStatus={sessionStatus}
-                onRegisterPlayer={onRegisterPlayer}
-            />}
+            {session.guid && <Seed session={session} sessionStatus={sessionStatus} onRegisterPlayer={onRegisterPlayer} />}
             <br />
-            {clientData != null && <Patch
-                sessionData={session.data}
-                clientData={clientData}
-            />}
+            {clientData !== null && <Patch gameId={session.data.seed.gameId} world={session.data.seed.worlds.find(world => world.worldId === clientData.worldId)} fileName={`${session.data.seed.gameName} - ${session.data.seed.seedNumber} - ${clientData.name}.sfc`} />}
             <br />
-            {clientData != null && <Connection
-                clientData={clientData}
-                device={device}
-                onConnect={onConnect}
-                onDeviceSelect={onDeviceSelect}
-            />}
+            {clientData !== null && <Connection clientData={clientData} device={device} onConnect={onConnect} onDeviceSelect={onDeviceSelect} />}
             <br />
-            {device.state === 1 && <Game
-                gameStatus={gameStatus}
-                network={network.current}
-            />}
+            {device.state === 1 && <Game gameStatus={gameStatus} network={network.current} />}
             <br />
-            {session.data != null && <Spoiler sessionData={session.data} />}
+            {session.data !== null && <Spoiler sessionData={session.data} />}
         </div>
     );
 }
