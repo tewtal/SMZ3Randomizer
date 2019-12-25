@@ -88,6 +88,7 @@ namespace Randomizer.SMZ3 {
             WritePlayerNames();
             WriteSeedData();
             WriteGameTitle();
+            WriteGameModeData();
 
             return patches.ToDictionary(x => x.offset, x => x.bytes);
         }
@@ -533,6 +534,12 @@ namespace Randomizer.SMZ3 {
             patches.Add((SMSnes(0xC07F58), Repeat<byte>(0x00, 8).ToArray()));
             patches.Add((SMSnes(0xC07F60), AsAscii(seedGuid)));
             patches.Add((SMSnes(0xC07F80), AsAscii(myWorld.Guid)));
+        }
+
+        void WriteGameModeData() {
+            if (myWorld.Config.GameMode == GameMode.Multiworld) {
+                patches.Add((0x347000, UshortBytes(0x0001)));
+            }
         }
 
         void WriteGameTitle() {

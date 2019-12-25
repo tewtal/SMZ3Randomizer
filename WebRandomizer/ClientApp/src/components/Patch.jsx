@@ -121,28 +121,28 @@ export default function Patch(props) {
     }
 
     let value;
-    const component = mode === 'upload' ? (
-        <Upload gameId={props.gameId} onUpload={onUploadRoms} />
-    ) : (
+    const component = mode === 'upload' ? <Upload gameId={props.gameId} onUpload={onUploadRoms} /> : (
         <Form onSubmit={(e) => e.preventDefault()}>
-            <Row className="mb-3">
-                <Col md="8">
-                    <InputGroup className="flex-nowrap" prefix="Play as">
-                        <DropdownSelect placeholder="Select Z3 sprite" index={(value = sprites.z3.findIndex(x => x.title === z3Sprite.title)) < 0 ? 0 : value} onIndexChange={onZ3SpriteChange}>
-                            {sprites.z3.map(({ title }, i) => <SpriteOption key={title}><Z3Sprite index={i} />{title}</SpriteOption>)}
-                        </DropdownSelect>
-                        <DropdownSelect placeholder="Select SM sprite" index={(value = sprites.sm.findIndex(x => x.title === smSprite.title)) < 0 ? 0 : value} onIndexChange={onSMSpriteChange}>
-                            {sprites.sm.map(({ title }, i) => <SpriteOption key={title}><SMSprite index={i} />{title}</SpriteOption>)}
-                        </DropdownSelect>
-                        <InputGroupAddon addonType="append">
-                            <InputGroupText tag={Label} title="Enable separate space/screw jump animations">
-                                <Input type="checkbox" addon={true} checked={spinjumps} onChange={onSpinjumpToggle} />{' '}
-                                <JumpSprite which="space" /> / <JumpSprite which="screw" />
-                            </InputGroupText>
-                        </InputGroupAddon>
-                    </InputGroup>
-                </Col>
-            </Row>
+            {props.gameId === "smz3" && (
+                <Row className="mb-3">
+                    <Col md="8">
+                        <InputGroup className="flex-nowrap" prefix="Play as">
+                            <DropdownSelect placeholder="Select Z3 sprite" index={(value = sprites.z3.findIndex(x => x.title === z3Sprite.title)) < 0 ? 0 : value} onIndexChange={onZ3SpriteChange}>
+                                {sprites.z3.map(({ title }, i) => <SpriteOption key={title}><Z3Sprite index={i} />{title}</SpriteOption>)}
+                            </DropdownSelect>
+                            <DropdownSelect placeholder="Select SM sprite" index={(value = sprites.sm.findIndex(x => x.title === smSprite.title)) < 0 ? 0 : value} onIndexChange={onSMSpriteChange}>
+                                {sprites.sm.map(({ title }, i) => <SpriteOption key={title}><SMSprite index={i} />{title}</SpriteOption>)}
+                            </DropdownSelect>
+                            <InputGroupAddon addonType="append">
+                                <InputGroupText tag={Label} title="Enable separate space/screw jump animations">
+                                    <Input type="checkbox" addon={true} checked={spinjumps} onChange={onSpinjumpToggle} />{' '}
+                                    <JumpSprite which="space" /> / <JumpSprite which="screw" />
+                                </InputGroupText>
+                            </InputGroupAddon>
+                        </InputGroup>
+                    </Col>
+                </Row>
+            )}
             <Row>
                 <Col md="6">
                     <Button color="primary" onClick={onDownloadRom}>Download ROM</Button>

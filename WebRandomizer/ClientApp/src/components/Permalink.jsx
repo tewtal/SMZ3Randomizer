@@ -37,7 +37,7 @@ export default function Permalink(props) {
                             </CardHeader>
                             <CardBody>
                                 <Row>
-                                    <Col>Seed guid: {props.match.params.seed_id}</Col>
+                                    <Col>Seed: {props.match.params.seed_id}</Col>
                                 </Row>
                                 <Row>
                                     <Col>Seed number: {seed.seedNumber}</Col>

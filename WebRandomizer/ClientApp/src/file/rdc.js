@@ -3,7 +3,7 @@
 const link_manifest = [
     [[0x508000], 0x7000], // sprite
     [[0x5BD308], 4 * 30], // palette
-    [[0x5BEDF5], 4],      // gloves
+    [[0x5BEDF5], 4]       // gloves
 ];
 
 const samus_loader_offsets = [0x0, 0x24, 0x4F, 0x73, 0x9E, 0xC2, 0xED, 0x111, 0x139];
@@ -63,12 +63,12 @@ const samus_manifest = [
     [[0xCE68B], 30],            // Ship Intro
     [[0xDD6C2], 30, 16, 0x24],  // Ship Outro
     [[0x22A5A0], 28],           // Ship Standard
-    [[0xDCA54], 2, 14, 0x6],    // Ship Glow
+    [[0xDCA54], 2, 14, 0x6]     // Ship Glow
 ];
 
 const block_entries = {
     1: ['link_sprite', link_manifest],
-    4: ['samus_sprite', samus_manifest],
+    4: ['samus_sprite', samus_manifest]
 };
 
 export function parse_rdc(rdc) {
@@ -117,20 +117,20 @@ function process_blocks(rdc, block_list) {
 function parse_block(block, manifest) {
     let offset = 0;
     const content = [];
-    for (const [, length, n = 1] of manifest) {
-        content.push(block.slice(offset, offset + n * length));
-        offset += n * length;
+    for (const [, length, entries = 1] of manifest) {
+        content.push(block.slice(offset, offset + entries * length));
+        offset += entries * length;
     }
     return content;
 }
 
 function apply_block(rom, content, manifest) {
     let index = -1;
-    for (const [addrs, length, n = 1, k = 0] of manifest) {
+    for (const [addrs, length, entries = 1, offset = 0] of manifest) {
         const entry = content[index += 1];
         for (const addr of addrs) {
-            for (let i = 0; i < n; i += 1) {
-                const dest = addr + (k[0] === null ? k * i : k[i]);
+            for (let i = 0; i < entries; i += 1) {
+                const dest = addr + (!Array.isArray(offset) ? offset * i : offset[i]);
                 const src = length * i;
                 rom.set(entry.slice(src, src + length), dest);
             }
