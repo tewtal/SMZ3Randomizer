@@ -47,7 +47,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                     items.Varia && items.Super && (
                         items.CanUsePowerBombs() && items.SpeedBooster ||
                         items.SpeedBooster && items.Wave ||
-                        items.Morph && (items.CanFly() || items.HiJump) && items.Wave
+                        items.Morph && (items.CanFly() || items.HiJump) && items.Gravity && items.Wave
                     ),
                 _ => (
                         (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||

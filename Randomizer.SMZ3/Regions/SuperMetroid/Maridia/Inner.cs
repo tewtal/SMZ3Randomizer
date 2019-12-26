@@ -34,20 +34,20 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
                         (items.HiJump || items.CanSpringBallJump() || items.CanFly() || items.SpeedBooster))
                 }),
                 new Location(this, 144, 0xC7C5DD, LocationType.Visible, "Missile (left Maridia sand pit room)", Logic switch {
-                    Normal => items => items.CanPassBombPassages(),
-                    _ => new Requirement(items => items.HiJump && (items.SpaceJump || items.CanSpringBallJump()) || items.Gravity)
+                    Normal => items => items.Super && items.CanPassBombPassages(),
+                    _ => new Requirement(items => items.Super && (items.HiJump && (items.SpaceJump || items.CanSpringBallJump()) || items.Gravity))
                 }),
                 new Location(this, 145, 0xC7C5E3, LocationType.Chozo, "Reserve Tank, Maridia", Logic switch {
-                    Normal => items => items.CanPassBombPassages(),
-                    _ => new Requirement(items => items.HiJump && (items.SpaceJump || items.CanSpringBallJump()) || items.Gravity)
+                    Normal => items => items.Super && items.CanPassBombPassages(),
+                    _ => new Requirement(items => items.Super && (items.HiJump && (items.SpaceJump || items.CanSpringBallJump()) || items.Gravity))
                 }),
                 new Location(this, 146, 0xC7C5EB, LocationType.Visible, "Missile (right Maridia sand pit room)", Logic switch {
-                    Normal => new Requirement(items => true),
-                    _ => items => items.HiJump || items.Gravity
+                    Normal => new Requirement(items => items.Super),
+                    _ => items => items.Super && (items.HiJump || items.Gravity)
                 }),
                 new Location(this, 147, 0xC7C5F1, LocationType.Visible, "Power Bomb (right Maridia sand pit room)", Logic switch {
-                    Normal => new Requirement(items => true),
-                    _ => items => items.HiJump && items.CanSpringBallJump() || items.Gravity
+                    Normal => new Requirement(items => items.Super),
+                    _ => items => items.Super && (items.HiJump && items.CanSpringBallJump() || items.Gravity)
                 }),
                 new Location(this, 148, 0xC7C603, LocationType.Visible, "Missile (pink Maridia)", Logic switch {
                     Normal => items => items.SpeedBooster,
@@ -58,10 +58,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
                     _ => new Requirement(items => items.Gravity)
                 }),
                 new Location(this, 150, 0xC7C6E5, LocationType.Chozo, "Spring Ball", Logic switch {
-                    Normal => items => items.Grapple && items.CanUsePowerBombs() && (items.SpaceJump || items.HiJump),
-                    _ => new Requirement(items => items.Grapple && items.CanUsePowerBombs() && (
-                        items.Gravity && (items.CanFly() || items.HiJump) ||
-                        items.Ice && items.HiJump && items.CanSpringBallJump() && items.SpaceJump))
+                    Normal => items => items.Super && items.Grapple && items.CanUsePowerBombs() && (items.SpaceJump || items.HiJump),
+                    _ => new Requirement(items => items.Super && items.Grapple && items.CanUsePowerBombs() 
+                                        && (items.Gravity && (items.CanFly() || items.HiJump) 
+                                            || items.Ice && items.HiJump && items.CanSpringBallJump() && items.SpaceJump))
                 }),
                 new Location(this, 151, 0xC7C74D, LocationType.Hidden, "Missile (Draygon)", Logic switch {
                     Normal => items => CanDefeatBotwoon(items),
@@ -96,15 +96,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
 
         public override bool CanEnter(Progression items) {
             return Logic switch {
-                Normal => (
-                        World.CanEnter("Norfair Upper West", items) && items.CanUsePowerBombs() &&
-                        (items.CanFly() || items.SpeedBooster || items.Grapple)
-                        || items.CanAccessMaridiaPortal(World)
-                    ) && items.Gravity,
-                _ =>
-                    World.CanEnter("Norfair Upper West", items) && items.CanUsePowerBombs() &&
-                    (items.Gravity || items.HiJump && (items.Ice || items.CanSpringBallJump()) && items.Grapple)
-                    || items.CanAccessMaridiaPortal(World)
+                Normal => items.Gravity && (World.CanEnter("Norfair Upper West", items) && items.Super && items.CanUsePowerBombs() && (items.CanFly() || items.SpeedBooster || items.Grapple)
+                                        || items.CanAccessMaridiaPortal(World)),
+                     _ => items.Super && World.CanEnter("Norfair Upper West", items) && items.CanUsePowerBombs() && (items.Gravity || items.HiJump && (items.Ice || items.CanSpringBallJump()) && items.Grapple)
+                       || items.CanAccessMaridiaPortal(World)
             };
         }
 

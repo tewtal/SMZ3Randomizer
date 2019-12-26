@@ -32,7 +32,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
                     ) && items.Gravity,
                 _ =>
                     World.CanEnter("Norfair Upper West", items) && items.CanUsePowerBombs() &&
-                    (items.Gravity || items.HiJump && (items.CanSpringBallJump() || items.Ice))
+                        (items.Gravity || items.HiJump && (items.CanSpringBallJump() || items.Ice))
                     || items.CanAccessMaridiaPortal(World)
             };
         }
