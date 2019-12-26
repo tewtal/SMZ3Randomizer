@@ -1,5 +1,6 @@
 import { HubConnectionBuilder } from '@microsoft/signalr';
 import { create_message, connect, send, clearBusy, readData, writeData } from '../snes/usb2snes';
+import cloneDeep from 'lodash/cloneDeep';
 
 export default class Network {
 
@@ -11,8 +12,8 @@ export default class Network {
         this.itemInPtr = -1;
         this.itemOutPtr = -1;
         this.eventLoopTimer = 0;
-        this.MessageBaseAddress = 0xE03700;
-        this.ItemsBaseAddress = 0xE04000;
+        this.MessageBaseAddress = null;
+        this.ItemsBaseAddress = null;
 
         this.session = {
             guid: sessionGuid,
@@ -40,26 +41,14 @@ export default class Network {
         this.init();
     }
 
-    /* get a snapshot of the state that is immutable vs the internal state */
-    snapshot() {
-        return {
-            session: {
-                ...this.session,
-                data: this.session.data && { ...this.session.data }
-            },
-            clientData: this.clientData && { ...this.clientData },
-            device: {
-                ...this.device,
-                list: this.device.list && [...this.device.list]
-            },
-            hub: { ...this.hub },
-            game: {
-                ...this.game,
-                inEvents: [...this.game.inEvents],
-                outEvents: [...this.game.outEvents],
-                writeQueue: [...this.game.writeQueue]
-            }
-        };
+    updateState() {
+        this.react.setState({
+            session: cloneDeep(this.session),
+            clientData: cloneDeep(this.clientData),
+            device: cloneDeep(this.device),
+            hub: cloneDeep(this.hub),
+            game: cloneDeep(this.game)
+        });
     }
 
     init() {
@@ -69,23 +58,23 @@ export default class Network {
 
         this.connection.onclose(() => {
             this.hub.state = 0;
-            this.react.state(this.snapshot());
+            this.updateState();
             this.startHub();
         });
 
         this.connection.on('UpdateClients', clients => {
             if (this.session.data !== null) {
                 this.session.data.clients = clients;
-                this.react.state(this.snapshot());
+                this.updateState();
             }
         });
     }
 
     start() {
         this.startSession();
-        this.react.gameStatus('Detecting game...');
+        this.react.setGameStatus('Detecting game...');
         this.eventLoopTimer = setTimeout(this.eventLoop, 200);
-        this.react.state(this.snapshot());
+        this.updateState();
     }
 
     stop() {
@@ -94,43 +83,43 @@ export default class Network {
 
     async startSession() {
         this.session.state = 0;
-        this.react.state(this.snapshot());
-        this.react.sessionStatus('Initializing session...');
+        this.updateState();
+        this.react.setSessionStatus('Initializing session...');
 
         try {
             const response = await fetch(`/api/multiworld/session/${this.session.guid}`);
             if (response.status !== 200) {
                 this.session.state = 0;
-                this.react.state(this.snapshot());
-                this.react.sessionStatus('Session not found');
+                this.updateState();
+                this.react.setSessionStatus('Session not found');
                 return;
             }
 
             const sessionData = await response.json();
             this.session.data = sessionData;
             this.session.state = 1;
-            this.react.state(this.snapshot());
-            this.react.sessionStatus('Session found, connecting to server');
+            this.updateState();
+            this.react.setSessionStatus('Session found, connecting to server');
 
             await this.startHub();
         } catch (error) {
             this.session.state = 0;
-            this.react.state(this.snapshot());
-            this.react.sessionStatus(`Error trying to establish session: ${error}`);
+            this.updateState();
+            this.react.setSessionStatus(`Error trying to establish session: ${error}`);
         }
     }
 
     startHub = async () => {
         try {
             this.hub.state = 0;
-            this.react.state(this.snapshot());
+            this.updateState();
             await this.connection.start();
 
             const registered = await this.connection.invoke('RegisterConnection', this.session.guid);
             if (registered) {
                 this.hub.state = 1;
-                this.react.state(this.snapshot());
-                this.react.sessionStatus('Session found, connected to server');
+                this.updateState();
+                this.react.setSessionStatus('Session found, connected to server');
 
                 /* Check if we have locally stored client data, so we can register back to the session */
                 if (this.clientData === null) {
@@ -141,15 +130,15 @@ export default class Network {
                         const client = await this.connection.invoke('RegisterPlayer', this.session.guid, clientGuid);
                         if (client !== null) {
                             this.clientData = client;
-                            this.react.state(this.snapshot());
-                            this.react.sessionStatus(`Session found, registered as player: ${client.name}`);
+                            this.updateState();
+                            this.react.setSessionStatus(`Session found, registered as player: ${client.name}`);
                         }
                     }
                 }
             } else {
                 this.hub.state = 0;
-                this.react.state(this.snapshot());
-                this.react.sessionStatus('Session found, but could not connect to session');
+                this.updateState();
+                this.react.setSessionStatus('Session found, but could not connect to session');
             }
         } catch (error) {
             console.log('Could not start connection to signalR hub:', error);
@@ -172,7 +161,7 @@ export default class Network {
             }
 
             this.clientData = null;
-            this.react.state(this.snapshot());
+            this.updateState();
         }
 
         try {
@@ -184,8 +173,8 @@ export default class Network {
             }
 
             this.clientData = client;
-            this.react.state(this.snapshot());
-            this.react.sessionStatus(`Session found, registered as player: ${client.name}`);
+            this.updateState();
+            this.react.setSessionStatus(`Session found, registered as player: ${client.name}`);
         } catch (error) {
             console.log('Could not register client:', error);
         }
@@ -200,14 +189,14 @@ export default class Network {
             console.log('Trying to reconnect');
         }
         this.device.state = 0;
-        this.react.state(this.snapshot());
+        this.updateState();
     };
 
     onConnect = async () => {
         try {
             if (this.device.state === 1) {
                 this.device.state = 0;
-                this.react.state(this.snapshot());
+                this.updateState();
                 this.socket.close();
                 return;
             }
@@ -222,7 +211,7 @@ export default class Network {
             if (!firstDevice) {
                 /* Set to 1 to signal a reconnect to socket_onclose */
                 this.device.state = 1;
-                this.react.state(this.snapshot());
+                this.updateState();
                 this.socket.close();
                 return;
             }
@@ -231,19 +220,19 @@ export default class Network {
                 await this.attachDevice(firstDevice);
             } else if (!this.device.selecting) {
                 this.device = { ...this.device, selecting: true, list: deviceList, selected: firstDevice };
-                this.react.state(this.snapshot());
+                this.updateState();
             } else if (this.device.selected !== null) {
                 const attached = await this.attachDevice(this.device.selected);
                 if (attached) {
                     this.device = { ...this.device, selecting: false, list: null, selected: null };
-                    this.react.state(this.snapshot());
+                    this.updateState();
                 }
             }
         }
         catch (error) {
             console.log('Can not connect to the websocket, retrying:', error);
             this.device.state = 0;
-            this.react.state(this.snapshot());
+            this.updateState();
             setTimeout(this.onConnect, 5000);
         }
     };
@@ -258,11 +247,11 @@ export default class Network {
 
                 this.clientData = { ...this.clientData, device, state: 5 };
                 this.device = { ...this.device, state: 1, version: deviceInfo.Results[0] };
-                this.react.state(this.snapshot());
+                this.updateState();
                 const client = await this.connection.invoke('UpdateClient', this.clientData);
                 if (client) {
                     this.clientData.client = client;
-                    this.react.state(this.snapshot());
+                    this.updateState();
                 }
 
                 return true;
@@ -271,7 +260,7 @@ export default class Network {
             console.log('Could not attach to device:', error);
             /* Set to 1 to signal a reconnect to socket_onclose */
             this.device.state = 1;
-            this.react.state(this.snapshot());
+            this.updateState();
             this.socket.close();
         }
         return false;
@@ -279,7 +268,7 @@ export default class Network {
 
     onDeviceSelect(device) {
         this.device.selected = device;
-        this.react.state(this.snapshot());
+        this.updateState();
     }
 
     eventLoop = async () => {
@@ -297,11 +286,17 @@ export default class Network {
 
     /* Try to detect the game by looking at the specific hashes */
     async detectGame() {
-        const mappings = [
-            [0x00FF50, 0xE03700, 0xE04000], /* SNES */
-            [0x407F50, 0xE03700, 0xE04000], /* SNES9x */
-            [0xC0FF50, 0x703700, 0x704000]  /* Retroarch */
-        ];
+        const mappings = this.data.seed.gameId === "smz3" ?
+            [            
+            //  [SeedData, MsgBase , ItemBase]
+                [0x00FF50, 0xE03700, 0xE04000], /* SNES */
+                [0x407F50, 0xE03700, 0xE04000], /* SNES9x */
+                [0xC0FF50, 0x703700, 0x704000]  /* Retroarch */
+            ] :                                
+            [                                   /* Super Metroid */
+                [0x1C4F00, 0xE01E00, 0xE02000], /* SNES / Snes9x */
+                [0xB8CF00, 0x701E00, 0x702000]  /* Retroarch */
+            ];
 
         /* Check platform mappings */
         for (const mapping in mappings) {
@@ -312,8 +307,8 @@ export default class Network {
             if (seedGuid === this.session.data.seed.guid && clientGuid === this.clientData.guid) {
                 [, this.MessageBaseAddress, this.ItemsBaseAddress] = mapping;
                 this.game.state = 1;
-                this.react.state(this.snapshot());
-                this.react.gameStatus('Game detected, have fun!');
+                this.updateState();
+                this.react.setGameStatus('Game detected, have fun!');
                 return;
             }
         }
@@ -429,7 +424,7 @@ export default class Network {
             }
 
             this.game.outEvents = snesHistory;
-            this.react.state(this.snapshot());
+            this.updateState();
 
             while (this.inPtr !== snesOutPtr) {
                 const msgAddress = this.inPtr * 0x10;

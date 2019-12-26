@@ -16,7 +16,7 @@ import set from 'lodash/set';
 
 import inventory from '../resources/sprite/inventory';
 import baseIpsSMZ3 from '../resources/zsm.ips.gz';
-import baseIpsSM from '../resources/base_190331_3.ips';
+import baseIpsSM from '../resources/sm.ips.gz';
 
 const baseIps = {
     "sm": baseIpsSM,

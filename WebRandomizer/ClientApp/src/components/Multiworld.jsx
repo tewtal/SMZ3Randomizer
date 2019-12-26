@@ -17,9 +17,9 @@ export default function Multiworld(props) {
     useEffect(() => {
         const sessionGuid = decode(props.match.params.session_id).replace(/-/g, "");
         network.current = new Network(sessionGuid, {
-            state: setState,
-            sessionStatus: setSessionStatus,
-            gameStatus: setGameStatus
+            setState: setState,
+            setSessionStatus: setSessionStatus,
+            setGameStatus: setGameStatus
         });
 
         if (sessionGuid) {
