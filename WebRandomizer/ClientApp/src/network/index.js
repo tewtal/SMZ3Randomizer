@@ -72,8 +72,6 @@ export default class Network {
 
     start() {
         this.startSession();
-        this.react.setGameStatus('Detecting game...');
-        this.eventLoopTimer = setTimeout(this.eventLoop, 200);
         this.updateState();
     }
 
@@ -147,6 +145,14 @@ export default class Network {
     };
 
     async onRegisterPlayer(clientGuid) {
+        /* If we're connected to USB2SNES, disconnect first */
+        if (this.device.state === 1) {
+            this.game = { state: 0, inEvents: [], outEvents: [], writeQueue: [] };
+            this.device = { state: 0, version: '', list: null, selecting: false, selected: null };
+            this.socket.close();
+            this.updateState();
+        }
+
         /* If we're already registered, unregister from the old world first */
         if (this.clientData !== null) {
             try {
@@ -188,7 +194,9 @@ export default class Network {
             setTimeout(this.onConnect, 1000);
             console.log('Trying to reconnect');
         }
+        clearTimeout(this.eventLoopTimer);
         this.device.state = 0;
+        this.game.state = 0;
         this.updateState();
     };
 
@@ -211,7 +219,6 @@ export default class Network {
             if (!firstDevice) {
                 /* Set to 1 to signal a reconnect to socket_onclose */
                 this.device.state = 1;
-                this.updateState();
                 this.socket.close();
                 return;
             }
@@ -232,6 +239,7 @@ export default class Network {
         catch (error) {
             console.log('Can not connect to the websocket, retrying:', error);
             this.device.state = 0;
+            this.game.state = 0;
             this.updateState();
             setTimeout(this.onConnect, 5000);
         }
@@ -254,13 +262,14 @@ export default class Network {
                     this.updateState();
                 }
 
+                this.react.setGameStatus('Detecting game...');
+                this.eventLoopTimer = setTimeout(this.eventLoop, 200);
                 return true;
             }
         } catch (error) {
             console.log('Could not attach to device:', error);
             /* Set to 1 to signal a reconnect to socket_onclose */
             this.device.state = 1;
-            this.updateState();
             this.socket.close();
         }
         return false;
@@ -279,14 +288,14 @@ export default class Network {
             } else {
                 await this.detectGame();
             }
-        }
 
-        this.eventLoopTimer = setTimeout(this.eventLoop, 1000);
+            this.eventLoopTimer = setTimeout(this.eventLoop, 1000);
+        }
     };
 
     /* Try to detect the game by looking at the specific hashes */
     async detectGame() {
-        const mappings = this.data.seed.gameId === "smz3" ?
+        const mappings = this.session.data.seed.gameId === "smz3" ?
             [            
             //  [SeedData, MsgBase , ItemBase]
                 [0x00FF50, 0xE03700, 0xE04000], /* SNES */
@@ -299,13 +308,13 @@ export default class Network {
             ];
 
         /* Check platform mappings */
-        for (const mapping in mappings) {
-            const [addr] = mapping;
+        for (let i = 0; i < mappings.length; i++) {
+            const addr = mappings[i][0];
             const seedData = await readData(addr, 0x50);
             const seedGuid = String.fromCharCode.apply(null, seedData.slice(0x10, 0x30));
             const clientGuid = String.fromCharCode.apply(null, seedData.slice(0x30, 0x50));
             if (seedGuid === this.session.data.seed.guid && clientGuid === this.clientData.guid) {
-                [, this.MessageBaseAddress, this.ItemsBaseAddress] = mapping;
+                [, this.MessageBaseAddress, this.ItemsBaseAddress] = mappings[i];
                 this.game.state = 1;
                 this.updateState();
                 this.react.setGameStatus('Game detected, have fun!');
@@ -477,5 +486,5 @@ function ushort_le_value(array, offset) {
 }
 
 function ushort_le_bytes(x) {
-    return [x && 0xFF, (x >> 8) && 0xFF];
+    return [x & 0xFF, (x >> 8) & 0xFF];
 }
