@@ -165,7 +165,7 @@ export async function writeData(address, data) {
                 try {
                     ok = await send(new Blob([data]), true, 10);
                     if (ok) {
-                        resolve(true)
+                        resolve(true);
                     }
                     else {
                         reject("Error sending binary data");

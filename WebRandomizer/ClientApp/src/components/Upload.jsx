@@ -23,7 +23,7 @@ export default function Upload(props) {
 
     async function onSubmitRom() {
         const smFile = fileInputSM.current.files[0];
-        const z3File = fileInputZ3.current.files[0];
+        const z3File = fileInputZ3.current !== null ? fileInputZ3.current.files[0] : null;
 
         let fileDataSM = null;
         let fileDataZ3 = null;
@@ -66,8 +66,8 @@ export default function Upload(props) {
 
     const onFileSelect = () => {
         setCanUpload(
-            hasIn(fileInputSM.current, 'files[0]') &&
-            hasIn(fileInputZ3.current, 'files[0]')
+            (props.gameId === "smz3" && hasIn(fileInputSM.current, 'files[0]') && hasIn(fileInputZ3.current, 'files[0]') ||
+            (props.gameId === "sm" && hasIn(fileInputSM.current, 'files[0]')))
         );
     };
 
