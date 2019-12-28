@@ -10,13 +10,13 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld {
 
         public NorthEast(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
-                new Location(this, 256+78, 0xEE185, LocationType.Regular, "Catfish",
+                new Location(this, 256+78, 0x1DE185, LocationType.Regular, "Catfish",
                     items => items.MoonPearl && items.CanLiftLight()),
-                new Location(this, 256+79, 0x180147, LocationType.Regular, "Pyramid"),
-                new Location(this, 256+80, 0xE980, LocationType.Regular, "Pyramid Fairy - Left",
+                new Location(this, 256+79, 0x308147, LocationType.Regular, "Pyramid"),
+                new Location(this, 256+80, 0x1E980, LocationType.Regular, "Pyramid Fairy - Left",
                     items => World.CanAquireAll(items, CrystalRed) && items.MoonPearl && World.CanEnter("Dark World South", items) &&
                         (items.Hammer || items.Mirror && World.CanAquire(items, Agahnim))),
-                new Location(this, 256+81, 0xE983, LocationType.Regular, "Pyramid Fairy - Right",
+                new Location(this, 256+81, 0x1E983, LocationType.Regular, "Pyramid Fairy - Right",
                     items => World.CanAquireAll(items, CrystalRed) && items.MoonPearl && World.CanEnter("Dark World South", items) &&
                         (items.Hammer || items.Mirror && World.CanAquire(items, Agahnim)))
             };

@@ -15,28 +15,28 @@ namespace Randomizer.SMZ3.Regions.Zelda {
             RegionItems = new[] { KeyTR, BigKeyTR, MapTR, CompassTR };
 
             Locations = new List<Location> {
-                new Location(this, 256+177, 0xEA22, LocationType.Regular, "Turtle Rock - Compass Chest"),
-                new Location(this, 256+178, 0xEA1C, LocationType.Regular, "Turtle Rock - Roller Room - Left",
+                new Location(this, 256+177, 0x1EA22, LocationType.Regular, "Turtle Rock - Compass Chest"),
+                new Location(this, 256+178, 0x1EA1C, LocationType.Regular, "Turtle Rock - Roller Room - Left",
                     items => items.Firerod),
-                new Location(this, 256+179, 0xEA1F, LocationType.Regular, "Turtle Rock - Roller Room - Right",
+                new Location(this, 256+179, 0x1EA1F, LocationType.Regular, "Turtle Rock - Roller Room - Right",
                     items => items.Firerod),
-                new Location(this, 256+180, 0xEA16, LocationType.Regular, "Turtle Rock - Chain Chomps",
+                new Location(this, 256+180, 0x1EA16, LocationType.Regular, "Turtle Rock - Chain Chomps",
                     items => items.KeyTR >= 1),
-                new Location(this, 256+181, 0xEA25, LocationType.Regular, "Turtle Rock - Big Key Chest",
+                new Location(this, 256+181, 0x1EA25, LocationType.Regular, "Turtle Rock - Big Key Chest",
                     items => items.KeyTR >=
                         (!Config.Keysanity || Locations.Get("Turtle Rock - Big Key Chest").ItemType == BigKeyTR ? 2 :
                             Locations.Get("Turtle Rock - Big Key Chest").ItemType == KeyTR ? 3 : 4))
                     .AlwaysAllow((item, items) => item.Type == KeyTR && items.KeyTR >= 3),
-                new Location(this, 256+182, 0xEA19, LocationType.Regular, "Turtle Rock - Big Chest",
+                new Location(this, 256+182, 0x1EA19, LocationType.Regular, "Turtle Rock - Big Chest",
                     items => items.BigKeyTR && items.KeyTR >= 2)
                     .Allow((item, items) => item.Type != BigKeyTR),
-                new Location(this, 256+183, 0xEA34, LocationType.Regular, "Turtle Rock - Crystaroller Room",
+                new Location(this, 256+183, 0x1EA34, LocationType.Regular, "Turtle Rock - Crystaroller Room",
                     items => items.BigKeyTR && items.KeyTR >= 2),
-                new Location(this, 256+184, 0xEA28, LocationType.Regular, "Turtle Rock - Eye Bridge - Top Right", LaserBridge),
-                new Location(this, 256+185, 0xEA2B, LocationType.Regular, "Turtle Rock - Eye Bridge - Top Left", LaserBridge),
-                new Location(this, 256+186, 0xEA2E, LocationType.Regular, "Turtle Rock - Eye Bridge - Bottom Right", LaserBridge),
-                new Location(this, 256+187, 0xEA31, LocationType.Regular, "Turtle Rock - Eye Bridge - Bottom Left", LaserBridge),
-                new Location(this, 256+188, 0x180159, LocationType.Regular, "Turtle Rock - Trinexx",
+                new Location(this, 256+184, 0x1EA28, LocationType.Regular, "Turtle Rock - Eye Bridge - Top Right", LaserBridge),
+                new Location(this, 256+185, 0x1EA2B, LocationType.Regular, "Turtle Rock - Eye Bridge - Top Left", LaserBridge),
+                new Location(this, 256+186, 0x1EA2E, LocationType.Regular, "Turtle Rock - Eye Bridge - Bottom Right", LaserBridge),
+                new Location(this, 256+187, 0x1EA31, LocationType.Regular, "Turtle Rock - Eye Bridge - Bottom Left", LaserBridge),
+                new Location(this, 256+188, 0x308159, LocationType.Regular, "Turtle Rock - Trinexx",
                     items => items.BigKeyTR && items.KeyTR >= 4 && items.Lamp && CanBeatBoss(items)),
             };
         }

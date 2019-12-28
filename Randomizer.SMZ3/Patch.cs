@@ -97,8 +97,8 @@ namespace Randomizer.SMZ3 {
             var turtleRock = myWorld.Regions.OfType<TurtleRock>().First();
             var miseryMire = myWorld.Regions.OfType<MiseryMire>().First();
 
-            var turtleRockAddresses = new int[] { 0x180023, 0x5020, 0x50FF, 0x51DE };
-            var miseryMireAddresses = new int[] { 0x180022, 0x4FF2, 0x50D1, 0x51B0 };
+            var turtleRockAddresses = new int[] { 0x308023, 0xD020, 0xD0FF, 0xD1DE };
+            var miseryMireAddresses = new int[] { 0x308022, 0xCFF2, 0xD0D1, 0xD1B0 };
 
             var turtleRockValues = turtleRock.Medallion switch {
                 Bombos => new byte[] { 0x00, 0x51, 0x10, 0x00 },
@@ -114,8 +114,8 @@ namespace Randomizer.SMZ3 {
                 var x => throw new InvalidOperationException($"Tried using {x} in place of Misery Mire medallion")
             };
 
-            patches.AddRange(turtleRockAddresses.Zip(turtleRockValues, (i, b) => (Z3Snes(i), new byte[] { b })));
-            patches.AddRange(miseryMireAddresses.Zip(miseryMireValues, (i, b) => (Z3Snes(i), new byte[] { b })));
+            patches.AddRange(turtleRockAddresses.Zip(turtleRockValues, (i, b) => (Snes(i), new byte[] { b })));
+            patches.AddRange(miseryMireAddresses.Zip(miseryMireValues, (i, b) => (Snes(i), new byte[] { b })));
         }
 
         void WriteRewards() {
@@ -139,21 +139,21 @@ namespace Randomizer.SMZ3 {
             var addresses = regions.Select(RewardAddresses);
             var values = rewards.Select(rewardValues);
             var associations = addresses.Zip(values, (a, v) => (a, v));
-            return associations.SelectMany(x => x.a.Zip(x.v, (i, b) => (Z3Snes(i), new byte[] { b })));
+            return associations.SelectMany(x => x.a.Zip(x.v, (i, b) => (Snes(i), new byte[] { b })));
         }
 
         int[] RewardAddresses(IReward region) {
             return region switch {
-                EasternPalace _ => new[] { 0x1209D, 0x53EF8, 0x53EF9, 0x180052, 0x18007C, 0xC6FE },
-                DesertPalace _ => new[] { 0x1209E, 0x53F1C, 0x53F1D, 0x180053, 0x180078, 0xC6FF },
-                TowerOfHera _ => new[] { 0x120A5, 0x53F0A, 0x53F0B, 0x18005A, 0x18007A, 0xC706 },
-                PalaceOfDarkness _ => new[] { 0x120A1, 0x53F00, 0x53F01, 0x180056, 0x18007D, 0xC702 },
-                SwampPalace _ => new[] { 0x120A0, 0x53F6C, 0x53F6D, 0x180055, 0x180071, 0xC701 },
-                SkullWoods _ => new[] { 0x120A3, 0x53F12, 0x53F13, 0x180058, 0x18007B, 0xC704 },
-                ThievesTown _ => new[] { 0x120A6, 0x53F36, 0x53F37, 0x18005B, 0x180077, 0xC707 },
-                IcePalace _ => new[] { 0x120A4, 0x53F5A, 0x53F5B, 0x180059, 0x180073, 0xC705 },
-                MiseryMire _ => new[] { 0x120A2, 0x53F48, 0x53F49, 0x180057, 0x180075, 0xC703 },
-                TurtleRock _ => new[] { 0x120A7, 0x53F24, 0x53F25, 0x18005C, 0x180079, 0xC708 },
+                EasternPalace _ => new[] { 0x2A09D, 0xABEF8, 0xABEF9, 0x308052, 0x30807C, 0x1C6FE },
+                DesertPalace _ => new[] { 0x2A09E, 0xABF1C, 0xABF1D, 0x308053, 0x308078, 0x1C6FF },
+                TowerOfHera _ => new[] { 0x2A0A5, 0xABF0A, 0xABF0B, 0x30805A, 0x30807A, 0x1C706 },
+                PalaceOfDarkness _ => new[] { 0x2A0A1, 0xABF00, 0xABF01, 0x308056, 0x30807D, 0x1C702 },
+                SwampPalace _ => new[] { 0x2A0A0, 0xABF6C, 0xABF6D, 0x308055, 0x308071, 0x1C701 },
+                SkullWoods _ => new[] { 0x2A0A3, 0xABF12, 0xABF13, 0x308058, 0x30807B, 0x1C704 },
+                ThievesTown _ => new[] { 0x2A0A6, 0xABF36, 0xABF37, 0x30805B, 0x308077, 0x1C707 },
+                IcePalace _ => new[] { 0x2A0A4, 0xABF5A, 0xABF5B, 0x308059, 0x308073, 0x1C705 },
+                MiseryMire _ => new[] { 0x2A0A2, 0xABF48, 0xABF49, 0x308057, 0x308075, 0x1C703 },
+                TurtleRock _ => new[] { 0x2A0A7, 0xABF24, 0xABF25, 0x30805C, 0x308079, 0x1C708 },
                 var x => throw new InvalidOperationException($"Region {x} should not be a dungeon reward region")
             };
         }
@@ -183,13 +183,13 @@ namespace Randomizer.SMZ3 {
         void WriteSMLocations(IEnumerable<Location> locations) {
             foreach (var location in locations) {
                 if (myWorld.Config.GameMode == GameMode.Multiworld) {
-                    patches.Add((SMSnes(location.Address), UshortBytes(GetSMItemPLM(location))));
+                    patches.Add((Snes(location.Address), UshortBytes(GetSMItemPLM(location))));
                     patches.Add(ItemTablePatch(location, GetZ3ItemId(location)));
                 } else {
                     ushort plmId = GetSMItemPLM(location);
-                    patches.Add((SMSnes(location.Address), UshortBytes(plmId)));
+                    patches.Add((Snes(location.Address), UshortBytes(plmId)));
                     if (plmId >= 0xefe0) {
-                        patches.Add((SMSnes(location.Address + 5), new byte[] { GetZ3ItemId(location) }));
+                        patches.Add((Snes(location.Address + 5), new byte[] { GetZ3ItemId(location) }));
                     }
                 }
             }
@@ -242,29 +242,29 @@ namespace Randomizer.SMZ3 {
         void WriteZ3Locations(IEnumerable<Location> locations) {
             foreach (var location in locations) {
                 if (location.Type == LocationType.HeraStandingKey) {
-                    patches.Add((Z3Snes(0x4E3BB), location.Item.Type == KeyTH ? new byte[] { 0xE4 } : new byte[] { 0xEB }));
+                    patches.Add((Snes(0x9E3BB), location.Item.Type == KeyTH ? new byte[] { 0xE4 } : new byte[] { 0xEB }));
                 } else if (new[] { LocationType.Pedestal, LocationType.Ether, LocationType.Bombos }.Contains(location.Type)) {
                     var text = Texts.ItemTextbox(location.Item);
                     var dialog = Dialog.Simple(text);
                     if (location.Type == LocationType.Pedestal) {
                         stringTable.SetPedestalText(text);
-                        patches.Add((Z3Snes(0x180300), dialog));
+                        patches.Add((Snes(0x308300), dialog));
                     }
                     else if (location.Type == LocationType.Ether) {
                         stringTable.SetEtherText(text);
-                        patches.Add((Z3Snes(0x180F00), dialog));
+                        patches.Add((Snes(0x308F00), dialog));
                     }
                     else if (location.Type == LocationType.Bombos) {
                         stringTable.SetBombosText(text);
-                        patches.Add((Z3Snes(0x181000), dialog));
+                        patches.Add((Snes(0x309000), dialog));
                     }
                 }
 
                 if (myWorld.Config.GameMode == GameMode.Multiworld) {
-                    patches.Add((Z3Snes(location.Address), new byte[] { (byte)(location.Id - 256) }));
+                    patches.Add((Snes(location.Address), new byte[] { (byte)(location.Id - 256) }));
                     patches.Add(ItemTablePatch(location, GetZ3ItemId(location)));
                 } else {
-                    patches.Add((Z3Snes(location.Address), new byte[] { GetZ3ItemId(location) }));
+                    patches.Add((Snes(location.Address), new byte[] { GetZ3ItemId(location) }));
                 }
             }
         }
@@ -313,22 +313,22 @@ namespace Randomizer.SMZ3 {
         IEnumerable<(int, byte[])> MusicPatches(IEnumerable<IReward> regions, IEnumerable<byte> music) {
             var addresses = regions.Select(MusicAddresses);
             var associations = addresses.Zip(music, (a, b) => (a, b));
-            return associations.SelectMany(x => x.a.Select(i => (Z3Snes(i), new byte[] { x.b })));
+            return associations.SelectMany(x => x.a.Select(i => (Snes(i), new byte[] { x.b })));
         }
 
         int[] MusicAddresses(IReward region) {
             return region switch {
-                EasternPalace _ => new[] { 0x1559A },
-                DesertPalace _ => new[] { 0x1559B, 0x1559C, 0x1559D, 0x1559E },
-                TowerOfHera _ => new[] { 0x155C5, 0x1107A, 0x10B8C },
-                PalaceOfDarkness _ => new[] { 0x155B8 },
-                SwampPalace _ => new[] { 0x155B7 },
-                SkullWoods _ => new[] { 0x155BA, 0x155BB, 0x155BC, 0x155BD, 0x15608, 0x15609, 0x1560A, 0x1560B },
-                ThievesTown _ => new[] { 0x155C6 },
-                IcePalace _ => new[] { 0x155BF },
-                MiseryMire _ => new[] { 0x155B9 },
-                TurtleRock _ => new[] { 0x155C7, 0x155A7, 0x155AA, 0x155AB },
-                var x => throw new InvalidOperationException($"Region {x} should not be a dungeon music region")
+                EasternPalace _ => new[] { 0x2D59A },
+                DesertPalace _ => new[] { 0x2D59B, 0x2D59C, 0x2D59D, 0x2D59E },
+                TowerOfHera _ => new[] { 0x2D5C5, 0x2907A, 0x28B8C },
+                PalaceOfDarkness _ => new[] { 0x2D5B8 },
+                SwampPalace _ => new[] { 0x2D5B7 },
+                SkullWoods _ => new[] { 0x2D5BA, 0x2D5BB, 0x2D5BC, 0x2D5BD, 0x2D608, 0x2D609, 0x2D60A, 0x2D60B },
+                ThievesTown _ => new[] { 0x2D5C6 },
+                IcePalace _ => new[] { 0x2D5BF },
+                MiseryMire _ => new[] { 0x2D5B9 },
+                TurtleRock _ => new[] { 0x2D5C7, 0x2D5A7, 0x2D5AA, 0x2D5AB },
+                var x => throw new InvalidOperationException($"Region {x} should not be a dungeon music region"),
             };
         }
 
@@ -364,24 +364,24 @@ namespace Randomizer.SMZ3 {
 
             /* prize pack drop order */
             (bytes, prizes) = prizes.SplitOff(prizePackItems);
-            patches.Add((Z3Snes(0x37A78), bytes.ToArray()));
+            patches.Add((Snes(0x6FA78), bytes.ToArray()));
 
             /* tree pull prizes */
             (bytes, prizes) = prizes.SplitOff(treePullItems);
-            patches.Add((Z3Snes(0xEFBD4), bytes.ToArray()));
+            patches.Add((Snes(0x1DFBD4), bytes.ToArray()));
 
             /* crab prizes */
             (drop, final, prizes) = prizes;
-            patches.Add((Z3Snes(0x329C8), new[] { drop }));
-            patches.Add((Z3Snes(0x329C4), new[] { final }));
+            patches.Add((Snes(0x6A9C8), new[] { drop }));
+            patches.Add((Snes(0x6A9C4), new[] { final }));
 
             /* stun prize */
             (drop, prizes) = prizes;
-            patches.Add((Z3Snes(0x37993), new[] { drop }));
+            patches.Add((Snes(0x6F993), new[] { drop }));
 
             /* fish prize */
             (drop, _) = prizes;
-            patches.Add((Z3Snes(0xE82CC), new[] { drop }));
+            patches.Add((Snes(0x1D82CC), new[] { drop }));
 
             patches.AddRange(EnemyPrizePackDistribution());
 
@@ -394,7 +394,7 @@ namespace Randomizer.SMZ3 {
                 Difficulty.Hard => (byte)1,
                 _ => (byte)3,
             };
-            patches.Add((Z3Snes(0x37A62), Repeat(p, nrPacks).ToArray()));
+            patches.Add((Snes(0x6FA62), Repeat(p, nrPacks).ToArray()));
         }
 
         IEnumerable<(int, byte[])> EnemyPrizePackDistribution() {
@@ -416,7 +416,7 @@ namespace Randomizer.SMZ3 {
                 select (d.dest, p.bytes);
             patches.AddRange(duplicates.ToList());
 
-            return patches.Select(x => (Z3Snes(x.offset), x.bytes));
+            return patches.Select(x => (Snes(x.offset), x.bytes));
         }
 
         /* Guarantees at least s of each prize pack, over a total of n packs.
@@ -445,13 +445,13 @@ namespace Randomizer.SMZ3 {
 
         /* Todo: Deadrock turns into $8F Blob when powdered, but those "onion blobs" always drop prize pack 1. */
         (IList<(int offset, byte[] bytes)>, IList<(int src, int dest)>) EnemyPrizePacks() {
-            const int offset = 0x6B632;
+            const int offset = 0xDB632;
             var patches = new[] {
                 /* sprite_prep */
-                (0x3088D, new byte[] { 0x00 }), // Keese DW
-                (0x308A8, new byte[] { 0x00 }), // Rope
-                (0x30967, new byte[] { 0x00, 0x00 }), // Crow/Dacto
-                (0x31125, new byte[] { 0x00, 0x00 }), // Red/Blue Hardhat Bettle
+                (0x6888D, new byte[] { 0x00 }), // Keese DW
+                (0x688A8, new byte[] { 0x00 }), // Rope
+                (0x68967, new byte[] { 0x00, 0x00 }), // Crow/Dacto
+                (0x69125, new byte[] { 0x00, 0x00 }), // Red/Blue Hardhat Bettle
                 /* sprite properties */
                 (offset+0x01, new byte[] { 0x90 }), // Vulture
                 (offset+0x08, new byte[] { 0x00 }), // Octorok (One Way)
@@ -502,7 +502,7 @@ namespace Randomizer.SMZ3 {
         }
 
         void WriteStringTable() {
-            patches.Add((Z3Snes(0xE0000), stringTable.GetPaddedBytes()));
+            patches.Add((Snes(0x1C8000), stringTable.GetPaddedBytes()));
         }
 
         void WritePlayerNames() {
@@ -527,18 +527,18 @@ namespace Randomizer.SMZ3 {
                 (Randomizer.version.Major << 4) |
                 (Randomizer.version.Minor << 0);
 
-            patches.Add((SMSnes(0xC07F50), UshortBytes(myWorld.Id)));
-            patches.Add((SMSnes(0xC07F52), UshortBytes(configField)));
-            patches.Add((SMSnes(0xC07F54), UintBytes(seed)));
+            patches.Add((Snes(0x80FF50), UshortBytes(myWorld.Id)));
+            patches.Add((Snes(0x80FF52), UshortBytes(configField)));
+            patches.Add((Snes(0x80FF54), UintBytes(seed)));
             /* Reserve the rest of the space for future use */
-            patches.Add((SMSnes(0xC07F58), Repeat<byte>(0x00, 8).ToArray()));
-            patches.Add((SMSnes(0xC07F60), AsAscii(seedGuid)));
-            patches.Add((SMSnes(0xC07F80), AsAscii(myWorld.Guid)));
+            patches.Add((Snes(0x80FF58), Repeat<byte>(0x00, 8).ToArray()));
+            patches.Add((Snes(0x80FF60), AsAscii(seedGuid)));
+            patches.Add((Snes(0x80FF80), AsAscii(myWorld.Guid)));
         }
 
         void WriteGameModeData() {
             if (myWorld.Config.GameMode == GameMode.Multiworld) {
-                patches.Add((0x347000, UshortBytes(0x0001)));
+                patches.Add((Snes(0xF47000), UshortBytes(0x0001)));
             }
         }
 
@@ -554,35 +554,35 @@ namespace Randomizer.SMZ3 {
                 _ => "X",
             };
             var title = AsAscii($"ZSM{Randomizer.version}{z3Glitch}{smGlitch}{seed:X8}".PadRight(21)[..21]);
-            patches.Add((Z3Snes(0x007FC0), title));
-            patches.Add((SMSnes(0xC07FC0), title));
+            patches.Add((Snes(0x00FFC0), title));
+            patches.Add((Snes(0x80FFC0), title));
         }
 
         void WriteWishingWellRoomData() {
-            patches.Add((Z3Snes(0x1F714), wishingWellRoomData));
+            patches.Add((Snes(0x3F714), wishingWellRoomData));
         }
 
         void WriteWishingWellChests() {
-            patches.Add((Z3Snes(0xE9AE), new byte[] { 0x14, 0x01 }));
-            patches.Add((Z3Snes(0xE9CF), new byte[] { 0x14, 0x01 }));
+            patches.Add((Snes(0x1E9AE), new byte[] { 0x14, 0x01 }));
+            patches.Add((Snes(0x1E9CF), new byte[] { 0x14, 0x01 }));
         }
 
         void WritePyramidFairyChests() {
-            patches.Add((Z3Snes(0x1FC16), new byte[] { 0xB1, 0xC6, 0xF9, 0xC9, 0xC6, 0xF9 }));
+            patches.Add((Snes(0x3FC16), new byte[] { 0xB1, 0xC6, 0xF9, 0xC9, 0xC6, 0xF9 }));
         }
 
         void WriteDiggingGameRng() {
             byte digs = (byte)(rnd.Next(30) + 1);
-            patches.Add((Z3Snes(0x180020), new byte[] { digs }));
-            patches.Add((Z3Snes(0xEFD95), new byte[] { digs }));
+            patches.Add((Snes(0x308020), new byte[] { digs }));
+            patches.Add((Snes(0x1DFD95), new byte[] { digs }));
         }
 
         void WriteOpenModeFlags() {
             patches.AddRange(new[] {
-                (Z3Snes(0x180032), new byte[] { 0x01 }),
-                (Z3Snes(0x180038), new byte[] { 0x00 }),
-                (Z3Snes(0x180039), new byte[] { 0x00 }),
-                (Z3Snes(0x18003A), new byte[] { 0x00 }),
+                (Snes(0x308032), new byte[] { 0x01 }),
+                (Snes(0x308038), new byte[] { 0x00 }),
+                (Snes(0x308039), new byte[] { 0x00 }),
+                (Snes(0x30803A), new byte[] { 0x00 }),
             });
         }
 
@@ -591,42 +591,42 @@ namespace Randomizer.SMZ3 {
         void WriteRemoveEquipmentFromUncle(Item item) {
             if (item.Type != ProgressiveSword) {
                 patches.AddRange(new[] {
-                    (Z3Snes(0x6D263), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
-                    (Z3Snes(0x6D26B), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
-                    (Z3Snes(0x6D293), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
-                    (Z3Snes(0x6D29B), new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x00, 0x0E }),
-                    (Z3Snes(0x6D2B3), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x02, 0x0E }),
-                    (Z3Snes(0x6D2BB), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x02, 0x0E }),
-                    (Z3Snes(0x6D2E3), new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x02, 0x0E }),
-                    (Z3Snes(0x6D2EB), new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x02, 0x0E }),
-                    (Z3Snes(0x6D31B), new byte[] { 0x00, 0x00, 0xE4, 0xFF, 0x08, 0x0E }),
-                    (Z3Snes(0x6D323), new byte[] { 0x00, 0x00, 0xE4, 0xFF, 0x08, 0x0E }),
+                    (Snes(0xDD263), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (Snes(0xDD26B), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (Snes(0xDD293), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (Snes(0xDD29B), new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x00, 0x0E }),
+                    (Snes(0xDD2B3), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x02, 0x0E }),
+                    (Snes(0xDD2BB), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x02, 0x0E }),
+                    (Snes(0xDD2E3), new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x02, 0x0E }),
+                    (Snes(0xDD2EB), new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x02, 0x0E }),
+                    (Snes(0xDD31B), new byte[] { 0x00, 0x00, 0xE4, 0xFF, 0x08, 0x0E }),
+                    (Snes(0xDD323), new byte[] { 0x00, 0x00, 0xE4, 0xFF, 0x08, 0x0E }),
                 });
             }
             if (item.Type != ProgressiveShield) {
                 patches.AddRange(new[] {
-                    (Z3Snes(0x6D253), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
-                    (Z3Snes(0x6D25B), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
-                    (Z3Snes(0x6D283), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
-                    (Z3Snes(0x6D28B), new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x00, 0x0E }),
-                    (Z3Snes(0x6D2CB), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x02, 0x0E }),
-                    (Z3Snes(0x6D2FB), new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x02, 0x0E }),
-                    (Z3Snes(0x6D313), new byte[] { 0x00, 0x00, 0xE4, 0xFF, 0x08, 0x0E }),
+                    (Snes(0xDD253), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (Snes(0xDD25B), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (Snes(0xDD283), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
+                    (Snes(0xDD28B), new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x00, 0x0E }),
+                    (Snes(0xDD2CB), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x02, 0x0E }),
+                    (Snes(0xDD2FB), new byte[] { 0x00, 0x00, 0xF7, 0xFF, 0x02, 0x0E }),
+                    (Snes(0xDD313), new byte[] { 0x00, 0x00, 0xE4, 0xFF, 0x08, 0x0E }),
                 });
             }
         }
 
         void WriteLockAgahnimDoorInEscape() {
-            patches.Add((Z3Snes(0x180169), new byte[] { 0x01 }));
+            patches.Add((Snes(0x308169), new byte[] { 0x01 }));
         }
 
         void WriteWishingWellUpgradeFalse() {
-            patches.Add((Z3Snes(0x348DB), new byte[] { 0x2A }));
-            patches.Add((Z3Snes(0x348EB), new byte[] { 0x05 }));
+            patches.Add((Snes(0x6C8DB), new byte[] { 0x2A }));
+            patches.Add((Snes(0x6C8EB), new byte[] { 0x05 }));
         }
 
         void WriteRestrictFairyPonds() {
-            patches.Add((Z3Snes(0x18017E), new byte[] { 0x01 }));
+            patches.Add((Snes(0x30817E), new byte[] { 0x01 }));
         }
 
         void WriteGanonInvicible(GanonInvincible invincible) {
@@ -637,53 +637,36 @@ namespace Randomizer.SMZ3 {
                 GanonInvincible.BeforeCrystals => 0x03,
                 var x => throw new ArgumentException($"Unknown Ganon invincible value {x}", nameof(invincible))
             };
-            patches.Add((Z3Snes(0x18003E), new byte[] { (byte)value }));
+            patches.Add((Snes(0x30803E), new byte[] { (byte)value }));
         }
 
         void WriteRngBlock() {
-            patches.Add((Z3Snes(0x178000), Range(0, 1024).Select(x => (byte)rnd.Next(0x100)).ToArray()));
+            /* Repoint RNG Block */
+            patches.Add((0x420000, Range(0, 1024).Select(x => (byte)rnd.Next(0x100)).ToArray()));
         }
 
         void WriteSmithyQuickItemGive() {
-            patches.Add((Z3Snes(0x180029), new byte[] { 0x01 }));
+            patches.Add((Snes(0x308029), new byte[] { 0x01 }));
         }
 
         void WriteSaveAndQuitFromBossRoom() {
-            patches.Add((Z3Snes(0x180042), new byte[] { 0x01 }));
+            patches.Add((Snes(0x308042), new byte[] { 0x01 }));
         }
 
         void WriteWorldOnAgahnimDeath() {
-            patches.Add((Z3Snes(0x1800A3), new byte[] { 0x01 }));
+            patches.Add((Snes(0x3080A3), new byte[] { 0x01 }));
         }
 
-        int Z3Snes(int addr) {
+        int Snes(int addr) {
             addr = addr switch {
-                _ when addr < 0x170000 => LoSnesAsExHiPc(addr),
-                /* Place $180000 access into ExHiROM bank 40 */
-                _ when (addr & 0xFF0000) == 0x180000 => 0x400000 | (addr & 0xFFFF),
-                /* Repoint RNG Block */
-                _ when addr == 0x178000 => 0x420000,
-                _ => throw new InvalidOperationException($"Unmapped Z3 snes address source ${addr:X}"),
+                /* Redirect hi bank $30 access into ExHiRom lo bank $40 */
+                _ when (addr & 0xFF8000) == 0x308000 => 0x400000 | (addr & 0x7FFF),
+                /* General case, add ExHi offset for banks < $80, and collapse mirroring */
+                _ => (addr < 0x800000 ? 0x400000 : 0) | (addr & 0x3FFFFF),
             };
             if (addr > 0x600000)
                 throw new InvalidOperationException($"Unmapped pc address target ${addr:X}");
             return addr;
-        }
-
-        int SMSnes(int addr) {
-            addr = addr switch {
-                _ when addr >= 0x800000 => LoSnesAsExHiPc(addr),
-                _ => throw new InvalidOperationException($"Unmapped SM snes address source ${addr:X}"),
-            };
-            if (addr > 0x600000)
-                throw new InvalidOperationException($"Unmapped pc address target ${addr:X}");
-            return addr;
-        }
-
-        int LoSnesAsExHiPc(int addr) {
-            var ex = (addr & 0x800000) == 0 ? 0x400000 : 0;
-            var pc = ((addr << 1) & 0x3F0000) | 0x8000 | (addr & 0x7FFF);
-            return ex | pc;
         }
 
         byte[] UintBytes(int value) => BitConverter.GetBytes((uint)value);

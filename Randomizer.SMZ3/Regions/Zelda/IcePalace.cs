@@ -14,18 +14,18 @@ namespace Randomizer.SMZ3.Regions.Zelda {
             RegionItems = new[] { KeyIP, BigKeyIP, MapIP, CompassIP };
 
             Locations = new List<Location> {
-                new Location(this, 256+161, 0xE9D4, LocationType.Regular, "Ice Palace - Compass Chest"),
-                new Location(this, 256+162, 0xE9E0, LocationType.Regular, "Ice Palace - Spike Room",
+                new Location(this, 256+161, 0x1E9D4, LocationType.Regular, "Ice Palace - Compass Chest"),
+                new Location(this, 256+162, 0x1E9E0, LocationType.Regular, "Ice Palace - Spike Room",
                     items => items.Hookshot || items.BigKeyIP && items.KeyIP >= 1),
-                new Location(this, 256+163, 0xE9DD, LocationType.Regular, "Ice Palace - Map Chest",
+                new Location(this, 256+163, 0x1E9DD, LocationType.Regular, "Ice Palace - Map Chest",
                     items => items.Hammer && items.CanLiftLight() && Locations.Get("Ice Palace - Spike Room").Available(items)),
-                new Location(this, 256+164, 0xE9A4, LocationType.Regular, "Ice Palace - Big Key Chest",
+                new Location(this, 256+164, 0x1E9A4, LocationType.Regular, "Ice Palace - Big Key Chest",
                     items => items.Hammer && items.CanLiftLight() && Locations.Get("Ice Palace - Spike Room").Available(items)),
-                new Location(this, 256+165, 0xE9E3, LocationType.Regular, "Ice Palace - Iced T Room"),
-                new Location(this, 256+166, 0xE995, LocationType.Regular, "Ice Palace - Freezor Chest"),
-                new Location(this, 256+167, 0xE9AA, LocationType.Regular, "Ice Palace - Big Chest",
+                new Location(this, 256+165, 0x1E9E3, LocationType.Regular, "Ice Palace - Iced T Room"),
+                new Location(this, 256+166, 0x1E995, LocationType.Regular, "Ice Palace - Freezor Chest"),
+                new Location(this, 256+167, 0x1E9AA, LocationType.Regular, "Ice Palace - Big Chest",
                     items => items.BigKeyIP),
-                new Location(this, 256+168, 0x180157, LocationType.Regular, "Ice Palace - Kholdstare",
+                new Location(this, 256+168, 0x308157, LocationType.Regular, "Ice Palace - Kholdstare",
                     items => items.BigKeyIP && items.Hammer && items.CanLiftLight() &&
                         items.KeyIP >= (items.Somaria ? 1 : 2)),
             };

@@ -14,37 +14,37 @@ namespace Randomizer.SMZ3.Regions.Zelda {
             RegionItems = new[] { KeyPD, BigKeyPD, MapPD, CompassPD };
 
             Locations = new List<Location> {
-                new Location(this, 256+121, 0xEA5B, LocationType.Regular, "Palace of Darkness - Shooter Room"),
-                new Location(this, 256+122, 0xEA37, LocationType.Regular, "Palace of Darkness - Big Key Chest",
+                new Location(this, 256+121, 0x1EA5B, LocationType.Regular, "Palace of Darkness - Shooter Room"),
+                new Location(this, 256+122, 0x1EA37, LocationType.Regular, "Palace of Darkness - Big Key Chest",
                     items => items.KeyPD >= (Locations.Get("Palace of Darkness - Big Key Chest").ItemType == KeyPD ? 1 :
                         items.Hammer && items.Bow && items.Lamp ? 6 : 5))
                     .AlwaysAllow((item, items) => item.Type == KeyPD && items.KeyPD >= 5),
-                new Location(this, 256+123, 0xEA49, LocationType.Regular, "Palace of Darkness - Stalfos Basement",
+                new Location(this, 256+123, 0x1EA49, LocationType.Regular, "Palace of Darkness - Stalfos Basement",
                     items => items.KeyPD >= 1 || items.Bow && items.Hammer),
-                new Location(this, 256+124, 0xEA3D, LocationType.Regular, "Palace of Darkness - The Arena - Bridge",
+                new Location(this, 256+124, 0x1EA3D, LocationType.Regular, "Palace of Darkness - The Arena - Bridge",
                     items => items.KeyPD >= 1 || items.Bow && items.Hammer),
-                new Location(this, 256+125, 0xEA3A, LocationType.Regular, "Palace of Darkness - The Arena - Ledge",
+                new Location(this, 256+125, 0x1EA3A, LocationType.Regular, "Palace of Darkness - The Arena - Ledge",
                     items => items.Bow),
-                new Location(this, 256+126, 0xEA52, LocationType.Regular, "Palace of Darkness - Map Chest",
+                new Location(this, 256+126, 0x1EA52, LocationType.Regular, "Palace of Darkness - Map Chest",
                     items => items.Bow),
-                new Location(this, 256+127, 0xEA43, LocationType.Regular, "Palace of Darkness - Compass Chest",
+                new Location(this, 256+127, 0x1EA43, LocationType.Regular, "Palace of Darkness - Compass Chest",
                     items => items.KeyPD >= (items.Hammer && items.Bow && items.Lamp ? 4 : 3)),
-                new Location(this, 256+128, 0xEA46, LocationType.Regular, "Palace of Darkness - Harmless Hellway",
+                new Location(this, 256+128, 0x1EA46, LocationType.Regular, "Palace of Darkness - Harmless Hellway",
                     items => items.KeyPD >= (Locations.Get("Palace of Darkness - Harmless Hellway").ItemType == KeyPD ?
                         items.Hammer && items.Bow && items.Lamp ? 4 : 3 :
                         items.Hammer && items.Bow && items.Lamp ? 6 : 5))
                     .AlwaysAllow((item, items) => item.Type == KeyPD && items.KeyPD >= 5),
-                new Location(this, 256+129, 0xEA4C, LocationType.Regular, "Palace of Darkness - Dark Basement - Left",
+                new Location(this, 256+129, 0x1EA4C, LocationType.Regular, "Palace of Darkness - Dark Basement - Left",
                     items => items.Lamp && items.KeyPD >= (items.Hammer && items.Bow ? 4 : 3)),
-                new Location(this, 256+130, 0xEA4F, LocationType.Regular, "Palace of Darkness - Dark Basement - Right",
+                new Location(this, 256+130, 0x1EA4F, LocationType.Regular, "Palace of Darkness - Dark Basement - Right",
                     items => items.Lamp && items.KeyPD >= (items.Hammer && items.Bow ? 4 : 3)),
-                new Location(this, 256+131, 0xEA55, LocationType.Regular, "Palace of Darkness - Dark Maze - Top",
+                new Location(this, 256+131, 0x1EA55, LocationType.Regular, "Palace of Darkness - Dark Maze - Top",
                     items => items.Lamp && items.KeyPD >= (items.Hammer && items.Bow ? 6 : 5)),
-                new Location(this, 256+132, 0xEA58, LocationType.Regular, "Palace of Darkness - Dark Maze - Bottom",
+                new Location(this, 256+132, 0x1EA58, LocationType.Regular, "Palace of Darkness - Dark Maze - Bottom",
                     items => items.Lamp && items.KeyPD >= (items.Hammer && items.Bow ? 6 : 5)),
-                new Location(this, 256+133, 0xEA40, LocationType.Regular, "Palace of Darkness - Big Chest",
+                new Location(this, 256+133, 0x1EA40, LocationType.Regular, "Palace of Darkness - Big Chest",
                     items => items.BigKeyPD && items.Lamp && items.KeyPD >= (items.Hammer && items.Bow ? 6 : 5)),
-                new Location(this, 256+134, 0x180153, LocationType.Regular, "Palace of Darkness - Helmasaur King",
+                new Location(this, 256+134, 0x308153, LocationType.Regular, "Palace of Darkness - Helmasaur King",
                     items => items.Lamp && items.Hammer && items.Bow && items.BigKeyPD && items.KeyPD >= 6),
             };
         }

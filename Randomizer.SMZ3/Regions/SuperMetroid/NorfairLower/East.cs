@@ -12,26 +12,26 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
 
         public East(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
-                new Location(this, 73, 0xC78F30, LocationType.Visible, "Missile (Mickey Mouse room)", Logic switch {
+                new Location(this, 73, 0x8F8F30, LocationType.Visible, "Missile (Mickey Mouse room)", Logic switch {
                     Normal => new Requirement(items => true),
                     _ => items => items.Morph && items.CanDestroyBombWalls()
                 }),
-                new Location(this, 74, 0xC78FCA, LocationType.Visible, "Missile (lower Norfair above fire flea room)"),
-                new Location(this, 75, 0xC78FD2, LocationType.Visible, "Power Bomb (lower Norfair above fire flea room)", Logic switch {
+                new Location(this, 74, 0x8F8FCA, LocationType.Visible, "Missile (lower Norfair above fire flea room)"),
+                new Location(this, 75, 0x8F8FD2, LocationType.Visible, "Power Bomb (lower Norfair above fire flea room)", Logic switch {
                     Normal => new Requirement(items => true),
                     _ => items => items.CanPassBombPassages()
                 }),
-                new Location(this, 76, 0xC790C0, LocationType.Visible, "Power Bomb (Power Bombs of shame)", Logic switch {
+                new Location(this, 76, 0x8F90C0, LocationType.Visible, "Power Bomb (Power Bombs of shame)", Logic switch {
                     _ => new Requirement(items => items.CanUsePowerBombs())
                 }),
-                new Location(this, 77, 0xC79100, LocationType.Visible, "Missile (lower Norfair near Wave Beam)", Logic switch {
+                new Location(this, 77, 0x8F9100, LocationType.Visible, "Missile (lower Norfair near Wave Beam)", Logic switch {
                     Normal => new Requirement(items => true),
                     _ => items => items.Morph && items.CanDestroyBombWalls()
                 }),
-                new Location(this, 78, 0xC79108, LocationType.Hidden, "Energy Tank, Ridley", Logic switch {
+                new Location(this, 78, 0x8F9108, LocationType.Hidden, "Energy Tank, Ridley", Logic switch {
                     _ => new Requirement(items => (!Config.Keysanity || items.RidleyKey) && items.CanUsePowerBombs() && items.Super)
                 }),
-                new Location(this, 80, 0xC79184, LocationType.Visible, "Energy Tank, Firefleas")
+                new Location(this, 80, 0x8F9184, LocationType.Visible, "Energy Tank, Firefleas")
             };
         }
 
