@@ -188,7 +188,7 @@ namespace Randomizer.SMZ3 {
                 } else {
                     ushort plmId = GetSMItemPLM(location);
                     patches.Add((Snes(location.Address), UshortBytes(plmId)));
-                    if (plmId >= 0xefe0) {
+                    if (plmId >= 0xEFE0) {
                         patches.Add((Snes(location.Address + 5), new byte[] { GetZ3ItemId(location) }));
                     }
                 }
@@ -196,35 +196,35 @@ namespace Randomizer.SMZ3 {
         }
 
         ushort GetSMItemPLM(Location location) {
-            int plmId = (myWorld.Config.GameMode == GameMode.Multiworld) 
-                ? 0xefe0 
-                : location.Item.Type switch {
-                    ETank => 0xeed7,
-                    Missile => 0xeedb,
-                    Super => 0xeedf,
-                    PowerBomb => 0xeee3,
-                    Bombs => 0xeee7,
-                    Charge => 0xeeeb,
-                    Ice => 0xeeef,
-                    HiJump => 0xeef3,
-                    SpeedBooster => 0xeef7,
-                    Wave => 0xeefb,
-                    Spazer => 0xeeff,
-                    SpringBall => 0xef03,
-                    Varia => 0xef07,
-                    Plasma => 0xef13,
-                    Grapple => 0xef17,
-                    Morph => 0xef23,
-                    ReserveTank => 0xef27,
-                    Gravity => 0xef0b,
-                    XRay => 0xef0f,
-                    SpaceJump => 0xef1b,
-                    ScrewAttack => 0xef1f,
-                    _ => 0xefe0
+            int plmId = myWorld.Config.GameMode == GameMode.Multiworld ?
+                0xEFE0 :
+                location.Item.Type switch {
+                    ETank => 0xEED7,
+                    Missile => 0xEEDB,
+                    Super => 0xEEDF,
+                    PowerBomb => 0xEEE3,
+                    Bombs => 0xEEE7,
+                    Charge => 0xEEEB,
+                    Ice => 0xEEEF,
+                    HiJump => 0xEEF3,
+                    SpeedBooster => 0xEEF7,
+                    Wave => 0xEEFB,
+                    Spazer => 0xEEFF,
+                    SpringBall => 0xEF03,
+                    Varia => 0xEF07,
+                    Plasma => 0xEF13,
+                    Grapple => 0xEF17,
+                    Morph => 0xEF23,
+                    ReserveTank => 0xEF27,
+                    Gravity => 0xEF0B,
+                    XRay => 0xEF0F,
+                    SpaceJump => 0xEF1B,
+                    ScrewAttack => 0xEF1F,
+                    _ => 0xEFE0,
                 };
 
             plmId += plmId switch {
-                0xefe0 => location.Type switch {
+                0xEFE0 => location.Type switch {
                     LocationType.Chozo => 4,
                     LocationType.Hidden => 8,
                     _ => 0
