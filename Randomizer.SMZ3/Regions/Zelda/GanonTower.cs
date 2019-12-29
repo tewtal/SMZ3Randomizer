@@ -27,16 +27,16 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                     items => items.Hammer && items.Hookshot),
                 new Location(this, 256+194, 0x1EAD3, LocationType.Regular, "Ganon's Tower - Map Chest",
                     items => items.Hammer && (items.Hookshot || items.Boots) && items.KeyGT >=
-                        (new[] { BigKeyGT, KeyGT }.Contains(Locations.Get("Ganon's Tower - Map Chest").ItemType) ? 3 : 4))
-                    .AlwaysAllow((item, items) => item.Type == KeyGT && items.KeyGT >= 3),
+                        (new[] { BigKeyGT, KeyGT }.Any(type => Locations.Get("Ganon's Tower - Map Chest").ItemIs(type, World)) ? 3 : 4))
+                    .AlwaysAllow((item, items) => item.Is(KeyGT, World) && items.KeyGT >= 3),
                 new Location(this, 256+195, 0x1EAD0, LocationType.Regular, "Ganon's Tower - Firesnake Room",
                     items => items.Hammer && items.Hookshot && items.KeyGT >= (new[] {
                             Locations.Get("Ganon's Tower - Randomizer Room - Top Right"),
                             Locations.Get("Ganon's Tower - Randomizer Room - Top Left"),
                             Locations.Get("Ganon's Tower - Randomizer Room - Bottom Left"),
                             Locations.Get("Ganon's Tower - Randomizer Room - Bottom Right")
-                        }.Any(l => l.ItemType == BigKeyGT) ||
-                        Locations.Get("Ganon's Tower - Firesnake Room").ItemType == KeyGT ? 2 : 3)),
+                        }.Any(l => l.ItemIs(BigKeyGT, World)) ||
+                        Locations.Get("Ganon's Tower - Firesnake Room").ItemIs(KeyGT, World) ? 2 : 3)),
                 new Location(this, 256+196, 0x1EAC4, LocationType.Regular, "Ganon's Tower - Randomizer Room - Top Left",
                     items => LeftSide(items, new[] {
                         Locations.Get("Ganon's Tower - Randomizer Room - Top Right"),
@@ -97,30 +97,30 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                     items => items.BigKeyGT && items.KeyGT >= 3 && (
                         items.Hammer && items.Hookshot ||
                         items.Somaria && items.Firerod))
-                    .Allow((item, items) => item.Type != BigKeyGT),
+                    .Allow((item, items) => item.IsNot(BigKeyGT, World)),
                 new Location(this, 256+209, 0x1EAF1, LocationType.Regular, "Ganon's Tower - Big Key Chest", BigKeyRoom),
                 new Location(this, 256+210, 0x1EAF4, LocationType.Regular, "Ganon's Tower - Big Key Room - Left", BigKeyRoom),
                 new Location(this, 256+211, 0x1EAF7, LocationType.Regular, "Ganon's Tower - Big Key Room - Right", BigKeyRoom),
                 new Location(this, 256+212, 0x1EAFD, LocationType.Regular, "Ganon's Tower - Mini Helmasaur Room - Left", TowerAscend)
-                    .Allow((item, items) => item.Type != BigKeyGT),
+                    .Allow((item, items) => item.IsNot(BigKeyGT, World)),
                 new Location(this, 256+213, 0x1EB00, LocationType.Regular, "Ganon's Tower - Mini Helmasaur Room - Right", TowerAscend)
-                    .Allow((item, items) => item.Type != BigKeyGT),
+                    .Allow((item, items) => item.IsNot(BigKeyGT, World)),
                 new Location(this, 256+214, 0x1EB03, LocationType.Regular, "Ganon's Tower - Pre-Moldorm Chest", TowerAscend)
-                    .Allow((item, items) => item.Type != BigKeyGT),
+                    .Allow((item, items) => item.IsNot(BigKeyGT, World)),
                 new Location(this, 256+215, 0x1EB06, LocationType.Regular, "Ganon's Tower - Moldorm Chest",
                     items => items.BigKeyGT && items.KeyGT >= 4 &&
                         items.Bow && items.CanLightTorches() &&
                         CanBeatMoldorm(items) && items.Hookshot)
-                    .Allow((item, items) => new[] { KeyGT, BigKeyGT }.Contains(item.Type) == false),
+                    .Allow((item, items) => new[] { KeyGT, BigKeyGT }.All(type => item.IsNot(type, World))),
             };
         }
 
         private bool LeftSide(Progression items, IList<Location> locations) {
-            return items.Hammer && items.Hookshot && items.KeyGT >= (locations.Any(l => l.ItemType == BigKeyGT) ? 3 : 4);
+            return items.Hammer && items.Hookshot && items.KeyGT >= (locations.Any(l => l.ItemIs(BigKeyGT, World)) ? 3 : 4);
         }
 
         private bool RightSide(Progression items, IList<Location> locations) {
-            return items.Somaria && items.Firerod && items.KeyGT >= (locations.Any(l => l.ItemType == BigKeyGT) ? 3 : 4);
+            return items.Somaria && items.Firerod && items.KeyGT >= (locations.Any(l => l.ItemIs(BigKeyGT, World)) ? 3 : 4);
         }
 
         private bool BigKeyRoom(Progression items) {
