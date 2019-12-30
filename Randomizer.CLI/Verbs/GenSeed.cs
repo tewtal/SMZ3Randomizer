@@ -44,9 +44,9 @@ namespace Randomizer.CLI.Verbs {
             HelpText = "Specify paths for RDC resources to be applied in the specified order.")]
         public IEnumerable<string> Rdc { get; set; }
 
-        [Option("no-interact",
-            HelpText = "Do not wait for keyboard input")]
-        public bool NoInteract { get; set; }
+        [Option(
+            HelpText = "Write patch and playthrough to the console instead of directly to files")]
+        public bool Console { get; set; }
 
         [Option(
             HelpText = "Show json formated playthrough for each seed")]
@@ -56,14 +56,11 @@ namespace Randomizer.CLI.Verbs {
             HelpText = "Show json formated patch for each world in the seed")]
         public bool Patch { get; set; }
 
-        public string Logic => this switch
-        {
+        public string Logic => this switch {
             var o when o.Tournament => "tournament",
             var o when o.Casual => "casual",
             _ => "tournament"
         };
-
-        public bool Interact => !NoInteract;
 
         protected const string smFile = @".\Super_Metroid_JU_.smc";
         protected const string z3File = @".\Zelda_no_Densetsu_-_Kamigami_no_Triforce_Japan.sfc";
@@ -127,12 +124,11 @@ namespace Randomizer.CLI.Verbs {
     static class GenSeed {
 
         public static void Run(GenSeedOptions opts) {
-            if (opts.Players< 1 || opts.Players> 64)
+            if (opts.Players < 1 || opts.Players > 64)
                 throw new ArgumentOutOfRangeException("players", "The players parameter must fall within the range 1-64");
 
             var optionList = new[] {
                 ("logic", opts.Logic),
-                ("gamemode", "multiworld"),
                 ("worlds", opts.Players.ToString()),
             };
             var players = from n in Enumerable.Range(0, opts.Players)
@@ -173,15 +169,25 @@ namespace Randomizer.CLI.Verbs {
                 }
             }
             if (opts.Playthrough) {
-                Console.WriteLine(JsonConvert.SerializeObject(data.Playthrough, Formatting.Indented));
-                Interact(opts);
+                var text = JsonConvert.SerializeObject(data.Playthrough, Formatting.Indented);
+                if (opts.Console) {
+                    Console.WriteLine(text);
+                    Console.ReadLine();
+                } else {
+                    File.WriteAllText($"playthrough-{data.Logic}-{data.Seed}.json", text);
+                }
             }
             if (opts.Patch) {
-                Console.WriteLine(JsonConvert.SerializeObject(
+                var text = JsonConvert.SerializeObject(
                     data.Worlds.ToDictionary(x => x.Player, x => x.Patches), Formatting.Indented,
                     new PatchWriteConverter()
-                ));
-                Interact(opts);
+                );
+                if (opts.Console) {
+                    Console.WriteLine(text);
+                    Console.ReadLine();
+                } else {
+                    File.WriteAllText($"patch-{data.Logic}-{data.Seed}.json", text);
+                }
             }
         }
 
@@ -201,11 +207,6 @@ namespace Randomizer.CLI.Verbs {
                 if (content.TryParse<SamusSprite>(stream, out block))
                     (block as DataBlock)?.Apply(rom);
             }
-        }
-
-        static void Interact(GenSeedOptions opts) {
-            if (opts.Interact)
-                Console.ReadLine();
         }
 
         public class PatchWriteConverter : JsonConverter<IDictionary<int, byte[]>> {

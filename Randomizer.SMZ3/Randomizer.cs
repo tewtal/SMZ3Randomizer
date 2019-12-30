@@ -66,7 +66,7 @@ namespace Randomizer.SMZ3 {
                 Seed = seed,
                 Game = Name,
                 Mode = config.GameMode.ToLString(),
-                Logic = $"{config.SMLogic.ToLString()}|{config.Z3Logic.ToLString()}",
+                Logic = $"{config.SMLogic.ToLString()}+{config.Z3Logic.ToLString()}",
                 Playthrough = spheres,
                 Worlds = new List<IWorldData>(),
             };
