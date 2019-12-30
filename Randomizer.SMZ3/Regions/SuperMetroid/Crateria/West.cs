@@ -10,16 +10,16 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
 
         public West(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
-                new Location(this, 8, 0xC78432, LocationType.Visible, "Energy Tank, Terminator"),
-                new Location(this, 5, 0xC78264, LocationType.Visible, "Energy Tank, Gauntlet", Logic switch {
+                new Location(this, 8, 0x8F8432, LocationType.Visible, "Energy Tank, Terminator"),
+                new Location(this, 5, 0x8F8264, LocationType.Visible, "Energy Tank, Gauntlet", Logic switch {
                     Normal => items => CanEnterAndLeaveGauntlet(items) && items.HasEnergyReserves(1),
                     _ => new Requirement(items => CanEnterAndLeaveGauntlet(items))
                 }),
-                new Location(this, 9, 0xC78464, LocationType.Visible, "Missile (Crateria gauntlet right)", Logic switch {
+                new Location(this, 9, 0x8F8464, LocationType.Visible, "Missile (Crateria gauntlet right)", Logic switch {
                     Normal => items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2),
                     _ => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
                 }),
-                new Location(this, 10, 0xC7846A, LocationType.Visible, "Missile (Crateria gauntlet left)", Logic switch {
+                new Location(this, 10, 0x8F846A, LocationType.Visible, "Missile (Crateria gauntlet left)", Logic switch {
                     Normal => items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2),
                     _ => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
                 })

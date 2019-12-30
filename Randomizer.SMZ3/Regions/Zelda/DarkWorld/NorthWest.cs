@@ -10,16 +10,16 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld {
 
         public NorthWest(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
-                new Location(this, 256+71, 0x180146, LocationType.Regular, "Bumper Cave",
+                new Location(this, 256+71, 0x308146, LocationType.Regular, "Bumper Cave",
                     items => items.CanLiftLight() && items.Cape),
-                new Location(this, 256+72, 0xEDA8, LocationType.Regular, "Chest Game"),
-                new Location(this, 256+73, 0xE9EF, LocationType.Regular, "C-Shaped House"),
-                new Location(this, 256+74, 0xE9EC, LocationType.Regular, "Brewery"),
-                new Location(this, 256+75, 0x180006, LocationType.Regular, "Hammer Pegs",
+                new Location(this, 256+72, 0x1EDA8, LocationType.Regular, "Chest Game"),
+                new Location(this, 256+73, 0x1E9EF, LocationType.Regular, "C-Shaped House"),
+                new Location(this, 256+74, 0x1E9EC, LocationType.Regular, "Brewery"),
+                new Location(this, 256+75, 0x308006, LocationType.Regular, "Hammer Pegs",
                     items => items.CanLiftHeavy() && items.Hammer),
-                new Location(this, 256+76, 0x18002A, LocationType.Regular, "Blacksmith",
+                new Location(this, 256+76, 0x30802A, LocationType.Regular, "Blacksmith",
                     items => items.CanLiftHeavy()),
-                new Location(this, 256+77, 0x33D68, LocationType.Regular, "Purple Chest",
+                new Location(this, 256+77, 0x6BD68, LocationType.Regular, "Purple Chest",
                     items => items.CanLiftHeavy()),
             };
         }

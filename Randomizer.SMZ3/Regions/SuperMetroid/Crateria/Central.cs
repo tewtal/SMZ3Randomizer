@@ -10,19 +10,19 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
 
         public Central(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
-                new Location(this, 0, 0xC781CC, LocationType.Visible, "Power Bomb (Crateria surface)", Logic switch {
+                new Location(this, 0, 0x8F81CC, LocationType.Visible, "Power Bomb (Crateria surface)", Logic switch {
                     _ => new Requirement(items => items.CanUsePowerBombs() && (items.SpeedBooster || items.CanFly()))
                 }),
-                new Location(this, 12, 0xC78486, LocationType.Visible, "Missile (Crateria middle)", Logic switch {
+                new Location(this, 12, 0x8F8486, LocationType.Visible, "Missile (Crateria middle)", Logic switch {
                     _ => new Requirement(items => items.CanPassBombPassages())
                 }),
-                new Location(this, 6, 0xC783EE, LocationType.Visible, "Missile (Crateria bottom)", Logic switch {
+                new Location(this, 6, 0x8F83EE, LocationType.Visible, "Missile (Crateria bottom)", Logic switch {
                     _ => new Requirement(items => items.CanDestroyBombWalls())
                 }),
-                new Location(this, 11, 0xC78478, LocationType.Visible, "Super Missile (Crateria)", Logic switch {
+                new Location(this, 11, 0x8F8478, LocationType.Visible, "Super Missile (Crateria)", Logic switch {
                     _ => new Requirement(items => items.CanUsePowerBombs() && items.HasEnergyReserves(2) && items.SpeedBooster)
                 }),
-                new Location(this, 7, 0xC78404, LocationType.Chozo, "Bombs", Logic switch {
+                new Location(this, 7, 0x8F8404, LocationType.Chozo, "Bombs", Logic switch {
                     Normal => items => items.CanPassBombPassages() && items.CanOpenRedDoors(),
                     _ => new Requirement(items => items.Morph && items.CanOpenRedDoors())
                 })

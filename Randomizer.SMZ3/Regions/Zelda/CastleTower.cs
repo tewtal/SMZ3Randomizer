@@ -14,8 +14,8 @@ namespace Randomizer.SMZ3.Regions.Zelda {
             RegionItems = new[] { KeyCT };
 
             Locations = new List<Location> {
-                new Location(this, 256+101, 0xEAB5, LocationType.Regular, "Castle Tower - Foyer"),
-                new Location(this, 256+102, 0xEAB2, LocationType.Regular, "Castle Tower - Dark Maze",
+                new Location(this, 256+101, 0x1EAB5, LocationType.Regular, "Castle Tower - Foyer"),
+                new Location(this, 256+102, 0x1EAB2, LocationType.Regular, "Castle Tower - Dark Maze",
                     items => items.Lamp && items.KeyCT >= 1),
             };
         }

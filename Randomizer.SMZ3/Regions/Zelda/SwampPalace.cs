@@ -14,26 +14,26 @@ namespace Randomizer.SMZ3.Regions.Zelda {
             RegionItems = new[] { KeySP, BigKeySP, MapSP, CompassSP };
 
             Locations = new List<Location> {
-                new Location(this, 256+135, 0xEA9D, LocationType.Regular, "Swamp Palace - Entrance")
+                new Location(this, 256+135, 0x1EA9D, LocationType.Regular, "Swamp Palace - Entrance")
                     .Allow((item, items) => Config.Keysanity || item.Type == KeySP),
-                new Location(this, 256+136, 0xE986, LocationType.Regular, "Swamp Palace - Map Chest",
+                new Location(this, 256+136, 0x1E986, LocationType.Regular, "Swamp Palace - Map Chest",
                     items => items.KeySP),
-                new Location(this, 256+137, 0xE989, LocationType.Regular, "Swamp Palace - Big Chest",
+                new Location(this, 256+137, 0x1E989, LocationType.Regular, "Swamp Palace - Big Chest",
                     items => items.BigKeySP && items.KeySP && items.Hammer)
                     .AlwaysAllow((item, items) => item.Type == BigKeySP),
-                new Location(this, 256+138, 0xEAA0, LocationType.Regular, "Swamp Palace - Compass Chest",
+                new Location(this, 256+138, 0x1EAA0, LocationType.Regular, "Swamp Palace - Compass Chest",
                     items => items.KeySP && items.Hammer),
-                new Location(this, 256+139, 0xEAA3, LocationType.Regular, "Swamp Palace - West Chest",
+                new Location(this, 256+139, 0x1EAA3, LocationType.Regular, "Swamp Palace - West Chest",
                     items => items.KeySP && items.Hammer),
-                new Location(this, 256+140, 0xEAA6, LocationType.Regular, "Swamp Palace - Big Key Chest",
+                new Location(this, 256+140, 0x1EAA6, LocationType.Regular, "Swamp Palace - Big Key Chest",
                     items => items.KeySP && items.Hammer),
-                new Location(this, 256+141, 0xEAA9, LocationType.Regular, "Swamp Palace - Flooded Room - Left",
+                new Location(this, 256+141, 0x1EAA9, LocationType.Regular, "Swamp Palace - Flooded Room - Left",
                     items => items.KeySP && items.Hammer && items.Hookshot),
-                new Location(this, 256+142, 0xEAAC, LocationType.Regular, "Swamp Palace - Flooded Room - Right",
+                new Location(this, 256+142, 0x1EAAC, LocationType.Regular, "Swamp Palace - Flooded Room - Right",
                     items => items.KeySP && items.Hammer && items.Hookshot),
-                new Location(this, 256+143, 0xEAAF, LocationType.Regular, "Swamp Palace - Waterfall Room",
+                new Location(this, 256+143, 0x1EAAF, LocationType.Regular, "Swamp Palace - Waterfall Room",
                     items => items.KeySP && items.Hammer && items.Hookshot),
-                new Location(this, 256+144, 0x180154, LocationType.Regular, "Swamp Palace - Arrghus",
+                new Location(this, 256+144, 0x308154, LocationType.Regular, "Swamp Palace - Arrghus",
                     items => items.KeySP && items.Hammer && items.Hookshot),
             };
         }

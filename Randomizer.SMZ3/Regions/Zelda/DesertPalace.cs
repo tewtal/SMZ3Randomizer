@@ -14,16 +14,16 @@ namespace Randomizer.SMZ3.Regions.Zelda {
             RegionItems = new[] { KeyDP, BigKeyDP, MapDP, CompassDP };
 
             Locations = new List<Location> {
-                new Location(this, 256+109, 0xE98F, LocationType.Regular, "Desert Palace - Big Chest",
+                new Location(this, 256+109, 0x1E98F, LocationType.Regular, "Desert Palace - Big Chest",
                     items => items.BigKeyDP),
-                new Location(this, 256+110, 0x180160, LocationType.Regular, "Desert Palace - Torch",
+                new Location(this, 256+110, 0x308160, LocationType.Regular, "Desert Palace - Torch",
                     items => items.Boots),
-                new Location(this, 256+111, 0xE9B6, LocationType.Regular, "Desert Palace - Map Chest"),
-                new Location(this, 256+112, 0xE9C2, LocationType.Regular, "Desert Palace - Big Key Chest",
+                new Location(this, 256+111, 0x1E9B6, LocationType.Regular, "Desert Palace - Map Chest"),
+                new Location(this, 256+112, 0x1E9C2, LocationType.Regular, "Desert Palace - Big Key Chest",
                     items => items.KeyDP),
-                new Location(this, 256+113, 0xE9CB, LocationType.Regular, "Desert Palace - Compass Chest",
+                new Location(this, 256+113, 0x1E9CB, LocationType.Regular, "Desert Palace - Compass Chest",
                     items => items.KeyDP),
-                new Location(this, 256+114, 0x180151, LocationType.Regular, "Desert Palace - Lanmolas",
+                new Location(this, 256+114, 0x308151, LocationType.Regular, "Desert Palace - Lanmolas",
                     items => (
                         items.CanLiftLight() ||
                         items.CanAccessMiseryMirePortal(Config) && items.Mirror

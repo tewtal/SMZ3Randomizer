@@ -15,21 +15,21 @@ namespace Randomizer.SMZ3.Regions.Zelda {
             RegionItems = new[] { KeyMM, BigKeyMM, MapMM, CompassMM };
 
             Locations = new List<Location> {
-                new Location(this, 256+169, 0xEA5E, LocationType.Regular, "Misery Mire - Main Lobby",
+                new Location(this, 256+169, 0x1EA5E, LocationType.Regular, "Misery Mire - Main Lobby",
                     items => items.BigKeyMM || items.KeyMM >= 1),
-                new Location(this, 256+170, 0xEA6A, LocationType.Regular, "Misery Mire - Map Chest",
+                new Location(this, 256+170, 0x1EA6A, LocationType.Regular, "Misery Mire - Map Chest",
                     items => items.BigKeyMM || items.KeyMM >= 1),
-                new Location(this, 256+171, 0xEA61, LocationType.Regular, "Misery Mire - Bridge Chest"),
-                new Location(this, 256+172, 0xE9DA, LocationType.Regular, "Misery Mire - Spike Chest"),
-                new Location(this, 256+173, 0xEA64, LocationType.Regular, "Misery Mire - Compass Chest",
+                new Location(this, 256+171, 0x1EA61, LocationType.Regular, "Misery Mire - Bridge Chest"),
+                new Location(this, 256+172, 0x1E9DA, LocationType.Regular, "Misery Mire - Spike Chest"),
+                new Location(this, 256+173, 0x1EA64, LocationType.Regular, "Misery Mire - Compass Chest",
                     items => items.CanLightTorches() &&
                         items.KeyMM >= (Locations.Get("Misery Mire - Big Key Chest").ItemType == BigKeyMM ? 2 : 3)),
-                new Location(this, 256+174, 0xEA6D, LocationType.Regular, "Misery Mire - Big Key Chest",
+                new Location(this, 256+174, 0x1EA6D, LocationType.Regular, "Misery Mire - Big Key Chest",
                     items => items.CanLightTorches() &&
                         items.KeyMM >= (Locations.Get("Misery Mire - Compass Chest").ItemType == BigKeyMM ? 2 : 3)),
-                new Location(this, 256+175, 0xEA67, LocationType.Regular, "Misery Mire - Big Chest",
+                new Location(this, 256+175, 0x1EA67, LocationType.Regular, "Misery Mire - Big Chest",
                     items => items.BigKeyMM),
-                new Location(this, 256+176, 0x180158, LocationType.Regular, "Misery Mire - Vitreous",
+                new Location(this, 256+176, 0x308158, LocationType.Regular, "Misery Mire - Vitreous",
                     items => items.BigKeyMM && items.Lamp && items.Somaria),
             };
         }

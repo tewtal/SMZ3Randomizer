@@ -10,27 +10,27 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
 
         public Crocomire(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
-                new Location(this, 52, 0xC78BA4, LocationType.Visible, "Energy Tank, Crocomire", Logic switch {
+                new Location(this, 52, 0x8F8BA4, LocationType.Visible, "Energy Tank, Crocomire", Logic switch {
                     Normal => items => items.HasEnergyReserves(1) || items.SpaceJump || items.Grapple,
                     _ => new Requirement(items => true)
                 }),
-                new Location(this, 54, 0xC78BC0, LocationType.Visible, "Missile (above Crocomire)", Logic switch {
+                new Location(this, 54, 0x8F8BC0, LocationType.Visible, "Missile (above Crocomire)", Logic switch {
                     Normal => items => items.CanFly() || items.Grapple || items.HiJump && items.SpeedBooster,
                     _ => new Requirement(items => (items.CanFly() || items.Grapple || items.HiJump &&
                         (items.SpeedBooster || items.CanSpringBallJump() || items.Varia && items.Ice)) && items.CanHellRun())
                 }),
-                new Location(this, 57, 0xC78C04, LocationType.Visible, "Power Bomb (Crocomire)", Logic switch {
+                new Location(this, 57, 0x8F8C04, LocationType.Visible, "Power Bomb (Crocomire)", Logic switch {
                     Normal => items => items.CanFly() || items.HiJump || items.Grapple,
                     _ => new Requirement(items => true)
                 }),
-                new Location(this, 58, 0xC78C14, LocationType.Visible, "Missile (below Crocomire)", Logic switch {
+                new Location(this, 58, 0x8F8C14, LocationType.Visible, "Missile (below Crocomire)", Logic switch {
                     _ => new Requirement(items => items.Morph)
                 }),
-                new Location(this, 59, 0xC78C2A, LocationType.Visible, "Missile (Grapple Beam)", Logic switch {
+                new Location(this, 59, 0x8F8C2A, LocationType.Visible, "Missile (Grapple Beam)", Logic switch {
                     Normal => items => items.Morph && (items.CanFly() || items.SpeedBooster && items.CanUsePowerBombs()),
                     _ => new Requirement(items => items.SpeedBooster || items.Morph && (items.CanFly() || items.Grapple))
                 }),
-                new Location(this, 60, 0xC78C36, LocationType.Chozo, "Grapple Beam", Logic switch {
+                new Location(this, 60, 0x8F8C36, LocationType.Chozo, "Grapple Beam", Logic switch {
                     Normal => items => items.Morph && (items.CanFly() || items.SpeedBooster && items.CanUsePowerBombs()),
                     _ => new Requirement(items => items.SpaceJump || items.Morph || items.Grapple ||
                         items.HiJump && items.SpeedBooster)
