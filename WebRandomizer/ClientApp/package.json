@@ -25,7 +25,8 @@
   },
   "devDependencies": {
     "ajv": "^6.10.2",
-    "cross-env": "^5.2.1"
+    "cross-env": "^5.2.1",
+    "raw-loader": "^4.0.0"
   },
   "scripts": {
     "start": "rimraf ./build && react-scripts start",
