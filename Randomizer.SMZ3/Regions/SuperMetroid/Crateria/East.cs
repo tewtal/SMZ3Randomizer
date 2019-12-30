@@ -38,7 +38,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
                           || items.CanAccessMaridiaPortal(World) && items.Gravity && items.Super && (items.CanDestroyBombWalls() || World.Locations.Get("Space Jump").Available(items)),
                      _ => items.CanUsePowerBombs() && items.Super
                           || items.CanAccessNorfairUpperPortal() && items.CanUsePowerBombs() && (items.Ice || items.HiJump || items.CanFly() || items.CanSpringBallJump())
-                          || (items.CanAccessMaridiaPortal(World) && items.Super && items.HiJump && items.CanPassBombPassages()
+                          || items.CanAccessMaridiaPortal(World) && (items.Super && items.HiJump && items.CanPassBombPassages()
                                 || items.Gravity && (World.Locations.Get("Space Jump").Available(items) || items.CanDestroyBombWalls()))
             };
         }
