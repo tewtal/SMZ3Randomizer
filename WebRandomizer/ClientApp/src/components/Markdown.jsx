@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createGlobalStyle } from 'styled-components';
 import ReactMarkdown from 'react-markdown';
+import classNames from 'classnames';
 
 import attempt from 'lodash/attempt';
 
@@ -19,7 +20,7 @@ const GlobalMarkdownStyle = createGlobalStyle`
 `;
 
 export default function Markdown(props) {
-    const { text = '' } = props;
+    const { className, text = '' } = props;
     const [sourceText, setSourceText] = useState('');
 
     useEffect(() => {
@@ -38,7 +39,10 @@ export default function Markdown(props) {
     return (
         <>
             <GlobalMarkdownStyle/>
-            <ReactMarkdown className="markdown" source={sourceText || text} />
+            <ReactMarkdown
+                className={classNames('markdown', className)}
+                source={sourceText || text}
+            />
         </>
     );
 }
