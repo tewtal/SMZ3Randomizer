@@ -20,10 +20,4 @@ CanUsePowerBombs *and* 2 EnergyReserves *and* SpeedBooster
 
 **Bombs**
 
-*Normal*
-
 CanPassBombPassages *and* CanOpenRedDoors
-
-*Hard*
-
-Morph *and* CanOpenRedDoors

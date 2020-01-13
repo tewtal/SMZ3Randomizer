@@ -1,13 +1,5 @@
 ﻿***can enter***
 
-*Normal*
-
-- Gravity *and one of*
-  - *can enter* **Upper Norfair West** *and* CanUsePowerBombs
-  - CanAccessMaridiaPortal
-
-*Hard*
-
 - *one of*
   - *can enter* **Upper Norfair West** *and* CanUsePowerBombs *and one of*
     - Gravity
@@ -16,12 +8,6 @@
 
 **Missile (green Maridia shinespark)**
 
-*Normal*
-
-SpeedBooster
-
-*Hard*
-
 Gravity *and* SpeedBooster
 
 **Super Missile (green Maridia)**
@@ -29,12 +15,6 @@ Gravity *and* SpeedBooster
 *Available*
 
 **Energy Tank, Mama turtle**
-
-*Normal*
-
-CanFly *or* SpeedBooster *or* Grapple
-
-*Hard*
 
 - *one of*
   - CanFly

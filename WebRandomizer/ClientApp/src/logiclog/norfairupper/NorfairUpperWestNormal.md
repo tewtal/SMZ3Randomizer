@@ -6,25 +6,11 @@
 
 **Ice Beam**
 
-*Normal*
-
 Super *and* CanPassBombPassages *and* Varia *and* SpeedBooster
-
-*Hard*
-
-Super *and* Morph *and either* Varia *or* 3 EnergyReserves
 
 **Missile (below Ice Beam)**
 
-*Normal*
-
- Super *and* CanUsePowerBombs *and* Varia *and* SpeedBooster
-
-*Hard*
-
-- *one of*
-  - Super *and* CanUsePowerBombs *and either* Varia *or* 3 EnergyReserves
-  - Varia *and* SpeedBooster *and* Super
+Super *and* CanUsePowerBombs *and* Varia *and* SpeedBooster
 
 **Hi-Jump Boots**
 

@@ -6,10 +6,10 @@ import DarkWorldSouth from '!!raw-loader!./DarkWorldSouth.md';
 import DarkWorldMire from '!!raw-loader!./DarkWorldMire.md';
 
 export default [
-    { name: 'Death Mountain West', markdown: DarkWorldDeathMountainWest },
-    { name: 'Death Mountain East', markdown: DarkWorldDeathMountainEast },
-    { name: 'North West', markdown: DarkWorldNorthWest },
-    { name: 'North East', markdown: DarkWorldNorthEast },
-    { name: 'South', markdown: DarkWorldSouth },
-    { name: 'Mire', markdown: DarkWorldMire }
+    { name: 'Death Mountain West', normal: DarkWorldDeathMountainWest },
+    { name: 'Death Mountain East', normal: DarkWorldDeathMountainEast },
+    { name: 'North West', normal: DarkWorldNorthWest },
+    { name: 'North East', normal: DarkWorldNorthEast },
+    { name: 'South', normal: DarkWorldSouth },
+    { name: 'Mire', normal: DarkWorldMire }
 ];

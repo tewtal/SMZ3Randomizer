@@ -1,13 +1,5 @@
 ﻿***can enter***
 
-*Normal*
-
-- Varia *and one of*
-  - *can enter* **Upper Norfair East** *and* CanUsePowerBombs *and* SpaceJump *and* Gravity
-  - CanAccessNorfairLowerPortal *and* CanDestroyBombWalls *and* Super *and* CanUsePowerBombs *and* CanFly
-
-*Hard*
-
 - *each of*
   - Varia *and one of*
     - *can enter* **Upper Norfair East** *and* CanUsePowerBombs *and either* HiJump *or* Gravity
@@ -18,12 +10,6 @@
 
 **Missile (Mickey Mouse room)**
 
-*Normal*
-
-*Available*
-
-*Hard*
-
 Morph *and* CanDestroyBombWalls
 
 **Missile (lower Norfair above fire flea room)**
@@ -32,27 +18,15 @@ Morph *and* CanDestroyBombWalls
 
 **Power Bomb (lower Norfair above fire flea room)**
 
-*Normal*
-
-*Available*
-
-*Hard*
-
 CanPassBombPassages
+
+**Missile (lower Norfair near Wave Beam)**
+
+Morph *and* CanDestroyBombWalls
 
 **Power Bomb (Power Bombs of shame)**
 
 CanUsePowerBombs
-
-**Missile (lower Norfair near Wave Beam)**
-
-*Normal*
-
-*Available*
-
-*Hard*
-
-Morph *and* CanDestroyBombWalls
 
 **Energy Tank, Ridley**
 

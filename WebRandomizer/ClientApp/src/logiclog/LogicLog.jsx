@@ -1,10 +1,13 @@
 ﻿import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Card, CardHeader, CardBody, Nav, NavItem, NavLink } from 'reactstrap';
+import { Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
+import { InputGroupAddon, Button, Nav, NavItem, NavLink } from 'reactstrap';
+import InputGroup from '../components/util/PrefixInputGroup';
 import Markdown from '../components/Markdown';
 
 import classnames from 'classnames';
 
+import capitalize from 'lodash/capitalize';
 import find from 'lodash/find';
 import initial from 'lodash/initial';
 import tail from 'lodash/tail';
@@ -38,13 +41,32 @@ const StyledMarkdown = styled(Markdown)`
 `;
 
 export default function LogicLog() {
-    const [state, setState] = useState({});
+    const [SMLogic, setSMLogic] = useState('normal');
+    const [tabState, setTabState] = useState({});
 
-    const parts = active(state, content);
+    const parts = active(tabState, content);
     const bars = initial(parts);
-    const pane = last(parts);
+    const { normal, hard } = last(parts);
 
-    return (
+    const logicButton = (logic, name) => (
+        <InputGroupAddon addonType="append">
+            <Button
+                color={logic === name ? 'primary' : 'secondary'}
+                onClick={() => setSMLogic(name)}
+            >
+                {capitalize(name)}
+            </Button>
+        </InputGroupAddon>
+    );
+
+    const toggle = (
+        <InputGroup prefix="SM Logic" className="mb-3">
+            {logicButton(SMLogic, 'normal')}
+            {logicButton(SMLogic, 'hard')}
+        </InputGroup>
+    );
+
+    const log = (
         <Card>
             {bars
                 .map((bar, i) => [bar, bars.slice(1, i + 1).map(x => x.name)])
@@ -55,7 +77,7 @@ export default function LogicLog() {
                                 <NavItem key={name}>
                                     <NavLink
                                         className={classnames({ active: name === bar.active })}
-                                        onClick={() => setState(activate(state, [...path, name]))}>
+                                        onClick={() => setTabState(activate(tabState, [...path, name]))}>
                                         {name}
                                     </NavLink>
                                 </NavItem>
@@ -65,9 +87,24 @@ export default function LogicLog() {
                 ))
             }
             <CardBody>
-                <StyledMarkdown text={pane.markdown} />
+                <StyledMarkdown text={SMLogic === 'hard' && hard || normal} />
             </CardBody>
         </Card>
+    );
+
+    return (
+        <>
+            <Row>
+                <Col>
+                    {toggle}
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    {log}
+                </Col>
+            </Row>
+        </>
     );
 }
 

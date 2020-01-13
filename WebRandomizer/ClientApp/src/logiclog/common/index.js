@@ -1,7 +1,8 @@
-﻿import SM from '!!raw-loader!./sm.md';
-import Z3 from '!!raw-loader!./z3.md';
+﻿import Aliases from '!!raw-loader!./aliases.md';
+import PortalsNormal from '!!raw-loader!./portalsNormal.md';
+import PortalsHard from '!!raw-loader!./portalsHard.md';
 
 export default [
-    { name: 'Super Metroid', markdown: SM },
-    { name: 'A Link to the Past', markdown: Z3 },
+    { name: 'Aliases', normal: Aliases },
+    { name: 'Portals', normal: PortalsNormal, hard: PortalsHard },
 ];

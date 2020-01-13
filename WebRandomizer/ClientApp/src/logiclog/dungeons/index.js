@@ -13,17 +13,17 @@ import TurtleRock from '!!raw-loader!./TurtleRock.md';
 import GanonsTower from '!!raw-loader!./GanonsTower.md';
 
 export default [
-    { name: 'Hyrule Castle', markdown: HyruleCastle },
-    { name: 'Eastern Palace', markdown: EasternPalace },
-    { name: 'Desert Palace', markdown: DesertPalace },
-    { name: 'Tower of Hera', markdown: TowerOfHera },
-    { name: 'Castle Tower', markdown: CastleTower },
-    { name: 'Palace of Darkness', markdown: PalaceOfDarkness },
-    { name: 'Swamp Palace', markdown: SwampPalace },
-    { name: 'Skull Woods', markdown: SkullWoods },
-    { name: "Thieves' Town", markdown: ThievesTown },
-    { name: 'Ice Palace', markdown: IcePalace },
-    { name: 'Misery Mire', markdown: MiseryMire },
-    { name: 'Turtle Rock', markdown: TurtleRock },
-    { name: "Ganon's Tower", markdown: GanonsTower }
+    { name: 'Hyrule Castle', normal: HyruleCastle },
+    { name: 'Eastern Palace', normal: EasternPalace },
+    { name: 'Desert Palace', normal: DesertPalace },
+    { name: 'Tower of Hera', normal: TowerOfHera },
+    { name: 'Castle Tower', normal: CastleTower },
+    { name: 'Palace of Darkness', normal: PalaceOfDarkness },
+    { name: 'Swamp Palace', normal: SwampPalace },
+    { name: 'Skull Woods', normal: SkullWoods },
+    { name: "Thieves' Town", normal: ThievesTown },
+    { name: 'Ice Palace', normal: IcePalace },
+    { name: 'Misery Mire', normal: MiseryMire },
+    { name: 'Turtle Rock', normal: TurtleRock },
+    { name: "Ganon's Tower", normal: GanonsTower }
 ];

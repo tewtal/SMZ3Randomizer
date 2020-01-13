@@ -1,6 +1,4 @@
-﻿***can enter***
-
-*Normal*
+﻿**CanEnter**
 
 - *one of*
   - CanOpenRedDoors *and either* CanDestroyBombWalls *or* SpeedBooster
@@ -8,15 +6,6 @@
   - *each of*
     - CanAccessNorfairUpperPortal *and* Morph *and* Wave
     - Ice *or* HiJump *or* SpaceJump
-
-*Hard*
-
-- *one of*
-  - CanOpenRedDoors *and either* CanDestroyBombWalls *or* SpeedBooster
-  - CanUsePowerBombs
-  - *each of*
-    - CanAccessNorfairUpperPortal *and* Morph *and either* CanOpenRedDoors *or* Wave
-    - Ice *or* HiJump *or* CanSpringBallJump *or* CanFly
 
 **Super Missile (pink Brinstar)**
 
@@ -33,13 +22,7 @@ CanPassBombPassages
 
 **Power Bomb (pink Brinstar)**
 
-*Normal*
-
 CanUsePowerBombs *and* Super *and* 1 EnergyReserves
-
-*Hard*
-
-CanUsePowerBombs *and* Super
 
 **Missile (green Brinstar pipe)**
 
@@ -51,10 +34,4 @@ CanUsePowerBombs *and* CanOpenRedDoors *and* SpeedBooster *and either* 1 EnergyR
 
 **Energy Tank, Brinstar Gate**
 
-*Normal*
-
 CanUsePowerBombs *and* Wave *and* 1 EnergyReserves
-
-*Hard*
-
-CanUsePowerBombs *and either* Wave *or* Super

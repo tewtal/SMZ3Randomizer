@@ -12,7 +12,7 @@ import common from './common';
 export default {
     tabs: [
         { name: 'Crateria', tabs: crateria },
-        { name: 'Wrecked Ship', markdown: wreckedship },
+        { name: 'Wrecked Ship', ...wreckedship },
         { name: 'Brinstar', tabs: brinstar },
         { name: 'Maridia', tabs: maridia },
         { name: 'Upper Norfair', tabs: norfairupper },

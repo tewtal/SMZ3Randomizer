@@ -5,9 +5,9 @@ import LightWorldNorthEast from '!!raw-loader!./LightWorldNorthEast.md';
 import LightWorldSouth from '!!raw-loader!./LightWorldSouth.md';
 
 export default [
-    { name: 'Death Mountain West', markdown: LightWorldDeathMountainWest },
-    { name: 'Death Mountain East', markdown: LightWorldDeathMountainEast },
-    { name: 'North West', markdown: LightWorldNorthWest },
-    { name: 'North East', markdown: LightWorldNorthEast },
-    { name: 'South', markdown: LightWorldSouth }
+    { name: 'Death Mountain West', normal: LightWorldDeathMountainWest },
+    { name: 'Death Mountain East', normal: LightWorldDeathMountainEast },
+    { name: 'North West', normal: LightWorldNorthWest },
+    { name: 'North East', normal: LightWorldNorthEast },
+    { name: 'South', normal: LightWorldSouth }
 ];

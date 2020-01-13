@@ -1,3 +1,4 @@
-﻿import WreckedShip from '!!raw-loader!./WreckedShip.md';
+﻿import WreckedShipNormal from '!!raw-loader!./WreckedShipNormal.md';
+import WreckedShipHard from '!!raw-loader!./WreckedShipHard.md';
 
-export default WreckedShip;
+export default { normal: WreckedShipNormal, hard: WreckedShipHard };
