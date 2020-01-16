@@ -12,17 +12,21 @@ namespace Randomizer.CLI.Verbs {
 
     abstract class GenSeedOptions {
 
+        [Option(
+            HelpText = "Generate a singleworld mode seed (defaults to multiworld")]
+        public bool Single { get; set; }
+
         [Option('p', "players", Default = 1,
             HelpText = "The number of players for seeds")]
         public int Players { get; set; }
 
-        [Option('c', "casual",
-            HelpText = "Generate seeds with Casual SM logic")]
-        public bool Casual { get; set; }
+        [Option('n', "normal",
+            HelpText = "Generate seeds with Normal SM logic (default)")]
+        public bool Normal { get; set; }
 
-        [Option('t', "tournament",
-            HelpText = "Generate seeds with Tournament SM logic (default)")]
-        public bool Tournament { get; set; }
+        [Option('h', "hard",
+            HelpText = "Generate seeds with Hard SM logic")]
+        public bool Hard { get; set; }
 
         [Option('l', "loop",
             HelpText = "Generate seeds repeatedly")]
@@ -57,9 +61,9 @@ namespace Randomizer.CLI.Verbs {
         public bool Patch { get; set; }
 
         public string Logic => this switch {
-            var o when o.Tournament => "tournament",
-            var o when o.Casual => "casual",
-            _ => "tournament"
+            var o when o.Hard => "hard",
+            var o when o.Normal => "normal",
+            _ => "normal"
         };
 
         protected const string smFile = @".\Super_Metroid_JU_.smc";
@@ -128,8 +132,9 @@ namespace Randomizer.CLI.Verbs {
                 throw new ArgumentOutOfRangeException("players", "The players parameter must fall within the range 1-64");
 
             var optionList = new[] {
-                ("logic", opts.Logic),
-                ("worlds", opts.Players.ToString()),
+                ("gamemode", opts.Single ? "normal" : "multiworld"),
+                ("smlogic", opts.Logic),
+                ("players", opts.Players.ToString()),
             };
             var players = from n in Enumerable.Range(0, opts.Players)
                           select ($"player-{n}", $"Player {n + 1}");
@@ -152,7 +157,7 @@ namespace Randomizer.CLI.Verbs {
             var end = DateTime.Now;
             Console.WriteLine(string.Join(" - ",
                 $"Generated seed: {data.Seed}",
-                $"Players: {options["worlds"]}",
+                $"Players: {options["players"]}",
                 $"Spheres: {data.Playthrough.Count}",
                 $"Generation time: {end - start}"
             ));
