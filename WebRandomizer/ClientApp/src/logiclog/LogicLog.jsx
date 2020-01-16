@@ -1,9 +1,11 @@
 ﻿import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
-import { InputGroupAddon, Button, Nav, NavItem, NavLink } from 'reactstrap';
+import { Row, Col, Card, CardHeader, CardBody, Collapse } from 'reactstrap';
+import { InputGroupAddon, Label, Button, Nav, NavItem, NavLink } from 'reactstrap';
 import InputGroup from '../components/util/PrefixInputGroup';
 import Markdown from '../components/Markdown';
+import PlusIcon from './PlusIcon';
+import MinusIcon from './MinusIcon';
 
 import classnames from 'classnames';
 
@@ -40,13 +42,44 @@ const StyledMarkdown = styled(Markdown)`
   }
 `;
 
+const introText =
+`
+The worlds are filled by this procedure: 
+- Assume all progression items are acquired
+- Progression items (non-dungeon) and item locations are shuffled respectively
+- Items are placed one by one. Dungeon items are placed first, followed by all other progression
+  - An item is placed at the first location where the item can first be placed there and then the
+    player can reach it with their remaining progression according to the logic
+  - An item can only be placed cross world if the owning player can reach the same location in
+    their world with their current progression *including* the item to be placed.
+
+Some bias is applied based on game mode. For multiworld Morph Balls are placed within the last 25%
+of the pool, and Moon Pearls within the last 50% (which makes them show up earlier).
+For singleworld first sphere locations in Link to the Past are weighted down significantly, and
+Green, and Pink Brinstar are weighted down slightly.
+`;
+
 export default function LogicLog() {
+    const [showIntro, setShowIntro] = useState(false);
     const [SMLogic, setSMLogic] = useState('normal');
     const [tabState, setTabState] = useState({});
 
     const parts = active(tabState, content);
     const bars = initial(parts);
     const { normal, hard } = last(parts);
+
+    const Icon = showIntro ? MinusIcon : PlusIcon;
+
+    const introduction = (
+        <>
+            <Label onClick={() => setShowIntro(!showIntro)}>
+                <Icon />{' '}<strong>Introduction</strong>
+            </Label>
+            <Collapse isOpen={showIntro}>
+                <Markdown text={introText} />
+            </Collapse>
+        </>
+    );
 
     const logicButton = (logic, name) => (
         <InputGroupAddon addonType="append">
@@ -94,6 +127,11 @@ export default function LogicLog() {
 
     return (
         <>
+            <Row>
+                <Col>
+                    {introduction}
+                </Col>
+            </Row>
             <Row>
                 <Col>
                     {toggle}
