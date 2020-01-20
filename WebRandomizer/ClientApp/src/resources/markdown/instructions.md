@@ -95,6 +95,6 @@ space jump in Super Metroid, and also a button to *Download ROM* which is your s
 ROM.
 
 Download the ROM and after loading it with SD2SNES or an Emulator, make sure the USB2SNES/QUSB2SNES
-software is running, any required lua scripts are running and then finally press "Connect". If
-everything works as expected and you have the correct ROM loaded it'll say below "Game detected,
-have fun" which means everything is ok and ready to go.
+software is running, any required lua scripts are running, that you have reached the File Select
+screen, and then finally press "Connect". If everything works as expected and you have the correct
+ROM loaded it'll say below "Game detected, have fun" which means everything is ok and ready to go.
