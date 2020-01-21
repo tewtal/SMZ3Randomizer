@@ -53,8 +53,8 @@ The worlds are filled by this procedure:
   - An item can only be placed cross world if the owning player can reach the same location in
     their world with their current progression *including* the item to be placed.
 
-Some bias is applied based on game mode. For multiworld Morph Balls are placed within the last 25%
-of the pool, and Moon Pearls within the last 50% (which makes them show up earlier).
+Some bias is applied based on game mode. For multiworld Morph Balls are placed within the last 20%
+of the pool, and Moon Pearls within the last 40% (which makes them show up earlier).
 For singleworld first sphere locations in Link to the Past are weighted down significantly, and
 Green, and Pink Brinstar are weighted down slightly.
 `;
