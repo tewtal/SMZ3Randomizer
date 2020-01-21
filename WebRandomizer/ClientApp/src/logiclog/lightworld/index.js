@@ -1,8 +1,9 @@
-﻿import LightWorldDeathMountainWest from '!!raw-loader!./LightWorldDeathMountainWest.md';
-import LightWorldDeathMountainEast from '!!raw-loader!./LightWorldDeathMountainEast.md';
-import LightWorldNorthWest from '!!raw-loader!./LightWorldNorthWest.md';
-import LightWorldNorthEast from '!!raw-loader!./LightWorldNorthEast.md';
-import LightWorldSouth from '!!raw-loader!./LightWorldSouth.md';
+﻿import raw from "raw.macro";
+const LightWorldDeathMountainWest = raw('./LightWorldDeathMountainWest.md');
+const LightWorldDeathMountainEast = raw('./LightWorldDeathMountainEast.md');
+const LightWorldNorthWest = raw('./LightWorldNorthWest.md');
+const LightWorldNorthEast = raw('./LightWorldNorthEast.md');
+const LightWorldSouth = raw('./LightWorldSouth.md');
 
 export default [
     { name: 'Death Mountain West', normal: LightWorldDeathMountainWest },

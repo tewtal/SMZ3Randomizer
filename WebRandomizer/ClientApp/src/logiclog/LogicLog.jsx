@@ -165,7 +165,7 @@ function activate(state, tabs) {
     const path = initial(tabs);
     const tab = last(tabs);
     for (const first of path) {
-        return { ...state, [first]: activate(state[first], tail(tabs)) }
+        return { ...state, [first]: activate(state[first], tail(tabs)) };
     }
     return { ...state, active: tab };
 }

@@ -1,12 +1,13 @@
-﻿import BrinstarBlueNormal from '!!raw-loader!./BrinstarBlueNormal.md';
-import BrinstarBlueHard from '!!raw-loader!./BrinstarBlueHard.md';
-import BrinstarGreenNormal from '!!raw-loader!./BrinstarGreenNormal.md';
-import BrinstarGreenHard from '!!raw-loader!./BrinstarGreenHard.md';
-import BrinstarPinkNormal from '!!raw-loader!./BrinstarPinkNormal.md';
-import BrinstarPinkHard from '!!raw-loader!./BrinstarPinkHard.md';
-import BrinstarRedNormal from '!!raw-loader!./BrinstarRedNormal.md';
-import BrinstarRedHard from '!!raw-loader!./BrinstarRedHard.md';
-import BrinstarKraid from '!!raw-loader!./BrinstarKraid.md';
+﻿import raw from "raw.macro";
+const BrinstarBlueNormal = raw('./BrinstarBlueNormal.md');
+const BrinstarBlueHard = raw('./BrinstarBlueHard.md');
+const BrinstarGreenNormal = raw('./BrinstarGreenNormal.md');
+const BrinstarGreenHard = raw('./BrinstarGreenHard.md');
+const BrinstarPinkNormal = raw('./BrinstarPinkNormal.md');
+const BrinstarPinkHard = raw('./BrinstarPinkHard.md');
+const BrinstarRedNormal = raw('./BrinstarRedNormal.md');
+const BrinstarRedHard = raw('./BrinstarRedHard.md');
+const BrinstarKraid = raw('./BrinstarKraid.md');
 
 export default [
     { name: 'Blue', normal: BrinstarBlueNormal, hard: BrinstarBlueHard },

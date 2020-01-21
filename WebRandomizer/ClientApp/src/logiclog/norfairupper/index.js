@@ -1,9 +1,10 @@
-﻿import NorfairUpperWestNormal from '!!raw-loader!./NorfairUpperWestNormal.md';
-import NorfairUpperWestHard from '!!raw-loader!./NorfairUpperWestHard.md';
-import NorfairUpperEastNormal from '!!raw-loader!./NorfairUpperEastNormal.md';
-import NorfairUpperEastHard from '!!raw-loader!./NorfairUpperEastHard.md';
-import NorfairUpperCrocomireNormal from '!!raw-loader!./NorfairUpperCrocomireNormal.md';
-import NorfairUpperCrocomireHard from '!!raw-loader!./NorfairUpperCrocomireHard.md';
+﻿import raw from "raw.macro";
+const NorfairUpperWestNormal = raw('./NorfairUpperWestNormal.md');
+const NorfairUpperWestHard = raw('./NorfairUpperWestHard.md');
+const NorfairUpperEastNormal = raw('./NorfairUpperEastNormal.md');
+const NorfairUpperEastHard = raw('./NorfairUpperEastHard.md');
+const NorfairUpperCrocomireNormal = raw('./NorfairUpperCrocomireNormal.md');
+const NorfairUpperCrocomireHard = raw('./NorfairUpperCrocomireHard.md');
 
 export default [
     { name: 'West', normal: NorfairUpperWestNormal, hard: NorfairUpperWestHard },

@@ -1,16 +1,17 @@
-﻿import HyruleCastle from '!!raw-loader!./HyruleCastle.md';
-import EasternPalace from '!!raw-loader!./EasternPalace.md';
-import DesertPalace from '!!raw-loader!./DesertPalace.md';
-import TowerOfHera from '!!raw-loader!./TowerOfHera.md';
-import CastleTower from '!!raw-loader!./CastleTower.md';
-import PalaceOfDarkness from '!!raw-loader!./PalaceOfDarkness.md';
-import SwampPalace from '!!raw-loader!./SwampPalace.md';
-import SkullWoods from '!!raw-loader!./SkullWoods.md';
-import ThievesTown from '!!raw-loader!./ThievesTown.md';
-import IcePalace from '!!raw-loader!./IcePalace.md';
-import MiseryMire from '!!raw-loader!./MiseryMire.md';
-import TurtleRock from '!!raw-loader!./TurtleRock.md';
-import GanonsTower from '!!raw-loader!./GanonsTower.md';
+﻿import raw from "raw.macro";
+const HyruleCastle = raw('./HyruleCastle.md');
+const EasternPalace = raw('./EasternPalace.md');
+const DesertPalace = raw('./DesertPalace.md');
+const TowerOfHera = raw('./TowerOfHera.md');
+const CastleTower = raw('./CastleTower.md');
+const PalaceOfDarkness = raw('./PalaceOfDarkness.md');
+const SwampPalace = raw('./SwampPalace.md');
+const SkullWoods = raw('./SkullWoods.md');
+const ThievesTown = raw('./ThievesTown.md');
+const IcePalace = raw('./IcePalace.md');
+const MiseryMire = raw('./MiseryMire.md');
+const TurtleRock = raw('./TurtleRock.md');
+const GanonsTower = raw('./GanonsTower.md');
 
 export default [
     { name: 'Hyrule Castle', normal: HyruleCastle },
