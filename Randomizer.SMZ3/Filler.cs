@@ -52,24 +52,46 @@ namespace Randomizer.SMZ3 {
             if (Config.GameMode == GameMode.Multiworld) {
                 /* Place moonpearls and morphs in last 25%/50% of the pool so that
                  * they will tend to place in earlier locations.
-                 * Prefer morphs being pushed too far up the list than moonpearls,
-                 * so start with morph, followed by moonpearls */
-                ReorderItems(progressionItems, ItemType.Morph, n => n - Rnd.Next(n / 4));
-                ReorderItems(progressionItems, ItemType.MoonPearl, n => n - Rnd.Next(n / 2));
+                 */
+                ApplyItemBias(progressionItems, new[] {
+                    (ItemType.MoonPearl, .50),
+                    (ItemType.Morph, .25),
+                });
             }
 
             GanonTowerFill(junkItems);
 
             var locations = Worlds.SelectMany(x => x.Locations).Empty().Shuffle(Rnd);
             if (Config.GameMode != GameMode.Multiworld)
-                locations = ApplyWeighting(locations).ToList();
+                locations = ApplyLocationWeighting(locations).ToList();
 
             AssumedFill(progressionItems, new List<Item>(), locations, Worlds);
             FastFill(niceItems, locations);
             FastFill(junkItems, locations);
         }
 
-        IEnumerable<Location> ApplyWeighting(IEnumerable<Location> locations) {
+        void ApplyItemBias(List<Item> itemPool, IEnumerable<(ItemType type, double weight)> reorder) {
+            var n = itemPool.Count;
+
+            /* Gather all items that are being biased */
+            var items = reorder.ToDictionary(x => x.type, x => itemPool.FindAll(item => item.Type == x.type));
+            itemPool.RemoveAll(item => reorder.Any(x => x.type == item.Type));
+
+            /* Insert items from each biased type such that their lowest index 
+             * is based on their weight on the original pool size
+             */
+            foreach (var (type, weight) in reorder.OrderByDescending(x => x.weight)) {
+                var i = (int)(n * (1 - weight));
+                if (i >= itemPool.Count)
+                    throw new InvalidOperationException($"Too many items are being biased which makes the tail portion for {type} too big");
+                foreach (var item in items[type]) {
+                    var k = Rnd.Next(i, itemPool.Count);
+                    itemPool.Insert(k, item);
+                }
+            }
+        }
+
+        IEnumerable<Location> ApplyLocationWeighting(IEnumerable<Location> locations) {
             return from location in locations.Select((x, i) => (x, i: i - x.Weight))
                    orderby location.i select location.x;
         }
@@ -123,14 +145,6 @@ namespace Randomizer.SMZ3 {
                 throw new InvalidOperationException($"Tried to front fill {item.Name} in, but no location was available");
             location.Item = item;
             itemPool.Remove(item);
-        }
-
-        void ReorderItems(List<Item> itemPool, ItemType itemType, Func<int, int> index) {
-            var items = itemPool.Where(x => x.Type == itemType).ToList();
-            itemPool.RemoveAll(x => x.Type == itemType);
-            foreach (var item in items) {
-                itemPool.Insert(index(itemPool.Count), item);
-            }
         }
 
         void GanonTowerFill(List<Item> itemPool) {
