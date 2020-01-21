@@ -1,17 +1,20 @@
+using System.IO;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.SignalR;
 using WebRandomizer.Hubs;
 using WebRandomizer.Models;
-using Microsoft.AspNetCore.StaticFiles;
 
 namespace WebRandomizer {
 
@@ -65,12 +68,27 @@ namespace WebRandomizer {
             provider.Mappings[".rdc"] = "application/octet-stream";
             provider.Mappings[".lua"] = "text/x-lua";
 
+            var attachments = new List<string> {
+                ".lua",
+            };
+
+            var path = $"ClientApp/{(env.IsProduction() ? "build" : "public")}";
             app.UseStaticFiles(new StaticFileOptions {
-                ContentTypeProvider = provider
+                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, path)),
+                ContentTypeProvider = provider,
+                OnPrepareResponse = ctx => {
+                    var ext = Path.GetExtension(ctx.File.Name);
+                    if (attachments.Contains(ext))
+                        ctx.Context.Response.Headers.Add("Content-Disposition", "attachment");
+                },
+            });
+
+            app.UseStaticFiles(new StaticFileOptions {
+                ContentTypeProvider = provider,
             });
 
             app.UseSpaStaticFiles(new StaticFileOptions {
-                ContentTypeProvider = provider
+                ContentTypeProvider = provider,
             });
 
             app.UseRouting();
