@@ -1,8 +1,9 @@
 import React from 'react';
-const ReactMarkdown = require('react-markdown');
+import Markdown from './Markdown';
+
 const homeMarkdown =
 `
-### Super Metroid and A Link to the Past Randomizer
+## Super Metroid and A Link to the Past Randomizer
 
 To generate a Combo Rando seed, go to the [Configure SMZ3 Game](/configure/smz3) page.
 
@@ -14,6 +15,6 @@ To generate a Super Metroid seed, go to the [Configure SM Game](/configure/sm) p
 
 export default function Home() {
     return (
-        <ReactMarkdown source={homeMarkdown} />
+        <Markdown text={homeMarkdown} />
     );
 }

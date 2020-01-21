@@ -37,6 +37,9 @@ export default function NavMenu() {
                                 <NavItem>
                                     <NavLink tag={Link} className="text-dark" to="/configure/smz3">Create randomized game</NavLink>
                                 </NavItem>
+                                <NavItem>
+                                    <NavLink tag={Link} className="text-dark" to="/logic">Logic Log</NavLink>
+                                </NavItem>
                             </ul>
                         </Collapse>
                     </Container>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createGlobalStyle } from 'styled-components';
 import ReactMarkdown from 'react-markdown';
+import classNames from 'classnames';
 
 import attempt from 'lodash/attempt';
 
@@ -19,23 +20,29 @@ const GlobalMarkdownStyle = createGlobalStyle`
 `;
 
 export default function Markdown(props) {
-    const [text, setText] = useState('');
+    const { className, text = '' } = props;
+    const [sourceText, setSourceText] = useState('');
 
     useEffect(() => {
-        attempt(async () => {
-            try {
-                const response = await fetch(props.source);
-                setText(await response.text());
-            } catch (error) {
-                setText(`Could not load text because: ${error}`);
-            }
-        });
+        if (props.source) {
+            attempt(async () => {
+                try {
+                    const response = await fetch(props.source);
+                    setSourceText(await response.text());
+                } catch (error) {
+                    setSourceText(`Could not load text because: ${error}`);
+                }
+            });
+        }
     }, [props.source]);
 
     return (
         <>
             <GlobalMarkdownStyle/>
-            <ReactMarkdown className="markdown" source={text} />
+            <ReactMarkdown
+                className={classNames('markdown', className)}
+                source={sourceText || text}
+            />
         </>
     );
 }
