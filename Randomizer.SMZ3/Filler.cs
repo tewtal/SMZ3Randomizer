@@ -50,12 +50,12 @@ namespace Randomizer.SMZ3 {
             var junkItems = Worlds.SelectMany(world => Item.CreateJunkPool(world)).Shuffle(Rnd);
 
             if (Config.GameMode == GameMode.Multiworld) {
-                /* Place moonpearls and morphs in last 25%/50% of the pool so that
+                /* Place moonpearls and morphs in last 40%/20% of the pool so that
                  * they will tend to place in earlier locations.
                  */
                 ApplyItemBias(progressionItems, new[] {
-                    (ItemType.MoonPearl, .50),
-                    (ItemType.Morph, .25),
+                    (ItemType.MoonPearl, .40),
+                    (ItemType.Morph, .20),
                 });
             }
 
