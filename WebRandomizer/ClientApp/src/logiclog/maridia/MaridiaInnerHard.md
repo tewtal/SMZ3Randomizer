@@ -6,8 +6,8 @@
     - HiJump *and either* Ice *or* CanSpringBallJump *and also* Grapple
   - CanAccessMaridiaPortal
 
-**Super Missile (yellow Maridia)**
-**Missile (yellow Maridia super missile)**
+**Super Missile (yellow Maridia)**  
+**Missile (yellow Maridia super missile)**  
 **Missile (yellow Maridia false wall)**
 
 CanPassBombPassages *and either* Gravity *or* Ice *or* CanSpringBallJump *with* HiJump
@@ -65,4 +65,4 @@ CanDefeatDraygon *and either* CanFly *or* SpeedBooster *with* HiJump
 
 **CanDefeatBotwoon**
 
-Ice *or* SpeedBooster *or* CanAccessMaridiaPortal
+Ice *or* SpeedBooster *with* Gravity *or* CanAccessMaridiaPortal

@@ -1,10 +1,11 @@
 ﻿***can enter***
 
-- *one of*
-  - CanDestroyBombWalls
-  - SpeedBooster
-  - CanAccessNorfairUpperPortal
-- Super *and* CanPassBombPassages
+- *each of*
+  - *one of*
+    - CanDestroyBombWalls
+    - SpeedBooster
+    - CanAccessNorfairUpperPortal
+  - Super *and* CanPassBombPassages
 
 **Energy Tank, Kraid**  
 **Varia Suit**

@@ -4,8 +4,8 @@
   - *can enter* **Upper Norfair West** *and* Super *and* CanUsePowerBombs *and either* CanFly *or* SpeedBooster *or* Grapple
   - CanAccessMaridiaPortal
 
-**Super Missile (yellow Maridia)**
-**Missile (yellow Maridia super missile)**
+**Super Missile (yellow Maridia)**  
+**Missile (yellow Maridia super missile)**  
 **Missile (yellow Maridia false wall)**
 
 CanPassBombPassages
