@@ -54,8 +54,10 @@ export default function Upload(props) {
         }
 
         try {
-            await localForage.setItem('baseRomSM', new Blob([fileDataSM]));
-            await localForage.setItem('baseRomLTTP', new Blob([fileDataZ3]));
+            if (fileDataSM)
+                await localForage.setItem('baseRomSM', new Blob([fileDataSM]));
+            if (fileDataZ3)
+                await localForage.setItem('baseRomLTTP', new Blob([fileDataZ3]));
         } catch (error) {
             console.log("Could not store file to localforage:", error);
             return;
