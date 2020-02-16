@@ -84,6 +84,11 @@ namespace WebRandomizer.Hubs {
                     if(fromClient.Events.Any(x => x.Type == EventType.ItemSent && x.ItemIndex == itemIndex)) {
                         return true;
                     }
+
+                    /* Reject item id 0, it's an item that shouldn't be able to be sent and is one that gets sent where there are client issues */
+                    if(itemId == 0) {
+                        return false;
+                    }
                     
                     /* Get the receiving client */                    
                     var toClient = session.Clients.SingleOrDefault(x => x.WorldId == worldId);

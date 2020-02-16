@@ -35,7 +35,7 @@ namespace Randomizer.SMZ3 {
         public ISeedData GenerateSeed(IDictionary<string, string> options, string seed) {
             int randoSeed;
             if (string.IsNullOrEmpty(seed)) {
-                randoSeed = new Random().Next();
+                randoSeed = System.Security.Cryptography.RandomNumberGenerator.GetInt32(0, int.MaxValue);
                 seed = randoSeed.ToString();
             } else {
                 randoSeed = int.Parse(seed);

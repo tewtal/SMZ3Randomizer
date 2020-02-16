@@ -30,7 +30,7 @@ namespace Randomizer.SuperMetroid {
         };
         public ISeedData GenerateSeed(IDictionary<string, string> options, string seed) {
             if (seed == "") {
-                seed = new Random().Next(0, int.MaxValue).ToString();
+                seed = System.Security.Cryptography.RandomNumberGenerator.GetInt32(0, int.MaxValue).ToString();
             }
 
             var rnd = new Random(int.Parse(seed));
