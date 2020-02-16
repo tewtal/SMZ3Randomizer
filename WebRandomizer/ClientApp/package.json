@@ -5,6 +5,7 @@
   "dependencies": {
     "@microsoft/signalr": "^3.1.0",
     "bootstrap": "^4.4.1",
+    "bootstrap-switch-button-react": "^1.2.0",
     "classnames": "^2.2.6",
     "file-saver": "^2.0.1",
     "jquery": "^3.4.1",

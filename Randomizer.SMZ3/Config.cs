@@ -83,6 +83,7 @@ namespace Randomizer.SMZ3 {
         public MorphLocation MorphLocation { get; set; } = MorphLocation.Randomized;
         public Goal Goal { get; set; } = Goal.DefeatBoth;
         public bool Keysanity { get; set; } = false;
+        public bool Race { get; set; } = false;
         public GanonInvincible GanonInvincible { get; set; } = GanonInvincible.BeforeCrystals;
 
         public Config(IDictionary<string, string> options) {
@@ -94,7 +95,8 @@ namespace Randomizer.SMZ3 {
             MorphLocation = ParseOption(options, MorphLocation.Randomized);
             Goal = ParseOption(options, Goal.DefeatBoth);
             GanonInvincible = ParseOption(options, GanonInvincible.BeforeCrystals);
-            Keysanity = false;
+            Race = ParseOption(options, "Race", false);
+            Keysanity = false;            
         }
 
         private TEnum ParseOption<TEnum>(IDictionary<string, string> options, TEnum defaultValue) where TEnum: Enum {
@@ -105,6 +107,14 @@ namespace Randomizer.SMZ3 {
                 }
             }
             return defaultValue;
+        }
+
+        private bool ParseOption(IDictionary<string, string> options, string option, bool defaultValue) {
+            if(options.ContainsKey(option.ToLower())) {
+                return bool.Parse(options[option.ToLower()]);
+            } else {
+                return defaultValue;
+            }
         }
 
         public static RandomizerOption GetRandomizerOption<T>(string description, string defaultOption = "") where T : Enum {
@@ -119,6 +129,17 @@ namespace Randomizer.SMZ3 {
                 Values = values.ToDictionary(k => k.ToLString(), v => v.GetDescription())
             };
         }
+
+        public static RandomizerOption GetRandomizerOption(string name, string description, bool defaultOption = false) {
+            return new RandomizerOption {
+                Key = name.ToLower(),
+                Description = description,
+                Type = RandomizerOptionType.Checkbox,
+                Default = defaultOption.ToString().ToLower(),
+                Values = new Dictionary<string, string>()
+            };
+        }
+
         public static TEnum GetDefaultValue<TEnum>() where TEnum : Enum {
             Type t = typeof(TEnum);
             var attributes = (DefaultValueAttribute[])t.GetCustomAttributes(typeof(DefaultValueAttribute), false);

@@ -296,12 +296,11 @@ export default class Network {
     /* Try to detect the game by looking at the specific hashes */
     async detectGame() {
         const mappings = this.session.data.seed.gameId === "smz3" ?
-            [            
-            //  [SeedData, MsgBase , ItemBase]
-                [0x00FF50, 0xE03700, 0xE04000], /* SNES */
-                [0x407F50, 0xE03700, 0xE04000], /* SNES9x */
-                [0xC0FF50, 0x703700, 0x704000]  /* Retroarch */
-            ] :                                
+            [
+                //  [SeedData, MsgBase , ItemBase]
+                [0xE046A0, 0xE03700, 0xE04000],  /* Any sane platform with proper SRAM mapping */
+                [0x7046A0, 0x703700, 0x704000]   /* Retroarch (bsnes-mercury) */
+            ] :
             [                                   /* Super Metroid */
                 [0x1C4F00, 0xE01E00, 0xE02000], /* SNES / Snes9x */
                 [0xB8CF00, 0x701E00, 0x702000]  /* Retroarch */

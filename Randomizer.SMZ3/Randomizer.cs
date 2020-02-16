@@ -24,6 +24,7 @@ namespace Randomizer.SMZ3 {
             new RandomizerOption {
                 Key = "seed", Description = "Seed", Type = Input
             },
+            Config.GetRandomizerOption("Race", "Race ROM (no spoilers)", false),
             Config.GetRandomizerOption<GameMode>("Game mode"),
 
             new RandomizerOption {
@@ -41,9 +42,14 @@ namespace Randomizer.SMZ3 {
             }
 
             var randoRnd = new Random(randoSeed);
-
+            
             var config = new Config(options);
             var worlds = new List<World>();
+
+            /* FIXME: Just here to semi-obfuscate race seeds until a better solution is in place */
+            if(config.Race) {
+                randoRnd = new Random(randoRnd.Next());
+            }
 
             if (config.GameMode == GameMode.Normal) {
                 worlds.Add(new World(config, "Player", 0, new HexGuid()));
@@ -67,7 +73,7 @@ namespace Randomizer.SMZ3 {
                 Game = Name,
                 Mode = config.GameMode.ToLString(),
                 Logic = $"{config.SMLogic.ToLString()}+{config.Z3Logic.ToLString()}",
-                Playthrough = spheres,
+                Playthrough = config.Race ? new List<Dictionary<string, string>>() : spheres,
                 Worlds = new List<IWorldData>(),
             };
 

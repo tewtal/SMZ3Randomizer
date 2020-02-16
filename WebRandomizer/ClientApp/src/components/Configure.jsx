@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { encode } from 'slugid';
 import { Container, Row, Col, Card, CardHeader, CardBody, Button, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Modal, ModalHeader, ModalBody, Progress } from 'reactstrap';
+import BootstrapSwitchButton from 'bootstrap-switch-button-react';
 
 export default function Configure(props) {
     const [options, setOptions] = useState(null);
@@ -63,8 +64,8 @@ export default function Configure(props) {
         }
     }
 
-    function updateOption(e, key) {
-        setOptions({...options, [key]: e.target.value});
+    function updateOption(key, value) {
+        setOptions({...options, [key]: value});
     }
 
     function chunk(array, size) {
@@ -89,7 +90,7 @@ export default function Configure(props) {
                                 <InputGroupAddon addonType="prepend">
                                     <InputGroupText>{opt.description}</InputGroupText>
                                 </InputGroupAddon>
-                                <Input id={opt.key} defaultValue={options[opt.key]} onChange={(e) => updateOption(e, opt.key)} />
+                                <Input id={opt.key} defaultValue={options[opt.key]} onChange={(e) => updateOption(opt.key, e.target.value)} />
                             </InputGroup>
                         </Col>
                     );
@@ -101,9 +102,22 @@ export default function Configure(props) {
                                 <InputGroupAddon addonType="prepend">
                                     <InputGroupText>{opt.description}</InputGroupText>
                                 </InputGroupAddon>
-                                <Input type="select" id={opt.key} defaultValue={options[opt.key]} onChange={(e) => updateOption(e, opt.key)}>
+                                <Input type="select" id={opt.key} defaultValue={options[opt.key]} onChange={(e) => updateOption(opt.key, e.target.value)}>
                                     {Object.entries(opt.values).map(([k,v]) => <option key={k} value={k}>{v}</option>)}
                                 </Input>
+                            </InputGroup>
+                        </Col>
+                    );
+                    break;
+                case 'checkbox':
+                    inputElement = (
+                        <Col key={opt.key} md="6">
+                            <InputGroup>
+                                <InputGroupAddon addonType="prepend">
+                                    <InputGroupText>{opt.description}</InputGroupText>
+                                </InputGroupAddon>
+                                &nbsp;
+                                <BootstrapSwitchButton onlabel="Yes" offlabel="No" width="80" id={opt.key} checked={options[opt.key]} onChange={(checked) => updateOption(opt.key, checked.toString())} />
                             </InputGroup>
                         </Col>
                     );
@@ -116,7 +130,7 @@ export default function Configure(props) {
                                     <InputGroupAddon addonType="prepend">
                                         <InputGroupText>{opt.description}</InputGroupText>
                                     </InputGroupAddon>
-                                    <Input id={opt.key} defaultValue={options[opt.key]} onChange={(e) => updateOption(e, opt.key)} />
+                                    <Input id={opt.key} defaultValue={options[opt.key]} onChange={(e) => updateOption(opt.key, e.target.value)} />
                                 </InputGroup>
                             </Col>
                         );
