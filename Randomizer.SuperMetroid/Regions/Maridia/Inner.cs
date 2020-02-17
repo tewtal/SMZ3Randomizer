@@ -70,7 +70,7 @@ namespace Randomizer.SuperMetroid.Regions.Maridia {
                     _ => new Requirement(items => items.CanDefeatBotwoon(Logic) && items.Has(Gravity))
                 }),
                 new Location(this, 152, "Energy Tank, Botwoon", Visible, Major, 0x7C755, Logic switch {
-                    _ => new Requirement(items => items.CanDefeatBotwoon(Logic))
+                    _ => new Requirement(items => items.CanDefeatBotwoon(Logic) && (items.Has(Gravity) || items.Has(Ice)))
                 }),
                 new Location(this, 154, "Space Jump", Chozo, Major, 0x7C7A7, Logic switch {
                     Casual => items => items.CanDefeatDraygon(Logic),

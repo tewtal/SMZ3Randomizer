@@ -90,7 +90,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
         bool CanDefeatBotwoon(Progression items) {
             return Logic switch {
                 Normal => items.SpeedBooster || items.CanAccessMaridiaPortal(World),
-                _ => items.Ice || items.SpeedBooster || items.CanAccessMaridiaPortal(World)
+                _ => items.Ice || items.SpeedBooster && items.Gravity || items.CanAccessMaridiaPortal(World)
             };
         }
 
