@@ -6,7 +6,7 @@ namespace Randomizer.SMZ3.Text {
 
     class StringTable {
 
-        internal readonly IList<(string, byte[])> entries;
+        internal readonly IList<(string name, byte[] bytes)> entries;
 
         public StringTable() {
             entries = CreateEntries();

@@ -16,49 +16,34 @@ namespace Randomizer.SMZ3.Tests {
         const string StringEntriesFile = "TestData.StringEntries.json";
         const string SimpleTextFile = "TestData.SimpleText.json";
 
-        static byte[] ParseEntry(IDictionary<string, string> table, string name) {
-            return ParseText(table[name]);
-        }
-
-        static byte[] ParseText(string text) {
-            return new Regex("..").Matches(text).Select(m => Convert.ToByte(m.Value, 16)).ToArray();
-        }
-
-        static void WithTextFrom(string file, Action<string> action) {
-            using (var stream = ManifestResources.GetEmbeddedStreamFor(file))
-            using (var reader = new StreamReader(stream)) {
-                action(reader.ReadToEnd());
-            }
-        }
-
         [Test]
         public void GeneratesTheCorrectByteArray() {
-            WithTextFrom(StringTableFile, text => {
-                var expected = ParseText(text);
-                var actual = new StringTable().GetBytes();
-                Assert.That(actual, Is.EqualTo(expected));
-            });
+            var text = TextFrom(StringTableFile);
+
+            var expected = ParseHex(text);
+            var actual = new StringTable().GetBytes();
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [TestCaseSource(nameof(StringTableEntries))]
         public void GeneratesTheCorrectDialogEntry(string name) {
-            WithTextFrom(StringEntriesFile, text => {
-                var table = JsonConvert.DeserializeObject<IDictionary<string, string>>(text);
-                var expected = ParseEntry(table, name);
-                var actual = new StringTable().entries.First(x => x.Item1 == name).Item2;
-                Assert.That(actual, Is.EqualTo(expected));
-            });
+            var text = TextFrom(StringEntriesFile);
+            var table = JsonConvert.DeserializeObject<IDictionary<string, string>>(text);
+
+            var expected = ParseEntry(table, name);
+            var actual = new StringTable().entries.First(x => x.name == name).bytes;
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [TestCaseSource(nameof(SimpleTextEntries))]
         public void GeneratesTheCorrectSimpleText(string name) {
-            WithTextFrom(SimpleTextFile, text => {
-                var item = new Item { Type = Enum.Parse<ItemType>(name) };
-                var table = JsonConvert.DeserializeObject<IDictionary<string, string>>(text);
-                var expected = ParseEntry(table, name);
-                var actual = Dialog.Simple(Texts.ItemTextbox(item));
-                Assert.That(actual, Is.EqualTo(expected));
-            });
+            var text = TextFrom(SimpleTextFile);
+            var table = JsonConvert.DeserializeObject<IDictionary<string, string>>(text);
+            var item = new Item { Type = Enum.Parse<ItemType>(name) };
+
+            var expected = ParseEntry(table, name);
+            var actual = Dialog.Simple(Texts.ItemTextbox(item));
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         //[Test]
@@ -72,7 +57,7 @@ namespace Randomizer.SMZ3.Tests {
                 string.Join("", table.GetBytes().Select(x => x.ToString("X2"))));
 
             File.WriteAllText(EntriesFile, JsonConvert.SerializeObject(
-                table.entries.ToDictionary(x => x.Item1, x => string.Join("", x.Item2.Select(b => b.ToString("X2")))), Formatting.Indented));
+                table.entries.ToDictionary(x => x.name, x => string.Join("", x.bytes.Select(b => b.ToString("X2")))), Formatting.Indented));
 
             File.WriteAllText(SimpleTextFile, JsonConvert.SerializeObject(
                 SimpleTextEntries().ToDictionary(x => x, x => {
@@ -83,13 +68,24 @@ namespace Randomizer.SMZ3.Tests {
         }
 
         static IEnumerable<string> StringTableEntries() {
-            return new StringTable().entries.Select(x => x.Item1);
+            return new StringTable().entries.Select(x => x.name);
         }
 
         static IEnumerable<string> SimpleTextEntries() {
-            var names = Enumerable.Empty<string>();
-            WithTextFrom(SimpleTextFile, text => names = JsonConvert.DeserializeObject<IDictionary<string, string>>(text).Keys);
-            return names;
+            var text = TextFrom(SimpleTextFile);
+            return JsonConvert.DeserializeObject<IDictionary<string, string>>(text).Keys;
+        }
+
+        static string TextFrom(string file) {
+            using var stream = EmbeddedStream.For(file);
+            using var reader = new StreamReader(stream);
+            return reader.ReadToEnd();
+        }
+
+        static byte[] ParseEntry(IDictionary<string, string> table, string name) => ParseHex(table[name]);
+
+        static byte[] ParseHex(string text) {
+            return new Regex("..").Matches(text).Select(m => Convert.ToByte(m.Value, 16)).ToArray();
         }
 
     }
