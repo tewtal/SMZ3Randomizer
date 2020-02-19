@@ -6,7 +6,6 @@ namespace Randomizer.SMZ3.Regions.Zelda {
     class TowerOfHera : Z3Region, IReward {
 
         public override string Name => "Tower of Hera";
-        public override string Area => "Tower of Hera";
 
         public RewardType Reward { get; set; } = RewardType.None;
 
@@ -18,7 +17,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                 new Location(this, 256+116, 0x1E9AD, LocationType.Regular, "Tower of Hera - Map Chest"),
                 new Location(this, 256+117, 0x1E9E6, LocationType.Regular, "Tower of Hera - Big Key Chest",
                     items => items.KeyTH && items.CanLightTorches())
-                    .AlwaysAllow((item, items) => item.Type == KeyTH),
+                    .AlwaysAllow((item, items) => item.Is(KeyTH, World)),
                 new Location(this, 256+118, 0x1E9FB, LocationType.Regular, "Tower of Hera - Compass Chest",
                     items => items.BigKeyTH),
                 new Location(this, 256+119, 0x1E9F8, LocationType.Regular, "Tower of Hera - Big Chest",

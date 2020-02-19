@@ -6,7 +6,6 @@ namespace Randomizer.SMZ3.Regions.Zelda {
     class HyruleCastle : Z3Region {
 
         public override string Name => "Hyrule Castle";
-        public override string Area => "Hyrule Castle";
 
         public HyruleCastle(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeyHC, MapHC };

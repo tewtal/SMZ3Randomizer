@@ -170,6 +170,9 @@ namespace Randomizer.SMZ3 {
         public bool IsMap => map.IsMatch(Type.ToString());
         public bool IsCompass => compass.IsMatch(Type.ToString());
 
+        public bool Is(ItemType type, World world) => Type == type && World == world;
+        public bool IsNot(ItemType type, World world) => !Is(type, world);
+
         public static Item Nothing(World world) {
             return new Item { Name = "Nothing", Type = ItemType.Nothing, World = world };
         }
@@ -376,7 +379,7 @@ namespace Randomizer.SMZ3 {
         }
 
         public static Item Get(this IEnumerable<Item> items, ItemType itemType, World world) {
-            var item = items.FirstOrDefault(i => i.Type == itemType && i.World == world);
+            var item = items.FirstOrDefault(i => i.Is(itemType, world));
             if (item == null)
                 throw new InvalidOperationException($"Could not find an item of type {itemType} in world {world.Id}");
             return item;

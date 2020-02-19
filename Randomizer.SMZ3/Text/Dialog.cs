@@ -31,9 +31,8 @@ namespace Randomizer.SMZ3.Text {
                     if (write[0] == 0xFD) {
                         bytes.AddRange(write);
                     } else {
-                        foreach (var @byte in write) {
-                            bytes.AddRange(new byte[] { 0x00, @byte });
-                        }
+                        foreach (var b in write)
+                            bytes.AddRange(new byte[] { 0x00, b });
                     }
                 }
 
@@ -115,7 +114,6 @@ namespace Randomizer.SMZ3.Text {
 
                 // The first box needs to fill the full width with spaces as the palette is loaded weird.
                 var letters = padOut && lineIndex < 3 ? line.PadRight(wrap) : line;
-                letters = letters.Length > wrap ? letters[..wrap] : letters;
                 bytes.AddRange(letters.SelectMany(LetterToBytes));
 
                 lineIndex += 1;

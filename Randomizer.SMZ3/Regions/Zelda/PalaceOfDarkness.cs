@@ -6,7 +6,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
     class PalaceOfDarkness : Z3Region, IReward {
 
         public override string Name => "Palace of Darkness";
-        public override string Area => "Palace of Darkness";
+        public override string Area => "Dark Palace";
 
         public RewardType Reward { get; set; } = RewardType.None;
 
@@ -16,9 +16,9 @@ namespace Randomizer.SMZ3.Regions.Zelda {
             Locations = new List<Location> {
                 new Location(this, 256+121, 0x1EA5B, LocationType.Regular, "Palace of Darkness - Shooter Room"),
                 new Location(this, 256+122, 0x1EA37, LocationType.Regular, "Palace of Darkness - Big Key Chest",
-                    items => items.KeyPD >= (Locations.Get("Palace of Darkness - Big Key Chest").ItemType == KeyPD ? 1 :
+                    items => items.KeyPD >= (Locations.Get("Palace of Darkness - Big Key Chest").ItemIs(KeyPD, World) ? 1 :
                         items.Hammer && items.Bow && items.Lamp ? 6 : 5))
-                    .AlwaysAllow((item, items) => item.Type == KeyPD && items.KeyPD >= 5),
+                    .AlwaysAllow((item, items) => item.Is(KeyPD, World) && items.KeyPD >= 5),
                 new Location(this, 256+123, 0x1EA49, LocationType.Regular, "Palace of Darkness - Stalfos Basement",
                     items => items.KeyPD >= 1 || items.Bow && items.Hammer),
                 new Location(this, 256+124, 0x1EA3D, LocationType.Regular, "Palace of Darkness - The Arena - Bridge",
@@ -30,10 +30,10 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                 new Location(this, 256+127, 0x1EA43, LocationType.Regular, "Palace of Darkness - Compass Chest",
                     items => items.KeyPD >= (items.Hammer && items.Bow && items.Lamp ? 4 : 3)),
                 new Location(this, 256+128, 0x1EA46, LocationType.Regular, "Palace of Darkness - Harmless Hellway",
-                    items => items.KeyPD >= (Locations.Get("Palace of Darkness - Harmless Hellway").ItemType == KeyPD ?
+                    items => items.KeyPD >= (Locations.Get("Palace of Darkness - Harmless Hellway").ItemIs(KeyPD, World) ?
                         items.Hammer && items.Bow && items.Lamp ? 4 : 3 :
                         items.Hammer && items.Bow && items.Lamp ? 6 : 5))
-                    .AlwaysAllow((item, items) => item.Type == KeyPD && items.KeyPD >= 5),
+                    .AlwaysAllow((item, items) => item.Is(KeyPD, World) && items.KeyPD >= 5),
                 new Location(this, 256+129, 0x1EA4C, LocationType.Regular, "Palace of Darkness - Dark Basement - Left",
                     items => items.Lamp && items.KeyPD >= (items.Hammer && items.Bow ? 4 : 3)),
                 new Location(this, 256+130, 0x1EA4F, LocationType.Regular, "Palace of Darkness - Dark Basement - Right",

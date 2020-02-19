@@ -38,9 +38,8 @@ namespace Randomizer.SMZ3 {
         Verification allow;
         int? weight;
 
-        public ItemType ItemType {
-            get { return Item?.Type ?? ItemType.Nothing; }
-        }
+        public bool ItemIs(ItemType type, World world) => Item?.Is(type, world) ?? false;
+        public bool ItemIsNot(ItemType type, World world) => !ItemIs(type, world);
 
         public Location(Region region, int id, int address, LocationType type, string name)
             : this(region, id, address, type, name, items => true) {

@@ -6,7 +6,6 @@ namespace Randomizer.SMZ3.Regions.Zelda {
     class CastleTower : Z3Region, IReward {
 
         public override string Name => "Castle Tower";
-        public override string Area => "Castle Tower";
 
         public RewardType Reward { get; set; } = RewardType.Agahnim;
 

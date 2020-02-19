@@ -150,7 +150,7 @@ namespace Randomizer.SMZ3 {
         void GanonTowerFill(List<Item> itemPool) {
             var locations = Worlds
                 .SelectMany(x => x.Locations)
-                .Where(x => x.Region is Regions.Zelda.GanonTower)
+                .Where(x => x.Region is Regions.Zelda.GanonsTower)
                 .Empty().Shuffle(Rnd);
             FastFill(itemPool, locations.Take(locations.Count / 2));
         }

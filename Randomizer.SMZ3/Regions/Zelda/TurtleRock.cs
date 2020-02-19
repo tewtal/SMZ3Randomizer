@@ -6,7 +6,6 @@ namespace Randomizer.SMZ3.Regions.Zelda {
     class TurtleRock : Z3Region, IReward, IMedallionAccess {
 
         public override string Name => "Turtle Rock";
-        public override string Area => "Turtle Rock";
 
         public RewardType Reward { get; set; } = RewardType.None;
         public ItemType Medallion { get; set; }
@@ -24,12 +23,12 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                     items => items.KeyTR >= 1),
                 new Location(this, 256+181, 0x1EA25, LocationType.Regular, "Turtle Rock - Big Key Chest",
                     items => items.KeyTR >=
-                        (!Config.Keysanity || Locations.Get("Turtle Rock - Big Key Chest").ItemType == BigKeyTR ? 2 :
-                            Locations.Get("Turtle Rock - Big Key Chest").ItemType == KeyTR ? 3 : 4))
-                    .AlwaysAllow((item, items) => item.Type == KeyTR && items.KeyTR >= 3),
+                        (!Config.Keysanity || Locations.Get("Turtle Rock - Big Key Chest").ItemIs(BigKeyTR, World) ? 2 :
+                            Locations.Get("Turtle Rock - Big Key Chest").ItemIs(KeyTR, World) ? 3 : 4))
+                    .AlwaysAllow((item, items) => item.Is(KeyTR, World) && items.KeyTR >= 3),
                 new Location(this, 256+182, 0x1EA19, LocationType.Regular, "Turtle Rock - Big Chest",
                     items => items.BigKeyTR && items.KeyTR >= 2)
-                    .Allow((item, items) => item.Type != BigKeyTR),
+                    .Allow((item, items) => item.IsNot(BigKeyTR, World)),
                 new Location(this, 256+183, 0x1EA34, LocationType.Regular, "Turtle Rock - Crystaroller Room",
                     items => items.BigKeyTR && items.KeyTR >= 2),
                 new Location(this, 256+184, 0x1EA28, LocationType.Regular, "Turtle Rock - Eye Bridge - Top Right", LaserBridge),

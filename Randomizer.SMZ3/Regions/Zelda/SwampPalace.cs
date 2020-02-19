@@ -6,7 +6,6 @@ namespace Randomizer.SMZ3.Regions.Zelda {
     class SwampPalace : Z3Region, IReward {
 
         public override string Name => "Swamp Palace";
-        public override string Area => "Swamp Palace";
 
         public RewardType Reward { get; set; } = RewardType.None;
 
@@ -15,12 +14,12 @@ namespace Randomizer.SMZ3.Regions.Zelda {
 
             Locations = new List<Location> {
                 new Location(this, 256+135, 0x1EA9D, LocationType.Regular, "Swamp Palace - Entrance")
-                    .Allow((item, items) => Config.Keysanity || item.Type == KeySP),
+                    .Allow((item, items) => Config.Keysanity || item.Is(KeySP, World)),
                 new Location(this, 256+136, 0x1E986, LocationType.Regular, "Swamp Palace - Map Chest",
                     items => items.KeySP),
                 new Location(this, 256+137, 0x1E989, LocationType.Regular, "Swamp Palace - Big Chest",
                     items => items.BigKeySP && items.KeySP && items.Hammer)
-                    .AlwaysAllow((item, items) => item.Type == BigKeySP),
+                    .AlwaysAllow((item, items) => item.Is(BigKeySP, World)),
                 new Location(this, 256+138, 0x1EAA0, LocationType.Regular, "Swamp Palace - Compass Chest",
                     items => items.KeySP && items.Hammer),
                 new Location(this, 256+139, 0x1EAA3, LocationType.Regular, "Swamp Palace - West Chest",

@@ -36,7 +36,7 @@ namespace Randomizer.SMZ3 {
                 new Regions.Zelda.IcePalace(this, Config),
                 new Regions.Zelda.MiseryMire(this, Config),
                 new Regions.Zelda.TurtleRock(this, Config),
-                new Regions.Zelda.GanonTower(this, Config),
+                new Regions.Zelda.GanonsTower(this, Config),
                 new Regions.Zelda.LightWorld.DeathMountain.West(this, Config),
                 new Regions.Zelda.LightWorld.DeathMountain.East(this, Config),
                 new Regions.Zelda.LightWorld.NorthWest(this, Config),
