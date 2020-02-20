@@ -52,12 +52,17 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
             return Logic switch {
                 Normal =>
                     items.Super && (
-                           items.CanUsePowerBombs() && (items.SpeedBooster || items.Grapple || items.SpaceJump || items.Gravity && (items.CanFly() || items.HiJump)) 
-                        || items.CanAccessMaridiaPortal(World) && items.Gravity && items.CanPassBombPassages()),
+                        items.CanUsePowerBombs() && (
+                            items.SpeedBooster || items.Grapple || items.SpaceJump ||
+                            items.Gravity && (items.CanFly() || items.HiJump)
+                        ) ||
+                        items.CanAccessMaridiaPortal(World) && items.Gravity && items.CanPassBombPassages()
+                    ),
                 _ =>
                     items.Super && (
                         items.CanUsePowerBombs() ||
-                        items.CanAccessMaridiaPortal(World) && (items.HiJump || items.Gravity) && items.CanPassBombPassages())
+                        items.CanAccessMaridiaPortal(World) && (items.HiJump || items.Gravity) && items.CanPassBombPassages()
+                    ),
             };
         }
 
