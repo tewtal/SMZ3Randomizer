@@ -141,6 +141,39 @@ namespace Randomizer.SMZ3.Text {
             return $"Seek the sage\n{player}\nfor the arrows";
         }
 
+        public static string TriforceRoom(Random rnd) {
+            return RandomLine(rnd, new[] {
+                "\n     G G",
+                "All your base\nare belong\nto us.",
+                "You have ended\nthe domination\nof dr. wily",
+                "  thanks for\n  playing!!!",
+                "\n   You Win!",
+                "  Thank you!\n  your quest\n   is over.",
+                "   A winner\n      is\n     you!",
+                "\n   WINNER!!",
+                "\n  I'm  sorry\n\nbut your\nprincess is in\nanother castle",
+                "\n   success!",
+                "    Whelp…\n  that  just\n   happened",
+                "   Oh  hey…\n   it's you",
+                "\n  Wheeeeee!!",
+                "   Time for\n another one?",
+                "and\n\n         scene",
+                "\n   GOT EM!!",
+                "\nTHE VALUUUE!!!",
+                "Cool seed,\n\nright?",
+                "\n  We did it!",
+                "  Spam those\n  emotes in\n  wilds chat",
+                "\n   O  M  G",
+                " Hello.  Will\n  you be my\n   friend?",
+                "   Beetorp\n     was\n    here!",
+                "The Wind Fish\nwill wake\nsoon.    Hoot!",
+                "meow meow meow\nmeow meow meow\n  oh my god!",
+                "Ahhhhhhhhh\nYa ya yaaaah\nYa ya yaaah",
+                ".done\n\n.comment lol",
+                "You get to\ndrink from\nthe firehose",
+            });
+        }
+
         public static string ItemTextbox(Item item) {
             return item.Type switch {
                 BigKeyEP => "The big key\nof the east",

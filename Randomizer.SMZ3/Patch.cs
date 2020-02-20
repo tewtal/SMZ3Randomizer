@@ -544,6 +544,9 @@ namespace Randomizer.SMZ3 {
                 Texts.GanonThirdPhaseSingle(silversLocation);
             patches.Add((Snes(0x308700), Dialog.Simple(silvers)));
             stringTable.SetGanonThirdPhaseText(silvers);
+
+            var triforceRoom = Texts.TriforceRoom(rnd);
+            patches.Add((Snes(0x308400), Dialog.Simple(triforceRoom)));
         }
 
         void WriteStringTable() {
