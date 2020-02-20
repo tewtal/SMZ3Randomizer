@@ -179,7 +179,7 @@ namespace Randomizer.CLI.Verbs {
                     Rom.ApplySeed(rom, world.Patches);
                     AdditionalPatches(rom, opts.Ips.Skip(1));
                     ApplyRdcResources(rom, opts.Rdc);
-                    File.WriteAllBytes($"{data.Game} {data.Logic} - {data.Seed} - {world.Player}.sfc", rom);
+                    File.WriteAllBytes($"{data.Game} {data.Logic} - {data.Seed}{(!opts.Single ? $" - {world.Player}" : "")}.sfc", rom);
                 } catch (Exception e) {
                     Console.Error.WriteLine(e.Message);
                 }
