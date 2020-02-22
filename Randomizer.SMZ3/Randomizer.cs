@@ -17,10 +17,10 @@ namespace Randomizer.SMZ3 {
 
         public List<IRandomizerOption> Options => new List<IRandomizerOption> {
             Config.GetRandomizerOption<SMLogic>("Super Metroid Logic"),
-//            Config.GetRandomizerOption<Z3Logic>("A Link to the Past Logic"),
-//            Config.GetRandomizerOption<SwordLocation>("First Sword"),
-//            Config.GetRandomizerOption<MorphLocation>("Morph Ball"),
             Config.GetRandomizerOption<Goal>("Goal"),
+//            Config.GetRandomizerOption<Z3Logic>("A Link to the Past Logic"),
+            Config.GetRandomizerOption<SwordLocation>("First Sword"),
+            Config.GetRandomizerOption<MorphLocation>("Morph Ball"),
             new RandomizerOption {
                 Key = "seed", Description = "Seed", Type = Input
             },
