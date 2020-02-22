@@ -1,5 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import Patch from './Patch';
+import Spoiler from './Spoiler';
 import { decode } from 'slugid';
 import { Container, Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
 
@@ -49,6 +50,7 @@ export default function Permalink(props) {
                                 <Patch gameId={seed.gameId} world={seed.worlds[0]} fileName={`${seed.gameName} - ${seed.seedNumber}.sfc`} />
                             </CardBody>
                         </Card>
+                        {seed !== null && <Spoiler seedData={seed} />}
                     </Col>
                 </Row>
             </Container>

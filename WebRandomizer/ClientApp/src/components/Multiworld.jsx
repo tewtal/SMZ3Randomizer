@@ -57,7 +57,7 @@ export default function Multiworld(props) {
             <br />
             {device.state === 1 && <Game gameStatus={gameStatus} network={network.current} />}
             <br />
-            {session.data !== null && <Spoiler sessionData={session.data} />}
+            {session.data !== null && <Spoiler seedData={session.data.seed} />}
         </div>
     );
 }

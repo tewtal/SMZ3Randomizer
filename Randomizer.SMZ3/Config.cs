@@ -36,6 +36,8 @@ namespace Randomizer.SMZ3 {
     enum SwordLocation {
         [Description("Randomized")]
         Randomized,
+        [Description("Early")]
+        Early,
         [Description("Uncle assured")]
         Uncle
     }
@@ -44,8 +46,10 @@ namespace Randomizer.SMZ3 {
     enum MorphLocation {
         [Description("Randomized")]
         Randomized,
-        [Description("Vanilla")]
-        Vanilla
+        [Description("Early")]
+        Early,
+        [Description("Original location")]
+        Original
     }
 
     [DefaultValue(DefeatBoth)]

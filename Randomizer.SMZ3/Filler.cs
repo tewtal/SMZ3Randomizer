@@ -28,18 +28,12 @@ namespace Randomizer.SMZ3 {
                 var dungeon = Item.CreateDungeonPool(world);
                 var progression = Item.CreateProgressionPool(world);
 
-                InitialFillInOwnWorld(dungeon, world);
+                InitialFillInOwnWorld(dungeon, progression, world);
 
                 if (Config.Keysanity == false) {
                     var worldLocations = world.Locations.Empty().Shuffle(Rnd);
                     AssumedFill(dungeon, progression, worldLocations, new[] { world });
                 }
-
-                /* We place a PB and Super in Sphere 1 to make sure the filler
-                 * doesn't start locking items behind this when there are a
-                 * high chance of the trash fill actually making them available */
-                FrontFillItemInOwnWorld(progression, ItemType.Super, world);
-                FrontFillItemInOwnWorld(progression, ItemType.PowerBomb, world);
 
                 progressionItems.AddRange(dungeon);
                 progressionItems.AddRange(progression);
@@ -96,10 +90,26 @@ namespace Randomizer.SMZ3 {
                    orderby location.i select location.x;
         }
 
-        void InitialFillInOwnWorld(List<Item> items, World world) {
-            var swKey = items.Get(ItemType.KeySW);
-            world.Locations.Get("Skull Woods - Pinball Room").Item = swKey;
-            items.Remove(swKey);
+        void InitialFillInOwnWorld(List<Item> dungeonItems, List<Item> progressionItems, World world) {
+            FillItemAtLocation(dungeonItems, ItemType.KeySW, world.Locations.Get("Skull Woods - Pinball Room"));
+
+            /* Check Swords option and place as needed */
+            switch (Config.SwordLocation) {
+                case SwordLocation.Uncle: FillItemAtLocation(progressionItems, ItemType.ProgressiveSword, world.Locations.Get("Link's Uncle")); break;
+                case SwordLocation.Early: FrontFillItemInOwnWorld(progressionItems, ItemType.ProgressiveSword, world); break;
+            }
+
+            /* Check Morph option and place as needed */
+            switch (Config.MorphLocation) {
+                case MorphLocation.Original: FillItemAtLocation(progressionItems, ItemType.Morph, world.Locations.Get("Morphing Ball")); break;
+                case MorphLocation.Early: FrontFillItemInOwnWorld(progressionItems, ItemType.Morph, world); break;
+            }
+
+            /* We place a PB and Super in Sphere 1 to make sure the filler
+             * doesn't start locking items behind this when there are a
+             * high chance of the trash fill actually making them available */
+            FrontFillItemInOwnWorld(progressionItems, ItemType.Super, world);
+            FrontFillItemInOwnWorld(progressionItems, ItemType.PowerBomb, world);
         }
 
         void AssumedFill(List<Item> itemPool, List<Item> baseItems, IEnumerable<Location> locations, IEnumerable<World> worlds) {
@@ -141,8 +151,10 @@ namespace Randomizer.SMZ3 {
         void FrontFillItemInOwnWorld(List<Item> itemPool, ItemType itemType, World world) {
             var item = itemPool.Get(itemType);
             var location = world.Locations.Empty().Available(world.Items).Random(Rnd);
-            if (location == null)
+            if (location == null) {
                 throw new InvalidOperationException($"Tried to front fill {item.Name} in, but no location was available");
+            }
+            
             location.Item = item;
             itemPool.Remove(item);
         }
@@ -160,6 +172,12 @@ namespace Randomizer.SMZ3 {
                 location.Item = item;
                 itemPool.Remove(item);
             }
+        }
+
+        void FillItemAtLocation(List<Item> itemPool, ItemType itemType, Location location) {
+            var itemToPlace = itemPool.Get(itemType);
+            location.Item = itemToPlace ?? throw new InvalidOperationException($"Tried to place item {itemType.ToString()} at {location.Name}, but there is no such item in the item pool");
+            itemPool.Remove(itemToPlace);
         }
 
     }
