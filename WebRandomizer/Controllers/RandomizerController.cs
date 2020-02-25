@@ -55,7 +55,7 @@ namespace WebRandomizer.Controllers {
                     return new StatusCodeResult(400);
                 }
 
-                var seedData = randomizer.GenerateSeed(options, options["seed"]);
+                var seedData = randomizer.GenerateSeed(options, SanitizeString(options["seed"]));
 
                 /* Store this seed to the database */
                 var seed = new Seed {
@@ -111,6 +111,10 @@ namespace WebRandomizer.Controllers {
             }
 
             return bytes.ToArray();
+        }
+
+        private string SanitizeString(string inString) {
+            return System.Text.RegularExpressions.Regex.Replace(inString, @"&#@!\|:;<>’\'", "");
         }
     }
 }

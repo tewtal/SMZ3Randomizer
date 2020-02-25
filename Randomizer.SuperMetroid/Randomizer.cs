@@ -32,6 +32,9 @@ namespace Randomizer.SuperMetroid {
             if (seed == "") {
                 seed = System.Security.Cryptography.RandomNumberGenerator.GetInt32(0, int.MaxValue).ToString();
             }
+            else {
+                seed = seed.ToCharArray().Sum(x => x).ToString();
+            }
 
             var rnd = new Random(int.Parse(seed));
             var config = new Config(options);
@@ -80,6 +83,7 @@ namespace Randomizer.SuperMetroid {
 
             return seedData;
         }
+
     }
 
     public class RandomizerOption : IRandomizerOption {
