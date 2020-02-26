@@ -282,8 +282,10 @@ namespace Randomizer.SMZ3 {
             };
 
             itemPool.AddRange(Copies(24, () => new Item { Name = "Piece of Heart", Type = HeartPiece }));
-            itemPool.AddRange(Copies(12, () => new Item { Name = "Ten Arrows", Type = TenArrows }));
-            itemPool.AddRange(Copies(17, () => new Item { Name = "Three Bombs", Type = ThreeBombs }));
+            itemPool.AddRange(Copies(8,  () => new Item { Name = "Ten Arrows", Type = TenArrows }));
+            itemPool.AddRange(Copies(13, () => new Item { Name = "Three Bombs", Type = ThreeBombs }));
+            itemPool.AddRange(Copies(4,  () => new Item { Name = "Arrow Capacity Upgrade", Type = ArrowUpgrade5 }));
+            itemPool.AddRange(Copies(4,  () => new Item { Name = "Bomb Capacity Upgrade", Type = BombUpgrade5 }));
             itemPool.AddRange(Copies(2,  () => new Item { Name = "One Rupee", Type = OneRupee }));
             itemPool.AddRange(Copies(4,  () => new Item { Name = "Five Rupees", Type = FiveRupees }));
             itemPool.AddRange(Copies(28, () => new Item { Name = "Twenty Rupees", Type = TwentyRupees }));

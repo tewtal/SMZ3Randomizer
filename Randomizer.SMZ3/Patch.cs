@@ -64,7 +64,7 @@ namespace Randomizer.SMZ3 {
 
             WriteDiggingGameRng();
 
-            WritePrizeShuffle(config.Difficulty);
+            WritePrizeShuffle();
 
             WriteOpenModeFlags();
 
@@ -334,7 +334,7 @@ namespace Randomizer.SMZ3 {
             };
         }
 
-        void WritePrizeShuffle(Difficulty difficulty) {
+        void WritePrizeShuffle() {
             const int prizePackItems = 56;
             const int treePullItems = 3;
 
@@ -354,13 +354,6 @@ namespace Randomizer.SMZ3 {
                 Green, // stunned prize
                 Red, // saved fish prize
             }.AsEnumerable();
-
-            /* Hard+ does not allow fairy or full magic */
-            if (difficulty >= Difficulty.Hard) {
-                pool = pool.Select(prize =>
-                    prize == FullMagic ? Magic :
-                    prize == Fairy ? Heart : prize);
-            }
 
             var prizes = pool.Shuffle(rnd).Cast<byte>();
 
@@ -388,15 +381,10 @@ namespace Randomizer.SMZ3 {
             patches.AddRange(EnemyPrizePackDistribution());
 
             /* Pack drop chance */
-            /* 0 => 100%, 1 => 50%, 3 => 25% */
+            /* Normal difficulty is 50%. 0 => 100%, 1 => 50%, 3 => 25% */
             const int nrPacks = 7;
-            var p = difficulty switch {
-                Difficulty.Easy => (byte)0,
-                Difficulty.Normal => (byte)1,
-                Difficulty.Hard => (byte)1,
-                _ => (byte)3,
-            };
-            patches.Add((Snes(0x6FA62), Repeat(p, nrPacks).ToArray()));
+            const byte probability = 1;
+            patches.Add((Snes(0x6FA62), Repeat(probability, nrPacks).ToArray()));
         }
 
         IEnumerable<(int, byte[])> EnemyPrizePackDistribution() {
