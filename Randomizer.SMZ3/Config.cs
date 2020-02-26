@@ -58,15 +58,6 @@ namespace Randomizer.SMZ3 {
         DefeatBoth,
     }
 
-    [DefaultValue(Normal)]
-    enum Difficulty {
-        Easy = -1,
-        Normal = 0,
-        Hard = 1,
-        Expert = 2,
-        Insane = 3,
-    }
-
     enum GanonInvincible {
         [Description("Never")]
         Never,
@@ -82,7 +73,6 @@ namespace Randomizer.SMZ3 {
         public GameMode GameMode { get; set; } = GameMode.Normal;
         public Z3Logic Z3Logic { get; set; } = Z3Logic.Normal;
         public SMLogic SMLogic { get; set; } = SMLogic.Normal;
-        public Difficulty Difficulty { get; set; } = Difficulty.Normal;
         public SwordLocation SwordLocation { get; set; } = SwordLocation.Randomized;
         public MorphLocation MorphLocation { get; set; } = MorphLocation.Randomized;
         public Goal Goal { get; set; } = Goal.DefeatBoth;
@@ -94,13 +84,12 @@ namespace Randomizer.SMZ3 {
             GameMode = ParseOption(options, GameMode.Normal);
             Z3Logic = ParseOption(options, Z3Logic.Normal);
             SMLogic = ParseOption(options, SMLogic.Normal);
-            Difficulty = ParseOption(options, Difficulty.Normal);
             SwordLocation = ParseOption(options, SwordLocation.Randomized);
             MorphLocation = ParseOption(options, MorphLocation.Randomized);
             Goal = ParseOption(options, Goal.DefeatBoth);
             GanonInvincible = ParseOption(options, GanonInvincible.BeforeCrystals);
             Race = ParseOption(options, "Race", false);
-            Keysanity = false;            
+            Keysanity = false;
         }
 
         private TEnum ParseOption<TEnum>(IDictionary<string, string> options, TEnum defaultValue) where TEnum: Enum {
