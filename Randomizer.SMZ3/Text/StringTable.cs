@@ -50,7 +50,7 @@ namespace Randomizer.SMZ3.Text {
 
         void SetText(string name, string text) {
             var index = entries.IndexOf(entries.First(x => x.Item1 == name));
-            entries[index] = (name, Dialog.Compiled(text, false));
+            entries[index] = (name, Dialog.Compiled(text));
         }
 
         public byte[] GetPaddedBytes() {
@@ -77,8 +77,8 @@ namespace Randomizer.SMZ3.Text {
         static IList<(string, byte[])> PrepareData(IEnumerable<(string, object)> list) {
             return list.Select(x => (x.Item1, x.Item2 switch {
                 byte[] bytes => bytes,
-                string text => Dialog.Compiled(text, true),
-                NoPause y => Dialog.Compiled(y.Text, false),
+                string text => Dialog.Compiled(text),
+                NoPause y => Dialog.Compiled(y.Text, pause: false),
                 var o => throw new InvalidOperationException($"Did not expect an object of type {o.GetType()}"),
             })).ToList();
         }
