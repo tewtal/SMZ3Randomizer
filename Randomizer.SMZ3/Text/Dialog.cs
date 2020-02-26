@@ -51,7 +51,7 @@ namespace Randomizer.SMZ3.Text {
             return bytes.ToArray();
         }
 
-        public static byte[] Compiled(string text, bool pause) {
+        public static byte[] Compiled(string text, bool pause = true) {
             const int maxBytes = 2046;
             const int wrap = 14;
 
