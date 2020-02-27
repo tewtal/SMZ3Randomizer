@@ -97,7 +97,7 @@ export function parse_rdc(rdc) {
         throw new Error("Missing null terminator for the Author data field");
     const author = utf8.decode(field.slice(0, end));
 
-    return [author, process_blocks(rdc, block_list)];
+    return [process_blocks(rdc, block_list), author];
 }
 
 function process_blocks(rdc, block_list) {
