@@ -1,6 +1,8 @@
 import { readAsArrayBuffer } from '../file/util';
 import { parse_rdc } from '../file/rdc';
+import { bigText } from '../snes/big_text_table';
 import { inflate } from 'pako';
+import each from 'lodash/each';
 import localForage from 'localforage';
 
 export async function prepareRom(world_patch, settings, baseIps, gameId) {
@@ -38,9 +40,37 @@ async function applySprite(rom, block, sprite) {
         const url = `${process.env.PUBLIC_URL}/sprites/${sprite.path}`;
         const rdc = maybeCompressed(new Uint8Array(await (await fetch(url)).arrayBuffer()));
         // Todo: do something with the author field
-        const [author, blocks] = parse_rdc(rdc);
+        const [blocks, author] = parse_rdc(rdc);
         blocks[block] && blocks[block](rom);
+        applySpriteAuthor(rom, block, author);
     }
+}
+
+function applySpriteAuthor(rom, block, author) {
+    author = author.toUpperCase();
+    /* Replace non-alphanum with space */
+    author = author.replace(/[^A-Z0-9]/, ' ');
+    /* Author field that is empty or has no accepted characters */
+    if (!author.match(/[A-Z0-9]/))
+        return;
+    /* Normalize spaces */
+    author = author.replace(/ +/, ' ');
+    /* Keep at most 30 non-whitespace characters */
+    /* A limit of 30 guarantee a margin at the edges */
+    author = author.trimStart().slice(0, 30).trimEnd();
+
+    const center = 16 - ((author.length + 1) >> 1);
+    const [enable, tilemap] = {
+        link_sprite: [0x347002, 0x3D1480],
+        samus_sprite: [0x347004, 0x3D1600],
+    }[block];
+
+    rom[enable] = 0x01;
+    each(author, (char, i) => {
+        const bytes = bigText[char];
+        rom[tilemap + 2 * (center + i)] = bytes[0];
+        rom[tilemap + 2 * (center + i + 32)] = bytes[1];
+    });
 }
 
 function maybeCompressed(data) {
