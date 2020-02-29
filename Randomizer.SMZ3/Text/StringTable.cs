@@ -36,6 +36,10 @@ namespace Randomizer.SMZ3.Text {
             SetText("ganon_phase_3", text);
         }
 
+        public void SetTriforceRoomText(string text) {
+            SetText("end_triforce", "{NOBORDER}\n" + text);
+        }
+
         public void SetPedestalText(string text) {
             SetText("mastersword_pedestal_translated", text);
         }

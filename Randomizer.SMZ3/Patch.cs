@@ -535,6 +535,7 @@ namespace Randomizer.SMZ3 {
 
             var triforceRoom = Texts.TriforceRoom(rnd);
             patches.Add((Snes(0x308400), Dialog.Simple(triforceRoom)));
+            stringTable.SetTriforceRoomText(triforceRoom);
         }
 
         void WriteStringTable() {
