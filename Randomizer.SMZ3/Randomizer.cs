@@ -37,9 +37,9 @@ namespace Randomizer.SMZ3 {
             if (string.IsNullOrEmpty(seed)) {
                 randoSeed = System.Security.Cryptography.RandomNumberGenerator.GetInt32(0, int.MaxValue);
                 seed = randoSeed.ToString();
-            } else {
-                randoSeed = seed.ToCharArray().Sum(x => x);
             }
+
+            randoSeed = int.Parse(seed);
 
             var randoRnd = new Random(randoSeed);
             

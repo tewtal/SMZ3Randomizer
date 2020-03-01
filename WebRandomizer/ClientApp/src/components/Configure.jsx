@@ -10,7 +10,8 @@ export default function Configure(props) {
     const [randomizer, setRandomizer] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
     const randomizer_id = props.match.params.randomizer_id;
-
+    const seedRegex = '[^\\d]';
+    
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -90,7 +91,16 @@ export default function Configure(props) {
                                 <InputGroupAddon addonType="prepend">
                                     <InputGroupText>{opt.description}</InputGroupText>
                                 </InputGroupAddon>
-                                <Input id={opt.key} defaultValue={options[opt.key]} onChange={(e) => updateOption(opt.key, e.target.value)} />
+                                <Input id={opt.key} defaultValue={options[opt.key]} onChange={(e) => {
+                                    if (!e.target.value.match(seedRegex)) {
+                                        updateOption(opt.key, e.target.value)
+                                    } else {
+                                        //set an empty value, otherwise old values persist, unless they had letters
+                                        updateOption(opt.key, '')
+                                        //handle error here in terms of UI
+                                        alert("Use only numbers, otherwise you will get a random seed");
+                                    }
+                                }} />
                             </InputGroup>
                         </Col>
                     );

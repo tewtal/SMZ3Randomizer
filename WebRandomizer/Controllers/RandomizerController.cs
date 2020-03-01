@@ -8,6 +8,7 @@ using Randomizer.Contracts;
 using WebRandomizer.Models;
 using Newtonsoft.Json;
 using static WebRandomizer.Controllers.Helpers;
+using System.Text.RegularExpressions;
 
 namespace WebRandomizer.Controllers {
 
@@ -17,6 +18,7 @@ namespace WebRandomizer.Controllers {
 
         private readonly RandomizerContext context;
         private readonly List<IRandomizer> randomizers;
+        private Regex regex = new Regex("[^\\d]", RegexOptions.IgnoreCase);
 
         public RandomizerController(RandomizerContext context) {
             this.context = context;
@@ -55,7 +57,7 @@ namespace WebRandomizer.Controllers {
                     return new StatusCodeResult(400);
                 }
 
-                var seedData = randomizer.GenerateSeed(options, SanitizeString(options["seed"]));
+                var seedData = randomizer.GenerateSeed(options, options["seed"]);
 
                 /* Store this seed to the database */
                 var seed = new Seed {
@@ -113,8 +115,5 @@ namespace WebRandomizer.Controllers {
             return bytes.ToArray();
         }
 
-        private string SanitizeString(string inString) {
-            return System.Text.RegularExpressions.Regex.Replace(inString, @"&#@!\|:;<>’\'", "");
-        }
     }
 }
