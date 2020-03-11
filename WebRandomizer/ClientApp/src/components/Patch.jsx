@@ -11,6 +11,7 @@ import { prepareRom } from '../file/rom';
 import localForage from 'localforage';
 import { saveAs } from 'file-saver';
 
+import includes from 'lodash/includes';
 import attempt from 'lodash/attempt';
 import set from 'lodash/set';
 
@@ -19,8 +20,8 @@ import baseIpsSMZ3 from '../resources/zsm.ips.gz';
 import baseIpsSM from '../resources/sm.ips.gz';
 
 const baseIps = {
-    "sm": baseIpsSM,
-    "smz3": baseIpsSMZ3
+    sm: baseIpsSM,
+    smz3: baseIpsSMZ3
 };
 
 const SpriteOption = styled.div`
@@ -63,11 +64,18 @@ export default function Patch(props) {
         sm: [{ title: 'Samus' }, ...inventory.sm]
     };
 
+    const { gameId, world, fileName } = props;
+    const game = {
+        smz3: gameId === 'smz3',
+        z3: gameId === 'smz3',
+        sm: includes(['smz3', 'sm'], gameId)
+    };
+
     useEffect(() => {
         attempt(async () => {
             const fileDataSM = await localForage.getItem('baseRomSM');
             const fileDataLTTP = await localForage.getItem('baseRomLTTP');
-            if ((props.gameId === "sm" && fileDataSM !== null) || (fileDataSM !== null && fileDataLTTP !== null)) {
+            if ((!game.z3 || fileDataLTTP !== null) && fileDataSM !== null) {
                 setMode('download');
             }
         });
@@ -85,10 +93,9 @@ export default function Patch(props) {
 
     async function onDownloadRom() {
         try {
-            const { gameId, world, fileName } = props;
             if (world !== null) {
                 const settings = { z3Sprite, smSprite, spinjumps };
-                const patchedData = await prepareRom(world.patch, settings, baseIps[gameId], gameId);
+                const patchedData = await prepareRom(world.patch, settings, baseIps[gameId], game);
                 saveAs(new Blob([patchedData]), fileName);
             }
         } catch (error) {
@@ -120,26 +127,16 @@ export default function Patch(props) {
         localStorage.setItem('persist', JSON.stringify(values));
     }
 
-    let value;
-    const component = mode === 'upload' ? <Upload gameId={props.gameId} onUpload={onUploadRoms} /> : (
+    const component = mode === 'upload' ? <Upload game={game} onUpload={onUploadRoms} /> : (
         <Form onSubmit={(e) => e.preventDefault()}>
-            {props.gameId === "smz3" && (
+            {game.smz3 && (
                 <Row className="mb-3">
                     <Col md="8">
-                        <InputGroup className="flex-nowrap" prefix="Play as">
-                            <DropdownSelect placeholder="Select Z3 sprite" index={(value = sprites.z3.findIndex(x => x.title === z3Sprite.title)) < 0 ? 0 : value} onIndexChange={onZ3SpriteChange}>
-                                {sprites.z3.map(({ title }, i) => <SpriteOption key={title}><Z3Sprite index={i} />{title}</SpriteOption>)}
-                            </DropdownSelect>
-                            <DropdownSelect placeholder="Select SM sprite" index={(value = sprites.sm.findIndex(x => x.title === smSprite.title)) < 0 ? 0 : value} onIndexChange={onSMSpriteChange}>
-                                {sprites.sm.map(({ title }, i) => <SpriteOption key={title}><SMSprite index={i} />{title}</SpriteOption>)}
-                            </DropdownSelect>
-                            <InputGroupAddon addonType="append">
-                                <InputGroupText tag={Label} title="Enable separate space/screw jump animations">
-                                    <Input type="checkbox" addon={true} checked={spinjumps} onChange={onSpinjumpToggle} />{' '}
-                                    <JumpSprite which="space" /> / <JumpSprite which="screw" />
-                                </InputGroupText>
-                            </InputGroupAddon>
-                        </InputGroup>
+                        <SpriteSettings game={game} sprites={sprites} settings={{ z3Sprite, smSprite, spinjumps }}
+                            onZ3SpriteChange={onZ3SpriteChange}
+                            onSMSpriteChange={onSMSpriteChange}
+                            onSpinjumpToggle={onSpinjumpToggle}
+                        />
                     </Col>
                 </Row>
             )}
@@ -157,5 +154,34 @@ export default function Patch(props) {
                 {component}
             </CardBody>
         </Card>
+    );
+}
+
+function SpriteSettings(props) {
+    const { game, sprites, settings } = props;
+    const { z3Sprite, smSprite, spinjumps } = settings;
+
+    let value;
+    return (
+        <InputGroup className="flex-nowrap" prefix="Play as">
+            {game.z3 && (
+                <DropdownSelect placeholder="Select Z3 sprite"
+                    index={(value = sprites.z3.findIndex(x => x.title === z3Sprite.title)) < 0 ? 0 : value}
+                    onIndexChange={props.onZ3SpriteChange}>
+                    {sprites.z3.map(({ title }, i) => <SpriteOption key={title}><Z3Sprite index={i} />{title}</SpriteOption>)}
+                </DropdownSelect>
+            )}
+            <DropdownSelect placeholder="Select SM sprite"
+                index={(value = sprites.sm.findIndex(x => x.title === smSprite.title)) < 0 ? 0 : value}
+                onIndexChange={props.onSMSpriteChange}>
+                {sprites.sm.map(({ title }, i) => <SpriteOption key={title}><SMSprite index={i} />{title}</SpriteOption>)}
+            </DropdownSelect>
+            <InputGroupAddon addonType="append">
+                <InputGroupText tag={Label} title="Enable separate space/screw jump animations">
+                    <Input type="checkbox" addon={true} checked={spinjumps} onChange={props.onSpinjumpToggle} />{' '}
+                    <JumpSprite which="space" /> / <JumpSprite which="screw" />
+                </InputGroupText>
+            </InputGroupAddon>
+        </InputGroup>
     );
 }

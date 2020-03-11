@@ -1,27 +1,29 @@
 import { readAsArrayBuffer } from '../file/util';
 import { parse_rdc } from '../file/rdc';
 import { bigText } from '../snes/big_text_table';
+
 import { inflate } from 'pako';
-import each from 'lodash/each';
 import localForage from 'localforage';
 
-export async function prepareRom(world_patch, settings, baseIps, gameId) {
+import each from 'lodash/each';
+
+export async function prepareRom(world_patch, settings, baseIps, game) {
     let rom = null;
-    if (gameId === "sm") {
+    if (game.smz3) {
+        const smRom = await readAsArrayBuffer(await localForage.getItem("baseRomSM"));
+        const lttpRom = await readAsArrayBuffer(await localForage.getItem("baseRomLTTP"));
+        rom = mergeRoms(new Uint8Array(smRom), new Uint8Array(lttpRom));
+    } else {
         const base_rom = await readAsArrayBuffer(await localForage.getItem("baseRomSM"));
         /* extend to 4 mb to account for the base patch with custom sprites */
         rom = new Uint8Array(new ArrayBuffer(0x400000));
         rom.set(new Uint8Array(base_rom));
-    } else {
-        const smRom = await readAsArrayBuffer(await localForage.getItem("baseRomSM"));
-        const lttpRom = await readAsArrayBuffer(await localForage.getItem("baseRomLTTP"));
-        rom = mergeRoms(new Uint8Array(smRom), new Uint8Array(lttpRom));
     }
     const base_patch = maybeCompressed(new Uint8Array(await (await fetch(baseIps, { cache: 'no-store' })).arrayBuffer()));
     world_patch = Uint8Array.from(atob(world_patch), c => c.charCodeAt(0));
 
     applyIps(rom, base_patch);
-    if (gameId === "smz3") {
+    if (game.smz3) {
         await applySprite(rom, 'link_sprite', settings.z3Sprite);
         await applySprite(rom, 'samus_sprite', settings.smSprite);
         if (settings.spinjumps) {
