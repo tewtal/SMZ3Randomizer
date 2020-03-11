@@ -6,15 +6,17 @@ import each from 'lodash/each';
 import localForage from 'localforage';
 
 export async function prepareRom(world_patch, settings, baseIps, gameId) {
-    let rom_blob = null;
+    let rom = null;
     if (gameId === "sm") {
-        rom_blob = await localForage.getItem("baseRomSM");
+        const base_rom = await readAsArrayBuffer(await localForage.getItem("baseRomSM"));
+        /* extend to 4 mb to account for the base patch with custom sprites */
+        rom = new Uint8Array(new ArrayBuffer(0x400000));
+        rom.set(new Uint8Array(base_rom));
     } else {
         const smRom = await readAsArrayBuffer(await localForage.getItem("baseRomSM"));
         const lttpRom = await readAsArrayBuffer(await localForage.getItem("baseRomLTTP"));
-        rom_blob = mergeRoms(new Uint8Array(smRom), new Uint8Array(lttpRom));
+        rom = mergeRoms(new Uint8Array(smRom), new Uint8Array(lttpRom));
     }
-    const rom = new Uint8Array(await readAsArrayBuffer(rom_blob));
     const base_patch = maybeCompressed(new Uint8Array(await (await fetch(baseIps, { cache: 'no-store' })).arrayBuffer()));
     world_patch = Uint8Array.from(atob(world_patch), c => c.charCodeAt(0));
 
@@ -80,26 +82,26 @@ function maybeCompressed(data) {
 }
 
 function mergeRoms(sm_rom, z3_rom) {
-    const data = new Uint8Array(0x600000);
+    const rom = new Uint8Array(0x600000);
 
     let pos = 0;
     for (let i = 0; i < 0x40; i++) {
         let hi_bank = sm_rom.slice((i * 0x8000), (i * 0x8000) + 0x8000);
         let lo_bank = sm_rom.slice(((i + 0x40) * 0x8000), ((i + 0x40) * 0x8000) + 0x8000);
 
-        data.set(lo_bank, pos);
-        data.set(hi_bank, pos + 0x8000);
+        rom.set(lo_bank, pos);
+        rom.set(hi_bank, pos + 0x8000);
         pos += 0x10000;
     }
 
     pos = 0x400000;
     for (let i = 0; i < 0x20; i++) {
         let hi_bank = z3_rom.slice((i * 0x8000), (i * 0x8000) + 0x8000);
-        data.set(hi_bank, pos + 0x8000);
+        rom.set(hi_bank, pos + 0x8000);
         pos += 0x10000;
     }
 
-    return new Blob([data]);
+    return rom;
 }
 
 function applyIps(rom, patch) {

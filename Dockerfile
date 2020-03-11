@@ -13,18 +13,21 @@ RUN curl -sSL "https://github.com/RPGHacker/asar/archive/v1.71.tar.gz" -o v1.71.
 WORKDIR /app
 COPY . ./
 
-# Create IPS patch from ASM code project
+# Create IPS patch from combo ASM code project
 WORKDIR /app/alttp_sm_combo_randomizer_rom/
 RUN cp /asar/asar-1.71/asar/asar-standalone resources/asar \
- && find . -name build.py -exec python3.7 {} \; \
- && cd resources \
- && python3.7 create_dummies.py 00.sfc ff.sfc \
- && ./asar --no-title-check ../src/main.asm 00.sfc \
- && ./asar --no-title-check ../src/main.asm ff.sfc \
- && python3.7 create_ips.py 00.sfc ff.sfc ../build/zsm.ips \
- && cd ../build/ \ 
+ && ./build.sh \
+ && cd ../build/ \
  && gzip zsm.ips \
  && cp zsm.ips.gz /app/WebRandomizer/ClientApp/src/resources/
+
+# Create IPS patch from sm ASM code project
+WORKDIR /app/sm_randomizer_rom/
+RUN cp /asar/asar-1.71/asar/asar-standalone resources/asar \
+ && ./build.sh \
+ && cd ../build/ \ 
+ && gzip sm.ips \
+ && cp sm.ips.gz /app/WebRandomizer/ClientApp/src/resources/
 
 # Build and publish .NET app
 WORKDIR /app
