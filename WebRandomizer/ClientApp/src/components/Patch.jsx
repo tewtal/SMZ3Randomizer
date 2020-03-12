@@ -129,17 +129,15 @@ export default function Patch(props) {
 
     const component = mode === 'upload' ? <Upload game={game} onUpload={onUploadRoms} /> : (
         <Form onSubmit={(e) => e.preventDefault()}>
-            {game.smz3 && (
-                <Row className="mb-3">
-                    <Col md="8">
-                        <SpriteSettings game={game} sprites={sprites} settings={{ z3Sprite, smSprite, spinjumps }}
-                            onZ3SpriteChange={onZ3SpriteChange}
-                            onSMSpriteChange={onSMSpriteChange}
-                            onSpinjumpToggle={onSpinjumpToggle}
-                        />
-                    </Col>
-                </Row>
-            )}
+            <Row className="mb-3">
+                <Col md={game.smz3 ? 8 : 6}>
+                    <SpriteSettings game={game} sprites={sprites} settings={{ z3Sprite, smSprite, spinjumps }}
+                        onZ3SpriteChange={onZ3SpriteChange}
+                        onSMSpriteChange={onSMSpriteChange}
+                        onSpinjumpToggle={onSpinjumpToggle}
+                    />
+                </Col>
+            </Row>
             <Row>
                 <Col md="6">
                     <Button color="primary" onClick={onDownloadRom}>Download ROM</Button>

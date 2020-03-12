@@ -1,11 +1,12 @@
-import { readAsArrayBuffer } from '../file/util';
-import { parse_rdc } from '../file/rdc';
+import { readAsArrayBuffer, snes_to_pc } from './util';
+import { parse_rdc } from './rdc';
 import { bigText } from '../snes/big_text_table';
 
 import { inflate } from 'pako';
 import localForage from 'localforage';
 
 import each from 'lodash/each';
+import isPlainObject from 'lodash/isPlainObject';
 
 export async function prepareRom(world_patch, settings, baseIps, game) {
     let rom = null;
@@ -22,59 +23,78 @@ export async function prepareRom(world_patch, settings, baseIps, game) {
     const base_patch = maybeCompressed(new Uint8Array(await (await fetch(baseIps, { cache: 'no-store' })).arrayBuffer()));
     world_patch = Uint8Array.from(atob(world_patch), c => c.charCodeAt(0));
 
+    const mode = mode_from_game(game);
     applyIps(rom, base_patch);
-    if (game.smz3) {
-        await applySprite(rom, 'link_sprite', settings.z3Sprite);
-        await applySprite(rom, 'samus_sprite', settings.smSprite);
-        if (settings.spinjumps) {
-            enableSeparateSpinjumps(rom);
-        }
+    if (game.z3) {
+        await applySprite(rom, mode, 'link_sprite', settings.z3Sprite);
+    }
+    await applySprite(rom, mode, 'samus_sprite', settings.smSprite);
+    if (settings.spinjumps) {
+        enableSeparateSpinjumps(rom, mode);
     }
     applySeed(rom, world_patch);
 
     return rom;
 }
 
-function enableSeparateSpinjumps(rom) {
-    rom[0x34F500] = 0x01;
+/* Combines a mode lookup with accessing the name of the mode. This way code
+   can either satisfy boolean checks or key lookups in other objects.
+*/
+function mode_from_game(game) {
+    return {
+        exhirom: game.smz3 && 'exhirom',
+        lorom: !game.smz3 && 'lorom'
+    };
 }
 
-async function applySprite(rom, block, sprite) {
+function enableSeparateSpinjumps(rom, mode) {
+    rom[snes_to_pc(mode, 0xB4F500)] = 0x01;
+}
+
+async function applySprite(rom, mode, block, sprite) {
     if (sprite.path) {
         const url = `${process.env.PUBLIC_URL}/sprites/${sprite.path}`;
         const rdc = maybeCompressed(new Uint8Array(await (await fetch(url)).arrayBuffer()));
-        // Todo: do something with the author field
         const [blocks, author] = parse_rdc(rdc);
-        blocks[block] && blocks[block](rom);
-        applySpriteAuthor(rom, block, author);
+        blocks[block] && blocks[block](rom, mode);
+        applySpriteAuthor(rom, mode, block, author);
     }
 }
 
-function applySpriteAuthor(rom, block, author) {
+function applySpriteAuthor(rom, mode, block, author) {
     author = author.toUpperCase();
-    /* Replace non-alphanum with space */
-    author = author.replace(/[^A-Z0-9]/, ' ');
     /* Author field that is empty or has no accepted characters */
     if (!author.match(/[A-Z0-9]/))
         return;
+
+    author = formatAuthor(author);
+    const center = 16 - ((author.length + 1) >> 1);
+
+    const addrs = {
+        link_sprite: [0xF47002, 0xFD1480],
+        samus_sprite: { exhirom: [0xF47004, 0xFD1600], lorom: [0xCEFF02, 0xCEC740] },
+    }[block];
+    const [enable, tilemap] = isPlainObject(addrs)
+        ? addrs[mode.exhirom || mode.lorom]
+        : addrs;
+
+    rom[snes_to_pc(mode, enable)] = 0x01;
+    each(author, (char, i) => {
+        const bytes = bigText[char];
+        rom[snes_to_pc(mode, tilemap + 2 * (center + i))] = bytes[0];
+        rom[snes_to_pc(mode, tilemap + 2 * (center + i + 32))] = bytes[1];
+    });
+}
+
+function formatAuthor(author) {
+    author.toUpperCase();
+    /* Replace non-alphanum with space */
+    author = author.replace(/[^A-Z0-9]/, ' ');
     /* Normalize spaces */
     author = author.replace(/ +/, ' ');
     /* Keep at most 30 non-whitespace characters */
     /* A limit of 30 guarantee a margin at the edges */
-    author = author.trimStart().slice(0, 30).trimEnd();
-
-    const center = 16 - ((author.length + 1) >> 1);
-    const [enable, tilemap] = {
-        link_sprite: [0x347002, 0x3D1480],
-        samus_sprite: [0x347004, 0x3D1600],
-    }[block];
-
-    rom[enable] = 0x01;
-    each(author, (char, i) => {
-        const bytes = bigText[char];
-        rom[tilemap + 2 * (center + i)] = bytes[0];
-        rom[tilemap + 2 * (center + i + 32)] = bytes[1];
-    });
+    return author.trimStart().slice(0, 30).trimEnd();
 }
 
 function maybeCompressed(data) {
@@ -127,7 +147,7 @@ function applyIps(rom, patch) {
     }
 }
 
-function applySeed (rom, patch) {
+function applySeed(rom, patch) {
     const little = true;
     let offset = 0;
     const view = new DataView(patch.buffer);
