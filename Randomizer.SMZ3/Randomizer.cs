@@ -21,7 +21,7 @@ namespace Randomizer.SMZ3 {
             Config.GetRandomizerOption<SwordLocation>("First Sword"),
             Config.GetRandomizerOption<MorphLocation>("Morph Ball"),
             new RandomizerOption {
-                Key = "seed", Description = "Seed", Type = Input
+                Key = "seed", Description = "Seed", Type = Seed
             },
             Config.GetRandomizerOption("Race", "Race ROM (no spoilers)", false),
             Config.GetRandomizerOption<GameMode>("Game mode"),
@@ -38,6 +38,11 @@ namespace Randomizer.SMZ3 {
                 seed = randoSeed.ToString();
             } else {
                 randoSeed = int.Parse(seed);
+                /* The Random ctor takes the absolute value of a negative seed.
+                 * This is an non-obvious behavior so we treat a negative value
+                 * as out of range. */
+                if (randoSeed < 0)
+                    throw new ArgumentOutOfRangeException("Expected the seed option value to be an integer value in the range [0, 2147483647]");
             }
 
             var randoRnd = new Random(randoSeed);
