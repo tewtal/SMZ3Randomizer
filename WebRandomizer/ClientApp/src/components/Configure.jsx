@@ -1,7 +1,21 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { encode } from 'slugid';
-import { Container, Row, Col, Card, CardHeader, CardBody, Button, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Modal, ModalHeader, ModalBody, Progress } from 'reactstrap';
+import { Container, Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
+import { Button, Form, Input, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, Progress } from 'reactstrap';
 import BootstrapSwitchButton from 'bootstrap-switch-button-react';
+import styled from 'styled-components';
+
+import { encode } from 'slugid';
+
+const InputWithoutSpinner = styled(Input)`
+  /* For firefox */
+  appearance: textfield;
+  /* For Chromium */
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button { 
+    appearance: none;
+  }
+`;
 
 export default function Configure(props) {
     const [options, setOptions] = useState(null);
@@ -83,14 +97,16 @@ export default function Configure(props) {
         const formOptions = randomizer.options.map(opt => {
             let inputElement = null;
             switch (opt.type) {
-                case 'input':
+                case 'seed':
                     inputElement = (
                         <Col key={opt.key} md="6">
                             <InputGroup>
                                 <InputGroupAddon addonType="prepend">
                                     <InputGroupText>{opt.description}</InputGroupText>
                                 </InputGroupAddon>
-                                <Input id={opt.key} defaultValue={options[opt.key]} onChange={(e) => updateOption(opt.key, e.target.value)} />
+                                <InputWithoutSpinner type="number" id={opt.key} min={0} max={0x7FFF_FFFF} value={options[opt.key]}
+                                    onChange={(e) => updateOption(opt.key, e.target.value)}
+                                />
                             </InputGroup>
                         </Col>
                     );
@@ -102,7 +118,7 @@ export default function Configure(props) {
                                 <InputGroupAddon addonType="prepend">
                                     <InputGroupText>{opt.description}</InputGroupText>
                                 </InputGroupAddon>
-                                <Input type="select" id={opt.key} defaultValue={options[opt.key]} onChange={(e) => updateOption(opt.key, e.target.value)}>
+                                <Input type="select" id={opt.key} value={options[opt.key]} onChange={(e) => updateOption(opt.key, e.target.value)}>
                                     {Object.entries(opt.values).map(([k,v]) => <option key={k} value={k}>{v}</option>)}
                                 </Input>
                             </InputGroup>
@@ -117,7 +133,9 @@ export default function Configure(props) {
                                     <InputGroupText>{opt.description}</InputGroupText>
                                 </InputGroupAddon>
                                 &nbsp;
-                                <BootstrapSwitchButton onlabel="Yes" offlabel="No" width="80" id={opt.key} checked={options[opt.key]} onChange={(checked) => updateOption(opt.key, checked.toString())} />
+                                <BootstrapSwitchButton id={opt.key} onlabel="Yes" offlabel="No" width="80" checked={options[opt.key]}
+                                    onChange={checked => updateOption(opt.key, checked.toString())}
+                                />
                             </InputGroup>
                         </Col>
                     );
@@ -130,7 +148,7 @@ export default function Configure(props) {
                                     <InputGroupAddon addonType="prepend">
                                         <InputGroupText>{opt.description}</InputGroupText>
                                     </InputGroupAddon>
-                                    <Input id={opt.key} defaultValue={options[opt.key]} onChange={(e) => updateOption(opt.key, e.target.value)} />
+                                    <Input id={opt.key} value={options[opt.key]} onChange={(e) => updateOption(opt.key, e.target.value)} />
                                 </InputGroup>
                             </Col>
                         );
@@ -143,7 +161,7 @@ export default function Configure(props) {
 
         const formOptionGroups = chunk(formOptions, 2);
 
-        const playerInputs = [];        
+        const playerInputs = [];
         for (let p = 0; p < parseInt(options["players"]); p++) {
             playerInputs.push(
                 <Col key={"playerInput" + p} md={{ size: 5, offset: 1 - (p%2) }}>
@@ -151,7 +169,7 @@ export default function Configure(props) {
                         <InputGroupAddon addonType="prepend">
                             <InputGroupText>Name {p + 1}</InputGroupText>
                         </InputGroupAddon>
-                        <Input id={"player-" + p} defaultValue={names[p]} onChange={(e) => setNames({ ...names, [p]: e.target.value })} />
+                        <Input id={"player-" + p} value={names[p]} onChange={(e) => setNames({ ...names, [p]: e.target.value })} />
                     </InputGroup>
                 </Col>
             );
