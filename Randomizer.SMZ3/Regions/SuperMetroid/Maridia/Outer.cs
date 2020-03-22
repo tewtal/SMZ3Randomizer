@@ -26,14 +26,14 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
 
         public override bool CanEnter(Progression items) {
             return Logic switch {
-                Normal => (
+                Normal => items.Gravity && (
                         World.CanEnter("Norfair Upper West", items) && items.CanUsePowerBombs() ||
                         items.CanAccessMaridiaPortal(World)
-                    ) && items.Gravity,
+                    ),
                 _ =>
                     World.CanEnter("Norfair Upper West", items) && items.CanUsePowerBombs() &&
-                        (items.Gravity || items.HiJump && (items.CanSpringBallJump() || items.Ice))
-                    || items.CanAccessMaridiaPortal(World)
+                        (items.Gravity || items.HiJump && (items.CanSpringBallJump() || items.Ice)) ||
+                    items.CanAccessMaridiaPortal(World)
             };
         }
 
