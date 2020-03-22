@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Randomizer.Contracts;
 using static Randomizer.Contracts.RandomizerOptionType;
 
@@ -11,7 +10,6 @@ namespace Randomizer.SuperMetroid {
         public static readonly Version version = new Version(3, 0);
 
         public string Id => "sm";
-
         public string Name => "Super Metroid Item Randomizer";
 
         public string Version => version.ToString();
@@ -28,27 +26,30 @@ namespace Randomizer.SuperMetroid {
                 Key = "players", Description = "Players", Type = Players, Default = "2"
             },
         };
+
         public ISeedData GenerateSeed(IDictionary<string, string> options, string seed) {
-            if (seed == "") {
-                seed = System.Security.Cryptography.RandomNumberGenerator.GetInt32(0, int.MaxValue).ToString();
+            int randoSeed;
+            if (string.IsNullOrEmpty(seed)) {
+                randoSeed = System.Security.Cryptography.RandomNumberGenerator.GetInt32(0, int.MaxValue);
+                seed = randoSeed.ToString();
+            } else {
+                randoSeed = int.Parse(seed);
             }
 
-            var rnd = new Random(int.Parse(seed));
+            var rnd = new Random(randoSeed);
             var config = new Config(options);
 
             int players = options.ContainsKey("players") ? int.Parse(options["players"]) : 1;
             var worlds = new List<World>();
 
             if (config.GameMode == GameMode.Normal || players == 1) {
-                worlds.Add(new World(config, "Player", 0));
+                worlds.Add(new World(config, "Player", 0, new HexGuid()));
             }
             else {
                 for (int p = 0; p < players; p++) {
-                    worlds.Add(new World(config, options[$"player-{p}"], p));
+                    worlds.Add(new World(config, options[$"player-{p}"], p, new HexGuid()));
                 }
             }
-
-            var guid = Guid.NewGuid().ToString();
 
             var filler = new Filler(worlds, config, rnd);
             filler.Fill();
@@ -57,7 +58,7 @@ namespace Randomizer.SuperMetroid {
             var spheres = playthrough.Generate();
 
             var seedData = new SeedData {
-                Guid = guid.Replace("-", ""),
+                Guid = new HexGuid(),
                 Seed = seed,
                 Game = Name,
                 Logic = config.Logic.ToLString(),
@@ -67,10 +68,10 @@ namespace Randomizer.SuperMetroid {
             };
 
             foreach(var world in worlds) {
-                var patch = new Patch(world, worlds, seedData.Guid);
+                var patch = new Patch(world, worlds, seedData.Guid, randoSeed);
                 var worldData = new WorldData {
                     Id = world.Id,
-                    Guid = world.Guid.Replace("-",""),
+                    Guid = world.Guid,
                     Player = world.Player,
                     Patches = patch.Create()
                 };

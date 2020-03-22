@@ -7,7 +7,7 @@ using static Randomizer.SuperMetroid.ItemClass;
 
 namespace Randomizer.SuperMetroid {
 
-    public enum ItemType {
+    public enum ItemType : byte {
         Missile = 1,
         Super = 2,
         PowerBomb = 3,
