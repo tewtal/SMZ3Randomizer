@@ -1,5 +1,6 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
 RUN apt-get update -yq && apt-get install nodejs npm cmake build-essential python3.7 -yq
+RUN ln -s /usr/bin/python3.7 /usr/bin/python3
 
 # Build asar
 WORKDIR /asar
@@ -16,16 +17,18 @@ COPY . ./
 # Create IPS patch from combo ASM code project
 WORKDIR /app/alttp_sm_combo_randomizer_rom/
 RUN cp /asar/asar-1.71/asar/asar-standalone resources/asar \
+ && chmod +x ./build.sh \
  && ./build.sh \
- && cd ../build/ \
+ && cd build \
  && gzip zsm.ips \
  && cp zsm.ips.gz /app/WebRandomizer/ClientApp/src/resources/
 
 # Create IPS patch from sm ASM code project
 WORKDIR /app/sm_randomizer_rom/
 RUN cp /asar/asar-1.71/asar/asar-standalone resources/asar \
+ && chmod +x ./build.sh \
  && ./build.sh \
- && cd ../build/ \ 
+ && cd build \ 
  && gzip sm.ips \
  && cp sm.ips.gz /app/WebRandomizer/ClientApp/src/resources/
 
