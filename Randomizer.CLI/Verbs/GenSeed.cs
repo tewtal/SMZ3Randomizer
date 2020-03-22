@@ -60,11 +60,8 @@ namespace Randomizer.CLI.Verbs {
             HelpText = "Show json formated patch for each world in the seed")]
         public bool Patch { get; set; }
 
-        public string Logic => this switch {
-            var o when o.Hard => "hard",
-            var o when o.Normal => "normal",
-            _ => "normal"
-        };
+        public virtual string LogicName { get; }
+        public virtual string LogicValue { get; }
 
         protected const string smFile = @".\Super_Metroid_JU_.smc";
         protected const string z3File = @".\Zelda_no_Densetsu_-_Kamigami_no_Triforce_Japan.sfc";
@@ -90,6 +87,13 @@ namespace Randomizer.CLI.Verbs {
 
         readonly Lazy<byte[]> smRom;
 
+        public override string LogicName => "logic";
+        public override string LogicValue => this switch {
+            var o when o.Hard => "tournament",
+            var o when o.Normal => "casual",
+            _ => "casual",
+        };
+
         public SMSeedOptions() {
             smRom = new Lazy<byte[]>(() => {
                 using var ips = OpenReadInnerStream(Ips.First());
@@ -108,6 +112,13 @@ namespace Randomizer.CLI.Verbs {
     class SMZ3SeedOptions : GenSeedOptions {
 
         readonly Lazy<byte[]> smz3Rom;
+
+        public override string LogicName => "smlogic";
+        public override string LogicValue => this switch {
+            var o when o.Hard => "hard",
+            var o when o.Normal => "normal",
+            _ => "normal"
+        };
 
         public SMZ3SeedOptions() {
             smz3Rom = new Lazy<byte[]>(() => {
@@ -133,7 +144,7 @@ namespace Randomizer.CLI.Verbs {
 
             var optionList = new[] {
                 ("gamemode", opts.Single ? "normal" : "multiworld"),
-                ("smlogic", opts.Logic),
+                (opts.LogicName, opts.LogicValue),
                 ("players", opts.Players.ToString()),
             };
             var players = from n in Enumerable.Range(0, opts.Players)
@@ -168,7 +179,7 @@ namespace Randomizer.CLI.Verbs {
                     Rom.ApplySeed(rom, world.Patches);
                     AdditionalPatches(rom, opts.Ips.Skip(1));
                     ApplyRdcResources(rom, opts.Rdc);
-                    File.WriteAllBytes($"{data.Game} {data.Logic} - {data.Seed} - {world.Player}.sfc", rom);
+                    File.WriteAllBytes($"{data.Game} {data.Logic} - {data.Seed}{(!opts.Single ? $" - {world.Player}" : "")}.sfc", rom);
                 } catch (Exception e) {
                     Console.Error.WriteLine(e.Message);
                 }
