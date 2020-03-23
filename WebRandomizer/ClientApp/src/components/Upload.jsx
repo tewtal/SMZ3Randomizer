@@ -1,7 +1,6 @@
 ﻿import React, { useState, useRef } from 'react';
 import { Form, Row, Col, Button } from 'reactstrap';
 import { readAsArrayBuffer } from '../file/util';
-import { mergeRoms } from '../file/rom';
 import { h32 } from 'xxhashjs';
 
 import localForage from 'localforage';
@@ -21,6 +20,8 @@ export default function Upload(props) {
     const fileInputSM = useRef(null);
     const fileInputZ3 = useRef(null);
 
+    const { game } = props;
+
     async function onSubmitRom() {
         const smFile = fileInputSM.current.files[0];
         const z3File = fileInputZ3.current !== null ? fileInputZ3.current.files[0] : null;
@@ -37,7 +38,7 @@ export default function Upload(props) {
             return;
         }
 
-        if (props.gameId === "smz3") {
+        if (game.z3) {
             try {
                 fileDataZ3 = new Uint8Array(await readAsArrayBuffer(z3File));
                 mismatch.ALTTP = h32(fileDataZ3.buffer, HashSeed).toNumber() !== Z3Hash;
@@ -68,8 +69,8 @@ export default function Upload(props) {
 
     const onFileSelect = () => {
         setCanUpload(
-            (props.gameId === "smz3" && hasIn(fileInputSM.current, 'files[0]') && hasIn(fileInputZ3.current, 'files[0]') ||
-            (props.gameId === "sm" && hasIn(fileInputSM.current, 'files[0]')))
+            game.smz3 && hasIn(fileInputSM.current, 'files[0]') && hasIn(fileInputZ3.current, 'files[0]') ||
+            game.sm && hasIn(fileInputSM.current, 'files[0]')
         );
     };
 
@@ -78,7 +79,9 @@ export default function Upload(props) {
             <h6>No ROM uploaded, please upload a valid ROM file.</h6>
             <Row className="justify-content-between">
                 <Col md="6">SM ROM: <input type="file" ref={fileInputSM} onChange={onFileSelect} /></Col>
-                {props.gameId === "smz3" && <Col md="6">ALTTP ROM: <input type="file" ref={fileInputZ3} onChange={onFileSelect} /></Col>}
+                {game.z3 && (
+                    <Col md="6">ALTTP ROM: <input type="file" ref={fileInputZ3} onChange={onFileSelect} /></Col>
+                )}
             </Row>
             <Row>
                 <Col md="6">
