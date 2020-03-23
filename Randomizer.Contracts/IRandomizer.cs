@@ -31,8 +31,8 @@ namespace Randomizer.Contracts {
 
     public enum RandomizerOptionType
     {
-        [EnumMember(Value = "input")]
-        Input,
+        [EnumMember(Value = "seed")]
+        Seed,
         [EnumMember(Value = "dropdown")]
         Dropdown,
         [EnumMember(Value = "checkbox")]

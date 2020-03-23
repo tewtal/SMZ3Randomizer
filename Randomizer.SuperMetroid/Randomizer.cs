@@ -19,7 +19,7 @@ namespace Randomizer.SuperMetroid {
             Config.GetRandomizerOption<Goal>("Goal"),
             Config.GetRandomizerOption<Placement>("Item Placement"),
             new RandomizerOption {
-                Key = "seed", Description = "Seed", Type = Input
+                Key = "seed", Description = "Seed", Type = Seed
             },
             Config.GetRandomizerOption<GameMode>("Game mode"),
             new RandomizerOption {
@@ -34,6 +34,11 @@ namespace Randomizer.SuperMetroid {
                 seed = randoSeed.ToString();
             } else {
                 randoSeed = int.Parse(seed);
+                /* The Random ctor takes the absolute value of a negative seed.
+                 * This is an non-obvious behavior so we treat a negative value
+                 * as out of range. */
+                if (randoSeed < 0)
+                    throw new ArgumentOutOfRangeException("Expected the seed option value to be an integer value in the range [0, 2147483647]");
             }
 
             var rnd = new Random(randoSeed);
