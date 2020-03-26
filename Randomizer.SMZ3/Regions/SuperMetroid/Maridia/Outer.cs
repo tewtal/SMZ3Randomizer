@@ -21,7 +21,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
                         items.CanSpringBallJump() && (items.Gravity || items.HiJump)))
                 }),
                 new Location(this, 139, 0x8FC483, LocationType.Hidden, "Missile (green Maridia tatori)"), Logic switch {
-                _ => new Requirement(items => items.CanOpenRedDoors())
+                    _ => new Requirement(items => items.CanOpenRedDoors())
                 }),
             };
         }
