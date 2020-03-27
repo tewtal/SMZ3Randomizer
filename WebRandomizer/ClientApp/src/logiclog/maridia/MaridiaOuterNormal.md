@@ -2,7 +2,7 @@
 
 - Gravity *and one of*
   - *can enter* **Upper Norfair West** *and* CanUsePowerBombs
-  - CanAccessMaridiaPortal
+  - CanAccessMaridiaPortal *and either* CanPassBombPassages *or* ScrewAttack
 
 **Missile (green Maridia shinespark)**
 
@@ -14,8 +14,10 @@ SpeedBooster
 
 **Energy Tank, Mama turtle**
 
-CanFly *or* SpeedBooster *or* Grapple
+- *each of*
+  - CanOpenRedDoors
+  - CanFly *or* SpeedBooster *or* Grapple
 
 **Missile (green Maridia tatori)**
 
-*Available*
+CanOpenRedDoors
