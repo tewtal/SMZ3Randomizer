@@ -17,8 +17,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
                 new Location(this, 137, 0x8FC43D, LocationType.Visible, "Super Missile (green Maridia)"),
                 new Location(this, 138, 0x8FC47D, LocationType.Visible, "Energy Tank, Mama turtle", Logic switch {
                     Normal => items => items.CanOpenRedDoors() && (items.CanFly() || items.SpeedBooster || items.Grapple),
-                    _ => new Requirement(items => items.CanOpenRedDoors() && (items.CanFly() || items.SpeedBooster || items.Grapple ||
-                        items.CanSpringBallJump() && (items.Gravity || items.HiJump)))
+                    _ => new Requirement(items => items.CanOpenRedDoors() && (
+                        items.CanFly() || items.SpeedBooster || items.Grapple ||
+                        items.CanSpringBallJump() && (items.Gravity || items.HiJump)
+                    ))
                 }),
                 new Location(this, 139, 0x8FC483, LocationType.Hidden, "Missile (green Maridia tatori)", Logic switch {
                     _ => new Requirement(items => items.CanOpenRedDoors())
@@ -35,7 +37,11 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
                 _ =>
                     World.CanEnter("Norfair Upper West", items) && items.CanUsePowerBombs() &&
                         (items.Gravity || items.HiJump && (items.CanSpringBallJump() || items.Ice)) ||
-                    items.CanAccessMaridiaPortal(World) && (items.CanPassBombPassages() || (items.Gravity && items.ScrewAttack) || items.Super && (items.Gravity || items.HiJump && (items.CanSpringBallJump() || items.Ice)))
+                    items.CanAccessMaridiaPortal(World) && (
+                        items.CanPassBombPassages() ||
+                        items.Gravity && items.ScrewAttack ||
+                        items.Super && (items.Gravity || items.HiJump && (items.CanSpringBallJump() || items.Ice))
+                    )
             };
         }
 
