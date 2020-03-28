@@ -6,6 +6,7 @@ import { inflate } from 'pako';
 import localForage from 'localforage';
 
 import each from 'lodash/each';
+import range from 'lodash/range';
 import defaultTo from 'lodash/defaultTo';
 import isPlainObject from 'lodash/isPlainObject';
 
@@ -36,6 +37,7 @@ export async function prepareRom(world_patch, settings, baseIps, game) {
     }
 
     if (game.z3) {
+        z3HeartColor(rom, mode, settings.z3HeartColor);
         z3HeartBeep(rom, settings.z3HeartBeep);
     }
     if (!settings.smEnergyBeep) {
@@ -106,6 +108,22 @@ function formatAuthor(author) {
 /* Enables separate spinjump behavior */
 function smSpinjumps(rom, mode) {
     rom[snes_to_pc(mode, 0xB4F500)] = 0x01;
+}
+
+function z3HeartColor(rom, mode, setting) {
+    const values = {
+        red:    [0x24, [0x18, 0x00]],
+        yellow: [0x28, [0xBC, 0x02]],
+        blue:   [0x2C, [0xC9, 0x69]],
+        green:  [0x3C, [0x04, 0x17]]
+    };
+    const [hud, file_select] = defaultTo(values[setting], values.red);
+
+    each(range(0, 20, 2), i => {
+        rom[snes_to_pc(mode, 0xDFA1E + i)] = hud;
+    });
+
+    rom.set(file_select, snes_to_pc(mode, 0x1BD6AA));
 }
 
 function z3HeartBeep(rom, setting) {

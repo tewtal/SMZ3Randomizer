@@ -60,6 +60,7 @@ export default function Patch(props) {
     const [z3Sprite, setZ3Sprite] = useState({});
     const [smSprite, setSMSprite] = useState({});
     const [smSpinjumps, setSMSpinjumps] = useState(false);
+    const [z3HeartColor, setZ3HeartColor] = useState('red');
     const [z3HeartBeep, setZ3HeartBeep] = useState('half');
     const [smEnergyBeep, setSMEnergyBeep] = useState(true);
 
@@ -89,10 +90,11 @@ export default function Patch(props) {
         let settings;
         if ((settings = restore())) {
             const { z3: z3Sprite, sm: smSprite, spinjumps } = settings.sprites || {};
-            const { z3_heart_beep, sm_energy_beep } = settings;
+            const { z3_heart_color, z3_heart_beep, sm_energy_beep } = settings;
             setZ3Sprite(sprites.z3.find(x => x.title === z3Sprite) || {});
             setSMSprite(sprites.sm.find(x => x.title === smSprite) || {});
             setSMSpinjumps(defaultTo(spinjumps, false));
+            setZ3HeartColor(defaultTo(z3_heart_color, 'red'));
             setZ3HeartBeep(defaultTo(z3_heart_beep, 'half'));
             setSMEnergyBeep(defaultTo(sm_energy_beep, true));
         }
@@ -101,7 +103,7 @@ export default function Patch(props) {
     async function onDownloadRom() {
         try {
             if (world !== null) {
-                const settings = { z3Sprite, smSprite, smSpinjumps, z3HeartBeep, smEnergyBeep };
+                const settings = { z3Sprite, smSprite, smSpinjumps, z3HeartColor, z3HeartBeep, smEnergyBeep };
                 const patchedData = await prepareRom(world.patch, settings, baseIps[gameId], game);
                 saveAs(new Blob([patchedData]), fileName);
             }
@@ -123,6 +125,10 @@ export default function Patch(props) {
     const onSpinjumpToggle = () => {
         setSMSpinjumps(!smSpinjumps);
         persist(set(restore() || {}, 'sprites.spinjumps', !smSpinjumps));
+    };
+    const onZ3HeartColorChange = (value) => {
+        setZ3HeartColor(value);
+        persist(set(restore() || {}, 'z3_heart_color', value));
     };
     const onZ3HeartBeepChange = (value) => {
         setZ3HeartBeep(value);
@@ -153,8 +159,8 @@ export default function Patch(props) {
                     />
                 </Col>
             </Row>
-            <Row className="mb-3">
-                {game.z3 && (
+            {game.z3 && (
+                <Row className="mb-3">
                     <Col md="5">
                         <InputGroup prefix="Heart Beep">
                             <Input type="select" value={z3HeartBeep} onChange={(e) => onZ3HeartBeepChange(e.target.value)}>
@@ -166,7 +172,19 @@ export default function Patch(props) {
                             </Input>
                         </InputGroup>
                     </Col>
-                )}
+                    <Col md="4">
+                        <InputGroup prefix="Heart Color">
+                            <Input type="select" value={z3HeartColor} onChange={(e) => onZ3HeartColorChange(e.target.value)}>
+                                <option value="red">Red</option>
+                                <option value="green">Green</option>
+                                <option value="blue">Blue</option>
+                                <option value="yellow">Yellow</option>
+                            </Input>
+                        </InputGroup>
+                    </Col>
+                </Row>
+            )}
+            <Row className="mb-3">
                 <Col md="4">
                     <InputGroup prefix="Energy Beep">
                         &nbsp;
