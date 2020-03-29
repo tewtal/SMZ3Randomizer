@@ -84,10 +84,10 @@ export default function Upload(props) {
         <Form onSubmit={(e) => { e.preventDefault(); onSubmitRom(); }}>
             <h6>No ROM uploaded, please upload a valid ROM file.</h6>
             <Row className="justify-content-between">
-                <Col md="6">SM ROM: <input type="file" ref={fileInputSM} onChange={onFileSelect} /></Col>
                 {game.z3 && (
                     <Col md="6">ALTTP ROM: <input type="file" ref={fileInputZ3} onChange={onFileSelect} /></Col>
                 )}
+                <Col md="6">SM ROM: <input type="file" ref={fileInputSM} onChange={onFileSelect} /></Col>
             </Row>
             <Row>
                 <Col md="6">
