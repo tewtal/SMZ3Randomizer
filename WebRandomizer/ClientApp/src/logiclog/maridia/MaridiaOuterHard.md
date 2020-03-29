@@ -4,7 +4,12 @@
   - *can enter* **Upper Norfair West** *and* CanUsePowerBombs *and one of*
     - Gravity
     - HiJump *and either* CanSpringBallJump *or* Ice
-  - CanAccessMaridiaPortal
+  - CanAccessMaridiaPortal *and one of*
+    - CanPassBombPassages
+    - Gravity *and* ScrewAttack
+    - Super *and one of*
+      - Gravity
+      - HiJump *and either* CanSpringBallJump *or* Ice
 
 **Missile (green Maridia shinespark)**
 
@@ -16,12 +21,12 @@ Gravity *and* SpeedBooster
 
 **Energy Tank, Mama turtle**
 
-- *one of*
-  - CanFly
-  - SpeedBooster
-  - Grapple
-  - CanSpringBallJump *and either* Gravity *or* HiJump
+- *each of*
+  - CanOpenRedDoors
+  - *one of*
+    - CanFly *or* SpeedBooster *or* Grapple
+    - CanSpringBallJump *and either* Gravity *or* HiJump
 
 **Missile (green Maridia tatori)**
 
-*Available*
+CanOpenRedDoors
