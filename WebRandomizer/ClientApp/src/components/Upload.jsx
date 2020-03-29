@@ -32,6 +32,9 @@ export default function Upload(props) {
 
         try {
             fileDataSM = new Uint8Array(await readAsArrayBuffer(smFile));
+            if (fileDataSM.length % 0x1000 === 0x200) {
+                fileDataSM = fileDataSM.slice(0x200);
+            }
             mismatch.SM = h32(fileDataSM.buffer, HashSeed).toNumber() !== SMHash;
         } catch (error) {
             console.log("Could not read uploaded SM file data:", error);
@@ -41,6 +44,9 @@ export default function Upload(props) {
         if (game.z3) {
             try {
                 fileDataZ3 = new Uint8Array(await readAsArrayBuffer(z3File));
+                if (fileDataZ3.length % 0x1000 === 0x200) {
+                    fileDataZ3 = fileDataZ3.slice(0x200);
+                }
                 mismatch.ALTTP = h32(fileDataZ3.buffer, HashSeed).toNumber() !== Z3Hash;
             } catch (error) {
                 console.log("Could not read uploaded ALTTP file data:", error);
@@ -78,10 +84,10 @@ export default function Upload(props) {
         <Form onSubmit={(e) => { e.preventDefault(); onSubmitRom(); }}>
             <h6>No ROM uploaded, please upload a valid ROM file.</h6>
             <Row className="justify-content-between">
-                <Col md="6">SM ROM: <input type="file" ref={fileInputSM} onChange={onFileSelect} /></Col>
                 {game.z3 && (
                     <Col md="6">ALTTP ROM: <input type="file" ref={fileInputZ3} onChange={onFileSelect} /></Col>
                 )}
+                <Col md="6">SM ROM: <input type="file" ref={fileInputSM} onChange={onFileSelect} /></Col>
             </Row>
             <Row>
                 <Col md="6">
