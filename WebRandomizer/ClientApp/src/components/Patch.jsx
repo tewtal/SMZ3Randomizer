@@ -2,6 +2,7 @@
 import styled from 'styled-components';
 import { Form, Row, Col, Card, CardBody } from 'reactstrap';
 import { Label, Button, Input, InputGroupAddon, InputGroupText } from 'reactstrap';
+import BootstrapSwitchButton from 'bootstrap-switch-button-react';
 import InputGroup from './util/PrefixInputGroup';
 import DropdownSelect from './util/DropdownSelect';
 import Upload from './Upload';
@@ -14,6 +15,7 @@ import { saveAs } from 'file-saver';
 import includes from 'lodash/includes';
 import attempt from 'lodash/attempt';
 import set from 'lodash/set';
+import defaultTo from 'lodash/defaultTo';
 
 import inventory from '../resources/sprite/inventory';
 import baseIpsSMZ3 from '../resources/zsm.ips.gz';
@@ -57,7 +59,10 @@ export default function Patch(props) {
     const [mode, setMode] = useState('upload');
     const [z3Sprite, setZ3Sprite] = useState({});
     const [smSprite, setSMSprite] = useState({});
-    const [spinjumps, setSpinjumps] = useState(false);
+    const [smSpinjumps, setSMSpinjumps] = useState(false);
+    const [z3HeartColor, setZ3HeartColor] = useState('red');
+    const [z3HeartBeep, setZ3HeartBeep] = useState('half');
+    const [smEnergyBeep, setSMEnergyBeep] = useState(true);
 
     const sprites = {
         z3: [{ title: 'Link' }, ...inventory.z3],
@@ -84,17 +89,21 @@ export default function Patch(props) {
     useEffect(() => {
         let settings;
         if ((settings = restore())) {
-            const { z3, sm, spinjumps } = settings.sprites || {};
-            setZ3Sprite(sprites.z3.find(x => x.title === z3) || {});
-            setSMSprite(sprites.sm.find(x => x.title === sm) || {});
-            setSpinjumps(spinjumps);
+            const { z3: z3Sprite, sm: smSprite, spinjumps } = settings.sprites || {};
+            const { z3_heart_color, z3_heart_beep, sm_energy_beep } = settings;
+            setZ3Sprite(sprites.z3.find(x => x.title === z3Sprite) || {});
+            setSMSprite(sprites.sm.find(x => x.title === smSprite) || {});
+            setSMSpinjumps(defaultTo(spinjumps, false));
+            setZ3HeartColor(defaultTo(z3_heart_color, 'red'));
+            setZ3HeartBeep(defaultTo(z3_heart_beep, 'half'));
+            setSMEnergyBeep(defaultTo(sm_energy_beep, true));
         }
     }, []);
 
     async function onDownloadRom() {
         try {
             if (world !== null) {
-                const settings = { z3Sprite, smSprite, spinjumps };
+                const settings = { z3Sprite, smSprite, smSpinjumps, z3HeartColor, z3HeartBeep, smEnergyBeep };
                 const patchedData = await prepareRom(world.patch, settings, baseIps[gameId], game);
                 saveAs(new Blob([patchedData]), fileName);
             }
@@ -114,8 +123,20 @@ export default function Patch(props) {
         persist(set(restore() || {}, 'sprites.sm', sprites.sm[i].title));
     };
     const onSpinjumpToggle = () => {
-        setSpinjumps(!spinjumps);
-        persist(set(restore() || {}, 'sprites.spinjumps', !spinjumps));
+        setSMSpinjumps(!smSpinjumps);
+        persist(set(restore() || {}, 'sprites.spinjumps', !smSpinjumps));
+    };
+    const onZ3HeartColorChange = (value) => {
+        setZ3HeartColor(value);
+        persist(set(restore() || {}, 'z3_heart_color', value));
+    };
+    const onZ3HeartBeepChange = (value) => {
+        setZ3HeartBeep(value);
+        persist(set(restore() || {}, 'z3_heart_beep', value));
+    };
+    const onSMEnergyBeepToggle = () => {
+        setSMEnergyBeep(!smEnergyBeep);
+        persist(set(restore() || {}, 'sm_energy_beep', !smEnergyBeep));
     };
 
     function restore() {
@@ -131,11 +152,46 @@ export default function Patch(props) {
         <Form onSubmit={(e) => e.preventDefault()}>
             <Row className="mb-3">
                 <Col md={game.smz3 ? 8 : 6}>
-                    <SpriteSettings game={game} sprites={sprites} settings={{ z3Sprite, smSprite, spinjumps }}
+                    <SpriteSettings game={game} sprites={sprites} settings={{ z3Sprite, smSprite, smSpinjumps }}
                         onZ3SpriteChange={onZ3SpriteChange}
                         onSMSpriteChange={onSMSpriteChange}
                         onSpinjumpToggle={onSpinjumpToggle}
                     />
+                </Col>
+            </Row>
+            {game.z3 && (
+                <Row className="mb-3">
+                    <Col md="5">
+                        <InputGroup prefix="Heart Beep">
+                            <Input type="select" value={z3HeartBeep} onChange={(e) => onZ3HeartBeepChange(e.target.value)}>
+                                <option value="off">Off</option>
+                                <option value="quarter">Quarter Speed</option>
+                                <option value="half">Half Speed</option>
+                                <option value="normal">Normal Speed</option>
+                                <option value="double">Double Speed</option>
+                            </Input>
+                        </InputGroup>
+                    </Col>
+                    <Col md="4">
+                        <InputGroup prefix="Heart Color">
+                            <Input type="select" value={z3HeartColor} onChange={(e) => onZ3HeartColorChange(e.target.value)}>
+                                <option value="red">Red</option>
+                                <option value="green">Green</option>
+                                <option value="blue">Blue</option>
+                                <option value="yellow">Yellow</option>
+                            </Input>
+                        </InputGroup>
+                    </Col>
+                </Row>
+            )}
+            <Row className="mb-3">
+                <Col md="4">
+                    <InputGroup prefix="Energy Beep">
+                        &nbsp;
+                        <BootstrapSwitchButton width="80" onlabel="On" offlabel="Off" checked={smEnergyBeep}
+                            onChange={onSMEnergyBeepToggle}
+                        />
+                    </InputGroup>
                 </Col>
             </Row>
             <Row>
@@ -157,7 +213,7 @@ export default function Patch(props) {
 
 function SpriteSettings(props) {
     const { game, sprites, settings } = props;
-    const { z3Sprite, smSprite, spinjumps } = settings;
+    const { z3Sprite, smSprite, smSpinjumps } = settings;
 
     let value;
     return (
@@ -176,7 +232,7 @@ function SpriteSettings(props) {
             </DropdownSelect>
             <InputGroupAddon addonType="append">
                 <InputGroupText tag={Label} title="Enable separate space/screw jump animations">
-                    <Input type="checkbox" addon={true} checked={spinjumps} onChange={props.onSpinjumpToggle} />{' '}
+                    <Input type="checkbox" addon={true} checked={smSpinjumps} onChange={props.onSpinjumpToggle} />{' '}
                     <JumpSprite which="space" /> / <JumpSprite which="screw" />
                 </InputGroupText>
             </InputGroupAddon>

@@ -6,6 +6,8 @@ import { inflate } from 'pako';
 import localForage from 'localforage';
 
 import each from 'lodash/each';
+import range from 'lodash/range';
+import defaultTo from 'lodash/defaultTo';
 import isPlainObject from 'lodash/isPlainObject';
 
 export async function prepareRom(world_patch, settings, baseIps, game) {
@@ -23,15 +25,25 @@ export async function prepareRom(world_patch, settings, baseIps, game) {
     const base_patch = maybeCompressed(new Uint8Array(await (await fetch(baseIps, { cache: 'no-store' })).arrayBuffer()));
     world_patch = Uint8Array.from(atob(world_patch), c => c.charCodeAt(0));
 
-    const mode = mode_from_game(game);
+    const mode = modeFromGame(game);
     applyIps(rom, base_patch);
+
     if (game.z3) {
         await applySprite(rom, mode, 'link_sprite', settings.z3Sprite);
     }
     await applySprite(rom, mode, 'samus_sprite', settings.smSprite);
     if (settings.spinjumps) {
-        enableSeparateSpinjumps(rom, mode);
+        smSpinjumps(rom, mode);
     }
+
+    if (game.z3) {
+        z3HeartColor(rom, mode, settings.z3HeartColor);
+        z3HeartBeep(rom, settings.z3HeartBeep);
+    }
+    if (!settings.smEnergyBeep) {
+        smEnergyBeepOff(rom, mode);
+    }
+
     applySeed(rom, world_patch);
 
     return rom;
@@ -40,15 +52,11 @@ export async function prepareRom(world_patch, settings, baseIps, game) {
 /* Combines a mode lookup with accessing the name of the mode. This way code
    can either satisfy boolean checks or key lookups in other objects.
 */
-function mode_from_game(game) {
+function modeFromGame(game) {
     return {
         exhirom: game.smz3 && 'exhirom',
         lorom: !game.smz3 && 'lorom'
     };
-}
-
-function enableSeparateSpinjumps(rom, mode) {
-    rom[snes_to_pc(mode, 0xB4F500)] = 0x01;
 }
 
 async function applySprite(rom, mode, block, sprite) {
@@ -95,6 +103,49 @@ function formatAuthor(author) {
     /* Keep at most 30 non-whitespace characters */
     /* A limit of 30 guarantee a margin at the edges */
     return author.trimStart().slice(0, 30).trimEnd();
+}
+
+/* Enables separate spinjump behavior */
+function smSpinjumps(rom, mode) {
+    rom[snes_to_pc(mode, 0xB4F500)] = 0x01;
+}
+
+function z3HeartColor(rom, mode, setting) {
+    const values = {
+        red:    [0x24, [0x18, 0x00]],
+        yellow: [0x28, [0xBC, 0x02]],
+        blue:   [0x2C, [0xC9, 0x69]],
+        green:  [0x3C, [0x04, 0x17]]
+    };
+    const [hud, file_select] = defaultTo(values[setting], values.red);
+
+    each(range(0, 20, 2), i => {
+        rom[snes_to_pc(mode, 0xDFA1E + i)] = hud;
+    });
+
+    rom.set(file_select, snes_to_pc(mode, 0x1BD6AA));
+}
+
+function z3HeartBeep(rom, setting) {
+    const values = {
+        off: 0x00,
+        double: 0x10,
+        normal: 0x20,
+        half: 0x40,
+        quarter: 0x80
+    };
+    /* Redirected to low bank $40 in combo */
+    rom[0x400033] = defaultTo(values[setting], values.half);
+}
+
+function smEnergyBeepOff(rom, mode) {
+    each([
+        [0x90EA9B, 0x80],
+        [0x90F337, 0x80],
+        [0x91E6D5, 0x80]
+    ],
+        ([addr, value]) => rom[snes_to_pc(mode, addr)] = value
+    );
 }
 
 function maybeCompressed(data) {
