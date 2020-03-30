@@ -165,13 +165,16 @@ namespace Randomizer.SuperMetroid {
                 FrontFillItemInWorld(world, items, Rnd.Next(2) == 0 ? Missile : Super, true);
 
                 /* Place a way to break bomb blocks */
-                FrontFillItemInWorld(world, items, Rnd.Next(8) switch
-                {
-                    0 => ScrewAttack,
-                    1 => SpeedBooster,
-                    2 => Bombs,
-                    _ => PowerBomb
-                }, true);
+                /* With split placement and casual logic there is not enough early major item locations */
+                var bombBlockBreaker = Config.Placement == Placement.Split && Config.Logic == Logic.Casual
+                    ? PowerBomb
+                    : Rnd.Next(8) switch {
+                        0 => ScrewAttack,
+                        1 => SpeedBooster,
+                        2 => Bombs,
+                        _ => PowerBomb
+                    };
+                FrontFillItemInWorld(world, items, bombBlockBreaker, true);
 
                 /* With split placement, we'll run into problem with placement if progression minors aren't available from the start */
                 if (Config.Placement == Placement.Split) {
