@@ -28,7 +28,7 @@ namespace Randomizer.SuperMetroid {
 
         public void Fill() {
             /* First fill the worlds with the very basic tools for progression from their own respective worlds */
-            var initialItems = InitialFill(ProgressionItems, Worlds);
+            InitialFill(ProgressionItems, Worlds);
 
             /* Priority fill items that needs to be placed first (will be placed in random order out of all items matching the types) */
             PriorityFill(new[] { Varia, Gravity }, ProgressionItems, new List<Item>(), Worlds);
@@ -98,8 +98,8 @@ namespace Randomizer.SuperMetroid {
                 var inventory = CollectItems(assumedItems.Concat(initialItems).ToList(), worlds).ToList();
                 var locationsToPlace = Config.Placement switch
                 {
-                    Placement.Split => locations.Where(x => x.Class == itemToPlace.Class).ToList().CanFillWithinWorld(itemToPlace, inventory),
-                    _ => locations.CanFillWithinWorld(itemToPlace, inventory)
+                    Placement.Split => locations.Where(x => x.Class == itemToPlace.Class && CanPlaceAtLocation(x, itemToPlace.Type)).ToList().CanFillWithinWorld(itemToPlace, inventory),
+                    _ => locations.Where(x => CanPlaceAtLocation(x, itemToPlace.Type)).ToList().CanFillWithinWorld(itemToPlace, inventory)
                 };
 
                 if (locationsToPlace.Count == 0) {
@@ -117,7 +117,7 @@ namespace Randomizer.SuperMetroid {
                 world.Items.Add(itemToPlace);
                 items.Remove(itemToPlace);
                 locations.Remove(locationToPlace);
-            }           
+            }
         }
 
         public List<Item> CollectItems(List<Item> items, IEnumerable<World> worlds) {
@@ -157,21 +157,26 @@ namespace Randomizer.SuperMetroid {
         }
 
         private List<Item> InitialFill(List<Item> items, List<World> worlds) {
-            foreach(var world in worlds) {
+            foreach (var world in worlds) {
                 /* Place Morph */
                 FrontFillItemInWorld(world, items, Morph, true);
 
                 /* Place missile or super */
                 FrontFillItemInWorld(world, items, Rnd.Next(2) == 0 ? Missile : Super, true);
 
-                /* Place a way to break bomb blocks */
-                FrontFillItemInWorld(world, items, Rnd.Next(8) switch
-                {
-                    0 => ScrewAttack,
-                    1 => SpeedBooster,
-                    2 => Bombs,
-                    _ => PowerBomb
-                }, true);
+                /* Place a way to break bomb blocks.
+                 * If split placement is used with casual logic we must place a powerbomb since there are no more major item locations available */
+                if (Config.Placement == Placement.Split && Config.Logic == Logic.Casual) {
+                    FrontFillItemInWorld(world, items, PowerBomb);
+                } else {
+                    FrontFillItemInWorld(world, items, Rnd.Next(8) switch
+                    {
+                        0 => ScrewAttack,
+                        1 => SpeedBooster,
+                        2 => Bombs,
+                        _ => PowerBomb
+                    }, true);
+                }
 
                 /* With split placement, we'll run into problem with placement if progression minors aren't available from the start */
                 if (Config.Placement == Placement.Split) {
@@ -194,9 +199,10 @@ namespace Randomizer.SuperMetroid {
         private void FrontFillItemInWorld(World world, List<Item> itemPool, ItemType itemType, bool restrictWorld = false) {
             /* Get a shuffled list of available locations to place this item in */
             Item item = restrictWorld ? itemPool.Get(itemType, world) : itemPool.Get(itemType);
-            var availableLocations = Config.Placement switch {
-                Placement.Split => world.Locations.Empty().Where(x => x.Class == item.Class).ToList().Available(world.Items).Shuffle(Rnd),
-                _ => world.Locations.Empty().Available(world.Items).Shuffle(Rnd)
+            var availableLocations = Config.Placement switch
+            {
+                Placement.Split => world.Locations.Empty().Where(x => x.Class == item.Class && CanPlaceAtLocation(x, itemType)).ToList().Available(world.Items).Shuffle(Rnd),
+                _ => world.Locations.Empty().Where(x => CanPlaceAtLocation(x, itemType)).ToList().Available(world.Items).Shuffle(Rnd)
             };
 
             if (availableLocations.Count > 0) {
@@ -211,14 +217,18 @@ namespace Randomizer.SuperMetroid {
         }
 
         private bool CanPlaceAtLocation(Location location, ItemType itemType) {
-            return itemType switch
-            {
-                Gravity => (!(location.Region.Area == "Crateria" || location.Region.Area == "Brinstar")) || location.Name == "X-Ray Scope" || location.Name == "Energy Tank, Waterway",
-                Varia => (!(location.Region.Area == "LowerNorfair" || location.Region.Area == "Crateria" || location.Name == "Morphing Ball" || location.Name == "Missile (blue Brinstar middle)" || location.Name == "Energy Tank, Brinstar Ceiling")),
-                SpeedBooster => !(location.Name == "Morphing Ball" || location.Name == "Missile (blue Brinstar middle)" || location.Name == "Energy Tank, Brinstar Ceiling"),
-                ScrewAttack => !(location.Name == "Morphing Ball" || location.Name == "Missile (blue Brinstar middle)" || location.Name == "Energy Tank, Brinstar Ceiling"),
-                _ => true
-            };
+            if (Config.GameMode == GameMode.Normal) {
+                return itemType switch
+                {
+                    Gravity => (!(location.Region.Area == "Crateria" || location.Region.Area == "Brinstar")) || location.Name == "X-Ray Scope" || location.Name == "Energy Tank, Waterway",
+                    Varia => (!(location.Region.Area == "LowerNorfair" || location.Region.Area == "Crateria" || location.Name == "Morphing Ball" || location.Name == "Missile (blue Brinstar middle)" || location.Name == "Energy Tank, Brinstar Ceiling")),
+                    SpeedBooster => !(location.Name == "Morphing Ball" || location.Name == "Missile (blue Brinstar middle)" || location.Name == "Energy Tank, Brinstar Ceiling"),
+                    ScrewAttack => !(location.Name == "Morphing Ball" || location.Name == "Missile (blue Brinstar middle)" || location.Name == "Energy Tank, Brinstar Ceiling"),
+                    _ => true
+                };
+            } else {
+                return true;
+            }
         }
 
     }

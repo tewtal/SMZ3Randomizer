@@ -72,8 +72,10 @@ namespace Randomizer.SuperMetroid {
                 Worlds = new List<IWorldData>()
             };
 
+            int patchSeed = rnd.Next();
             foreach(var world in worlds) {
-                var patch = new Patch(world, worlds, seedData.Guid, randoSeed);
+                var patchRnd = new Random(patchSeed);
+                var patch = new Patch(world, worlds, seedData.Guid, patchRnd);
                 var worldData = new WorldData {
                     Id = world.Id,
                     Guid = world.Guid,
