@@ -11,7 +11,7 @@ namespace WebRandomizer.Models {
         public int SeedId { get; set; }
         public string Guid { get; set; }
         public string Player { get; set; }
-        public string Logic { get; set; }
+        public string Settings { get; set; }
         public byte[] Patch { get; set; }
     }
 

@@ -73,7 +73,7 @@ namespace WebRandomizer.Controllers {
                     var world = new World {
                         WorldId = seedWorld.Id,
                         Guid = seedWorld.Guid,
-                        Logic = seedData.Logic,
+                        Settings = JsonConvert.SerializeObject(options),
                         Player = seedWorld.Player,
                         Patch = ConvertPatch(seedWorld.Patches)
                     };
