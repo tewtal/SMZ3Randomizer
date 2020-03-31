@@ -329,10 +329,12 @@ namespace Randomizer.SuperMetroid {
         void WriteItemLocations() {
             int romAddress = 0x2F5240;
             foreach (var location in myWorld.Locations.OrderBy(l => l.Region.Name).ThenBy(l => l.Name).Where(l => l.Item.Class == ItemClass.Major)) {
-                patches.Add(romAddress, AsCreditsString(0x04, location.Item.Name));
-                patches.Add(romAddress + 0x40, AsCreditsString(0x18, location.Name));
+                patches.Add(romAddress, AsCreditsString(0x04, location.Item.Name, true));
+                patches.Add(romAddress + 0x40, AsCreditsString(0x18, location.Name, false));
                 romAddress += 0x80;
             }
+
+            patches.Add(romAddress, new byte[] { 0, 0, 0, 0 });
         }
 
         byte[] UintBytes(int value) => BitConverter.GetBytes((uint)value);
@@ -343,9 +345,13 @@ namespace Randomizer.SuperMetroid {
 
         int BeInt(byte[] bytes) => bytes.Select((x, i) => (x, i)).Aggregate(0, (t, n) => t | (n.x << (8 * (bytes.Length - n.i - 1))));
 
-        byte[] AsCreditsString(int color, string text) {
-            var creditsText = Regex.Replace(text, "[^A-Z0-9\\.,'!: ]+", "");
-            creditsText = " " + creditsText[..Math.Min(creditsText.Length, 30)].PadRight(31, ' ');
+        byte[] AsCreditsString(int color, string text, bool alignLeft) {
+            var creditsText = Regex.Replace(text.ToUpper(), "[^A-Z0-9\\.,'!: ]+", "");
+            if (alignLeft) {
+                creditsText = " " + creditsText[..Math.Min(creditsText.Length, 30)].PadRight(31, ' ');
+            } else {
+                creditsText = " " + creditsText[..Math.Min(creditsText.Length, 30)].PadLeft(30, '.') + " ";
+            }
             
             return creditsText.Select(c => new byte[] {
                 c switch { ' ' => 0x7f, '!' => 0x1f, ':' => 0x1e, '\'' => 0x1d, '_' => 0x1c, ',' => 0x1b, '.' => 0x1a, _ => (byte)(c - 0x41) },
