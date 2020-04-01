@@ -69,6 +69,12 @@ namespace WebRandomizer.Controllers {
                     Worlds = new List<World>()
                 };
 
+                /* If race mode is enabled, blank out the seed number to not reveal it to the client */
+                if (options.ContainsKey("race") && options["race"] == "true") {
+                    seed.SeedNumber = "";
+                    options["seed"] = "";
+                }
+
                 foreach (var seedWorld in seedData.Worlds) {
                     var world = new World {
                         WorldId = seedWorld.Id,
