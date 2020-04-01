@@ -27,6 +27,12 @@ namespace Randomizer.Contracts {
         string Version { get; }
         List<IRandomizerOption> Options { get; }
         ISeedData GenerateSeed(IDictionary<string, string> options, string seed);
+        IStatistics GenerateStats(IDictionary<string, string> options, int seeds);
+    }
+
+    public interface IStatistics {
+        int Seeds { get; }
+        Dictionary<string, Dictionary<string, int>> ItemLocations { get;  }
     }
 
     public enum RandomizerOptionType

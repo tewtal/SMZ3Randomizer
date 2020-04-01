@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Randomizer.Contracts;
 using static Randomizer.Contracts.RandomizerOptionType;
 
@@ -99,6 +100,45 @@ namespace Randomizer.SMZ3 {
             return seedData;
         }
 
+        public IStatistics GenerateStats(IDictionary<string, string> options, int seeds) {
+            var stats = new Statistics();
+            stats.Seeds = seeds;
+            stats.ItemLocations = new Dictionary<string, Dictionary<string, int>>();
+
+            var config = new Config(options);
+
+            /* Init itemLocations */
+            var world = new World(config, "Player", 0, new HexGuid());
+            var itemPool = Item.CreateProgressionPool(world).Concat(Item.CreateDungeonPool(world)).Concat(Item.CreateNicePool(world)).Concat(Item.CreateJunkPool(world)).Select(x => x.Name).Distinct();
+            foreach(var location in world.Locations) {
+                stats.ItemLocations.Add(location.Name.Replace(",", ""), new Dictionary<string, int>());
+                foreach(var item in itemPool) {
+                    stats.ItemLocations[location.Name.Replace(",", "")].Add(item.Replace(",",""), 0);
+                }
+            }
+
+            for (int i = 0; i < seeds; i++) {
+                var randoSeed = System.Security.Cryptography.RandomNumberGenerator.GetInt32(0, int.MaxValue);
+                var randoRnd = new Random(randoSeed);
+                var worlds = new List<World> {
+                    new World(config, "Player", 0, new HexGuid())
+                };
+                var filler = new Filler(worlds, config, randoRnd);
+                filler.Fill();
+
+                foreach(var location in worlds[0].Locations) {
+                    stats.ItemLocations[location.Name.Replace(",", "")][location.Item.Name.Replace(",", "")] += 1;
+                }
+            }
+
+            return stats;
+        }
+
+    }
+
+    public class Statistics : IStatistics {
+        public int Seeds { get; set; }
+        public Dictionary<string, Dictionary<string, int>> ItemLocations { get; set; }
     }
 
     public class RandomizerOption : IRandomizerOption { 

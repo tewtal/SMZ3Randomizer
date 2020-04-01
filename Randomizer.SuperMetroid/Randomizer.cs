@@ -88,6 +88,10 @@ namespace Randomizer.SuperMetroid {
 
             return seedData;
         }
+
+        public IStatistics GenerateStats(IDictionary<string, string> options, int seeds) {
+            return null;
+        }
     }
 
     public class RandomizerOption : IRandomizerOption {

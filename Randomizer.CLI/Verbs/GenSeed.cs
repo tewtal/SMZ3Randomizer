@@ -60,6 +60,10 @@ namespace Randomizer.CLI.Verbs {
             HelpText = "Show json formated patch for each world in the seed")]
         public bool Patch { get; set; }
 
+        [Option(
+            HelpText = "Generate statistics for the given amount of seeds", Default = 0)]
+        public int Stats { get; set; }
+
         public virtual string LogicName { get; }
         public virtual string LogicValue { get; }
 
@@ -151,13 +155,23 @@ namespace Randomizer.CLI.Verbs {
                           select ($"player-{n}", $"Player {n + 1}");
             var options = optionList.Concat(players).ToDictionary(x => x.Item1, x => x.Item2);
 
-            try {
-                while (true) {
-                    MakeSeed(options, opts);
-                    if (!opts.Loop) break;
+            if (opts.Stats == 0) {
+                try {
+                    while (true) {
+                        MakeSeed(options, opts);
+                        if (!opts.Loop) break;
+                    }
                 }
-            } catch (Exception e) {
-                Console.Error.WriteLine(e.Message);
+                catch (Exception e) {
+                    Console.Error.WriteLine(e.Message);
+                }
+            } else {
+                try {
+                    MakeStats(options, opts);
+                }
+                catch (Exception e) {
+                    Console.Error.WriteLine(e.Message);
+                }
             }
         }
 
@@ -205,6 +219,31 @@ namespace Randomizer.CLI.Verbs {
                     File.WriteAllText($"patch-{data.Logic}-{data.Seed}.json", text);
                 }
             }
+        }
+
+        static void MakeStats(Dictionary<string, string> options, GenSeedOptions opts)
+        {
+            var rando = opts.NewRandomizer();
+            var start = DateTime.Now;
+            var stats = rando.GenerateStats(options, opts.Stats);
+            var end = DateTime.Now;
+            Console.WriteLine(string.Join(" - ",
+                $"Generated stats for : {stats.Seeds}",
+                $"Players: {options["players"]}",
+                $"Generation time: {end - start}"
+            ));
+
+            var statsData = new List<string>
+            {
+                "Location," + string.Join(',', stats.ItemLocations.SelectMany(x => x.Value.Keys).Distinct().OrderBy(x => x))
+            };
+
+            foreach (var itemLocations in stats.ItemLocations)
+            {
+                statsData.Add(itemLocations.Key + "," +  string.Join(',', itemLocations.Value.OrderBy(x => x.Key).Select(x => x.Value)));
+            }
+
+            File.WriteAllLines($"stats.csv", statsData);
         }
 
         static void AdditionalPatches(byte[] rom, IEnumerable<string> ips) {
