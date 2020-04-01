@@ -47,7 +47,7 @@ export default function Permalink(props) {
                                     <Col>Type: {seed.type}</Col>
                                 </Row>
                                 <br />
-                                <Patch gameId={seed.gameId} world={seed.worlds[0]} fileName={`${seed.gameName} - ${seed.seedNumber}.sfc`} />
+                                <Patch gameId={seed.gameId} gameType={seed.type} seedNumber={seed.seedNumber} world={seed.worlds[0]} />
                             </CardBody>
                         </Card>
                         {seed !== null && <Spoiler seedData={seed} />}

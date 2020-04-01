@@ -13,8 +13,10 @@ import localForage from 'localforage';
 import { saveAs } from 'file-saver';
 
 import includes from 'lodash/includes';
-import attempt from 'lodash/attempt';
+import compact from 'lodash/compact';
+import join from 'lodash/join';
 import set from 'lodash/set';
+import attempt from 'lodash/attempt';
 import defaultTo from 'lodash/defaultTo';
 
 import inventory from '../resources/sprite/inventory';
@@ -69,7 +71,7 @@ export default function Patch(props) {
         sm: [{ title: 'Samus' }, ...inventory.sm]
     };
 
-    const { gameId, world, fileName } = props;
+    const { gameId, gameType, seedNumber, world } = props;
     const game = {
         smz3: gameId === 'smz3',
         z3: gameId === 'smz3',
@@ -105,11 +107,32 @@ export default function Patch(props) {
             if (world !== null) {
                 const settings = { z3Sprite, smSprite, smSpinjumps, z3HeartColor, z3HeartBeep, smEnergyBeep };
                 const patchedData = await prepareRom(world.patch, settings, baseIps[gameId], game);
-                saveAs(new Blob([patchedData]), fileName);
+                saveAs(new Blob([patchedData]), constructFileName());
             }
         } catch (error) {
             console.log(error);
         }
+    }
+
+    function constructFileName() {
+        const settings = JSON.parse(world.settings);
+
+        /* compact works as long as seedNumber is string, since 0 is a valid number */
+        const parts = compact([
+            gameId.toUpperCase(),
+            ...{
+                smz3: ({ smlogic, swordlocation, morphlocation }) => [
+                    `ZLn+SL${smlogic[0]}`,
+                    swordlocation !== 'randomized' ? `S${swordlocation[0]}` : null,
+                    morphlocation !== 'randomized' ? `M${morphlocation[0]}` : null
+                ],
+                sm: ({ logic, placement }) => [`L${logic[0]}`, `I${placement[0]}`]
+            }[gameId](settings),
+            seedNumber,
+            gameType === 'multiworld' ? world.player : null
+        ]);
+
+        return `${join(parts, '-')}.sfc`;
     }
 
     const onUploadRoms = () => setMode('download');

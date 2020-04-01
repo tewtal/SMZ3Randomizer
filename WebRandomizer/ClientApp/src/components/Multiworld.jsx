@@ -51,7 +51,14 @@ export default function Multiworld(props) {
         <div>
             {session.guid && <Seed session={session} sessionStatus={sessionStatus} onRegisterPlayer={onRegisterPlayer} />}
             <br />
-            {clientData !== null && <Patch gameId={session.data.seed.gameId} world={session.data.seed.worlds.find(world => world.worldId === clientData.worldId)} fileName={`${session.data.seed.gameName} - ${session.data.seed.seedNumber} - ${clientData.name}.sfc`} />}
+            {clientData !== null && (
+                <Patch
+                    gameId={session.data.seed.gameId}
+                    gameType={session.data.seed.type}
+                    seedNumber={session.data.seed.seedNumber}
+                    world={session.data.seed.worlds.find(world => world.worldId === clientData.worldId)}
+                />
+            )}
             <br />
             {clientData !== null && <Connection clientData={clientData} device={device} onConnect={onConnect} onDeviceSelect={onDeviceSelect} />}
             <br />
