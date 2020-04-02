@@ -18,7 +18,7 @@ namespace Randomizer.SuperMetroid.Regions.Brinstar {
                     _ => new Requirement(items => items.CanUsePowerBombs())
                 }),
                 new Location(this, 15, "Missile (green Brinstar below super missile)", Visible, Minor, 0x78518, Logic switch {
-                    _ => new Requirement(items => items.CanPassBombPassages() && items.CanOpenRedDoors())
+                    _ => new Requirement(items => items.CanOpenRedDoors())
                 }),
                 new Location(this, 16, "Super Missile (green Brinstar top)", Visible, Minor, 0x7851E, Logic switch {
                     Casual => items => items.CanOpenRedDoors() && items.Has(SpeedBooster),

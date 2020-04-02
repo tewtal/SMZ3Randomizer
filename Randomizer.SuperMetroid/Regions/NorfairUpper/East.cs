@@ -63,19 +63,14 @@ namespace Randomizer.SuperMetroid.Regions.NorfairUpper {
         public override bool CanEnter(List<Item> items) {
             return Logic switch {
                 Casual => 
-                    (items.CanDestroyBombWalls() || items.Has(SpeedBooster)) && items.Has(Super) && items.Has(Morph) &&
-                    items.Has(Varia) && items.Has(Super) &&
-                    (items.CanFly() || items.Has(HiJump) || items.Has(SpeedBooster)),
+                    (items.CanDestroyBombWalls() || items.Has(SpeedBooster)) && items.Has(Super) && items.Has(Morph) && items.Has(Varia),
                 _ =>
                     // Norfair Main Street Access
                     (items.CanDestroyBombWalls() || items.Has(SpeedBooster)) && items.Has(Super) && items.Has(Morph) &&
                     // Hell Run and Green Door
                     items.CanHellRun() && (
-                        items.Has(Super) && (
-                            // Cathedral Route
-                            items.CanFly() || items.Has(HiJump) || items.Has(SpeedBooster) || items.CanSpringBallJump() ||
-                            items.Has(Varia) && (items.Has(Ice) || items.Has(SpeedBooster))
-                        ) ||
+                        // Top route
+                        items.Has(Super) ||
                         // Speedway route
                         items.Has(SpeedBooster) && items.CanUsePowerBombs())
             };
