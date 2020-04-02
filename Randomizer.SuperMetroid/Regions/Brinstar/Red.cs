@@ -31,7 +31,7 @@ namespace Randomizer.SuperMetroid.Regions.Brinstar {
                     _ => new Requirement(items => items.Has(Super))
                 }),
                 new Location(this, 42, "Spazer", Chozo, Major, 0x7896E, Logic switch {
-                    _ => new Requirement(items => items.CanPassBombPassages() && items.Has(Super))
+                    _ => new Requirement(items => items.Has(Morph) && items.Has(Super))
                 }),
             };
         }

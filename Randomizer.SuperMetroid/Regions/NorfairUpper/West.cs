@@ -26,10 +26,10 @@ namespace Randomizer.SuperMetroid.Regions.NorfairUpper {
                     _ => new Requirement(items => items.CanOpenRedDoors())
                 }),
                 new Location(this, 55, "Missile (Hi-Jump Boots)", Visible, Minor, 0x78BE6, Logic switch {
-                    _ => new Requirement(items => items.CanOpenRedDoors() && items.CanPassBombPassages())
+                    _ => new Requirement(items => items.CanOpenRedDoors())
                 }),
                 new Location(this, 56, "Energy Tank (Hi-Jump Boots)", Visible, Minor, 0x78BEC, Logic switch {
-                    _ => new Requirement(items => items.CanOpenRedDoors() && items.Has(Morph))
+                    _ => new Requirement(items => items.CanOpenRedDoors())
                 }),
             };
         }
