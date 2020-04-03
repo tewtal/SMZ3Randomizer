@@ -30,8 +30,8 @@ namespace Randomizer.SMZ3 {
                 if (!newItems.Any()) {
                     /* With no new items added we might have a problem, so list inaccessable items */
                     var inaccessibleLocations = worlds.SelectMany(w => w.Locations).Where(l => !locations.Contains(l)).ToList();
-                    if (inaccessibleLocations.Select(l => l.Item).Count() >= (5 * worlds.Count))
-                        throw new Exception("Too many inaccessible items, seed likely impossible.");
+                    //if (inaccessibleLocations.Select(l => l.Item).Count() >= (5 * worlds.Count))
+                    //    throw new Exception("Too many inaccessible items, seed likely impossible.");
 
                     var n = 0;
                     foreach (var location in inaccessibleLocations) {

@@ -43,6 +43,10 @@ namespace Randomizer.SMZ3 {
             var niceItems = Worlds.SelectMany(world => Item.CreateNicePool(world)).Shuffle(Rnd);
             var junkItems = Worlds.SelectMany(world => Item.CreateJunkPool(world)).Shuffle(Rnd);
 
+            var locations = Worlds.SelectMany(x => x.Locations).Empty().ToList().Shuffle(Rnd);
+            if (Config.GameMode != GameMode.Multiworld)
+                locations = ApplyLocationWeighting(locations).ToList();
+
             if (Config.GameMode == GameMode.Multiworld) {
                 /* Place moonpearls and morphs in last 40%/20% of the pool so that
                  * they will tend to place in earlier locations.
@@ -53,15 +57,17 @@ namespace Randomizer.SMZ3 {
                 });
             }
 
-            GanonTowerFill(junkItems);
+            if (Config.Fill == SMZ3.Fill.Assumed) {
+                GanonTowerFill(junkItems, 2);
+                AssumedFill(progressionItems, new List<Item>(), locations, Worlds);
+                FastFill(niceItems, locations);
+                FastFill(junkItems, locations);
+            } else {
+                GanonTowerFill(junkItems, 1.33);
+                RandomizedFill(progressionItems.ToList(), niceItems.Concat(junkItems).ToList(), locations.Empty().ToList(), Worlds);
+            }
 
-            var locations = Worlds.SelectMany(x => x.Locations).Empty().Shuffle(Rnd);
-            if (Config.GameMode != GameMode.Multiworld)
-                locations = ApplyLocationWeighting(locations).ToList();
 
-            AssumedFill(progressionItems, new List<Item>(), locations, Worlds);
-            FastFill(niceItems, locations);
-            FastFill(junkItems, locations);
         }
 
         void ApplyItemBias(List<Item> itemPool, IEnumerable<(ItemType type, double weight)> reorder) {
@@ -131,6 +137,29 @@ namespace Randomizer.SMZ3 {
             }
         }
 
+        void RandomizedFill(List<Item> progressionPool, List<Item> otherPool, IEnumerable<Location> locations, IEnumerable<World> worlds) {
+            while (true) {
+                var itemPool = progressionPool.ToList().Shuffle(Rnd).Concat(otherPool.ToList().Shuffle(Rnd)).ToList();
+                
+                if (Config.GameMode == GameMode.Normal) {
+                    FastFill(itemPool, locations);
+                }
+                else {
+                    RestrictedFastFill(itemPool, locations);
+                }
+
+                var items = CollectItems(new List<Item>(), worlds);
+                if (worlds.All(w => w.Locations.Get("Ganon's Tower - Moldorm Chest").Available(new Progression(items.Where(i => i.World == w))))) {
+                    break;
+                }
+                else {
+                    foreach (var l in locations) {
+                        l.Item = null;
+                    }
+                }
+            }
+        }
+
         IEnumerable<Item> CollectItems(IEnumerable<Item> items, IEnumerable<World> worlds) {
             var assumedItems = new List<Item>(items);
             var remainingLocations = worlds.SelectMany(l => l.Locations).Filled().ToList();
@@ -159,16 +188,24 @@ namespace Randomizer.SMZ3 {
             itemPool.Remove(item);
         }
 
-        void GanonTowerFill(List<Item> itemPool) {
+        void GanonTowerFill(List<Item> itemPool, double factor) {
             var locations = Worlds
                 .SelectMany(x => x.Locations)
                 .Where(x => x.Region is Regions.Zelda.GanonsTower)
                 .Empty().Shuffle(Rnd);
-            FastFill(itemPool, locations.Take(locations.Count / 2));
+            FastFill(itemPool, locations.Take((int)(locations.Count / factor)));
         }
 
         void FastFill(List<Item> itemPool, IEnumerable<Location> locations) {
             foreach (var (location, item) in locations.Empty().Zip(itemPool, (l, i) => (l, i)).ToList()) {
+                location.Item = item;
+                itemPool.Remove(item);
+            }
+        }
+
+        void RestrictedFastFill(List<Item> itemPool, IEnumerable<Location> locations) {
+            foreach (var item in itemPool.ToList()) {
+                var location = locations.Empty().Where(l => l.Region.CanFill(item)).First();
                 location.Item = item;
                 itemPool.Remove(item);
             }

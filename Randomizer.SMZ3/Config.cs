@@ -58,6 +58,14 @@ namespace Randomizer.SMZ3 {
         DefeatBoth,
     }
 
+    [DefaultValue(Randomized)]
+    enum Fill {
+        [Description("Major items available (Assumed filling)")]
+        Assumed,
+        [Description("Beatable (Fully random filling)")]
+        Randomized
+    }
+
     enum GanonInvincible {
         [Description("Never")]
         Never,
@@ -76,6 +84,7 @@ namespace Randomizer.SMZ3 {
         public SwordLocation SwordLocation { get; set; } = SwordLocation.Randomized;
         public MorphLocation MorphLocation { get; set; } = MorphLocation.Randomized;
         public Goal Goal { get; set; } = Goal.DefeatBoth;
+        public Fill Fill { get; set; } = Fill.Randomized;
         public bool Keysanity { get; set; } = false;
         public bool Race { get; set; } = false;
         public GanonInvincible GanonInvincible { get; set; } = GanonInvincible.BeforeCrystals;
@@ -87,6 +96,7 @@ namespace Randomizer.SMZ3 {
             SwordLocation = ParseOption(options, SwordLocation.Randomized);
             MorphLocation = ParseOption(options, MorphLocation.Randomized);
             Goal = ParseOption(options, Goal.DefeatBoth);
+            Fill = ParseOption(options, Fill.Randomized);
             GanonInvincible = ParseOption(options, GanonInvincible.BeforeCrystals);
             Race = ParseOption(options, "Race", false);
             Keysanity = false;
