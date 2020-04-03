@@ -11,6 +11,7 @@ import { prepareRom } from '../file/rom';
 
 import localForage from 'localforage';
 import { saveAs } from 'file-saver';
+import { encode } from 'slugid';
 
 import includes from 'lodash/includes';
 import compact from 'lodash/compact';
@@ -58,7 +59,7 @@ const JumpSprite = styled.span`
 `;
 
 export default function Patch(props) {
-    const [mode, setMode] = useState('upload');
+    const [patchState, setPatchState] = useState('upload');
     const [z3Sprite, setZ3Sprite] = useState({});
     const [smSprite, setSMSprite] = useState({});
     const [smSpinjumps, setSMSpinjumps] = useState(false);
@@ -71,7 +72,8 @@ export default function Patch(props) {
         sm: [{ title: 'Samus' }, ...inventory.sm]
     };
 
-    const { gameId, gameType, seedNumber, world } = props;
+    const { seed, world } = props;
+    const { gameId } = seed;
     const game = {
         smz3: gameId === 'smz3',
         z3: gameId === 'smz3',
@@ -83,10 +85,10 @@ export default function Patch(props) {
             const fileDataSM = await localForage.getItem('baseRomSM');
             const fileDataLTTP = await localForage.getItem('baseRomLTTP');
             if ((!game.z3 || fileDataLTTP !== null) && fileDataSM !== null) {
-                setMode('download');
+                setPatchState('download');
             }
         });
-    }, [mode]);
+    }, [patchState]);
 
     useEffect(() => {
         let settings;
@@ -115,11 +117,13 @@ export default function Patch(props) {
     }
 
     function constructFileName() {
+        const { gameVersion, guid, seedNumber, mode } = seed;
         const settings = JSON.parse(world.settings);
 
         /* compact works as long as seedNumber is string, since 0 is a valid number */
         const parts = compact([
             gameId.toUpperCase(),
+            `V${gameVersion}`,
             ...{
                 smz3: ({ smlogic, swordlocation, morphlocation }) => [
                     `ZLn+SL${smlogic[0]}`,
@@ -128,14 +132,14 @@ export default function Patch(props) {
                 ],
                 sm: ({ logic, placement }) => [`L${logic[0]}`, `I${placement[0]}`]
             }[gameId](settings),
-            seedNumber,
-            gameType === 'multiworld' ? world.player : null
+            seedNumber || encode(guid),
+            mode === 'multiworld' ? world.player : null
         ]);
 
         return `${join(parts, '-')}.sfc`;
     }
 
-    const onUploadRoms = () => setMode('download');
+    const onUploadRoms = () => setPatchState('download');
 
     const onZ3SpriteChange = (i) => {
         setZ3Sprite(sprites.z3[i]);
@@ -171,7 +175,7 @@ export default function Patch(props) {
         localStorage.setItem('persist', JSON.stringify(values));
     }
 
-    const component = mode === 'upload' ? <Upload game={game} onUpload={onUploadRoms} /> : (
+    const component = patchState === 'upload' ? <Upload game={game} onUpload={onUploadRoms} /> : (
         <Form onSubmit={(e) => e.preventDefault()}>
             <Row className="mb-3">
                 <Col md={game.smz3 ? 8 : 6}>
