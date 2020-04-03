@@ -65,7 +65,7 @@ namespace WebRandomizer.Controllers {
                     Players = seedData.Worlds.Count,
                     SeedNumber = seedData.Seed,
                     Spoiler = JsonConvert.SerializeObject(seedData.Playthrough),
-                    Type = seedData.Mode,
+                    Mode = seedData.Mode,
                     Worlds = new List<World>()
                 };
 
