@@ -11,6 +11,7 @@ namespace WebRandomizer.Models {
         public string SeedNumber { get; set; }
         public string Spoiler { get; set; }
         public string GameName { get; set; }
+        public string GameVersion { get; set; }
         public string GameId { get; set; }
         public int Players { get; set; }
         public List<World> Worlds { get; set; }
