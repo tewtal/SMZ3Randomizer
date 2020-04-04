@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Randomizer.Contracts;
 using static Randomizer.Contracts.RandomizerOptionType;
 
@@ -85,7 +86,8 @@ namespace Randomizer.SuperMetroid {
                     Id = world.Id,
                     Guid = world.Guid,
                     Player = world.Player,
-                    Patches = patch.Create()
+                    Patches = patch.Create(),
+                    Locations = world.Locations.Select(l => new LocationData() { LocationId = l.Id, ItemId = (int)l.Item.Type, ItemWorldId = l.Item.World.Id }).ToList<ILocationData>()
                 };
 
                 seedData.Worlds.Add(worldData);
@@ -114,9 +116,17 @@ namespace Randomizer.SuperMetroid {
     }
 
     public class WorldData : IWorldData {
+
         public int Id { get; set; }
         public string Guid { get; set; }
         public string Player { get; set; }
         public Dictionary<int, byte[]> Patches { get; set; }
+        public List<ILocationData> Locations { get; set; }
+    }
+
+    public class LocationData : ILocationData {
+        public int LocationId { get; set; }
+        public int ItemId { get; set; }
+        public int ItemWorldId { get; set; }
     }
 }

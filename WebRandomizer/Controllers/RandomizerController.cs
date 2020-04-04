@@ -82,7 +82,8 @@ namespace WebRandomizer.Controllers {
                         Guid = seedWorld.Guid,
                         Settings = JsonConvert.SerializeObject(options),
                         Player = seedWorld.Player,
-                        Patch = ConvertPatch(seedWorld.Patches)
+                        Patch = ConvertPatch(seedWorld.Patches),
+                        Locations = seedWorld.Locations.Select(l => new Location() { LocationId = l.LocationId, ItemId = l.ItemId, ItemWorldId = l.ItemWorldId}).ToList()
                     };
                     seed.Worlds.Add(world);
                 }
