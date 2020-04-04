@@ -5,16 +5,20 @@ import { Label, Button, Input, InputGroupAddon, InputGroupText } from 'reactstra
 import BootstrapSwitchButton from 'bootstrap-switch-button-react';
 import InputGroup from './util/PrefixInputGroup';
 import DropdownSelect from './util/DropdownSelect';
+import DownloadInfoTooltip from './util/DownloadInfoTooltip';
 import Upload from './Upload';
 
 import { prepareRom } from '../file/rom';
 
 import localForage from 'localforage';
 import { saveAs } from 'file-saver';
+import { encode } from 'slugid';
 
 import includes from 'lodash/includes';
-import attempt from 'lodash/attempt';
+import compact from 'lodash/compact';
+import join from 'lodash/join';
 import set from 'lodash/set';
+import attempt from 'lodash/attempt';
 import defaultTo from 'lodash/defaultTo';
 
 import inventory from '../resources/sprite/inventory';
@@ -56,7 +60,7 @@ const JumpSprite = styled.span`
 `;
 
 export default function Patch(props) {
-    const [mode, setMode] = useState('upload');
+    const [patchState, setPatchState] = useState('upload');
     const [z3Sprite, setZ3Sprite] = useState({});
     const [smSprite, setSMSprite] = useState({});
     const [smSpinjumps, setSMSpinjumps] = useState(false);
@@ -69,7 +73,8 @@ export default function Patch(props) {
         sm: [{ title: 'Samus' }, ...inventory.sm]
     };
 
-    const { gameId, world, fileName } = props;
+    const { seed, world } = props;
+    const { gameId } = seed;
     const game = {
         smz3: gameId === 'smz3',
         z3: gameId === 'smz3',
@@ -81,10 +86,10 @@ export default function Patch(props) {
             const fileDataSM = await localForage.getItem('baseRomSM');
             const fileDataLTTP = await localForage.getItem('baseRomLTTP');
             if ((!game.z3 || fileDataLTTP !== null) && fileDataSM !== null) {
-                setMode('download');
+                setPatchState('download');
             }
         });
-    }, [mode]);
+    }, [patchState]);
 
     useEffect(() => {
         let settings;
@@ -105,14 +110,37 @@ export default function Patch(props) {
             if (world !== null) {
                 const settings = { z3Sprite, smSprite, smSpinjumps, z3HeartColor, z3HeartBeep, smEnergyBeep };
                 const patchedData = await prepareRom(world.patch, settings, baseIps[gameId], game);
-                saveAs(new Blob([patchedData]), fileName);
+                saveAs(new Blob([patchedData]), constructFileName());
             }
         } catch (error) {
             console.log(error);
         }
     }
 
-    const onUploadRoms = () => setMode('download');
+    function constructFileName() {
+        const { gameVersion, guid, seedNumber, mode } = seed;
+        const settings = JSON.parse(world.settings);
+
+        /* compact works as long as seedNumber is string, since 0 is a valid number */
+        const parts = compact([
+            gameId.toUpperCase(),
+            `V${gameVersion}`,
+            ...{
+                smz3: ({ smlogic, swordlocation, morphlocation }) => [
+                    `ZLn+SL${smlogic[0]}`,
+                    swordlocation !== 'randomized' ? `S${swordlocation[0]}` : null,
+                    morphlocation !== 'randomized' ? `M${morphlocation[0]}` : null
+                ],
+                sm: ({ logic, placement }) => [`L${logic[0]}`, `I${placement[0]}`]
+            }[gameId](settings),
+            seedNumber || encode(guid),
+            mode === 'multiworld' ? world.player : null
+        ]);
+
+        return `${join(parts, '-')}.sfc`;
+    }
+
+    const onUploadRoms = () => setPatchState('download');
 
     const onZ3SpriteChange = (i) => {
         setZ3Sprite(sprites.z3[i]);
@@ -148,7 +176,7 @@ export default function Patch(props) {
         localStorage.setItem('persist', JSON.stringify(values));
     }
 
-    const component = mode === 'upload' ? <Upload game={game} onUpload={onUploadRoms} /> : (
+    const component = patchState === 'upload' ? <Upload game={game} onUpload={onUploadRoms} /> : (
         <Form onSubmit={(e) => e.preventDefault()}>
             <Row className="mb-3">
                 <Col md={game.smz3 ? 8 : 6}>
@@ -195,8 +223,9 @@ export default function Patch(props) {
                 </Col>
             </Row>
             <Row>
-                <Col md="6">
+                <Col className="d-flex align-items-center" md="6">
                     <Button color="primary" onClick={onDownloadRom}>Download ROM</Button>
+                    <DownloadInfoTooltip className="ml-2" gameId={gameId} />
                 </Col>
             </Row>
         </Form>

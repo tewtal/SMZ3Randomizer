@@ -40,14 +40,13 @@ export default function Permalink(props) {
                                 <Row>
                                     <Col>Seed: {props.match.params.seed_id}</Col>
                                 </Row>
-                                <Row>
-                                    <Col>Seed number: {seed.seedNumber}</Col>
-                                </Row>
-                                <Row>
-                                    <Col>Type: {seed.type}</Col>
-                                </Row>
+                                {seed.seedNumber && (
+                                    <Row>
+                                        <Col>Seed number: {seed.seedNumber}</Col>
+                                    </Row>
+                                )}
                                 <br />
-                                <Patch gameId={seed.gameId} world={seed.worlds[0]} fileName={`${seed.gameName} - ${seed.seedNumber}.sfc`} />
+                                <Patch seed={seed} world={seed.worlds[0]} />
                             </CardBody>
                         </Card>
                         {seed !== null && <Spoiler seedData={seed} />}

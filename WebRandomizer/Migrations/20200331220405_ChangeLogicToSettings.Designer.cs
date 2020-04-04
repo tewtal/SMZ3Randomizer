@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebRandomizer.Models;
@@ -9,9 +10,10 @@ using WebRandomizer.Models;
 namespace WebRandomizer.Migrations
 {
     [DbContext(typeof(RandomizerContext))]
-    partial class RandomizerContextModelSnapshot : ModelSnapshot
+    [Migration("20200331220405_ChangeLogicToSettings")]
+    partial class ChangeLogicToSettings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,13 +118,7 @@ namespace WebRandomizer.Migrations
                     b.Property<string>("GameName")
                         .HasColumnType("text");
 
-                    b.Property<string>("GameVersion")
-                        .HasColumnType("text");
-
                     b.Property<string>("Guid")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Mode")
                         .HasColumnType("text");
 
                     b.Property<int>("Players")
@@ -132,6 +128,9 @@ namespace WebRandomizer.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Spoiler")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
                         .HasColumnType("text");
 
                     b.HasKey("Id");

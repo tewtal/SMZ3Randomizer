@@ -29,7 +29,7 @@ const StyledMarkdown = styled(Markdown)`
     padding: 0;
 
     ul {
-      ul { padding: 0 1em; }
+      ul { padding-left: 1em; }
 
       li:before {
         content: "";

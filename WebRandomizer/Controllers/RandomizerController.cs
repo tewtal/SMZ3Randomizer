@@ -60,20 +60,27 @@ namespace WebRandomizer.Controllers {
                 /* Store this seed to the database */
                 var seed = new Seed {
                     GameName = seedData.Game,
+                    GameVersion = randomizer.Version.ToString(),
                     GameId = randomizer.Id,
                     Guid = seedData.Guid,
                     Players = seedData.Worlds.Count,
                     SeedNumber = seedData.Seed,
                     Spoiler = JsonConvert.SerializeObject(seedData.Playthrough),
-                    Type = seedData.Mode,
+                    Mode = seedData.Mode,
                     Worlds = new List<World>()
                 };
+
+                /* If race mode is enabled, blank out the seed number to not reveal it to the client */
+                if (options.ContainsKey("race") && options["race"] == "true") {
+                    seed.SeedNumber = "";
+                    options["seed"] = "";
+                }
 
                 foreach (var seedWorld in seedData.Worlds) {
                     var world = new World {
                         WorldId = seedWorld.Id,
                         Guid = seedWorld.Guid,
-                        Logic = seedData.Logic,
+                        Settings = JsonConvert.SerializeObject(options),
                         Player = seedWorld.Player,
                         Patch = ConvertPatch(seedWorld.Patches)
                     };
