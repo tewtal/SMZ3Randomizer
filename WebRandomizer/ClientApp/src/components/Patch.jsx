@@ -5,6 +5,7 @@ import { Label, Button, Input, InputGroupAddon, InputGroupText } from 'reactstra
 import BootstrapSwitchButton from 'bootstrap-switch-button-react';
 import InputGroup from './util/PrefixInputGroup';
 import DropdownSelect from './util/DropdownSelect';
+import DownloadInfoTooltip from './util/DownloadInfoTooltip';
 import Upload from './Upload';
 
 import { prepareRom } from '../file/rom';
@@ -222,8 +223,9 @@ export default function Patch(props) {
                 </Col>
             </Row>
             <Row>
-                <Col md="6">
+                <Col className="d-flex align-items-center" md="6">
                     <Button color="primary" onClick={onDownloadRom}>Download ROM</Button>
+                    <DownloadInfoTooltip className="ml-2" gameId={gameId} />
                 </Col>
             </Row>
         </Form>
