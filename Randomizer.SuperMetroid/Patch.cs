@@ -164,10 +164,11 @@ namespace Randomizer.SuperMetroid {
   
         #endregion 
 
-        public Patch(World myWorld, List<World> allWorlds, string seedGuid, Random rnd) {
+        public Patch(World myWorld, List<World> allWorlds, string seedGuid, int seed, Random rnd) {
             this.myWorld = myWorld;
             this.allWorlds = allWorlds;
             this.seedGuid = seedGuid;
+            this.seed = seed;
             this.rnd = rnd;
         }
 
@@ -257,6 +258,7 @@ namespace Randomizer.SuperMetroid {
             WriteSeedHash();
             WriteItemLocations();
             WriteAnimalSurprise();
+            WriteGameTitle();
 
             return patches;
         }
@@ -335,6 +337,16 @@ namespace Randomizer.SuperMetroid {
             }
 
             patches.Add(romAddress, new byte[] { 0, 0, 0, 0 });
+        }
+        void WriteGameTitle() {
+            var smLogic = myWorld.Config.Logic switch
+            {
+                Logic.Casual => "C",
+                Logic.Tournament => "T",
+                _ => "C",
+            };
+            var title = AsAscii($"SM{Randomizer.version}{smLogic}{seed:X8}".PadRight(21)[..21]);
+            patches.Add(0x007FC0, title);
         }
 
         byte[] UintBytes(int value) => BitConverter.GetBytes((uint)value);

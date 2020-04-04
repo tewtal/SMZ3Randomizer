@@ -85,7 +85,7 @@ namespace Randomizer.SMZ3 {
             int patchSeed = randoRnd.Next();
             foreach (var world in worlds) {
                 var patchRnd = new Random(patchSeed);
-                var patch = new Patch(world, worlds, seedData.Guid, randoSeed, patchRnd);
+                var patch = new Patch(world, worlds, seedData.Guid, config.Race ? 0 : randoSeed, patchRnd);
                 var worldData = new WorldData {
                     Id = world.Id,
                     Guid = world.Guid,
