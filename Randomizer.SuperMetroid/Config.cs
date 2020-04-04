@@ -13,11 +13,6 @@ namespace Randomizer.SuperMetroid {
         Casual,
         [Description("Tournament")]
         Tournament
-        // TODO: Implement these
-        //[Description("Normal")]
-        //Normal,
-        //[Description("Hard")]
-        //Hard 
     }
     
     [DefaultValue(Split)]
@@ -47,6 +42,7 @@ namespace Randomizer.SuperMetroid {
         public Logic Logic { get; set; } = Logic.Tournament;
         public Goal Goal { get; set; } = Goal.DefeatMB;
         public Placement Placement { get; set; } = Placement.Split;
+        public bool Race { get; set; } = false;
         public bool Keysanity { get; set; } = false;
 
         public Config(IDictionary<string, string> options) {
@@ -54,6 +50,7 @@ namespace Randomizer.SuperMetroid {
             Logic = ParseOption(options, Logic.Tournament);
             Goal = ParseOption(options, Goal.DefeatMB);
             Placement = ParseOption(options, Placement.Split);
+            Race = ParseOption(options, "Race", false);
             Keysanity = false;
         }
 
@@ -67,6 +64,15 @@ namespace Randomizer.SuperMetroid {
             return defaultValue;
         }
 
+        private bool ParseOption(IDictionary<string, string> options, string option, bool defaultValue) {
+            if (options.ContainsKey(option.ToLower())) {
+                return bool.Parse(options[option.ToLower()]);
+            }
+            else {
+                return defaultValue;
+            }
+        }
+
         public static RandomizerOption GetRandomizerOption<T>(string description, string defaultOption = "") where T : Enum {
             var enumType = typeof(T);
             var values = Enum.GetValues(enumType).Cast<Enum>();
@@ -77,6 +83,16 @@ namespace Randomizer.SuperMetroid {
                 Type = RandomizerOptionType.Dropdown,
                 Default = string.IsNullOrEmpty(defaultOption) ? GetDefaultValue<T>().ToLString() : defaultOption,
                 Values = values.ToDictionary(k => k.ToLString(), v => v.GetDescription())
+            };
+        }
+
+        public static RandomizerOption GetRandomizerOption(string name, string description, bool defaultOption = false) {
+            return new RandomizerOption {
+                Key = name.ToLower(),
+                Description = description,
+                Type = RandomizerOptionType.Checkbox,
+                Default = defaultOption.ToString().ToLower(),
+                Values = new Dictionary<string, string>()
             };
         }
 
