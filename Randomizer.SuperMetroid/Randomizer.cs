@@ -21,6 +21,7 @@ namespace Randomizer.SuperMetroid {
             new RandomizerOption {
                 Key = "seed", Description = "Seed", Type = Seed
             },
+            Config.GetRandomizerOption("Race", "Race ROM (no spoilers)", false),
             Config.GetRandomizerOption<GameMode>("Game mode"),
             new RandomizerOption {
                 Key = "players", Description = "Players", Type = Players, Default = "2"
@@ -43,6 +44,10 @@ namespace Randomizer.SuperMetroid {
 
             var rnd = new Random(randoSeed);
             var config = new Config(options);
+
+            if (config.Race) {
+                rnd = new Random(rnd.Next());
+            }
 
             int players = options.ContainsKey("players") ? int.Parse(options["players"]) : 1;
             var worlds = new List<World>();
@@ -67,7 +72,7 @@ namespace Randomizer.SuperMetroid {
                 Seed = seed,
                 Game = Name,
                 Logic = config.Logic.ToLString(),
-                Playthrough = spheres,
+                Playthrough = config.Race ? new List<Dictionary<string, string>>() : spheres,
                 Mode = config.GameMode.ToLString(),
                 Worlds = new List<IWorldData>()
             };
