@@ -64,7 +64,7 @@ namespace Randomizer.SuperMetroid {
             var filler = new Filler(worlds, config, rnd);
             filler.Fill();
 
-            var playthrough = new Playthrough(worlds);
+            var playthrough = new Playthrough(worlds, config);
             var spheres = playthrough.Generate();
 
             var seedData = new SeedData {

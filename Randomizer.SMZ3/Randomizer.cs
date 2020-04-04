@@ -68,7 +68,7 @@ namespace Randomizer.SMZ3 {
             var filler = new Filler(worlds, config, randoRnd);
             filler.Fill();
 
-            var playthrough = new Playthrough(worlds);
+            var playthrough = new Playthrough(worlds, config);
             var spheres = playthrough.Generate();
 
             var seedData = new SeedData {

@@ -5,9 +5,12 @@ using System.Linq;
 
 namespace Randomizer.SuperMetroid {
     class Playthrough {
-        private List<World> worlds;
-        public Playthrough(List<World> worlds) {
+        readonly List<World> worlds;
+        readonly Config config;
+        
+        public Playthrough(List<World> worlds, Config config) {
             this.worlds = worlds;
+            this.config = config;
         }
 
         public List<Dictionary<string, string>> Generate() {
@@ -37,7 +40,11 @@ namespace Randomizer.SuperMetroid {
                       i.Type != ItemType.ReserveTank)
                 )) {
                     var itemLocation = newLocations.Where(l => l.Item == addedItem).First();
-                    sphere.Add($"{itemLocation.Name} ({itemLocation.Region.World.Player})", $"{addedItem.Name} ({addedItem.World.Player})");
+                    if (config.GameMode == GameMode.Multiworld) {
+                        sphere.Add($"{itemLocation.Name} ({itemLocation.Region.World.Player})", $"{addedItem.Name} ({addedItem.World.Player})");
+                    } else {
+                        sphere.Add($"{itemLocation.Name}", $"{addedItem.Name}");
+                    }
                 }
 
                 spheres.Add(sphere);

@@ -1,5 +1,5 @@
 ﻿import React, { useState } from 'react';
-import { Card, CardHeader, CardBody, Button } from 'reactstrap';
+import { Row, Col, Card, CardHeader, CardBody, Button } from 'reactstrap';
 
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
@@ -7,17 +7,20 @@ import map from 'lodash/map';
 export default function Spoiler(props) {
     const [show, setShow] = useState(false);
 
-    if (props.seedData === null)
+    if (props.seedData === null || props.seedData.spoiler === "[]")
         return null;
-    else if (!show)
-        return <Button onClick={() => setShow(true)}>Show spoiler</Button>;
 
     return (
         <div>
-            <Button color="primary" onClick={() => setShow(false)}>Hide spoiler</Button>
+            <br />
             <Card>
-                <CardHeader>Seed Playthrough</CardHeader>
-                <CardBody>
+                <CardHeader >
+                    <Row className="align-items-center justify-content-between">
+                        <Col>Playthrough</Col>
+                        <Col><Button outline className="float-right" color="secondary" onClick={() => setShow(!show)}>{show ? "Hide" : "Show"}</Button></Col>
+                    </Row>
+                </CardHeader>
+                {show && (<CardBody>
                     {JSON.parse(props.seedData.spoiler).filter(sphere => !isEmpty(sphere)).map(sphere => (
                         <Card>
                             <CardBody>
@@ -29,7 +32,7 @@ export default function Spoiler(props) {
                             </CardBody>
                         </Card>
                     ))}
-                </CardBody>
+                </CardBody>)}
             </Card>
         </div>
     );
