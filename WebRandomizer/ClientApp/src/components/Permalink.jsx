@@ -1,16 +1,22 @@
 ﻿import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
 import Patch from './Patch';
 import Spoiler from './Spoiler';
+
+import classNames from 'classnames';
+
 import { decode } from 'slugid';
-import { Container, Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
+
+import attempt from 'lodash/attempt';
 
 export default function Permalink(props) {
-    const seedGuid = decode(props.match.params.seed_id).replace(/-/g,"");
+    const seedSlug = props.match.params.seed_id;
+    const seedGuid = decode(seedSlug).replace(/-/g, "");
     const [seed, setSeed] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
 
     useEffect(() => {
-        const fetchData = async () => {
+        attempt(async () => {
             try {
                 var response = await fetch(`/api/seed/${seedGuid}`);
                 if (response && response.ok) {
@@ -22,55 +28,60 @@ export default function Permalink(props) {
             } catch (error) {
                 setErrorMessage(error.toString());
             }
-        };
-
-        fetchData();
+        })
     }, []);
 
+    let content;
     if (seed) {
-        return (
-            <Container>
-                <Row className="justify-content-md-center">
-                    <Col md="10">
-                        <Card>
-                            <CardHeader className="bg-primary text-white">
-                                {seed.gameName}
-                            </CardHeader>
-                            <CardBody>
-                                <Row>
-                                    <Col>Seed: {props.match.params.seed_id}</Col>
-                                </Row>
-                                {seed.seedNumber && (
-                                    <Row>
-                                        <Col>Seed number: {seed.seedNumber}</Col>
-                                    </Row>
-                                )}
-                                <br />
-                                <Patch seed={seed} world={seed.worlds[0]} />
-                            </CardBody>
-                        </Card>
-                        {seed !== null && <Spoiler seedData={seed} />}
-                    </Col>
-                </Row>
-            </Container>
-        );
-    } else {
-        return (
-            <Container>
-                <Row className="justify-content-md-center">
-                    <Col md="10">
-                        <Card>
-                            <CardHeader className={errorMessage ? "bg-danger text-white" : "bg-primary text-white"}>
-                                {errorMessage ? <div>Something went wrong :(</div> : <div>Game information</div>}
-                            </CardHeader>
-                            <CardBody>
-                                {errorMessage ? <p>{errorMessage}</p> : <p>Please wait, loading...</p>}
-                            </CardBody>
-                        </Card>
-                    </Col>
-                </Row>
-            </Container>
+        const world = seed.worlds[0];
+        content = (<>
+            <Card>
+                <CardHeader className="bg-primary text-white">
+                    {seed.gameName}
+                </CardHeader>
+                <CardBody>
+                    <Row>
+                        <Col>Seed: {seedSlug}</Col>
+                    </Row>
+                    {seed.seedNumber && (
+                        <Row>
+                            <Col>Seed number: {seed.seedNumber}</Col>
+                        </Row>
+                    )}
+                    <Row className="mt-3">
+                        <Col>
+                            <Patch seed={seed} world={world} />
+                        </Col>
+                    </Row>
+                </CardBody>
+            </Card>
+            <Spoiler seedData={seed} />
+        </>);
+    }
+    else {
+        content = (
+            <Card>
+                <CardHeader className={classNames({
+                        'bg-danger': errorMessage,
+                        'bg-primary': !errorMessage
+                    }, 'text-white'
+                )}>
+                    {errorMessage ? <div>Something went wrong :(</div> : <div>Game information</div>}
+                </CardHeader>
+                <CardBody>
+                    {errorMessage ? <p>{errorMessage}</p> : <p>Please wait, loading...</p>}
+                </CardBody>
+            </Card>
         );
     }
 
+    return (
+        <Container>
+            <Row className="justify-content-md-center">
+                <Col md="10">
+                    {content}
+                </Col>
+            </Row>
+        </Container>
+    );
 }
