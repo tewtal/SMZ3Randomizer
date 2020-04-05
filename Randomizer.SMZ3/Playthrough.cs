@@ -7,9 +7,11 @@ namespace Randomizer.SMZ3 {
     class Playthrough {
 
         readonly List<World> worlds;
+        readonly Config config;
 
-        public Playthrough(List<World> worlds) {
+        public Playthrough(List<World> worlds, Config config) {
             this.worlds = worlds;
+            this.config = config;
         }
 
         public List<Dictionary<string, string>> Generate() {
@@ -35,8 +37,12 @@ namespace Randomizer.SMZ3 {
 
                     var n = 0;
                     foreach (var location in inaccessibleLocations) {
-                        sphere.Add($"Inaccessable Item #{n += 1}: {location.Name} ({location.Region.World.Player})",
-                            $"{location.Item.Name} ({location.Item.World.Player})");
+                        if (config.GameMode == GameMode.Multiworld) {
+                            sphere.Add($"Inaccessable Item #{n += 1}: {location.Name} ({location.Region.World.Player})", $"{location.Item.Name} ({location.Item.World.Player})");
+                        }
+                        else {
+                            sphere.Add($"Inaccessable Item #{n += 1}: {location.Name}", $"{location.Item.Name}");
+                        }
                     }
                     spheres.Add(sphere);
                     return spheres;
@@ -45,9 +51,14 @@ namespace Randomizer.SMZ3 {
                 foreach (var location in newLocations) {
                     if (!location.Item.Progression)
                         continue;
-                    sphere.Add($"{location.Name} ({location.Region.World.Player})", $"{location.Item.Name} ({location.Item.World.Player})");
-                }
 
+                    if (config.GameMode == GameMode.Multiworld) {
+                        sphere.Add($"{location.Name} ({location.Region.World.Player})", $"{location.Item.Name} ({location.Item.World.Player})");
+                    }
+                    else {
+                        sphere.Add($"{location.Name}", $"{location.Item.Name}");
+                    }
+                }
                 spheres.Add(sphere);
 
                 if (spheres.Count > 100)
