@@ -161,6 +161,7 @@ export default function Configure(props) {
 
         const formOptionGroups = chunk(formOptions, 2);
 
+        /* Chromium did not respect "off", so we're forced to use "new-passwod" */
         const playerInputs = [];
         for (let p = 0; p < parseInt(options["players"]); p++) {
             playerInputs.push(
@@ -169,7 +170,7 @@ export default function Configure(props) {
                         <InputGroupAddon addonType="prepend">
                             <InputGroupText>Name {p + 1}</InputGroupText>
                         </InputGroupAddon>
-                        <Input id={"player-" + p} value={names[p]} onChange={(e) => setNames({ ...names, [p]: e.target.value })} />
+                        <Input autocomplete="new-password" value={names[p]} onChange={(e) => setNames({ ...names, [p]: e.target.value })} />
                     </InputGroup>
                 </Col>
             );
@@ -184,7 +185,7 @@ export default function Configure(props) {
                                 {randomizer.name} - {randomizer.version}
                             </CardHeader>
                             <CardBody>
-                                <Form onSubmit={createGame}>
+                                <Form autocomplete="off" onSubmit={createGame}>
                                     {formOptionGroups.map((optionGroup, i) => (
                                         <Row key={i} className="form-group">
                                             {optionGroup}
