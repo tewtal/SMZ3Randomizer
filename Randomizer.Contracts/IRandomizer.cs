@@ -4,11 +4,18 @@ using System.Runtime.Serialization;
 
 namespace Randomizer.Contracts {
 
+    public interface ILocationData
+    {
+        int LocationId { get; }
+        int ItemId { get; }
+        int ItemWorldId { get; }
+    }
     public interface IWorldData {
         int Id { get; }
         string Guid { get; }
         string Player { get; }
         Dictionary<int, byte[]> Patches { get; }
+        List<ILocationData> Locations { get; }
     }
 
     public interface ISeedData {

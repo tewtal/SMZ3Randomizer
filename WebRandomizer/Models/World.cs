@@ -13,6 +13,7 @@ namespace WebRandomizer.Models {
         public string Player { get; set; }
         public string Settings { get; set; }
         public byte[] Patch { get; set; }
+        public List<Location> Locations { get; set; }
     }
 
 }
