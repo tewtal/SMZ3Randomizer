@@ -34,6 +34,7 @@ export default function Permalink(props) {
     let content;
     if (seed) {
         const world = seed.worlds[0];
+        const settings = JSON.parse(world.settings);
         content = (<>
             <Card>
                 <CardHeader className="bg-primary text-white">
@@ -48,6 +49,54 @@ export default function Permalink(props) {
                             <Col>Seed number: {seed.seedNumber}</Col>
                         </Row>
                     )}
+
+                    {seed.gameId === 'smz3' && (<>
+                        <Row>
+                            <Col>Super Metroid Logic: {{
+                                normal: 'Normal',
+                                hard: 'Hard'
+                            }[settings.smlogic]
+                            }</Col>
+                        </Row>
+                        <Row>
+                            <Col>First Sword: {{
+                                randomized: 'Randomized',
+                                early: 'Early',
+                                uncle: 'Uncle assured'
+                            }[settings.swordlocation]
+                            }</Col>
+                        </Row>
+                        <Row>
+                            <Col>Morph Ball: {{
+                                randomized: 'Randomized',
+                                early: 'Early',
+                                original: 'Original location'
+                            }[settings.morphlocation]
+                            }</Col>
+                        </Row>
+                    </>)}
+                    {seed.gameId === 'sm' && (<>
+                        <Row>
+                            <Col>Logic: {{
+                                casual: 'Casual',
+                                tournament: 'Tournament'
+                            }[settings.logic]
+                            }</Col>
+                        </Row>
+                        <Row>
+                            <Col>Item Placement: {{
+                                full: 'Full randomization',
+                                split: 'Major/Minor split'
+                            }[settings.placement]
+                            }</Col>
+                        </Row>
+                    </>)}
+                    {settings.race === 'true' && (
+                        <Row>
+                            <Col>Race Rom (no spoilers)</Col>
+                        </Row>
+                    )}
+
                     <Row className="mt-3">
                         <Col>
                             <Patch seed={seed} world={world} />
