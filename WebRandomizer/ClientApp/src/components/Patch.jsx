@@ -119,23 +119,35 @@ export default function Patch(props) {
 
     function constructFileName() {
         const { gameVersion, guid, seedNumber, mode } = seed;
-        const settings = JSON.parse(world.settings);
+        const settings = world.settings && JSON.parse(world.settings);
 
         /* compact works as long as seedNumber is string, since 0 is a valid number */
         const parts = compact([
             gameId.toUpperCase(),
             `V${gameVersion}`,
-            ...{
-                smz3: ({ smlogic, swordlocation, morphlocation }) => [
-                    `ZLn+SL${smlogic[0]}`,
-                    swordlocation !== 'randomized' ? `S${swordlocation[0]}` : null,
-                    morphlocation !== 'randomized' ? `M${morphlocation[0]}` : null
-                ],
-                sm: ({ logic, placement }) => [`L${logic[0]}`, `I${placement[0]}`]
-            }[gameId](settings),
+            /* either no settings present, or construct the parts */
+            ...(!settings ? []
+                : gameId === 'smz3' ? smz3Parts(settings) :
+                    gameId === 'sm' ? smParts(settings) : []
+            ),
             seedNumber || encode(guid),
             mode === 'multiworld' ? world.player : null
         ]);
+
+        function smz3Parts({ smlogic, swordlocation, morphlocation }) {
+            return [
+                `ZLn+SL${smlogic[0]}`,
+                swordlocation !== 'randomized' ? `S${swordlocation[0]}` : null,
+                morphlocation !== 'randomized' ? `M${morphlocation[0]}` : null
+            ];
+        }
+
+        function smParts({ logic, placement }) {
+            return [
+                `L${logic[0]}`,
+                `I${placement[0]}`
+            ];
+        }
 
         return `${join(parts, '-')}.sfc`;
     }

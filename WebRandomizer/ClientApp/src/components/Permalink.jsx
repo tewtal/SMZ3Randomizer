@@ -48,9 +48,8 @@ export default function Permalink(props) {
                         <Row>
                             <Col>Seed number: {seed.seedNumber}</Col>
                         </Row>
-                    )}
-
-                    {seed.gameId === 'smz3' && (<>
+                    )}                    
+                    {settings && seed.gameId === 'smz3' && (<>
                         <Row>
                             <Col>Super Metroid Logic: {{
                                 normal: 'Normal',
@@ -75,7 +74,7 @@ export default function Permalink(props) {
                             }</Col>
                         </Row>
                     </>)}
-                    {seed.gameId === 'sm' && (<>
+                    {settings && seed.gameId === 'sm' && (<>
                         <Row>
                             <Col>Logic: {{
                                 casual: 'Casual',
@@ -91,7 +90,7 @@ export default function Permalink(props) {
                             }</Col>
                         </Row>
                     </>)}
-                    {settings.race === 'true' && (
+                    {settings && settings.race === 'true' && (
                         <Row>
                             <Col>Race Rom (no spoilers)</Col>
                         </Row>
