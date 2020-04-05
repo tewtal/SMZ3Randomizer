@@ -32,7 +32,7 @@ export async function prepareRom(world_patch, settings, baseIps, game) {
         await applySprite(rom, mode, 'link_sprite', settings.z3Sprite);
     }
     await applySprite(rom, mode, 'samus_sprite', settings.smSprite);
-    if (settings.spinjumps) {
+    if (settings.smSpinjumps) {
         smSpinjumps(rom, mode);
     }
 
