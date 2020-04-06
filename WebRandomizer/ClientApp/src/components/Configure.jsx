@@ -50,7 +50,6 @@ export default function Configure(props) {
         setModal(true);
 
         try {
-
             if (options["gamemode"] === "multiworld") {
                 for (let p = 0; p < parseInt(options["players"]); p++) {
                     options["player-" + p] = names[p];
@@ -157,7 +156,9 @@ export default function Configure(props) {
                         <InputGroupAddon addonType="prepend">
                             <InputGroupText>Name {p + 1}</InputGroupText>
                         </InputGroupAddon>
-                        <Input autocomplete="new-password" value={names[p]} onChange={(e) => setNames({ ...names, [p]: e.target.value })} />
+                        <Input autoComplete="new-password" value={names[p] || ''}
+                            onChange={(e) => setNames({ ...names, [p]: e.target.value })}
+                        />
                     </InputGroup>
                 </Col>
             );
@@ -172,7 +173,7 @@ export default function Configure(props) {
                                 {randomizer.name} - {randomizer.version}
                             </CardHeader>
                             <CardBody>
-                                <Form autocomplete="off" onSubmit={createGame}>
+                                <Form autoComplete="off" onSubmit={createGame}>
                                     {formOptionGroups.map((optionGroup, i) => (
                                         <Row key={i} className="form-group">
                                             {optionGroup}
