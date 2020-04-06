@@ -169,7 +169,7 @@ export default function Configure(props) {
                         <InputGroupAddon addonType="prepend">
                             <InputGroupText>Name {p + 1}</InputGroupText>
                         </InputGroupAddon>
-                        <Input autoComplete="new-password" value={names[p] || ''}
+                        <Input autoComplete="new-password" value={names[p] || ''} required pattern=".*[A-Za-z\d].*"
                             onChange={(e) => setNames({ ...names, [p]: e.target.value })}
                         />
                     </InputGroup>
