@@ -37,7 +37,7 @@ export default function Permalink(props) {
         const world = seed.worlds[0];
         const settings = JSON.parse(world.settings);
         content = (<>
-            <Card>
+            <Card className="mb-3">
                 <CardHeader className="bg-primary text-white">
                     {seed.gameName}
                 </CardHeader>
@@ -49,7 +49,7 @@ export default function Permalink(props) {
                         <Row>
                             <Col>Seed number: {seed.seedNumber}</Col>
                         </Row>
-                    )}                    
+                    )}
                     {settings && seed.gameId === 'smz3' && (<>
                         <Row>
                             <Col>Super Metroid Logic: {{

@@ -11,29 +11,26 @@ export default function Spoiler(props) {
         return null;
 
     return (
-        <div>
-            <br />
-            <Card>
-                <CardHeader >
-                    <Row className="align-items-center justify-content-between">
-                        <Col>Playthrough</Col>
-                        <Col><Button outline className="float-right" color="secondary" onClick={() => setShow(!show)}>{show ? "Hide" : "Show"}</Button></Col>
-                    </Row>
-                </CardHeader>
-                {show && (<CardBody>
-                    {JSON.parse(props.seedData.spoiler).filter(sphere => !isEmpty(sphere)).map(sphere => (
-                        <Card>
-                            <CardBody>
-                                <ul>
-                                    {map(sphere, (item, location) =>
-                                        <li>{location} - {item}</li>
-                                    )}
-                                </ul>
-                            </CardBody>
-                        </Card>
-                    ))}
-                </CardBody>)}
-            </Card>
-        </div>
+        <Card>
+            <CardHeader >
+                <Row className="align-items-center justify-content-between">
+                    <Col>Playthrough</Col>
+                    <Col><Button outline className="float-right" color="secondary" onClick={() => setShow(!show)}>{show ? "Hide" : "Show"}</Button></Col>
+                </Row>
+            </CardHeader>
+            {show && (<CardBody>
+                {JSON.parse(props.seedData.spoiler).filter(sphere => !isEmpty(sphere)).map(sphere => (
+                    <Card>
+                        <CardBody>
+                            <ul>
+                                {map(sphere, (item, location) =>
+                                    <li>{location} - {item}</li>
+                                )}
+                            </ul>
+                        </CardBody>
+                    </Card>
+                ))}
+            </CardBody>)}
+        </Card>
     );
 }

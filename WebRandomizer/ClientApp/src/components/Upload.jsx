@@ -89,9 +89,8 @@ export default function Upload(props) {
                 )}
                 <Col md="6">SM ROM: <input type="file" ref={fileInputSM} onChange={onFileSelect} /></Col>
             </Row>
-            <Row>
+            <Row className="mt-3">
                 <Col md="6">
-                    <br />
                     <Button type="submit" color="primary" disabled={!canUpload}>Upload Files</Button>
                 </Col>
             </Row>

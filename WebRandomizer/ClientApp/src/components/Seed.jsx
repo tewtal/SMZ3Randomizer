@@ -1,5 +1,6 @@
 ﻿import React from 'react';
 import { Row, Col, Card, CardHeader, CardBody, Button } from 'reactstrap';
+import PlainList from './util/PlainList';
 import classNames from 'classnames';
 
 export default function Seed(props) {
@@ -16,9 +17,11 @@ export default function Seed(props) {
                         'bg-danger': session.state === 0
                     }, 'text-white'
                 )}>
-                Session: {session.guid}<br />
-                Game: {session.state > 0 ? seed.gameName : 'Loading...'}<br />
-                Status: {sessionStatus}
+                <PlainList>
+                    <li>Session: {session.guid}</li>
+                    <li>Game: {session.state > 0 ? seed.gameName : 'Loading...'}</li>
+                    <li>Status: {sessionStatus}</li>
+                </PlainList>
             </CardHeader>
             <CardBody>
                 <Row>
