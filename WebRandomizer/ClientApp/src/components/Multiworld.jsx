@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect, useRef } from 'react';
-import { decode } from 'slugid';
+import { Row, Col } from 'reactstrap';
 import Seed from './Seed';
 import Patch from './Patch';
 import Connection from './Connection';
@@ -7,6 +7,8 @@ import Game from './Game';
 import Spoiler from './Spoiler';
 
 import Network from '../network';
+
+import { decode } from 'slugid';
 
 export default function Multiworld(props) {
     const network = useRef(null);
@@ -47,17 +49,49 @@ export default function Multiworld(props) {
 
     const { session, clientData, device } = state;
 
-    return (
-        <div>
-            {session.guid && <Seed session={session} sessionStatus={sessionStatus} onRegisterPlayer={onRegisterPlayer} />}
-            <br />
-            {clientData !== null && <Patch seed={session.data.seed} world={session.data.seed.worlds.find(world => world.worldId === clientData.worldId)} />}
-            <br />
-            {clientData !== null && <Connection clientData={clientData} device={device} onConnect={onConnect} onDeviceSelect={onDeviceSelect} />}
-            <br />
-            {device.state === 1 && <Game gameStatus={gameStatus} network={network.current} />}
-            <br />
-            {session.data !== null && <Spoiler seedData={session.data.seed} />}
-        </div>
-    );
+    return (<>
+        {session.guid && (
+            <Row className="mb-3">
+                <Col>
+                    <Seed session={session} sessionStatus={sessionStatus}
+                        onRegisterPlayer={onRegisterPlayer}
+                    />
+                </Col>
+            </Row>
+        )}
+        {clientData !== null && (
+            <Row className="mb-3">
+                <Col>
+                    <Patch
+                        seed={session.data.seed}
+                        world={session.data.seed.worlds.find(world => world.worldId === clientData.worldId)}
+                    />
+                </Col>
+            </Row>
+        )}
+        {clientData !== null && (
+            <Row className="mb-3">
+                <Col>
+                    <Connection clientData={clientData} device={device}
+                        onConnect={onConnect}
+                        onDeviceSelect={onDeviceSelect}
+                    />
+                </Col>
+            </Row>
+        )}
+        {device.state === 1 && (
+            <Row className="mb-3">
+                <Col>
+                    <Game gameStatus={gameStatus} network={network.current} />
+                </Col>
+            </Row>
+        )}
+        {session.data !== null && (
+            <Row className="mb-3">
+                <Col>
+                    <Spoiler seedData={session.data.seed} />
+                </Col>
+            </Row>
+        )}
+    </>);
 }

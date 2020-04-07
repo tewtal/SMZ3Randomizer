@@ -2,10 +2,11 @@
 import { InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 
 export default function PrefixedIndexGroup(props) {
-    return <InputGroup className={props.className}>
-        <InputGroupAddon addonType="prepend">
-            <InputGroupText>{props.prefix}</InputGroupText>
+    const { className, prefixClassName, prefix, children } = props;
+    return <InputGroup className={className}>
+        <InputGroupAddon className={prefixClassName} addonType="prepend">
+            <InputGroupText>{prefix}</InputGroupText>
         </InputGroupAddon>
-        {props.children}
+        {children}
     </InputGroup>;
 }

@@ -226,8 +226,7 @@ export default function Patch(props) {
             )}
             <Row className="mb-3">
                 <Col md="4">
-                    <InputGroup prefix="Energy Beep">
-                        &nbsp;
+                    <InputGroup prefixClassName="mr-1" prefix="Energy Beep">
                         <BootstrapSwitchButton width="80" onlabel="On" offlabel="Off" checked={smEnergyBeep}
                             onChange={onSMEnergyBeepToggle}
                         />
