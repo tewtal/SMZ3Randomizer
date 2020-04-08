@@ -18,12 +18,13 @@ const InputWithoutSpinner = styled(Input)`
 `;
 
 export default function Configure(props) {
+    const randomizer_id = props.match.params.randomizer_id;
+
     const [options, setOptions] = useState(null);
     const [names, setNames] = useState({});
     const [modal, setModal] = useState(false);
     const [randomizer, setRandomizer] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
-    const randomizer_id = props.match.params.randomizer_id;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -42,7 +43,7 @@ export default function Configure(props) {
         };
 
         fetchData();
-    }, []);
+    }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
 
     async function createGame(e) {
         e.preventDefault();
@@ -95,68 +96,54 @@ export default function Configure(props) {
 
     if (randomizer) {
         const formOptions = randomizer.options.map(opt => {
-            let inputElement = null;
-            switch (opt.type) {
-                case 'seed':
-                    inputElement = (
-                        <Col key={opt.key} md="6">
-                            <InputGroup>
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>{opt.description}</InputGroupText>
-                                </InputGroupAddon>
-                                <InputWithoutSpinner type="number" id={opt.key} min={0} max={0x7FFF_FFFF} value={options[opt.key]}
-                                    onChange={(e) => updateOption(opt.key, e.target.value)}
-                                />
-                            </InputGroup>
-                        </Col>
-                    );
-                    break;
-                case 'dropdown':
-                    inputElement = (
-                        <Col key={opt.key} md="6">
-                            <InputGroup>
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>{opt.description}</InputGroupText>
-                                </InputGroupAddon>
-                                <Input type="select" id={opt.key} value={options[opt.key]} onChange={(e) => updateOption(opt.key, e.target.value)}>
-                                    {Object.entries(opt.values).map(([k,v]) => <option key={k} value={k}>{v}</option>)}
-                                </Input>
-                            </InputGroup>
-                        </Col>
-                    );
-                    break;
-                case 'checkbox':
-                    inputElement = (
-                        <Col key={opt.key} md="6">
-                            <InputGroup>
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>{opt.description}</InputGroupText>
-                                </InputGroupAddon>
-                                &nbsp;
-                                <BootstrapSwitchButton id={opt.key} onlabel="Yes" offlabel="No" width="80" checked={options[opt.key]}
-                                    onChange={checked => updateOption(opt.key, checked.toString())}
-                                />
-                            </InputGroup>
-                        </Col>
-                    );
-                    break;
-                case 'players':
-                    if (options["gamemode"] === "multiworld") {
-                        inputElement = (
-                            <Col key={opt.key} md="6">
-                                <InputGroup>
-                                    <InputGroupAddon addonType="prepend">
-                                        <InputGroupText>{opt.description}</InputGroupText>
-                                    </InputGroupAddon>
-                                    <Input id={opt.key} value={options[opt.key]} onChange={(e) => updateOption(opt.key, e.target.value)} />
-                                </InputGroup>
-                            </Col>
-                        );
-                    }
-                    break;
-            }
-
-            return inputElement;
+            return opt.type === 'seed' ? (
+                <Col key={opt.key} md="6">
+                    <InputGroup>
+                        <InputGroupAddon addonType="prepend">
+                            <InputGroupText>{opt.description}</InputGroupText>
+                        </InputGroupAddon>
+                        <InputWithoutSpinner type="number" id={opt.key} min={0} max={0x7FFF_FFFF} value={options[opt.key]}
+                            onChange={(e) => updateOption(opt.key, e.target.value)}
+                        />
+                    </InputGroup>
+                </Col>
+            )
+            : opt.type === 'dropdown' ? (
+                <Col key={opt.key} md="6">
+                    <InputGroup>
+                        <InputGroupAddon addonType="prepend">
+                            <InputGroupText>{opt.description}</InputGroupText>
+                        </InputGroupAddon>
+                        <Input type="select" id={opt.key} value={options[opt.key]} onChange={(e) => updateOption(opt.key, e.target.value)}>
+                            {Object.entries(opt.values).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                        </Input>
+                    </InputGroup>
+                </Col>
+            )
+            : opt.type === 'checkbox' ? (
+                <Col key={opt.key} md="6">
+                    <InputGroup>
+                        <InputGroupAddon addonType="prepend">
+                            <InputGroupText>{opt.description}</InputGroupText>
+                        </InputGroupAddon>
+                        &nbsp;
+                        <BootstrapSwitchButton id={opt.key} onlabel="Yes" offlabel="No" width="80" checked={options[opt.key]}
+                            onChange={checked => updateOption(opt.key, checked.toString())}
+                        />
+                    </InputGroup>
+                </Col>
+            )
+            : opt.type === 'players' && options["gamemode"] === "multiworld" ? (
+                <Col key={opt.key} md="6">
+                    <InputGroup>
+                        <InputGroupAddon addonType="prepend">
+                            <InputGroupText>{opt.description}</InputGroupText>
+                        </InputGroupAddon>
+                        <Input id={opt.key} value={options[opt.key]} onChange={(e) => updateOption(opt.key, e.target.value)} />
+                    </InputGroup>
+                </Col>
+            )
+            : null;
         });
 
         const formOptionGroups = chunk(formOptions, 2);

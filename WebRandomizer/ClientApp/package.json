@@ -36,6 +36,15 @@
     "eject": "react-scripts eject",
     "lint": "eslint ./src/"
   },
+  "eslintConfig": {
+    "extends": "react-app",
+    "plugins": [
+      "react-hooks"
+    ],
+    "rules": {
+      "no-mixed-operators": "off"
+    }
+  },
   "browserslist": {
     "production": [
       ">0.2%",

@@ -27,7 +27,7 @@ export default function Multiworld(props) {
             network.current.start();
             return () => network.current.stop();
         }
-    }, []);
+    }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
 
     function onRegisterPlayer(clientGuid) {
         localStorage.setItem('clientGuid', clientGuid);
