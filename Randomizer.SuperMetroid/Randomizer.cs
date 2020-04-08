@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Randomizer.Contracts;
 using static Randomizer.Contracts.RandomizerOptionType;
 
@@ -14,6 +15,8 @@ namespace Randomizer.SuperMetroid {
         public string Name => "Super Metroid Item Randomizer";
 
         public string Version => version.ToString();
+
+        static Regex alphaNumeric = new Regex(@"[A-Z\d]", RegexOptions.IgnoreCase);
 
         public List<IRandomizerOption> Options => new List<IRandomizerOption> {
             Config.GetRandomizerOption<Logic>("Logic"),
@@ -58,7 +61,10 @@ namespace Randomizer.SuperMetroid {
             }
             else {
                 for (int p = 0; p < players; p++) {
-                    worlds.Add(new World(config, options[$"player-{p}"], p, new HexGuid()));
+                    var found = options.TryGetValue($"player-{p}", out var player);
+                    if (!found || !alphaNumeric.IsMatch(player))
+                        throw new ArgumentException($"Name for player {p + 1} not provided, or contains no alphanumeric characters");
+                    worlds.Add(new World(config, player, p, new HexGuid()));
                 }
             }
 

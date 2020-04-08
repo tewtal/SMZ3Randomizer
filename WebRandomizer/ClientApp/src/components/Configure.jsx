@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
-import { Button, Form, Input, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
+import { Button, Form, Input } from 'reactstrap';
+import InputGroup from './util/PrefixInputGroup';
 import { Modal, ModalHeader, ModalBody, Progress } from 'reactstrap';
 import BootstrapSwitchButton from 'bootstrap-switch-button-react';
 import styled from 'styled-components';
@@ -50,7 +51,6 @@ export default function Configure(props) {
         setModal(true);
 
         try {
-
             if (options["gamemode"] === "multiworld") {
                 for (let p = 0; p < parseInt(options["players"]); p++) {
                     options["player-" + p] = names[p];
@@ -98,10 +98,7 @@ export default function Configure(props) {
         const formOptions = randomizer.options.map(opt => {
             return opt.type === 'seed' ? (
                 <Col key={opt.key} md="6">
-                    <InputGroup>
-                        <InputGroupAddon addonType="prepend">
-                            <InputGroupText>{opt.description}</InputGroupText>
-                        </InputGroupAddon>
+                    <InputGroup prefix={opt.description}>
                         <InputWithoutSpinner type="number" id={opt.key} min={0} max={0x7FFF_FFFF} value={options[opt.key]}
                             onChange={(e) => updateOption(opt.key, e.target.value)}
                         />
@@ -110,23 +107,16 @@ export default function Configure(props) {
             )
             : opt.type === 'dropdown' ? (
                 <Col key={opt.key} md="6">
-                    <InputGroup>
-                        <InputGroupAddon addonType="prepend">
-                            <InputGroupText>{opt.description}</InputGroupText>
-                        </InputGroupAddon>
+                    <InputGroup prefix={opt.description}>
                         <Input type="select" id={opt.key} value={options[opt.key]} onChange={(e) => updateOption(opt.key, e.target.value)}>
-                            {Object.entries(opt.values).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                    {Object.entries(opt.values).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                         </Input>
                     </InputGroup>
                 </Col>
             )
             : opt.type === 'checkbox' ? (
                 <Col key={opt.key} md="6">
-                    <InputGroup>
-                        <InputGroupAddon addonType="prepend">
-                            <InputGroupText>{opt.description}</InputGroupText>
-                        </InputGroupAddon>
-                        &nbsp;
+                    <InputGroup prefixClassName="mr-1" prefix={opt.description}>
                         <BootstrapSwitchButton id={opt.key} onlabel="Yes" offlabel="No" width="80" checked={options[opt.key]}
                             onChange={checked => updateOption(opt.key, checked.toString())}
                         />
@@ -135,10 +125,7 @@ export default function Configure(props) {
             )
             : opt.type === 'players' && options["gamemode"] === "multiworld" ? (
                 <Col key={opt.key} md="6">
-                    <InputGroup>
-                        <InputGroupAddon addonType="prepend">
-                            <InputGroupText>{opt.description}</InputGroupText>
-                        </InputGroupAddon>
+                    <InputGroup prefix={opt.description}>
                         <Input id={opt.key} value={options[opt.key]} onChange={(e) => updateOption(opt.key, e.target.value)} />
                     </InputGroup>
                 </Col>
@@ -152,12 +139,11 @@ export default function Configure(props) {
         const playerInputs = [];
         for (let p = 0; p < parseInt(options["players"]); p++) {
             playerInputs.push(
-                <Col key={"playerInput" + p} md={{ size: 5, offset: 1 - (p%2) }}>
-                    <InputGroup>
-                        <InputGroupAddon addonType="prepend">
-                            <InputGroupText>Name {p + 1}</InputGroupText>
-                        </InputGroupAddon>
-                        <Input autocomplete="new-password" value={names[p]} onChange={(e) => setNames({ ...names, [p]: e.target.value })} />
+                <Col key={"playerInput" + p} md={{ size: 5, offset: 1 - (p % 2) }}>
+                    <InputGroup prefix={`Name ${p + 1}`}>
+                        <Input autoComplete="new-password" value={names[p] || ''} required pattern=".*[A-Za-z\d].*"
+                            onChange={(e) => setNames({ ...names, [p]: e.target.value })}
+                        />
                     </InputGroup>
                 </Col>
             );
@@ -172,7 +158,7 @@ export default function Configure(props) {
                                 {randomizer.name} - {randomizer.version}
                             </CardHeader>
                             <CardBody>
-                                <Form autocomplete="off" onSubmit={createGame}>
+                                <Form autoComplete="off" onSubmit={createGame}>
                                     {formOptionGroups.map((optionGroup, i) => (
                                         <Row key={i} className="form-group">
                                             {optionGroup}
