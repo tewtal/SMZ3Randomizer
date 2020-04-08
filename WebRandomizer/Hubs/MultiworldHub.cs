@@ -183,44 +183,43 @@ namespace WebRandomizer.Hubs {
 
         public async Task<Client> RegisterPlayer(string sessionGuid, string worldGuid) {
             var session = await context.Sessions.Include(x => x.Seed).ThenInclude(x => x.Worlds).SingleOrDefaultAsync(x => x.Guid == sessionGuid);
-            if(session != null) {
-                if(session.State == SessionState.Created) {
-                    try {
-                        /* Make sure we don't register an existing client, otherwise we update the connection id and return the existing one */
-                        Client client = await context.Clients.SingleOrDefaultAsync(x => x.SessionId == session.Id && x.Guid == worldGuid);
-                        var world = session.Seed.Worlds.Find(x => x.Guid == worldGuid);
+            if (session == null || session.State != SessionState.Created)
+                return null;
 
-                        if (client == null) {
-                            client = new Client {
-                                SessionId = session.Id,
-                                Name = world.Player,
-                                Guid = world.Guid,
-                                WorldId = world.WorldId,
-                                State = ClientState.Registered,
-                                Device = "",
-                                ConnectionId = this.Context.ConnectionId
-                            };
-                            context.Clients.Add(client);
-                            await context.SaveChangesAsync();
-                        } else {
-                            client.ConnectionId = this.Context.ConnectionId;
-                            client.Name = world.Player;
-                            context.Clients.Update(client);
-                            await context.SaveChangesAsync();
-                        }
+            try {
+                /* Make sure we don't register an existing client, otherwise we update the connection id and return the existing one */
+                Client client = await context.Clients.SingleOrDefaultAsync(x => x.SessionId == session.Id && x.Guid == worldGuid);
+                var world = session.Seed.Worlds.Find(x => x.Guid == worldGuid);
+                if (world == null)
+                    return null;
 
-                        /* Push an update of the client list to everyone registered to the hub */
-                        var newClients = context.Clients.Where(x => x.SessionId == session.Id);
-                        await Clients.Group(session.Guid).SendAsync("UpdateClients", newClients);
-
-                        return client;
-                    } catch {
-                        return null;
-                    }
+                if (client == null) {
+                    client = new Client {
+                        SessionId = session.Id,
+                        Name = world.Player,
+                        Guid = world.Guid,
+                        WorldId = world.WorldId,
+                        State = ClientState.Registered,
+                        Device = "",
+                        ConnectionId = this.Context.ConnectionId
+                    };
+                    context.Clients.Add(client);
+                    await context.SaveChangesAsync();
+                } else {
+                    client.ConnectionId = this.Context.ConnectionId;
+                    client.Name = world.Player;
+                    context.Clients.Update(client);
+                    await context.SaveChangesAsync();
                 }
-            }
 
-            return null;
+                /* Push an update of the client list to everyone registered to the hub */
+                var newClients = context.Clients.Where(x => x.SessionId == session.Id);
+                await Clients.Group(session.Guid).SendAsync("UpdateClients", newClients);
+
+                return client;
+            } catch {
+                return null;
+            }
         }
 
         public async Task<Client> UpdateClient(Client client) {
