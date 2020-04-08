@@ -89,7 +89,7 @@ export default function Patch(props) {
                 setPatchState('download');
             }
         });
-    }, [patchState]);
+    }, [patchState, game.z3]);
 
     useEffect(() => {
         let settings;
@@ -103,7 +103,7 @@ export default function Patch(props) {
             setZ3HeartBeep(defaultTo(z3_heart_beep, 'half'));
             setSMEnergyBeep(defaultTo(sm_energy_beep, true));
         }
-    }, []);
+    }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
 
     async function onDownloadRom() {
         try {

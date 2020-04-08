@@ -12,6 +12,7 @@ import attempt from 'lodash/attempt';
 export default function Permalink(props) {
     const seedSlug = props.match.params.seed_id;
     const seedGuid = decode(seedSlug).replace(/-/g, "");
+
     const [seed, setSeed] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
 
@@ -29,7 +30,7 @@ export default function Permalink(props) {
                 setErrorMessage(error.toString());
             }
         })
-    }, []);
+    }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
 
     let content;
     if (seed) {
