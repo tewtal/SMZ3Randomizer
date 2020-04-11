@@ -63,7 +63,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
                         items.CanUsePowerBombs() ||
                         items.CanAccessMaridiaPortal(World) && ( 
                         items.HiJump && items.CanPassBombPassages() || items.Gravity && (items.CanDestroyBombWalls() ||
-                        World.Locations.Get("Space Jump").Available(items))
+                        World.Locations.Get("Space Jump").Available(items)))
                     ),
             };
         }
