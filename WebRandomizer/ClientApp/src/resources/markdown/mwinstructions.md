@@ -1,14 +1,24 @@
-# Multiworld Beta Instructions
+# Multiworld Instructions
 
-This page will help you get setup and ready to play SMZ3 Multiworld.
+This page will help you get set up and ready to play Multiworld Randomizer.
 
-The first step will be to download and prepare the proper tools and software, and then creating and
+## What is Multiworld
+
+Multiworld is an online cooperative game mode where multiple players play at the same time where items
+in one player's game can be found in one of the other players' games. And by finding items for each other you
+will eventually be able to all complete the game.
+
+For example: Player A opens a chest to find an item. This item belongs to Player B and therefore enters Player B's inventory immediately.
+
+## Getting started
+
+The next step will be to download and prepare the proper tools and software, and then creating and
 playing in a multiworld session.
 
 ## Required tools and software
 
 Since the required software and other tools are different depending on if you're playing on console
-with sd2snes or playing on emulator, skip ahead to the section that decribes the setup you will be
+with sd2snes or playing on emulator, skip ahead to the section that describes the setup you will be
 playing on.
 
 ### Console
@@ -28,13 +38,13 @@ playing on.
    "sd2snes" folder on the SD-card.
 3. In the unzipped USB2SNES-folder, start "usb2snes.exe" to start the USB2SNES tray app that handles
    communication.
-4. You should now be ready and setup to play.
+4. You should now be ready and set up to play.
 
 ### Emulators
 
 ##### Required software:
 
-* QUSB2SNES v0.7.11 [[Download](https://github.com/Skarsnik/QUsb2snes/releases/download/v0.7.11/QUsb2Snes-v0.7.11.7z)]
+* QUSB2SNES v0.7.16.1 [[Download](https://github.com/Skarsnik/QUsb2snes/releases/download/v0.7.16.1/QUsb2Snes-v0.7.16.1.7z)]
 
 #### Snes9x
 
@@ -48,15 +58,14 @@ If you want to play using Snes9x you'll need the following additional software:
 1. Unzip QUSB2SNES and then run "QUSB2SNES.exe" to start the QUSB2SNES tray app.
 2. Right click on the QUSB2SNES tray icon and under "Devices" select "Enable Lua bridge (snes9x-rr)"
 3. Unzip Snes9x-rr and start it.
-4. Go to (File > Lua scripting > New Lua script window) and load the "multibridge_smz3_r2.lua"
-   script and keep the lua window open.
+4. Go to (File > Lua scripting > New Lua script window) and load "multibridge_smz3_r2.lua" if you're playing Combo Randomizer, or just "multibridge.lua" if you're playing regular Super Metroid.
 5. When ready, load the ROM you get from the randomizer.
 
 #### Retroarch
 
-If you want to play using Retroarch, you will need version 1.8.0.
+If you want to play using Retroarch, you will need version 1.8.0 or newer.
 
-* RetroArch 1.8.0 [[Download](https://www.retroarch.com/?page=platforms)]
+* RetroArch [[Download](https://www.retroarch.com/?page=platforms)]
 
 ##### Instructions:
 
@@ -70,11 +79,12 @@ If you want to play using Retroarch, you will need version 1.8.0.
 
 ## Starting a multiworld session
 
-1. To start a new multiworld session, go to the [Create randomized game](/randomizer) page and fill
-   in the options you want to use for your session.
+1. To start a new multiworld session, go to the "Generate Randomized Game" page and fill
+   in the options you want to use for your session. Make sure to set the "Game Mode" option to "Multiworld" to
+   create a multiworld game and to be able to enter the amount of players and their names.
 2. If you want to use a set seed (for example for races where you want to create multiple session
    using the same seed) you can fill it in, otherwise leave it blank for random.
-3. When everything is setup just hit *Create Multiworld Game* and you will be redirected to a newly
+3. When everything is setup just hit *Generate Game* and you will be redirected to a newly
    created multiworld session.
 4. Copy the link of the page you got redirected to and share with the people you want to play with
    so they can join your session.
@@ -84,10 +94,9 @@ If you want to play using Retroarch, you will need version 1.8.0.
 When you've just joined a new session you will first to have to register as a player by clicking
 one of the *Register as this player* buttons.
 
-After doing so, you will get a popup that prompts you to select and upload the original ROM's for
-both Super Metroid and A Link to the Past (1.0 Japanese). Make sure these ROM's are unaltered and
-are unheadered and that the correct ROM is uploaded to the correct slot because right now the only
-way to go back and reupload is to clear your browser cache.
+After doing so, you will get a popup that prompts you to select the original ROM(s) needed. 
+Make sure these ROM's are unaltered and are the original versions of the games.
+For the A Link to the Past ROM in a Combo Randomizer game, make sure it is the Japanese 1.0 version.
 
 When the ROM's have been properly uploaded you will get the option to choose your two player
 sprites as well as if you want to use separate animations for screwattack with and without
