@@ -107,7 +107,7 @@ function formatAuthor(author) {
 
 /* Enables separate spinjump behavior */
 function smSpinjumps(rom, mode) {
-    rom[snes_to_pc(mode, 0xB4F500)] = 0x01;
+    rom[snes_to_pc(mode, 0x9B93FE)] = 0x01;
 }
 
 function z3HeartColor(rom, mode, setting) {
