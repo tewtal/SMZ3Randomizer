@@ -7,6 +7,8 @@
     * Included Super Metroid multiworld support, and solo SM rando accessible at [Super Metroid Randomizer](https://sm.samus.link/)
   * Auto-stripping of unneeded headers from base roms
   * Added the [Logic Log](/logic) to the website that explains the Randomizer logic in detail.
+  * The spoiler log currently only contains progression items (Spoiler log improvements are planned in a future update)
+  * Information about the new filename structure can be found by hovering over the (i) icon next to the Download button
   * New custom title screen
   * Soft reset (L+R+Select+Start) added to both games
   * Options for "early" morph and/or sword. (Early meaning a location accessible from the start of the game)

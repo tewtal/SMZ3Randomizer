@@ -5,7 +5,7 @@ The Super Metroid and A Link to the Past Crossover Randomizer is an item randomi
 Travel between the games is possible through the use of four cross-game portals spread out in the games in certain doors and entrances.
 
 The game starts out in Super Metroid right after Samus' ship has landed on Zebes, and from this point there's the option to head further down into Super Metroid, or head to the first available cross-game portal.  
-This portal is found in the door that normally would head to the Cratera Map Station, but this will not instead take you outside the fortune teller's house south of Link's house in Hyrule.
+This portal is found in the door that normally would head to the Cratera Map Station, but this will instead take you outside the fortune teller's house south of Link's house in Hyrule.
 
 These are the four cross-game portals in the game:
 * Lake Hylia Fortune Teller ⇔ Crateria Map Room
