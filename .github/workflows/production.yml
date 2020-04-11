@@ -1,0 +1,21 @@
+name: Create and publish docker image (production)
+
+on:
+  push:
+    branches: 
+      - production
+
+jobs:
+  build:
+    runs-on: ubuntu-16.04
+    
+    steps:
+    - uses: actions/checkout@v1 
+      with:
+        submodules: true   
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: tewtal/webrandomizer:live
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
