@@ -51,14 +51,17 @@ playing on.
 If you want to play using Snes9x you'll need the following additional software:
 
 * Snes9x-rr-1.55-multitroid2-r4 [[Download](https://drive.google.com/open?id=1xFw994dDl_yhwj0f0d1_nC9ZmX6wUFiE)]
-* Multibridge_smz3_r2.lua [[Download](/lua/multibridge_smz3_r2.lua)]
+    * Combo: multibridge_smz3_r2.lua [[Download](/lua/multibridge_smz3_r2.lua)]
+    * SM: The included multibridge.lua
 
 ##### Instructions:
 
 1. Unzip QUSB2SNES and then run "QUSB2SNES.exe" to start the QUSB2SNES tray app.
 2. Right click on the QUSB2SNES tray icon and under "Devices" select "Enable Lua bridge (snes9x-rr)"
 3. Unzip Snes9x-rr and start it.
-4. Go to (File > Lua scripting > New Lua script window) and load "multibridge_smz3_r2.lua" if you're playing Combo Randomizer, or just "multibridge.lua" if you're playing regular Super Metroid.
+4. Go to File -> Lua scripting -> New Lua script window
+    * If playing Combo Randomizer, load "multibridge_smz3_r2.lua"
+    * If playing Super Metroid Randomizer, load "multibridge.lua"
 5. When ready, load the ROM you get from the randomizer.
 
 #### Retroarch
