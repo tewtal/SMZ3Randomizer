@@ -12,9 +12,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
         public Kraid(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 43, 0x8F899C, LocationType.Hidden, "Energy Tank, Kraid",
-                    items => !Config.Keysanity || items.KraidKey),
+                    items => items.CardBrinstarBoss),
                 new Location(this, 48, 0x8F8ACA, LocationType.Chozo, "Varia Suit",
-                    items => !Config.Keysanity || items.KraidKey),
+                    items => items.CardBrinstarBoss),
                 new Location(this, 44, 0x8F89EC, LocationType.Hidden, "Missile (Kraid)", Logic switch {
                     _ => new Requirement(items => items.CanUsePowerBombs())
                 }),

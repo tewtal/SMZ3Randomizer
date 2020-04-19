@@ -13,16 +13,6 @@ namespace Randomizer.SMZ3 {
         [Description("Nothing")] 
         Nothing,
 
-        [Description("Brinstar Boss Keycard")] 
-        KraidKey/* = ?*/,
-        [Description("Wrecked Ship Boss Keycard")] 
-        PhantoonKey/* = ?*/,
-        [Description("Maridia Boss Keycard")] 
-        DraygonKey/* = ?*/,
-        [Description("Ridley Boss Keycard")] 
-        RidleyKey/* = ?*/,
-
-        [Description("Hyrule Castle Map")]
         MapHC = 0x7F,
         [Description("Eastern Palace Map")]
         MapEP = 0x7D,
@@ -225,7 +215,39 @@ namespace Randomizer.SMZ3 {
         [Description("+10 Arrow Capacity")]
         ArrowUpgrade10 = 0x54,
 
-        [Description("Missile")]
+        [Description("Crateria Level 1 Keycard")]
+        CardCrateriaL1 = 0xD0,
+        [Description("Crateria Level 2 Keycard")]
+        CardCrateriaL2 = 0xD1,
+        [Description("Crateria Boss Keycard")]
+        CardCrateriaBoss = 0xD2,
+        [Description("Brinstar Level 1 Keycard")]
+        CardBrinstarL1 = 0xD3,
+        [Description("Brinstar Level 2 Keycard")]
+        CardBrinstarL2 = 0xD4,
+        [Description("Brinstar Boss Keycard")]
+        CardBrinstarBoss = 0xD5,
+        [Description("Norfair Level 1 Keycard")]
+        CardNorfairL1 = 0xD6,
+        [Description("Norfair Level 2 Keycard")]
+        CardNorfairL2 = 0xD7,
+        [Description("Norfair Boss Keycard")]
+        CardNorfairBoss = 0xD8,
+        [Description("Maridia Level 1 Keycard")]
+        CardMaridiaL1 = 0xD9,
+        [Description("Maridia Level 2 Keycard")]
+        CardMaridiaL2 = 0xDA,
+        [Description("Maridida Boss Keycard")]
+        CardMaridiaBoss = 0xDB,
+        [Description("Wrecked Ship Level 1 Keycard")]
+        CardWreckedShipL1 = 0xDC,
+        [Description("Wrecked Ship Boss Keycard")]
+        CardWreckedShipBoss = 0xDD,
+        [Description("Lower Norfair Level 1 Keycard")]
+        CardLowerNorfairL1 = 0xDE,
+        [Description("Lower Norfair Boss Keycard")]
+        CardLowerNorfairBoss = 0xDF,
+
         Missile = 0xC2,
         [Description("Super Missile")]
         Super = 0xC3,
@@ -302,12 +324,14 @@ namespace Randomizer.SMZ3 {
         static readonly Regex key = new Regex("^Key");
         static readonly Regex map = new Regex("^Map");
         static readonly Regex compass = new Regex("^Compass");
+        static readonly Regex keycard = new Regex("^Card");
 
         public bool IsDungeonItem => dungeon.IsMatch(Type.ToString());
         public bool IsBigKey => bigKey.IsMatch(Type.ToString());
         public bool IsKey => key.IsMatch(Type.ToString());
         public bool IsMap => map.IsMatch(Type.ToString());
         public bool IsCompass => compass.IsMatch(Type.ToString());
+        public bool IsKeycard => keycard.IsMatch(Type.ToString());
 
         public bool Is(ItemType type, World world) => Type == type && World == world;
         public bool IsNot(ItemType type, World world) => !Is(type, world);
@@ -436,7 +460,7 @@ namespace Randomizer.SMZ3 {
             itemPool.AddRange(Copies(4,  () => new Item(BombUpgrade5)));
             itemPool.AddRange(Copies(2,  () => new Item(OneRupee)));
             itemPool.AddRange(Copies(4,  () => new Item(FiveRupees)));
-            itemPool.AddRange(Copies(28, () => new Item(TwentyRupees)));
+            itemPool.AddRange(Copies(world.Config.Keysanity ? 23 : 28, () => new Item(TwentyRupees)));
             itemPool.AddRange(Copies(7,  () => new Item(FiftyRupees)));
             itemPool.AddRange(Copies(5,  () => new Item(ThreeHundredRupees)));
 
@@ -493,24 +517,48 @@ namespace Randomizer.SMZ3 {
                 new Item(MapIP),
                 new Item(MapMM),
                 new Item(MapTR),
-                new Item(MapGT),
-
-                new Item(CompassEP),
-                new Item(CompassDP),
-                new Item(CompassTH),
-                new Item(CompassPD),
-                new Item(CompassSP),
-                new Item(CompassSW),
-                new Item(CompassTT),
-                new Item(CompassIP),
-                new Item(CompassMM),
-                new Item(CompassTR),
-                new Item(CompassGT),
+                new Item(MapGT)
             });
+            if (!world.Config.Keysanity) {
+                itemPool.AddRange(new[] {
+                    new Item(CompassEP),
+                    new Item(CompassDP),
+                    new Item(CompassTH),
+                    new Item(CompassPD),
+                    new Item(CompassSP),
+                    new Item(CompassSW),
+                    new Item(CompassTT),
+                    new Item(CompassIP),
+                    new Item(CompassMM),
+                    new Item(CompassTR),
+                    new Item(CompassGT),
+                });
+            }
 
             foreach (var item in itemPool) item.World = world;
 
             return itemPool;
+        }
+
+        public static List<Item> CreateKeycards(World world) {
+            return new List<Item> {
+                new Item(CardCrateriaL1, world),
+                new Item(CardCrateriaL2, world),
+                new Item(CardCrateriaBoss, world),
+                new Item(CardBrinstarL1, world),
+                new Item(CardBrinstarL2, world),
+                new Item(CardBrinstarBoss, world),
+                new Item(CardNorfairL1, world),
+                new Item(CardNorfairL2, world),
+                new Item(CardNorfairBoss, world),
+                new Item(CardMaridiaL1, world),
+                new Item(CardMaridiaL2, world),
+                new Item(CardMaridiaBoss, world),
+                new Item(CardWreckedShipL1, world),
+                new Item(CardWreckedShipBoss, world),
+                new Item(CardLowerNorfairL1, world),
+                new Item(CardLowerNorfairBoss, world),
+            };
         }
 
         static List<Item> Copies(int nr, Func<Item> template) {
@@ -562,10 +610,22 @@ namespace Randomizer.SMZ3 {
         public int KeyMM { get; private set; }
         public int KeyTR { get; private set; }
         public int KeyGT { get; private set; }
-        public bool KraidKey { get; private set; }
-        public bool PhantoonKey { get; private set; }
-        public bool DraygonKey { get; private set; }
-        public bool RidleyKey { get; private set; }
+        public bool CardCrateriaL1 { get; private set; }
+        public bool CardCrateriaL2 { get; private set; }
+        public bool CardCrateriaBoss { get; private set; }
+        public bool CardBrinstarL1 { get; private set; }
+        public bool CardBrinstarL2 { get; private set; }
+        public bool CardBrinstarBoss { get; private set; }
+        public bool CardNorfairL1 { get; private set; }
+        public bool CardNorfairL2 { get; private set; }
+        public bool CardNorfairBoss { get; private set; }
+        public bool CardMaridiaL1 { get; private set; }
+        public bool CardMaridiaL2 { get; private set; }
+        public bool CardMaridiaBoss { get; private set; }
+        public bool CardWreckedShipL1 { get; private set; }
+        public bool CardWreckedShipBoss { get; private set; }
+        public bool CardLowerNorfairL1 { get; private set; }
+        public bool CardLowerNorfairBoss { get; private set; }
         public bool CanBlockLasers { get { return shield >= 3; } }
         public bool Sword { get; private set; }
         public bool MasterSword { get; private set; }
@@ -640,10 +700,22 @@ namespace Randomizer.SMZ3 {
                     ItemType.KeyTH => KeyTH = true,
                     ItemType.KeySP => KeySP = true,
                     ItemType.KeyTT => KeyTT = true,
-                    ItemType.KraidKey => KraidKey = true,
-                    ItemType.PhantoonKey => PhantoonKey = true,
-                    ItemType.DraygonKey => DraygonKey = true,
-                    ItemType.RidleyKey => RidleyKey = true,
+                    ItemType.CardCrateriaL1 => CardCrateriaL1 = true,
+                    ItemType.CardCrateriaL2 => CardCrateriaL2 = true,
+                    ItemType.CardCrateriaBoss => CardCrateriaBoss = true,
+                    ItemType.CardBrinstarL1 => CardBrinstarL1 = true,
+                    ItemType.CardBrinstarL2 => CardBrinstarL2 = true,
+                    ItemType.CardBrinstarBoss => CardBrinstarBoss = true,
+                    ItemType.CardNorfairL1 => CardNorfairL1 = true,
+                    ItemType.CardNorfairL2 => CardNorfairL2 = true,
+                    ItemType.CardNorfairBoss => CardNorfairBoss = true,
+                    ItemType.CardMaridiaL1 => CardMaridiaL1 = true,
+                    ItemType.CardMaridiaL2 => CardMaridiaL2 = true,
+                    ItemType.CardMaridiaBoss => CardMaridiaBoss = true,
+                    ItemType.CardWreckedShipL1 => CardWreckedShipL1 = true,
+                    ItemType.CardWreckedShipBoss => CardWreckedShipBoss = true,
+                    ItemType.CardLowerNorfairL1 => CardLowerNorfairL1 = true,
+                    ItemType.CardLowerNorfairBoss => CardLowerNorfairBoss = true,
                     ItemType.Bow => Bow = true,
                     ItemType.Hookshot => Hookshot = true,
                     ItemType.Mushroom => Mushroom = true,
@@ -715,7 +787,6 @@ namespace Randomizer.SMZ3 {
                 }
             }
         }
-
     }
 
     static class ProgressionExtensions {
@@ -747,9 +818,9 @@ namespace Randomizer.SMZ3 {
         public static bool CanAccessDarkWorldPortal(this Progression items, Config config) {
             return config.SMLogic switch {
                 Normal =>
-                    items.CanUsePowerBombs() && items.Super && items.Gravity && items.SpeedBooster,
+                    items.CardMaridiaL1 && items.CardMaridiaL2 && items.CanUsePowerBombs() && items.Super && items.Gravity && items.SpeedBooster,
                 _ =>
-                    items.CanUsePowerBombs() && items.Super &&
+                    items.CardMaridiaL1 && items.CardMaridiaL2 && items.CanUsePowerBombs() && items.Super &&
                     (items.Charge || items.Super && items.Missile) &&
                     (items.Gravity || items.HiJump && items.Ice && items.Grapple) &&
                     (items.Ice || items.Gravity && items.SpeedBooster)
@@ -759,9 +830,9 @@ namespace Randomizer.SMZ3 {
         public static bool CanAccessMiseryMirePortal(this Progression items, Config config) {
             return config.SMLogic switch {
                 Normal =>
-                    items.Varia && items.Super && (items.Gravity && items.SpaceJump) && items.CanUsePowerBombs(),
+                    (items.CardNorfairL2 || (items.SpeedBooster && items.Wave)) && items.Varia && items.Super && (items.Gravity && items.SpaceJump) && items.CanUsePowerBombs(),
                 _ =>
-                    items.Varia && items.Super && (
+                    (items.CardNorfairL2 || items.SpeedBooster) && items.Varia && items.Super && (
                         items.CanFly() || items.HiJump || items.SpeedBooster || items.CanSpringBallJump() || items.Ice
                    ) && (items.Gravity || items.HiJump) && items.CanUsePowerBombs()
              };

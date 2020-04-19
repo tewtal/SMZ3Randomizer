@@ -47,28 +47,28 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
         }
 
         bool CanUnlockShip(Progression items) {
-            return items.CanPassBombPassages() && (!Config.Keysanity || items.PhantoonKey);
+            return items.CardWreckedShipBoss;
         }
 
         public override bool CanEnter(Progression items) {
             return Logic switch {
                 Normal =>
                     items.Super && (
-                        items.CanUsePowerBombs() && (
+                        ((Config.Keysanity && items.CardCrateriaL2) || (!Config.Keysanity && items.CanUsePowerBombs())) && (
                             items.SpeedBooster || items.Grapple || items.SpaceJump || items.Gravity
                         ) ||
-                        items.CanAccessMaridiaPortal(World) && items.Gravity && (
+                        items.CanAccessMaridiaPortal(World) && items.Gravity && items.CardMaridiaL2 && (
                             items.CanDestroyBombWalls() ||
                             World.Locations.Get("Space Jump").Available(items)
                         )
                     ),
                 _ =>
                     items.Super && (
-                        items.CanUsePowerBombs() ||
+                        ((Config.Keysanity && items.CardCrateriaL2) || (!Config.Keysanity && items.CanUsePowerBombs())) ||
                         items.CanAccessMaridiaPortal(World) && ( 
-                            items.HiJump && items.CanPassBombPassages() ||
+                            items.HiJump && items.CanPassBombPassages() && items.CardMaridiaL2 ||
                             items.Gravity && (
-                                items.CanDestroyBombWalls() ||
+                                items.CanDestroyBombWalls() && items.CardMaridiaL2 ||
                                 World.Locations.Get("Space Jump").Available(items)
                             )
                         )

@@ -13,7 +13,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
 
             Locations = new List<Location> {
                 new Location(this, 14, 0x8F84E4, LocationType.Chozo, "Super Missile (pink Brinstar)", Logic switch {
-                    _ => new Requirement(items => items.CanPassBombPassages() && items.Super)
+                    _ => new Requirement(items => (items.CardBrinstarBoss || items.CardBrinstarL2) && items.CanPassBombPassages() && items.Super)
                 }),
                 new Location(this, 21, 0x8F8608, LocationType.Visible, "Missile (pink Brinstar top)"),
                 new Location(this, 22, 0x8F860E, LocationType.Visible, "Missile (pink Brinstar bottom)"),
@@ -33,8 +33,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
                         (items.HasEnergyReserves(1) || items.Gravity))
                 }),
                 new Location(this, 35, 0x8F8824, LocationType.Visible, "Energy Tank, Brinstar Gate", Logic switch {
-                    Normal => items => items.CanUsePowerBombs() && items.Wave && items.HasEnergyReserves(1),
-                    _ => new Requirement(items => items.CanUsePowerBombs() && (items.Wave || items.Super))
+                    Normal => items => items.CardBrinstarL2 && items.CanUsePowerBombs() && items.Wave && items.HasEnergyReserves(1),
+                    _ => new Requirement(items => items.CardBrinstarL2 && items.CanUsePowerBombs() && (items.Wave || items.Super))
                 }),
             };
         }
@@ -42,15 +42,15 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
         public override bool CanEnter(Progression items) {
             return Logic switch {
                 Normal =>
-                    items.CanOpenRedDoors() && (items.CanDestroyBombWalls() || items.SpeedBooster) ||
+                    (items.CanOpenRedDoors() && (items.CanDestroyBombWalls() || items.SpeedBooster) ||
                     items.CanUsePowerBombs() ||
                     items.CanAccessNorfairUpperPortal() && items.Morph && items.Wave &&
-                        (items.Ice || items.HiJump || items.SpaceJump),
+                        (items.Ice || items.HiJump || items.SpaceJump)),
                 _ =>
-                    items.CanOpenRedDoors() && (items.CanDestroyBombWalls() || items.SpeedBooster) ||
+                    (items.CanOpenRedDoors() && (items.CanDestroyBombWalls() || items.SpeedBooster) ||
                     items.CanUsePowerBombs() ||
                     items.CanAccessNorfairUpperPortal() && items.Morph && (items.CanOpenRedDoors() || items.Wave) &&
-                        (items.Ice || items.HiJump || items.CanSpringBallJump() || items.CanFly())
+                        (items.Ice || items.HiJump || items.CanSpringBallJump() || items.CanFly()))
             };
         }
 

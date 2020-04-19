@@ -13,7 +13,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
 
             Locations = new List<Location> {
                 new Location(this, 13, 0x8F84AC, LocationType.Chozo, "Power Bomb (green Brinstar bottom)", Logic switch {
-                    _ => new Requirement(items => items.CanUsePowerBombs())
+                    _ => new Requirement(items => items.CardBrinstarL2 && items.CanUsePowerBombs())
                 }),
                 new Location(this, 15, 0x8F8518, LocationType.Visible, "Missile (green Brinstar below super missile)", Logic switch {
                     _ => new Requirement(items => items.CanPassBombPassages() && items.CanOpenRedDoors())
@@ -35,10 +35,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
                     _ => new Requirement(items => items.CanOpenRedDoors() && items.Morph)
                 }),
                 new Location(this, 30, 0x8F87C2, LocationType.Visible, "Energy Tank, Etecoons", Logic switch {
-                    _ => new Requirement(items => items.CanUsePowerBombs())
+                    _ => new Requirement(items => items.CardBrinstarL2 && items.CanUsePowerBombs())
                 }),
                 new Location(this, 31, 0x8F87D0, LocationType.Visible, "Super Missile (green Brinstar bottom)", Logic switch {
-                    _ => new Requirement(items => items.CanUsePowerBombs() && items.Super)
+                    _ => new Requirement(items => items.CardBrinstarL2 && items.CanUsePowerBombs() && items.Super)
                 }),
             };
         }
