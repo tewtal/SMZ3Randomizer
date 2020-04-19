@@ -9,7 +9,7 @@ namespace Randomizer.Shared.Models {
             : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
-            modelBuilder.Entity<Client>().UseXminAsConcurrencyToken();
+            //modelBuilder.Entity<Client>().UseXminAsConcurrencyToken();
         }
 
         public DbSet<Session> Sessions { get; set; }

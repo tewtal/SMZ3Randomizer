@@ -11,7 +11,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
         public Crocomire(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 52, 0x8F8BA4, LocationType.Visible, "Energy Tank, Crocomire", Logic switch {
-                    Normal => items => items.HasEnergyReserves(1) || items.SpaceJump || items.Grapple,
+                    Normal => items => items.CardNorfairBoss && (items.HasEnergyReserves(1) || items.SpaceJump || items.Grapple),
                     _ => new Requirement(items => true)
                 }),
                 new Location(this, 54, 0x8F8BC0, LocationType.Visible, "Missile (above Crocomire)", Logic switch {
@@ -20,18 +20,18 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                         (items.SpeedBooster || items.CanSpringBallJump() || items.Varia && items.Ice)) && items.CanHellRun())
                 }),
                 new Location(this, 57, 0x8F8C04, LocationType.Visible, "Power Bomb (Crocomire)", Logic switch {
-                    Normal => items => items.CanFly() || items.HiJump || items.Grapple,
+                    Normal => items => items.CardNorfairBoss && (items.CanFly() || items.HiJump || items.Grapple),
                     _ => new Requirement(items => true)
                 }),
                 new Location(this, 58, 0x8F8C14, LocationType.Visible, "Missile (below Crocomire)", Logic switch {
-                    _ => new Requirement(items => items.Morph)
+                    _ => new Requirement(items => items.CardNorfairBoss && items.Morph)
                 }),
                 new Location(this, 59, 0x8F8C2A, LocationType.Visible, "Missile (Grapple Beam)", Logic switch {
-                    Normal => items => items.Morph && (items.CanFly() || items.SpeedBooster && items.CanUsePowerBombs()),
+                    Normal => items => items.CardNorfairBoss && (items.Morph && (items.CanFly() || items.SpeedBooster && items.CanUsePowerBombs())),
                     _ => new Requirement(items => items.SpeedBooster || items.Morph && (items.CanFly() || items.Grapple))
                 }),
                 new Location(this, 60, 0x8F8C36, LocationType.Chozo, "Grapple Beam", Logic switch {
-                    Normal => items => items.Morph && (items.CanFly() || items.SpeedBooster && items.CanUsePowerBombs()),
+                    Normal => items => items.CardNorfairBoss && (items.Morph && (items.CanFly() || items.SpeedBooster && items.CanUsePowerBombs())),
                     _ => new Requirement(items => items.SpaceJump || items.Morph || items.Grapple ||
                         items.HiJump && items.SpeedBooster)
                 }),
@@ -44,12 +44,12 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                         (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
                         items.CanAccessNorfairUpperPortal()
                     ) &&
-                    items.Varia && items.Super && (
-                        items.CanUsePowerBombs() && items.SpeedBooster ||
+                    items.Varia && (
+                        items.CardNorfairL1 && items.CanUsePowerBombs() && items.SpeedBooster ||
                         items.SpeedBooster && items.Wave ||
-                        items.Morph && (items.CanFly() || items.HiJump) && (items.CanPassBombPassages() || items.Gravity) && items.Wave
+                        items.CardNorfairL2 && items.Morph && (items.CanFly() || items.HiJump) && (items.CanPassBombPassages() || items.Gravity) && items.Wave
                     ),
-                _ => (
+                _ => items.CardNorfairBoss && (
                         (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
                         items.CanAccessNorfairUpperPortal()
                     ) &&
