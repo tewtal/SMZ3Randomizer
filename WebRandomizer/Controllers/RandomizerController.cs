@@ -50,7 +50,7 @@ namespace WebRandomizer.Controllers {
             try {
                 /* Initialize the randomizer and generate a seed with the given options */
                 IRandomizer randomizer = randomizers.FirstOrDefault(x => x.Id == randomizerId);
-                
+
                 if(randomizer == null) {
                     return new StatusCodeResult(400);
                 }

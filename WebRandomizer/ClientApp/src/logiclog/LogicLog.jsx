@@ -44,7 +44,7 @@ const StyledMarkdown = styled(Markdown)`
 
 const introText =
 `
-The worlds are filled by this procedure: 
+The worlds are filled by this procedure:
 - Assume all progression items are acquired
 - Progression items (non-dungeon) and item locations are shuffled respectively
 - Items are placed one by one. Dungeon items are placed first, followed by all other progression

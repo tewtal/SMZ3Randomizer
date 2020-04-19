@@ -95,7 +95,6 @@ function applySpriteAuthor(rom, mode, block, author) {
 }
 
 function formatAuthor(author) {
-    author.toUpperCase();
     /* Replace non-alphanum with space */
     author = author.replace(/[^A-Z0-9]/, ' ');
     /* Normalize spaces */

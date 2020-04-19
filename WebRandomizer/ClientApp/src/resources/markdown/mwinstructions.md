@@ -97,7 +97,7 @@ If you want to play using Retroarch, you will need version 1.8.0 or newer.
 When you've just joined a new session you will first to have to register as a player by clicking
 one of the *Register as this player* buttons.
 
-After doing so, you will get a popup that prompts you to select the original ROM(s) needed. 
+After doing so, you will get a popup that prompts you to select the original ROM(s) needed.
 Make sure these ROM's are unaltered and are the original versions of the games.
 For the A Link to the Past ROM in a Combo Randomizer game, make sure it is the Japanese 1.0 version.
 

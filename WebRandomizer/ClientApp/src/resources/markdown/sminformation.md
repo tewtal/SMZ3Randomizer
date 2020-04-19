@@ -33,14 +33,14 @@ These options are available when generating a new game.
 ### Logic
 This option selects what kind of logic to use for item placement inside Super Metroid.
 * Casual - Casual logic includes only what Super Metroid teaches players itself. Anything that's not demonstrated in-game or by the intro cutscenes will not be required here.
-  
+
   Required moves include for example:
     * Wall jumping (not including very precise ones)
     * Shinesparks in any direction (short charging for these is not expected)
     * Infinite Bomb Jumps
-* Tournament - Tournament logic is based upon the "no major glitches" ruleset and includes most tricks that are considered minor glitches, with some restrictions. 
+* Tournament - Tournament logic is based upon the "no major glitches" ruleset and includes most tricks that are considered minor glitches, with some restrictions.
   You'll want to be somewhat of a Super Metroid veteran for this logic.
-  
+
   Required moves include (in addition to anything in Normal logic) for example:
     * Mockballs
     * Short charging
@@ -77,7 +77,7 @@ These options are entered after game generation and are cosmetic or non gameplay
 
 ### Play as
 This lets you select the sprite to use for Samus.
-For Samus there is a toggle for how you want the Screw Attack animation to look when you don't have Space Jump equipped. 
+For Samus there is a toggle for how you want the Screw Attack animation to look when you don't have Space Jump equipped.
 If it is unchecked, the Screw Attack animation will always include the Space Jump animation as well (as in the original game), but if it's checked you will get the Screw Attack animation applied on top of the regular spin jump animation.
 
 ### Energy Beep

@@ -92,8 +92,7 @@ namespace WebRandomizer {
             });
 
             app.UseRouting();
-            app.UseEndpoints(endpoints => 
-            {
+            app.UseEndpoints(endpoints => {
                 endpoints.MapHub<MultiworldHub>("/multiworldHub");
             });
 

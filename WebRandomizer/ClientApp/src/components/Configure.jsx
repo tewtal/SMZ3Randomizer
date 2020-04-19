@@ -13,7 +13,7 @@ const InputWithoutSpinner = styled(Input)`
   appearance: textfield;
   /* For Chromium */
   &::-webkit-inner-spin-button,
-  &::-webkit-outer-spin-button { 
+  &::-webkit-outer-spin-button {
     appearance: none;
   }
 `;
