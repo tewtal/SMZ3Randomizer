@@ -23,7 +23,7 @@ import attempt from 'lodash/attempt';
 import defaultTo from 'lodash/defaultTo';
 
 import inventory from '../resources/sprite/inventory';
-import baseIpsSMZ3 from '../resources/zsm.ips.gz';
+import baseIpsSMZ3 from '../resources/zsm.ips';
 import baseIpsSM from '../resources/sm.ips.gz';
 
 const baseIps = {
