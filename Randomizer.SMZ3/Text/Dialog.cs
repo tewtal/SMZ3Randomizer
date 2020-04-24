@@ -10,14 +10,15 @@ namespace Randomizer.SMZ3.Text {
         static readonly Regex command = new Regex(@"^\{[^}]*\}");
         static readonly Regex invalid = new Regex(@"(?<!^)\{[^}]*\}(?!$)", RegexOptions.Multiline);
         static readonly Regex digit = new Regex(@"\d");
-        static readonly Regex letter = new Regex("[A-Z]");
+        static readonly Regex uppercaseLetter = new Regex("[A-Z]");
+        static readonly Regex lowercaseLetter = new Regex("[a-z]");
 
         public static byte[] Simple(string text) {
             const int maxBytes = 256;
-            const int wrap = 14;
+            const int wrap = 19;
 
             var bytes = new List<byte>();
-            var lines = text.ToUpper().Split('\n');
+            var lines = text.Split('\n');
             var lineIndex = 0;
             foreach (var line in lines) {
                 bytes.Add(lineIndex switch {
@@ -53,7 +54,7 @@ namespace Randomizer.SMZ3.Text {
 
         public static byte[] Compiled(string text, bool pause = true) {
             const int maxBytes = 2046;
-            const int wrap = 14;
+            const int wrap = 19;
 
             if (invalid.IsMatch(text))
                 throw new ArgumentException("Dialog commands must be placed on separate lines", nameof(text));
@@ -61,7 +62,7 @@ namespace Randomizer.SMZ3.Text {
             bool padOut = false;
 
             var bytes = new List<byte> { 0xFB };
-            var lines = Wordwrap(text.ToUpper(), wrap);
+            var lines = Wordwrap(text, wrap);
             var lineCount = lines.Count(l => !command.IsMatch(l));
             var lineIndex = 0;
             foreach (var line in lines) {
@@ -157,7 +158,9 @@ namespace Randomizer.SMZ3.Text {
         static byte[] LetterToBytes(char c) {
             return c switch {
                 _ when digit.IsMatch(c.ToString()) => new byte[] { (byte)(c - '0' + 0xA0) },
-                _ when letter.IsMatch(c.ToString()) => new byte[] { (byte)(c - 'A' + 0xAA) },
+                _ when uppercaseLetter.IsMatch(c.ToString()) => new byte[] { (byte)(c - 'A' + 0xAA) },
+                // TODO: The lowercase character ID range is not yet fully decided
+                _ when lowercaseLetter.IsMatch(c.ToString()) => new byte[] { (byte)(c - 'a' + 0x30) },
                 _ => letters.TryGetValue(c, out byte[] bytes) ? bytes : new byte[] { 0xFF },
             };
         }
@@ -242,38 +245,41 @@ namespace Randomizer.SMZ3.Text {
             { 'ぞ', new byte[] { 0x2D } },
             { 'だ', new byte[] { 0x2E } },
             { 'ぢ', new byte[] { 0x2F } },
-            { 'ま', new byte[] { 0x30 } },
-            { 'み', new byte[] { 0x31 } },
-            { 'む', new byte[] { 0x32 } },
-            { 'め', new byte[] { 0x33 } },
-            { 'も', new byte[] { 0x34 } },
-            { 'づ', new byte[] { 0x35 } },
-            { 'で', new byte[] { 0x36 } },
-            { 'ど', new byte[] { 0x37 } },
-            { 'ら', new byte[] { 0x38 } },
-            { 'り', new byte[] { 0x39 } },
-            { 'る', new byte[] { 0x3A } },
-            { 'れ', new byte[] { 0x3B } },
-            { 'ろ', new byte[] { 0x3C } },
-            { 'ば', new byte[] { 0x3D } },
-            { 'び', new byte[] { 0x3E } },
-            { 'ぶ', new byte[] { 0x3F } },
-            { 'べ', new byte[] { 0x40 } },
-            { 'ぼ', new byte[] { 0x41 } },
-            { 'ぱ', new byte[] { 0x42 } },
-            { 'ぴ', new byte[] { 0x43 } },
-            { 'ぷ', new byte[] { 0x44 } },
-            { 'ぺ', new byte[] { 0x45 } },
-            { 'ぽ', new byte[] { 0x46 } },
-            { 'ゃ', new byte[] { 0x47 } },
-            { 'ゅ', new byte[] { 0x48 } },
-            { 'ょ', new byte[] { 0x49 } },
-            { 'っ', new byte[] { 0x4A } },
-            { 'ぁ', new byte[] { 0x4B } },
-            { 'ぃ', new byte[] { 0x4C } },
-            { 'ぅ', new byte[] { 0x4D } },
-            { 'ぇ', new byte[] { 0x4E } },
-            { 'ぉ', new byte[] { 0x4F } },
+
+            // TODO: Remove these when the lowercase character ID range is completely decided
+            //{ 'ま', new byte[] { 0x30 } },
+            //{ 'み', new byte[] { 0x31 } },
+            //{ 'む', new byte[] { 0x32 } },
+            //{ 'め', new byte[] { 0x33 } },
+            //{ 'も', new byte[] { 0x34 } },
+            //{ 'づ', new byte[] { 0x35 } },
+            //{ 'で', new byte[] { 0x36 } },
+            //{ 'ど', new byte[] { 0x37 } },
+            //{ 'ら', new byte[] { 0x38 } },
+            //{ 'り', new byte[] { 0x39 } },
+            //{ 'る', new byte[] { 0x3A } },
+            //{ 'れ', new byte[] { 0x3B } },
+            //{ 'ろ', new byte[] { 0x3C } },
+            //{ 'ば', new byte[] { 0x3D } },
+            //{ 'び', new byte[] { 0x3E } },
+            //{ 'ぶ', new byte[] { 0x3F } },
+            //{ 'べ', new byte[] { 0x40 } },
+            //{ 'ぼ', new byte[] { 0x41 } },
+            //{ 'ぱ', new byte[] { 0x42 } },
+            //{ 'ぴ', new byte[] { 0x43 } },
+            //{ 'ぷ', new byte[] { 0x44 } },
+            //{ 'ぺ', new byte[] { 0x45 } },
+            //{ 'ぽ', new byte[] { 0x46 } },
+            //{ 'ゃ', new byte[] { 0x47 } },
+            //{ 'ゅ', new byte[] { 0x48 } },
+            //{ 'ょ', new byte[] { 0x49 } },
+            //{ 'っ', new byte[] { 0x4A } },
+            //{ 'ぁ', new byte[] { 0x4B } },
+            //{ 'ぃ', new byte[] { 0x4C } },
+            //{ 'ぅ', new byte[] { 0x4D } },
+            //{ 'ぇ', new byte[] { 0x4E } },
+            //{ 'ぉ', new byte[] { 0x4F } },
+            
             { 'ア', new byte[] { 0x50 } },
             { 'イ', new byte[] { 0x51 } },
             { 'ウ', new byte[] { 0x52 } },
