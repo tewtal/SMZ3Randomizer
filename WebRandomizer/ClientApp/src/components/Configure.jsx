@@ -188,10 +188,20 @@ export default function Configure(props) {
         return map(range(parseInt(options.players)), (p) => (
             <InputGroup prefix={`Name ${p + 1}`}>
                 <Input autoComplete="new-password" value={names[p] || ''} required pattern=".*[A-Za-z\d].*"
-                    onChange={(e) => setNames({ ...names, [p]: e.target.value })}
+                    onChange={(e) => { playerPatternValidity(e.target); setNames({ ...names, [p]: e.target.value }); }}
                 />
             </InputGroup>
         ));
+    }
+
+    function playerPatternValidity(element) {
+        /* A custom message sets the ordinary message, so it first has to be
+         * reset to avoid having the suffix repeat at each validation check */
+        element.setCustomValidity('');
+        element.setCustomValidity(element.validity.patternMismatch
+            ? `${element.validationMessage} (Must contain at least one letter or digit)`
+            : ''
+        );
     }
 
 }
