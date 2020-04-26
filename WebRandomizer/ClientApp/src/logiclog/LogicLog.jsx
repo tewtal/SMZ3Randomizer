@@ -4,8 +4,8 @@ import { Row, Col, Card, CardHeader, CardBody, Collapse } from 'reactstrap';
 import { InputGroupAddon, Label, Button, Nav, NavItem, NavLink } from 'reactstrap';
 import InputGroup from '../components/util/PrefixInputGroup';
 import Markdown from '../components/Markdown';
-import PlusIcon from './PlusIcon';
-import MinusIcon from './MinusIcon';
+
+import { PlusSquareFill, DashSquareFill } from '../components/util/BootstrapIcon';
 
 import classnames from 'classnames';
 
@@ -42,6 +42,15 @@ const StyledMarkdown = styled(Markdown)`
   }
 `;
 
+const IntroLabel = styled(Label)`
+  display: flex;
+  align-items: center;
+  & > .icon {
+    width: 1.25em;
+    height: 1.25em;
+  }
+`;
+
 const introText =
 `
 The worlds are filled by this procedure:
@@ -68,13 +77,14 @@ export default function LogicLog() {
     const bars = initial(parts);
     const { normal, hard } = last(parts);
 
-    const Icon = showIntro ? MinusIcon : PlusIcon;
+    const Icon = showIntro ? DashSquareFill : PlusSquareFill;
 
     const introduction = (
         <>
-            <Label onClick={() => setShowIntro(!showIntro)}>
-                <Icon />{' '}<strong>Introduction</strong>
-            </Label>
+            <IntroLabel onClick={() => setShowIntro(!showIntro)}>
+                <Icon className="icon text-primary mr-1" />
+                <strong>Introduction</strong>
+            </IntroLabel>
             <Collapse isOpen={showIntro}>
                 <Markdown text={introText} />
             </Collapse>
