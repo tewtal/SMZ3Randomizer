@@ -42,6 +42,27 @@ const StyledMarkdown = styled(Markdown)`
   }
 `;
 
+/* Skipped active, active+focus. color-yiq is bootstrap's contrast picker
+ * between dark ($gray-900), and light ($white) */
+const ToggleButton = styled(Button)`
+  &.btn-light {
+    color: #212529;               /* color: color-yiq(background) => $gray-900 */
+    background-color: #E9ECEF;    /* background: $input-group-addon-bg */
+    border-color: #CED4DA;        /* border: $input-group-addon-border-color */
+    &:hover {
+      color: #212529;             /* hover-color: color-yip(hover-background) => $gray-900 */
+      background-color: #D2D8DE;  /* hover-background: darken(background, 7.5%) */
+      border-color: #B1BBC4;      /* hover-border: darken(border, 10%) */
+    }
+    &:focus, &.focus {
+      color: #212529;             /* hover-color */
+      background-color: #D2D8DE;  /* hover-background */
+      border-color: #B1BBC4;      /* hover-border */
+      box-shadow: 0 0 0 .2rem /* $btn-focus-width */ rgba(180, 186, 191, .5); /* mix(color, border, 15%), .5 */
+    }
+  }
+`;
+
 const IntroLabel = styled(Label)`
   display: flex;
   align-items: center;
@@ -93,12 +114,12 @@ export default function LogicLog() {
 
     const logicButton = (logic, name) => (
         <InputGroupAddon addonType="append">
-            <Button
-                color={logic === name ? 'primary' : 'secondary'}
+            <ToggleButton
+                color={logic === name ? 'primary' : 'light'}
                 onClick={() => setSMLogic(name)}
             >
                 {capitalize(name)}
-            </Button>
+            </ToggleButton>
         </InputGroupAddon>
     );
 
