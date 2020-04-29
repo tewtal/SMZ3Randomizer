@@ -63,7 +63,7 @@ namespace Randomizer.CLI.Verbs {
         public virtual string LogicName { get; }
         public virtual string LogicValue { get; }
 
-        protected const string smFile = @".\Super_Metroid_JU_.smc";
+        protected const string smFile = @".\Super_Metroid_JU_.sfc";
         protected const string z3File = @".\Zelda_no_Densetsu_-_Kamigami_no_Triforce_Japan.sfc";
 
         public abstract IRandomizer NewRandomizer();
