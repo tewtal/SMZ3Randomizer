@@ -5,14 +5,14 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="TestData\SimpleText.json" />
-    <None Remove="TestData\StringEntries.json" />
-    <None Remove="TestData\StringTable.txt" />
+    <None Remove="TestData\ItemTexts.json" />
+    <None Remove="TestData\StringTableData.txt" />
+    <None Remove="TestData\StringTableEntries.json" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="TestData\SimpleText.json" />
-    <EmbeddedResource Include="TestData\StringEntries.json" />
-    <EmbeddedResource Include="TestData\StringTable.txt" />
+    <EmbeddedResource Include="TestData\ItemTexts.json" />
+    <EmbeddedResource Include="TestData\StringTableEntries.json" />
+    <EmbeddedResource Include="TestData\StringTableData.txt" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
