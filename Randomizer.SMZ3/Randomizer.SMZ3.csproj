@@ -6,6 +6,28 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Text\Scripts\Blind.txt" />
+    <None Remove="Text\Scripts\Ganon.txt" />
+    <None Remove="Text\Scripts\General.yaml" />
+    <None Remove="Text\Scripts\StringTable.yaml" />
+    <None Remove="Text\Scripts\TavernMan.txt" />
+    <None Remove="Text\Scripts\TriforceRoom.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Text\Scripts\Blind.txt" />
+    <EmbeddedResource Include="Text\Scripts\Ganon.txt" />
+    <EmbeddedResource Include="Text\Scripts\General.yaml" />
+    <EmbeddedResource Include="Text\Scripts\StringTable.yaml" />
+    <EmbeddedResource Include="Text\Scripts\TavernMan.txt" />
+    <EmbeddedResource Include="Text\Scripts\TriforceRoom.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SharpYaml" Version="1.6.6" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Randomizer.Contracts\Randomizer.Contracts.csproj" />
   </ItemGroup>
 

@@ -11,6 +11,11 @@ namespace Randomizer.SMZ3 {
     public enum ItemType : byte {
         Nothing,
 
+        KraidKey/* = ?*/,
+        PhantoonKey/* = ?*/,
+        DraygonKey/* = ?*/,
+        RidleyKey/* = ?*/,
+
         MapHC = 0x7F,
         MapEP = 0x7D,
         MapDP = 0x7C,
@@ -111,11 +116,6 @@ namespace Randomizer.SMZ3 {
         BombUpgrade10 = 0x52,
         ArrowUpgrade5 = 0x53,
         ArrowUpgrade10 = 0x54,
-
-        KraidKey/* = ?*/,
-        PhantoonKey/* = ?*/,
-        DraygonKey/* = ?*/,
-        RidleyKey/* = ?*/,
 
         Missile = 0xC2,
         Super = 0xC3,

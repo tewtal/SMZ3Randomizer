@@ -528,8 +528,8 @@ namespace Randomizer.SMZ3 {
 
             var silversLocation = allWorlds.SelectMany(world => world.Locations).Where(l => l.ItemIs(SilverArrows, myWorld)).First();
             var silvers = config.GameMode == GameMode.Multiworld ?
-                Texts.GanonThirdPhaseMulti(silversLocation, myWorld) :
-                Texts.GanonThirdPhaseSingle(silversLocation);
+                Texts.GanonThirdPhaseMulti(silversLocation.Region, myWorld) :
+                Texts.GanonThirdPhaseSingle(silversLocation.Region);
             patches.Add((Snes(0x308700), Dialog.Simple(silvers)));
             stringTable.SetGanonThirdPhaseText(silvers);
 
