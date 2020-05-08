@@ -1,10 +1,18 @@
 ﻿import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import { Container, Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
-import { Button, Form, Input } from 'reactstrap';
-import InputGroup from './util/PrefixInputGroup';
+import { Form, FormGroup, Button, Input } from 'reactstrap';
 import { Modal, ModalHeader, ModalBody, Progress } from 'reactstrap';
 import BootstrapSwitchButton from 'bootstrap-switch-button-react';
-import styled from 'styled-components';
+import InputGroup from './util/PrefixInputGroup';
+import classNames from 'classnames';
+
+import map from 'lodash/map';
+import transform from 'lodash/transform';
+import chunk from 'lodash/chunk';
+import range from 'lodash/range';
+import attempt from 'lodash/attempt';
+import defaultTo from 'lodash/defaultTo';
 
 import { encode } from 'slugid';
 
@@ -13,7 +21,7 @@ const InputWithoutSpinner = styled(Input)`
   appearance: textfield;
   /* For Chromium */
   &::-webkit-inner-spin-button,
-  &::-webkit-outer-spin-button { 
+  &::-webkit-outer-spin-button {
     appearance: none;
   }
 `;
@@ -23,55 +31,53 @@ export default function Configure(props) {
 
     const [options, setOptions] = useState(null);
     const [names, setNames] = useState({});
-    const [modal, setModal] = useState(false);
     const [randomizer, setRandomizer] = useState(null);
+    const [modal, setModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
 
     useEffect(() => {
-        const fetchData = async () => {
+        attempt(async () => {
             try {
                 var response = await fetch(`/api/randomizers/${randomizer_id}`);
                 if (response) {
-                    var result = await response.json();
-                    setOptions(result.options.reduce((obj, opt) => { return { ...obj, [opt.key]: opt.default !== null ? opt.default : "" }; }, {}));
+                    const result = await response.json();
+                    const options = transform(result.options,
+                        (options, opt) => options[opt.key] = defaultTo(opt.default, ''),
+                        {}
+                    );
+                    setOptions(options);
                     setRandomizer(result);
                 } else {
-                    setErrorMessage("Cannot load metadata for the specified randomizer.");
+                    setErrorMessage('Cannot load metadata for the specified randomizer.');
                 }
             } catch (error) {
                 setErrorMessage(error);
             }
-        };
-
-        fetchData();
+        });
     }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
 
-    async function createGame(e) {
-        e.preventDefault();
+    async function createGame() {
         setModal(true);
 
         try {
-            if (options["gamemode"] === "multiworld") {
-                for (let p = 0; p < parseInt(options["players"]); p++) {
-                    options["player-" + p] = names[p];
+            if (options.gamemode === 'multiworld') {
+                for (let p = 0; p < parseInt(options.players); p++) {
+                    options[`player-${p}`] = names[p];
                 }
             }
 
-            let response = await fetch(`/api/randomizers/${randomizer_id}/generate`,
-                {
-                    method: "POST",
-                    cache: "no-cache",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(options)
-                });
-            let data = await response.json();
+            const response = await fetch(`/api/randomizers/${randomizer_id}/generate`, {
+                method: 'POST',
+                cache: 'no-cache',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(options)
+            });
+            const data = await response.json();
             setModal(false);
-            if (options["gamemode"] === "multiworld") {
-                props.history.push('/multiworld/' + encode(data.guid));
+            if (options.gamemode === 'multiworld') {
+                props.history.push(`/multiworld/${encode(data.guid)}`);
             } else {
-                props.history.push('/seed/' + encode(data.guid));
+                props.history.push(`/seed/${encode(data.guid)}`);
             }
         } catch (error) {
             console.log(error);
@@ -80,132 +86,122 @@ export default function Configure(props) {
     }
 
     function updateOption(key, value) {
-        setOptions({...options, [key]: value});
+        setOptions({ ...options, [key]: value });
     }
 
-    function chunk(array, size) {
-        return array.reduce((chunks, item, i) => {
-            if (i % size === 0) {
-                chunks.push([item]);
-            } else {
-                chunks[chunks.length - 1].push(item);
-            }
-            return chunks;
-        }, []);
+    const component = randomizer
+        ? (<>
+            <CardHeader className="bg-primary text-white">
+                {randomizer.name} - {randomizer.version}
+            </CardHeader>
+            <CardBody>
+                <Form autoComplete="off" onSubmit={(e) => { e.preventDefault(); createGame(); }}>
+                    {map(chunk(randomizer.options, 2), (group, i) => (
+                        <FormGroup row={true} key={i}>
+                            {map(group, (option) => {
+                                let input = createFormOption(option);
+                                return input && <Col key={option.key} md="6">{input}</Col>;
+                            })}
+                        </FormGroup>
+                    ))}
+                    {options.gamemode === 'multiworld' && (
+                        <FormGroup row={true}>
+                            {map(createPlayerInputs(), (input, p) => (
+                                <Col key={`playerInput${p}`} md={{ size: 5, offset: 1 - (p % 2) }}>
+                                    {input}
+                                </Col>
+                            ))}
+                        </FormGroup>
+                    )}
+                    <FormGroup row={true}>
+                        <Col md="6">
+                            <Button color="success" type="submit">Generate Game</Button>
+                        </Col>
+                    </FormGroup>
+                </Form>
+            </CardBody>
+        </>)
+        : (<>
+            <CardHeader className={classNames({
+                'bg-danger': errorMessage,
+                'bg-primary': !errorMessage
+            }, 'text-white'
+            )}>
+                {errorMessage ? 'Something went wrong :(' : 'Create new randomized game'}
+            </CardHeader>
+            <CardBody>
+                {errorMessage || 'Please wait, loading...'}
+            </CardBody>
+        </>);
+
+    return (
+        <Container>
+            <Row className="justify-content-md-center">
+                <Col md="10">
+                    <Card>
+                        {component}
+                    </Card>
+                </Col>
+            </Row>
+            <Modal isOpen={modal} backdrop="static" autoFocus>
+                <ModalHeader>Generating new game</ModalHeader>
+                <ModalBody>
+                    <p>Please wait while a new game is generated</p>
+                    <Progress animated color="info" value={100} />
+                </ModalBody>
+            </Modal>
+        </Container>
+    );
+
+    function createFormOption({ type, key, description, values }) {
+        return type === 'seed' ? (
+            <InputGroup prefix={description}>
+                <InputWithoutSpinner type="number" min={0} max={0x7FFF_FFFF} value={options[key]}
+                    onChange={(e) => updateOption(key, e.target.value)}
+                />
+            </InputGroup>
+        )
+        : type === 'dropdown' ? (
+            <InputGroup prefix={description}>
+                <Input type="select" value={options[key]} onChange={(e) => updateOption(key, e.target.value)}>
+                    {map(values, (v, k) => <option key={k} value={k}>{v}</option>)}
+                </Input>
+            </InputGroup>
+        )
+        : type === 'checkbox' ? (
+            <InputGroup prefixClassName="mr-1" prefix={description}>
+                <BootstrapSwitchButton onlabel="Yes" offlabel="No" width="80" checked={options[key] === 'true'}
+                    onChange={checked => updateOption(key, checked.toString())}
+                />
+            </InputGroup>
+        )
+        : type === 'players' && options.gamemode === 'multiworld' ? (
+            <InputGroup prefix={description}>
+                <Input value={options[key]} onChange={(e) => updateOption(key, e.target.value)} />
+            </InputGroup>
+        )
+        : null;
     }
 
-    if (randomizer) {
-        const formOptions = randomizer.options.map(opt => {
-            return opt.type === 'seed' ? (
-                <Col key={opt.key} md="6">
-                    <InputGroup prefix={opt.description}>
-                        <InputWithoutSpinner type="number" id={opt.key} min={0} max={0x7FFF_FFFF} value={options[opt.key]}
-                            onChange={(e) => updateOption(opt.key, e.target.value)}
-                        />
-                    </InputGroup>
-                </Col>
-            )
-            : opt.type === 'dropdown' ? (
-                <Col key={opt.key} md="6">
-                    <InputGroup prefix={opt.description}>
-                        <Input type="select" id={opt.key} value={options[opt.key]} onChange={(e) => updateOption(opt.key, e.target.value)}>
-                    {Object.entries(opt.values).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-                        </Input>
-                    </InputGroup>
-                </Col>
-            )
-            : opt.type === 'checkbox' ? (
-                <Col key={opt.key} md="6">
-                    <InputGroup prefixClassName="mr-1" prefix={opt.description}>
-                        <BootstrapSwitchButton id={opt.key} onlabel="Yes" offlabel="No" width="80" checked={options[opt.key]}
-                            onChange={checked => updateOption(opt.key, checked.toString())}
-                        />
-                    </InputGroup>
-                </Col>
-            )
-            : opt.type === 'players' && options["gamemode"] === "multiworld" ? (
-                <Col key={opt.key} md="6">
-                    <InputGroup prefix={opt.description}>
-                        <Input id={opt.key} value={options[opt.key]} onChange={(e) => updateOption(opt.key, e.target.value)} />
-                    </InputGroup>
-                </Col>
-            )
-            : null;
-        });
-
-        const formOptionGroups = chunk(formOptions, 2);
-
+    function createPlayerInputs() {
         /* Chromium did not respect "off", so we're forced to use "new-passwod" */
-        const playerInputs = [];
-        for (let p = 0; p < parseInt(options["players"]); p++) {
-            playerInputs.push(
-                <Col key={"playerInput" + p} md={{ size: 5, offset: 1 - (p % 2) }}>
-                    <InputGroup prefix={`Name ${p + 1}`}>
-                        <Input autoComplete="new-password" value={names[p] || ''} required pattern=".*[A-Za-z\d].*"
-                            onChange={(e) => setNames({ ...names, [p]: e.target.value })}
-                        />
-                    </InputGroup>
-                </Col>
-            );
-        }
+        return map(range(parseInt(options.players)), (p) => (
+            <InputGroup prefix={`Name ${p + 1}`}>
+                <Input autoComplete="new-password" value={names[p] || ''} required pattern=".*[A-Za-z\d].*"
+                    onChange={(e) => { playerPatternValidity(e.target); setNames({ ...names, [p]: e.target.value }); }}
+                />
+            </InputGroup>
+        ));
+    }
 
-        return (
-            <Container>
-                <Row className="justify-content-md-center">
-                    <Col md="10">
-                        <Card>
-                            <CardHeader className="bg-primary text-white">
-                                {randomizer.name} - {randomizer.version}
-                            </CardHeader>
-                            <CardBody>
-                                <Form autoComplete="off" onSubmit={createGame}>
-                                    {formOptionGroups.map((optionGroup, i) => (
-                                        <Row key={i} className="form-group">
-                                            {optionGroup}
-                                        </Row>
-                                    ))}
-                                    {options["gamemode"] === "multiworld" && (
-                                        <Row className="form-group">
-                                            {playerInputs}
-                                        </Row>
-                                    )}
-                                    <Row className="form-group">
-                                        <Col md="6">
-                                            <Button color="success" type="submit">Generate Game</Button>
-                                        </Col>
-                                    </Row>
-                                </Form>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                </Row>
-
-                <Modal isOpen={modal} backdrop="static" autoFocus>
-                    <ModalHeader>Generating new game</ModalHeader>
-                    <ModalBody>
-                        <p>Please wait while a new game is generated</p>
-                        <Progress animated color="info" value={100} />
-                    </ModalBody>
-                </Modal>
-
-            </Container>
-        );
-    } else {
-        return (
-            <Container>
-                <Row className="justify-content-md-center">
-                    <Col md="10">
-                        <Card>
-                            <CardHeader className={errorMessage ? "bg-danger text-white" : "bg-primary text-white"}>
-                                {errorMessage ? <div>Something went wrong :(</div> : <div>Create new randomized game</div>}
-                            </CardHeader>
-                            <CardBody>
-                                {errorMessage ? <p>{errorMessage}</p> : <p>Please wait, loading...</p>}
-                            </CardBody>
-                        </Card>
-                    </Col>
-                </Row>
-            </Container>
+    function playerPatternValidity(element) {
+        /* A custom message sets the ordinary message, so it first has to be
+         * reset to avoid having the suffix repeat at each validation check */
+        element.setCustomValidity('');
+        element.setCustomValidity(element.validity.patternMismatch
+            ? `${element.validationMessage} (Must contain at least one letter or digit)`
+            : ''
         );
     }
+
 }

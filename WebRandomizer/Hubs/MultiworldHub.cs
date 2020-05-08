@@ -70,22 +70,22 @@ namespace WebRandomizer.Hubs {
             return false;
         }
 
-        public async Task<bool> SendItem(string sessionGuid, int worldId, int itemId, int itemIndex, int sequenceId) {            
+        public async Task<bool> SendItem(string sessionGuid, int worldId, int itemId, int itemIndex, int sequenceId) {
             /* Check that the session is valid and grab it from the database */
             var session = await context.Sessions.Include(x => x.Clients).ThenInclude(x => x.Events).SingleOrDefaultAsync(x => x.Guid == sessionGuid);
             if(session != null) {
-                
+
                 /* Check that the sender is a client in the session */
                 var fromClient = session.Clients.SingleOrDefault(x => x.ConnectionId == this.Context.ConnectionId);
                 if(fromClient != null) {
-                    
+
                     /* If we're seeing a repeat item index it means we're getting a dupe item (snes was reset/player died)
                      * We just accept it without creating a new event here since the target player should hopefully already have the item */
                     if(fromClient.Events.Any(x => x.Type == EventType.ItemSent && x.ItemIndex == itemIndex)) {
                         return true;
                     }
-                    
-                    /* Get the receiving client */                    
+
+                    /* Get the receiving client */
                     var toClient = session.Clients.SingleOrDefault(x => x.WorldId == worldId);
                     if (toClient != null) {
                         try {
@@ -126,7 +126,7 @@ namespace WebRandomizer.Hubs {
                                 Type = EventType.ItemReceived,
                                 SequenceNum = toClient.RecievedSeq
                             };
-                                
+
                             context.Events.Add(fromEvent);
                             context.Events.Add(toEvent);
                             await context.SaveChangesAsync();

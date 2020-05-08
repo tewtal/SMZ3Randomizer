@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace WebRandomizer.Models {
+
     public enum SessionState {
         Created,
         Running,
-        Done
+        Done,
     }
 
     public class Session {
@@ -17,4 +15,5 @@ namespace WebRandomizer.Models {
         public List<Client> Clients { get; set; }
         public Seed Seed { get; set; }
     }
+
 }

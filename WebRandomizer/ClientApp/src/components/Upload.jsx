@@ -12,7 +12,7 @@ import hasIn from 'lodash/hasIn';
 
 /* "SMZ3" as UTF8 in big-endian */
 const HashSeed = 0x534D5A33;
-const Z3Hash = 0x8AC8FD15; 
+const Z3Hash = 0x8AC8FD15;
 const SMHash = 0xCADB4883;
 
 export default function Upload(props) {

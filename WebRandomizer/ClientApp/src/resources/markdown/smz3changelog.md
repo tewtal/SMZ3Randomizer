@@ -14,7 +14,7 @@
   * Options for "early" morph and/or sword. (Early meaning a location accessible from the start of the game)
   * Option for Uncle Assured sword
   * Custom sprite support (a limited selection currently, but this will be expanded in a future minor release soon)
-  * Custom heart colors 
+  * Custom heart colors
   * Adjustable low heart beep speed
   * Low energy alarm toggle
 
@@ -30,7 +30,7 @@
   * Fixed Botwoon access in Hard logic, requiring Gravity Suit to use Speed Booster
   * Fixed Outer Maridia access via Maridia Portal, requiring the ability to break bomb blocks in Aqueduct (all logics) or climb Mainstreet after Green Gate Glitch (Hard logic)
   * Fixed Mama Turtle items to require the ability to open red doors
-  * Fixed key logic in Ice Palace, preventing right side lockout 
+  * Fixed key logic in Ice Palace, preventing right side lockout
   * Multiworld specific logic changes:
     * All "Progression pool" items banned from Ganon's Tower in multiworld seeds, even if not required. (Also items not your own)
     * Innate "early" bias for morph (first 20% of available checks) and moon pearl (first 40%) in multiworld seeds
@@ -42,7 +42,6 @@
   * Lenophis. Osse101, Rushlight and TarThoron - Logic updates and fixes
   * All the beta testers for both single player and multiworld.
   * Everyone in the SMZ3 community for supporting and playing this randomizer.
-  
 
 ## 2019-02-17 - Version 10.2
 * This version fixes an issue with item placement where progression items ended up being significantly more likely to show up in ALTTP dungeons than would be expected.

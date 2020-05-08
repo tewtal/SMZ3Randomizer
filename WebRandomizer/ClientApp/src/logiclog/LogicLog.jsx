@@ -4,8 +4,8 @@ import { Row, Col, Card, CardHeader, CardBody, Collapse } from 'reactstrap';
 import { InputGroupAddon, Label, Button, Nav, NavItem, NavLink } from 'reactstrap';
 import InputGroup from '../components/util/PrefixInputGroup';
 import Markdown from '../components/Markdown';
-import PlusIcon from './PlusIcon';
-import MinusIcon from './MinusIcon';
+
+import { PlusSquareFill, DashSquareFill } from '../components/util/BootstrapIcon';
 
 import classnames from 'classnames';
 
@@ -42,9 +42,39 @@ const StyledMarkdown = styled(Markdown)`
   }
 `;
 
+/* Skipped active, active+focus. color-yiq is bootstrap's contrast picker
+ * between dark ($gray-900), and light ($white) */
+const ToggleButton = styled(Button)`
+  &.btn-light {
+    color: #212529;               /* color: color-yiq(background) => $gray-900 */
+    background-color: #E9ECEF;    /* background: $input-group-addon-bg */
+    border-color: #CED4DA;        /* border: $input-group-addon-border-color */
+    &:hover {
+      color: #212529;             /* hover-color: color-yip(hover-background) => $gray-900 */
+      background-color: #D2D8DE;  /* hover-background: darken(background, 7.5%) */
+      border-color: #B1BBC4;      /* hover-border: darken(border, 10%) */
+    }
+    &:focus, &.focus {
+      color: #212529;             /* hover-color */
+      background-color: #D2D8DE;  /* hover-background */
+      border-color: #B1BBC4;      /* hover-border */
+      box-shadow: 0 0 0 .2rem /* $btn-focus-width */ rgba(180, 186, 191, .5); /* mix(color, border, 15%), .5 */
+    }
+  }
+`;
+
+const IntroLabel = styled(Label)`
+  display: flex;
+  align-items: center;
+  & > .icon {
+    width: 1.25em;
+    height: 1.25em;
+  }
+`;
+
 const introText =
 `
-The worlds are filled by this procedure: 
+The worlds are filled by this procedure:
 - Assume all progression items are acquired
 - Progression items (non-dungeon) and item locations are shuffled respectively
 - Items are placed one by one. Dungeon items are placed first, followed by all other progression
@@ -68,13 +98,14 @@ export default function LogicLog() {
     const bars = initial(parts);
     const { normal, hard } = last(parts);
 
-    const Icon = showIntro ? MinusIcon : PlusIcon;
+    const Icon = showIntro ? DashSquareFill : PlusSquareFill;
 
     const introduction = (
         <>
-            <Label onClick={() => setShowIntro(!showIntro)}>
-                <Icon />{' '}<strong>Introduction</strong>
-            </Label>
+            <IntroLabel onClick={() => setShowIntro(!showIntro)}>
+                <Icon className="icon text-primary mr-1" />
+                <strong>Introduction</strong>
+            </IntroLabel>
             <Collapse isOpen={showIntro}>
                 <Markdown text={introText} />
             </Collapse>
@@ -83,12 +114,12 @@ export default function LogicLog() {
 
     const logicButton = (logic, name) => (
         <InputGroupAddon addonType="append">
-            <Button
-                color={logic === name ? 'primary' : 'secondary'}
+            <ToggleButton
+                color={logic === name ? 'primary' : 'light'}
                 onClick={() => setSMLogic(name)}
             >
                 {capitalize(name)}
-            </Button>
+            </ToggleButton>
         </InputGroupAddon>
     );
 

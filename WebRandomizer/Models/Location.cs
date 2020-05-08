@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿namespace WebRandomizer.Models {
 
-namespace WebRandomizer.Models {
     public class Location {
         public int Id { get; set; }
         public int WorldId { get; set; }
@@ -11,4 +7,5 @@ namespace WebRandomizer.Models {
         public int ItemId { get; set; }
         public int ItemWorldId { get; set; }
     }
+
 }

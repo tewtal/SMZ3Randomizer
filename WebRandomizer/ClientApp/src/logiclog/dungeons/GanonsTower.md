@@ -30,7 +30,7 @@ Can always hold a Key *if having* 3 Keys
   - *if one of*
     - *any location in* **Ganon's Tower - Randomizer Room** *has* BigKey
     - **Ganon's Tower - Firesnake Room** *has* Key
-  - *then* 2 Keys 
+  - *then* 2 Keys
   - *otherwise* 3 Keys
 
 **Ganon's Tower - Randomizer Room - Top Left**  

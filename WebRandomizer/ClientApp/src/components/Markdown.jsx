@@ -16,6 +16,12 @@ const GlobalMarkdownStyle = createGlobalStyle`
     h1, h2, h3 { margin-top: 3rem; }
     h4 { margin-top: 1.5rem; }
     h5 { margin-top: 1rem; }
+
+    ul, ol {
+      p + ul, p + ol {
+        margin-bottom: 1rem;
+      }
+    }
   }
 `;
 

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace WebRandomizer.Models {
+
     public class RandomizerContext : DbContext {
+
         public RandomizerContext(DbContextOptions<RandomizerContext> options)
             : base(options) { }
 
@@ -21,4 +19,5 @@ namespace WebRandomizer.Models {
         public DbSet<Location> Locations { get; set; }
 
     }
+
 }
