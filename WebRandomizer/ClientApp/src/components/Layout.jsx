@@ -17,7 +17,7 @@ export default function Layout(props) {
         <>
             <GlobalStyle />
             <NavMenu gameId={props.gameId} />
-            <Container>
+            <Container className="mb-5">
                 {props.children}
             </Container>
         </>
