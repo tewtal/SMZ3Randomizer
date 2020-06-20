@@ -102,6 +102,8 @@ If you want to play using Retroarch, you will need version 1.8.0 or newer.
 When you've just joined a new session you will first to have to register as a
 player by clicking one of the *Register as this player* buttons.
 
+***Please note, you are only able to register for one session at a time per browser. Registering for a new session will lose the connection to the old session. Additionally, incognito browser registrations will be lost if you close the window. Once registration is lost for a session, you will be unable to recover it.***
+
 After doing so, you will get a popup that prompts you to select the original
 ROM(s) needed. Make sure these ROM's are unaltered and are the original
 versions of the games. For the A Link to the Past ROM in a Combo Randomizer
@@ -122,3 +124,9 @@ ready to go.
 Hard reset, either through your console or emulator, severs the connection to
 the server. Instead the ROM's provide an in-game soft reset feature which is
 activated by pressing L+select+start+R.
+
+## Softlock Edge Cases
+
+### Tourian Point of No Return Save
+
+If you have already completed LTTP and save at the final Tourian save point, you will be no longer be able to access either game and can perform no further item checks. If other players are dependent on an item from your world to complete their game, they will be locked out of completion. Make sure to either skip this save point, beat SM first, or wait for all players to have the items they need to finish to prevent this problem.
