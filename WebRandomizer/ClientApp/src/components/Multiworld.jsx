@@ -25,14 +25,13 @@ export default function Multiworld(props) {
         });
 
         if (sessionGuid) {
-            localStorage.setItem('sessionGuid', sessionGuid);
             network.current.start();
             return () => network.current.stop();
         }
     }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
 
-    function onRegisterPlayer(clientGuid) {
-        localStorage.setItem('clientGuid', clientGuid);
+    function onRegisterPlayer(sessionGuid, clientGuid) {
+        localStorage.setItem(sessionGuid, clientGuid);
         network.current.onRegisterPlayer(clientGuid);
     }
 
