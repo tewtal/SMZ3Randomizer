@@ -47,8 +47,8 @@ namespace Randomizer.SMZ3 {
                 worlds.Add(new World(config, "Player", 0, new HexGuid()));
             }
             else {
-                int players = options.ContainsKey("players") ? int.Parse(options["players"]) : 1;
-                for (int p = 0; p < players; p++) {
+                var players = options.ContainsKey("players") ? int.Parse(options["players"]) : 1;
+                for (var p = 0; p < players; p++) {
                     var found = options.TryGetValue($"player-{p}", out var player);
                     if (!found)
                         throw new ArgumentException($"No name provided for player {p + 1}");
