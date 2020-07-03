@@ -146,12 +146,12 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         }
 
         public override bool CanFill(Item item, Progression items) {
-            if (Config.GameMode == GameMode.Multiworld) {
+            if (Config.MultiWorld) {
                 if (item.World != World || item.Progression) {
                     return false;
                 }
 
-                if (Config.KeyShuffle == KeyShuffle.Keysanity && !((item.Type == BigKeyGT || item.Type == KeyGT) && item.World == World) && (item.IsKey || item.IsBigKey || item.IsKeycard)) {
+                if (Config.Keysanity && !((item.Type == BigKeyGT || item.Type == KeyGT) && item.World == World) && (item.IsKey || item.IsBigKey || item.IsKeycard)) {
                     return false;
                 }
             }

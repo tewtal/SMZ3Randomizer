@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 using static Randomizer.SuperMetroid.ItemType;
 using System.Threading;
 
 namespace Randomizer.SuperMetroid {
+
     class Filler {
+
         List<World> Worlds { get; set; }
         List<Item> ProgressionItems { get; set; } = new List<Item>();
         List<Item> NiceItems { get; set; } = new List<Item>();
@@ -225,11 +226,11 @@ namespace Randomizer.SuperMetroid {
         }
 
         private bool CanPlaceAtLocation(Location location, ItemType itemType) {
-            if (Config.GameMode == GameMode.Normal) {
+            if (Config.SingleWorld) {
                 return itemType switch
                 {
                     Gravity => (!(location.Region.Area == "Crateria" || location.Region.Area == "Brinstar")) || location.Name == "X-Ray Scope" || location.Name == "Energy Tank, Waterway",
-                    Varia => (!(location.Region.Area == "LowerNorfair" || location.Region.Area == "Crateria" || location.Name == "Morphing Ball" || location.Name == "Missile (blue Brinstar middle)" || location.Name == "Energy Tank, Brinstar Ceiling")),
+                    Varia => !(location.Region.Area == "LowerNorfair" || location.Region.Area == "Crateria" || location.Name == "Morphing Ball" || location.Name == "Missile (blue Brinstar middle)" || location.Name == "Energy Tank, Brinstar Ceiling"),
                     SpeedBooster => !(location.Name == "Morphing Ball" || location.Name == "Missile (blue Brinstar middle)" || location.Name == "Energy Tank, Brinstar Ceiling"),
                     ScrewAttack => !(location.Name == "Morphing Ball" || location.Name == "Missile (blue Brinstar middle)" || location.Name == "Energy Tank, Brinstar Ceiling"),
                     _ => true

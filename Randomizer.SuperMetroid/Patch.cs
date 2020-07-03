@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Linq;
 using System.IO;
 using static Randomizer.SuperMetroid.ItemType;
-using System.Text.RegularExpressions;
 
 namespace Randomizer.SuperMetroid {
 
@@ -202,7 +202,7 @@ namespace Randomizer.SuperMetroid {
         }
 
         private byte[] GetSMItemPLM(Location location) {
-            int plmId = myWorld.Config.GameMode == GameMode.Multiworld ?
+            int plmId = myWorld.Config.MultiWorld ?
                 0xEFE0 :
                 location.Item.Type switch
                 {
@@ -268,7 +268,7 @@ namespace Randomizer.SuperMetroid {
                 /* Write the correct PLM to the item location */
                 patches.Add(location.Address, GetSMItemPLM(location));
 
-                if (myWorld.Config.GameMode == GameMode.Multiworld) {
+                if (myWorld.Config.MultiWorld) {
                     /* Write item information to new randomizer item table */
                     var type = location.Item.World == location.Region.World ? 0 : 1;
                     var itemId = (byte)location.Item.Type;
@@ -303,7 +303,7 @@ namespace Randomizer.SuperMetroid {
         void WriteSeedData() {
             var configField =
                 ((myWorld.Config.Race ? 1 : 0) << 15) |
-                ((myWorld.Config.GameMode == GameMode.Multiworld ? 1 : 0) << 12) |
+                ((myWorld.Config.MultiWorld ? 1 : 0) << 12) |
                 /* Gap of 2 bits, taken by Z3 logic in combo */
                 ((int)myWorld.Config.Logic << 8) |
                 (Randomizer.version.Major << 4) |
@@ -317,7 +317,7 @@ namespace Randomizer.SuperMetroid {
             patches.Add(0x1C4F10, AsAscii(seedGuid));
             patches.Add(0x1C4F30, AsAscii(myWorld.Guid));
 
-            if (myWorld.Config.GameMode == GameMode.Multiworld) {
+            if (myWorld.Config.MultiWorld) {
                 /* Write multiworld config flag into the ROM */
                 patches.Add(0x277F00, BitConverter.GetBytes((ushort)1));
             }

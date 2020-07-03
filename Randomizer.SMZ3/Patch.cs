@@ -4,10 +4,10 @@ using System.Text;
 using System.Linq;
 using static System.Linq.Enumerable;
 using Randomizer.SMZ3.Regions.Zelda;
+using Randomizer.SMZ3.Text;
 using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.RewardType;
 using static Randomizer.SMZ3.DropPrize;
-using Randomizer.SMZ3.Text;
 
 namespace Randomizer.SMZ3 {
 
@@ -16,7 +16,7 @@ namespace Randomizer.SMZ3 {
         public const ushort Level2 = 0xe1;
         public const ushort Boss = 0xe2;
         public const ushort None = 0x00;
-    }    
+    }
 
     static class KeycardDoors {
         public const ushort Left = 0xd414;
@@ -206,7 +206,7 @@ namespace Randomizer.SMZ3 {
 
         void WriteSMLocations(IEnumerable<Location> locations) {
             foreach (var location in locations) {
-                if (myWorld.Config.GameMode == GameMode.Multiworld) {
+                if (myWorld.Config.MultiWorld) {
                     patches.Add((Snes(location.Address), UshortBytes(GetSMItemPLM(location))));
                     patches.Add(ItemTablePatch(location, GetZ3ItemId(location)));
                 } else {
@@ -220,7 +220,7 @@ namespace Randomizer.SMZ3 {
         }
 
         ushort GetSMItemPLM(Location location) {
-            int plmId = myWorld.Config.GameMode == GameMode.Multiworld ?
+            int plmId = myWorld.Config.MultiWorld ?
                 0xEFE0 :
                 location.Item.Type switch {
                     ETank => 0xEED7,
@@ -284,7 +284,7 @@ namespace Randomizer.SMZ3 {
                     }
                 }
 
-                if (myWorld.Config.GameMode == GameMode.Multiworld) {
+                if (myWorld.Config.MultiWorld) {
                     patches.Add((Snes(location.Address), new byte[] { (byte)(location.Id - 256) }));
                     patches.Add(ItemTablePatch(location, GetZ3ItemId(location)));
                 } else {
@@ -546,7 +546,7 @@ namespace Randomizer.SMZ3 {
             // ---
 
             var silversLocation = allWorlds.SelectMany(world => world.Locations).Where(l => l.ItemIs(SilverArrows, myWorld)).First();
-            var silvers = config.GameMode == GameMode.Multiworld ?
+            var silvers = config.MultiWorld ?
                 Texts.GanonThirdPhaseMulti(silversLocation.Region, myWorld) :
                 Texts.GanonThirdPhaseSingle(silversLocation.Region);
             patches.Add((Snes(0x308700), Dialog.Simple(silvers)));
@@ -581,7 +581,7 @@ namespace Randomizer.SMZ3 {
             var configField =
                 ((myWorld.Config.Race ? 1 : 0) << 15) |
                 ((myWorld.Config.Keysanity ? 1 : 0) << 13) |
-                ((myWorld.Config.GameMode == GameMode.Multiworld ? 1 : 0) << 12) |
+                ((myWorld.Config.MultiWorld ? 1 : 0) << 12) |
                 ((int)myWorld.Config.Z3Logic << 10) |
                 ((int)myWorld.Config.SMLogic << 8) |
                 (Randomizer.version.Major << 4) |
@@ -598,7 +598,7 @@ namespace Randomizer.SMZ3 {
 
         void WriteCommonFlags() {
             /* Common Combo Configuration flags at [asm]/config.asm */
-            if (myWorld.Config.GameMode == GameMode.Multiworld) {
+            if (myWorld.Config.MultiWorld) {
                 patches.Add((Snes(0xF47000), UshortBytes(0x0001)));
             }
             if (myWorld.Config.Keysanity) {

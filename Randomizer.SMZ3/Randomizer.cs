@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Randomizer.Shared.Contracts;
-using static Randomizer.Shared.Contracts.RandomizerOptionType;
 
 namespace Randomizer.SMZ3 {
 
@@ -14,30 +13,12 @@ namespace Randomizer.SMZ3 {
 
         public string Id => "smz3";
         public string Name => "Super Metroid & A Link to the Past Combo Randomizer";
-
         public string Version => version.ToString();
+        public List<IRandomizerOption> Options => RandomizerOptions.List;
 
         static readonly Regex legalCharacters = new Regex(@"[A-Z0-9]", RegexOptions.IgnoreCase);
         static readonly Regex illegalCharacters = new Regex(@"[^A-Z0-9]", RegexOptions.IgnoreCase);
         static readonly Regex continousSpace = new Regex(@" +");
-
-        public List<IRandomizerOption> Options => new List<IRandomizerOption> {
-            Config.GetRandomizerOption<SMLogic>("Super Metroid Logic"),
-            Config.GetRandomizerOption<Goal>("Goal"),
-            //Config.GetRandomizerOption<Z3Logic>("A Link to the Past Logic"),
-            Config.GetRandomizerOption<SwordLocation>("First Sword"),
-            Config.GetRandomizerOption<MorphLocation>("Morph Ball"),
-            Config.GetRandomizerOption<KeyShuffle>("Key shuffle"),
-            new RandomizerOption {
-                Key = "seed", Description = "Seed", Type = Seed
-            },
-            Config.GetRandomizerOption("Race", "Race ROM (no spoilers)", false),
-            Config.GetRandomizerOption<GameMode>("Game mode"),
-
-            new RandomizerOption {
-                Key = "players", Description = "Players", Type = Players, Default = "2"
-            },
-        };
 
         public ISeedData GenerateSeed(IDictionary<string, string> options, string seed, CancellationToken cancellationToken) {
             int randoSeed;
@@ -54,16 +35,15 @@ namespace Randomizer.SMZ3 {
             }
 
             var randoRnd = new Random(randoSeed);
-
-            var config = new Config(options);
-            var worlds = new List<World>();
+            var config = RandomizerOptions.Parse(options);
 
             /* FIXME: Just here to semi-obfuscate race seeds until a better solution is in place */
             if (config.Race) {
                 randoRnd = new Random(randoRnd.Next());
             }
 
-            if (config.GameMode == GameMode.Normal) {
+            var worlds = new List<World>();
+            if (config.SingleWorld) {
                 worlds.Add(new World(config, "Player", 0, new HexGuid()));
             }
             else {
@@ -89,8 +69,8 @@ namespace Randomizer.SMZ3 {
                 Guid = new HexGuid(),
                 Seed = seed,
                 Game = Name,
-                Mode = config.GameMode.ToLString(),
-                Logic = $"{config.SMLogic.ToLString()}+{config.Z3Logic.ToLString()}",
+                Mode = config.GameMode.ToLowerString(),
+                Logic = $"{config.SMLogic.ToLowerString()}+{config.Z3Logic.ToLowerString()}",
                 Playthrough = config.Race ? new List<Dictionary<string, string>>() : spheres,
                 Worlds = new List<IWorldData>(),
             };
@@ -105,7 +85,9 @@ namespace Randomizer.SMZ3 {
                     Guid = world.Guid,
                     Player = world.Player,
                     Patches = patch.Create(config),
-                    Locations = world.Locations.Select(l => new LocationData() { LocationId = l.Id, ItemId = (int)l.Item.Type, ItemWorldId = l.Item.World.Id }).ToList<ILocationData>()
+                    Locations = world.Locations
+                        .Select(l => new LocationData() { LocationId = l.Id, ItemId = (int)l.Item.Type, ItemWorldId = l.Item.World.Id })
+                        .ToList<ILocationData>(),
                 };
 
                 seedData.Worlds.Add(worldData);
@@ -115,7 +97,7 @@ namespace Randomizer.SMZ3 {
         }
 
         public Dictionary<int, ILocationTypeData> GetLocations() => 
-            new World(new Config(new Dictionary<string, string>()), "", 0, "")
+            new World(new Config(), "", 0, "")
                 .Locations.Select(location => new LocationTypeData {
                     Id = location.Id,
                     Name = location.Name,
@@ -147,7 +129,6 @@ namespace Randomizer.SMZ3 {
     }
 
     public class SeedData : ISeedData {
-
         public string Guid { get; set; }
         public string Seed { get; set; }
         public string Game { get; set; }
@@ -155,11 +136,9 @@ namespace Randomizer.SMZ3 {
         public string Mode { get; set; }
         public List<IWorldData> Worlds { get; set; }
         public List<Dictionary<string, string>> Playthrough { get; set; }
-
     }
 
     public class WorldData : IWorldData {
-
         public int Id { get; set; }
         public string Guid { get; set; }
         public string Player { get; set; }
@@ -180,13 +159,9 @@ namespace Randomizer.SMZ3 {
 
     public class LocationTypeData : ILocationTypeData {
         public int Id { get; set; }
-
         public string Name { get; set; }
-
         public string Type { get; set; }
-
         public string Region { get; set; }
-
         public string Area { get; set; }
     }
 

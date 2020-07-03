@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 
 namespace Randomizer.SuperMetroid {
+
     class Playthrough {
+
         readonly List<World> worlds;
         readonly Config config;
         
@@ -40,7 +41,7 @@ namespace Randomizer.SuperMetroid {
                       i.Type != ItemType.ReserveTank)
                 )) {
                     var itemLocation = newLocations.Where(l => l.Item == addedItem).First();
-                    if (config.GameMode == GameMode.Multiworld) {
+                    if (config.MultiWorld) {
                         sphere.Add($"{itemLocation.Name} ({itemLocation.Region.World.Player})", $"{addedItem.Name} ({addedItem.World.Player})");
                     } else {
                         sphere.Add($"{itemLocation.Name}", $"{addedItem.Name}");
@@ -53,5 +54,7 @@ namespace Randomizer.SuperMetroid {
 
             return spheres;
         }
+
     }
+
 }

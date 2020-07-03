@@ -4,36 +4,21 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Randomizer.Shared.Contracts;
-using static Randomizer.Shared.Contracts.RandomizerOptionType;
 
 namespace Randomizer.SuperMetroid {
 
     public class Randomizer : IRandomizer {
-        
+
         public static readonly Version version = new Version(3, 0);
 
         public string Id => "sm";
         public string Name => "Super Metroid Item Randomizer";
-
         public string Version => version.ToString();
+        public List<IRandomizerOption> Options => RandomizerOptions.List;
 
         static readonly Regex legalCharacters = new Regex(@"[A-Z0-9]", RegexOptions.IgnoreCase);
         static readonly Regex illegalCharacters = new Regex(@"[^A-Z0-9]", RegexOptions.IgnoreCase);
         static readonly Regex continousSpace = new Regex(@" +");
-
-        public List<IRandomizerOption> Options => new List<IRandomizerOption> {
-            Config.GetRandomizerOption<Logic>("Logic"),
-            Config.GetRandomizerOption<Goal>("Goal"),
-            Config.GetRandomizerOption<Placement>("Item Placement"),
-            new RandomizerOption {
-                Key = "seed", Description = "Seed", Type = Seed
-            },
-            Config.GetRandomizerOption("Race", "Race ROM (no spoilers)", false),
-            Config.GetRandomizerOption<GameMode>("Game mode"),
-            new RandomizerOption {
-                Key = "players", Description = "Players", Type = Players, Default = "2"
-            },
-        };
 
         public ISeedData GenerateSeed(IDictionary<string, string> options, string seed, CancellationToken cancellationToken) {
             int randoSeed;
@@ -50,16 +35,16 @@ namespace Randomizer.SuperMetroid {
             }
 
             var rnd = new Random(randoSeed);
-            var config = new Config(options);
+            var config = RandomizerOptions.Parse(options);
 
             if (config.Race) {
                 rnd = new Random(rnd.Next());
             }
 
             int players = options.ContainsKey("players") ? int.Parse(options["players"]) : 1;
-            var worlds = new List<World>();
 
-            if (config.GameMode == GameMode.Normal || players == 1) {
+            var worlds = new List<World>();
+            if (config.SingleWorld || players == 1) {
                 worlds.Add(new World(config, "Player", 0, new HexGuid()));
             }
             else {
@@ -84,14 +69,14 @@ namespace Randomizer.SuperMetroid {
                 Guid = new HexGuid(),
                 Seed = seed,
                 Game = Name,
-                Logic = config.Logic.ToLString(),
+                Mode = config.GameMode.ToLowerString(),
+                Logic = config.Logic.ToLowerString(),
                 Playthrough = config.Race ? new List<Dictionary<string, string>>() : spheres,
-                Mode = config.GameMode.ToLString(),
-                Worlds = new List<IWorldData>()
+                Worlds = new List<IWorldData>(),
             };
 
             int patchSeed = rnd.Next();
-            foreach(var world in worlds) {
+            foreach (var world in worlds) {
                 var patchRnd = new Random(patchSeed);
                 var patch = new Patch(world, worlds, seedData.Guid, config.Race ? 0 : randoSeed, patchRnd);
                 var worldData = new WorldData {
@@ -99,7 +84,9 @@ namespace Randomizer.SuperMetroid {
                     Guid = world.Guid,
                     Player = world.Player,
                     Patches = patch.Create(),
-                    Locations = world.Locations.Select(l => new LocationData() { LocationId = l.Id, ItemId = (int)l.Item.Type, ItemWorldId = l.Item.World.Id }).ToList<ILocationData>()
+                    Locations = world.Locations
+                        .Select(l => new LocationData() { LocationId = l.Id, ItemId = (int)l.Item.Type, ItemWorldId = l.Item.World.Id })
+                        .ToList<ILocationData>(),
                 };
 
                 seedData.Worlds.Add(worldData);
@@ -109,7 +96,7 @@ namespace Randomizer.SuperMetroid {
         }
 
         public Dictionary<int, ILocationTypeData> GetLocations() =>
-            new World(new Config(new Dictionary<string, string>()), "", 0, "")
+            new World(new Config(), "", 0, "")
                 .Locations.Select(location => new LocationTypeData {
                     Id = location.Id,
                     Name = location.Name,
@@ -172,13 +159,10 @@ namespace Randomizer.SuperMetroid {
 
     public class LocationTypeData : ILocationTypeData {
         public int Id { get; set; }
-
         public string Name { get; set; }
-
         public string Type { get; set; }
-
         public string Region { get; set; }
-
         public string Area { get; set; }
     }
+
 }
