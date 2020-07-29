@@ -198,7 +198,7 @@ namespace Randomizer.SMZ3 {
                 new Item { Name = "Shovel", Type = Shovel },
                 new Item { Name = "Flute", Type = Flute },
                 new Item { Name = "Bug Catching Net", Type = Bugnet },
-                new Item { Name = "Book of Modura", Type = Book },
+                new Item { Name = "Book of Mudora", Type = Book },
                 new Item { Name = "Bottle", Type = Bottle },
                 new Item { Name = "Cane of Somaria", Type = Somaria },
                 new Item { Name = "Cane of Byrna", Type = Byrna },
