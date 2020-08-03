@@ -102,8 +102,6 @@ If you want to play using Retroarch, you will need version 1.8.0 or newer.
 When you've just joined a new session you will first to have to register as a
 player by clicking one of the *Register as this player* buttons.
 
-***Please note, you are only able to register for one session at a time per browser. Registering for a new session will lose the connection to the old session. Additionally, incognito browser registrations will be lost if you close the window. Once registration is lost for a session, you will be unable to recover it.***
-
 After doing so, you will get a popup that prompts you to select the original
 ROM(s) needed. Make sure these ROM's are unaltered and are the original
 versions of the games. For the A Link to the Past ROM in a Combo Randomizer
