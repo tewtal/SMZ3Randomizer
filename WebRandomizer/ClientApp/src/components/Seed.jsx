@@ -30,7 +30,7 @@ export default function Seed(props) {
                         return (<Col key={`player-${i}`} md="3">
                             <h5>{world.player}</h5>
                             {client == null ?
-                                <Button color="primary" onClick={() => onRegisterPlayer(world.guid)}>Register as this player</Button> :
+                                <Button color="primary" onClick={() => onRegisterPlayer(session.guid, world.guid)}>Register as this player</Button> :
                                 <Button disabled color={client.state < 5 ? 'secondary' : client.state === 5 ? 'warning' : 'success'}>
                                     {client.state < 5 ? 'Registered' : client.state === 5 ? 'Connected' : 'Ready'}
                                 </Button>

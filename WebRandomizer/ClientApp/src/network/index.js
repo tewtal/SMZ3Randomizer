@@ -121,10 +121,18 @@ export default class Network {
 
                 /* Check if we have locally stored client data, so we can register back to the session */
                 if (this.clientData === null) {
-                    const clientGuid = localStorage.getItem('clientGuid');
-                    const sessionGuid = localStorage.getItem('sessionGuid');
-                    if (sessionGuid === this.session.guid && clientGuid !== null && clientGuid !== '') {
-                        /* The stored session matches and we have a client id, register as this player */
+                    let clientGuid = localStorage.getItem(this.session.guid);
+                    /* Backwards compatibility with old lookup to avoid players losing their sessions
+                       This can be removed once enough time has elapsed */
+                    if (clientGuid === null || clientGuid === '') {
+                        const sessionGuid = localStorage.getItem('sessionGuid');
+                        if (sessionGuid === this.session.guid) {
+                            clientGuid = localStorage.getItem('clientGuid');
+                        }
+                    }
+                    /* End backwards compatibile lookup */
+                    if (clientGuid !== null && clientGuid !== '') {
+                        /* We have a client id for the current session, register as this player */
                         const client = await this.connection.invoke('RegisterPlayer', this.session.guid, clientGuid);
                         if (client !== null) {
                             this.clientData = client;
