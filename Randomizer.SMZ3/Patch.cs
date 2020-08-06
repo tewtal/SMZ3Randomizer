@@ -36,12 +36,6 @@ namespace Randomizer.SMZ3 {
         StringTable stringTable;
         List<(int offset, byte[] bytes)> patches;
 
-        #region Whishing Well room data
-
-        static readonly byte[] wishingWellRoomData = Convert.FromBase64String("4QAQrA0pmgFYmA8RsWH8TYEg2gIs4WH8voFhsWJU2gL9jYNE4WL9HoMxpckxpGkxwCJNpGkxxvlJxvkQmaBcmaILmGAN6MBV6MALkgBzmGD+aQCYo2H+a4H+q4WpyGH+roH/aQLYo2L/a4P/K4fJyGL/LoP+oQCqIWH+poH/IQLKIWL/JoO7I/rDI/q7K/rDK/q7U/rDU/qwoD2YE8CYUsCIAGCQAGDoAGDwAGCYysDYysDYE8DYUsD8vYX9HYf/////8P+ALmEOgQ7//w==");
-
-        #endregion
-
         public Patch(World myWorld, List<World> allWorlds, string seedGuid, int seed, Random rnd) {
             this.myWorld = myWorld;
             this.allWorlds = allWorlds;
@@ -57,10 +51,6 @@ namespace Randomizer.SMZ3 {
             WriteMedallions();
             WriteRewards();
             WriteDungeonMusic(config.Keysanity);
-
-            WriteWishingWellRoomData();
-            WriteWishingWellChests();
-            WritePyramidFairyChests();
 
             WriteDiggingGameRng();
 
@@ -594,19 +584,6 @@ namespace Randomizer.SMZ3 {
             var title = AsAscii($"ZSM{Randomizer.version}{z3Glitch}{smGlitch}{seed:X8}".PadRight(21)[..21]);
             patches.Add((Snes(0x00FFC0), title));
             patches.Add((Snes(0x80FFC0), title));
-        }
-
-        void WriteWishingWellRoomData() {
-            patches.Add((Snes(0x3F714), wishingWellRoomData));
-        }
-
-        void WriteWishingWellChests() {
-            patches.Add((Snes(0x1E9AE), new byte[] { 0x14, 0x01 }));
-            patches.Add((Snes(0x1E9CF), new byte[] { 0x14, 0x01 }));
-        }
-
-        void WritePyramidFairyChests() {
-            patches.Add((Snes(0x3FC16), new byte[] { 0xB1, 0xC6, 0xF9, 0xC9, 0xC6, 0xF9 }));
         }
 
         void WriteDiggingGameRng() {
