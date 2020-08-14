@@ -4,7 +4,7 @@
 
 **Power Bomb (Crateria surface)**
 
-CanUsePowerBombs *and either* SpeedBooster *or* "CanFly"
+CanUsePowerBombs *and either* SpeedBooster *or* CanFly
 
 **Missile (Crateria middle)**
 
