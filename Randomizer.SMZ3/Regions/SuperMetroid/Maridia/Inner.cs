@@ -71,9 +71,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
                     _ => new Requirement(items => CanDefeatBotwoon(items))
                 }),
                 new Location(this, 154, 0x8FC7A7, LocationType.Chozo, "Space Jump", Logic switch {
-                    Normal => items => CanDefeatDraygon(items),
-                    _ => new Requirement(items => CanDefeatDraygon(items) &&
-                        (items.CanFly() || items.SpeedBooster && items.HiJump))
+                    _ => new Requirement(items => CanDefeatDraygon(items))
                 })
             };
         }
