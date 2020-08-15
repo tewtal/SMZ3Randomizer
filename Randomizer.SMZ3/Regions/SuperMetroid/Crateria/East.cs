@@ -11,7 +11,11 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
         public East(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 1, 0x8F81E8, LocationType.Visible, "Missile (outside Wrecked Ship bottom)", Logic switch {
-                    _ => new Requirement(items => World.CanEnter("Wrecked Ship", items))
+                    Normal => items =>
+                        items.SpeedBooster || items.Grapple || items.SpaceJump ||
+                        items.Gravity && (items.CanFly() || items.HiJump) ||
+                        World.CanEnter("Wrecked Ship", items),
+                    _ => new Requirement(items => true)
                 }),
                 new Location(this, 2, 0x8F81EE, LocationType.Hidden, "Missile (outside Wrecked Ship top)", Logic switch {
                     _ => new Requirement(items => World.CanEnter("Wrecked Ship", items) && (!Config.Keysanity || items.PhantoonKey))
