@@ -27,7 +27,7 @@ namespace Randomizer.CLI.Verbs {
     [Verb("spriteinventory", HelpText = "Generate a JSON file that make inventory of RDC sprite recourses under a directory")]
     class SpriteInventoryOptions : SpriteTaskOptions { }
 
-    [Verb("spritemontage", HelpText = "")]
+    [Verb("spritemontage", HelpText = "Generate a png avatar montage of each games sprites")]
     class SpriteMontageOptions : SpriteTaskOptions {
 
         [Option("z3", Required = true,
@@ -37,6 +37,15 @@ namespace Randomizer.CLI.Verbs {
         [Option("sm", Required = true,
             HelpText = "Specify the path to the PNG file to generate for the SM sprite montage")]
         public string SMFile { get; set; }
+    }
+
+    [Verb("spritez3avatar", HelpText = "Generate a png avatar of a specific Z3 sprite (RDC or ZSPR")]
+    class SpriteZ3AvatarOptions {
+
+        [Option("z3", Required = true,
+            HelpText = "Specify the path to the RDC or ZSPR file to generate an avatar from")]
+        public string Z3File { get; set; }
+
     }
 
     static class SpriteTasks {
@@ -145,24 +154,74 @@ namespace Randomizer.CLI.Verbs {
                 var sprite = (LinkSprite) block;
                 var palette = ConvertPalette(sprite.FetchPalette(0));
 
-                Bitmap tile(int index) {
-                    var bytes = sprite.Fetch8x8(index);
-                    var tile = ConvertTile(bytes);
-                    return RenderTile(tile, palette);
-                }
-
-                void pasteSprite(int index, Point origin) {
-                    foreach (var (x, y) in Enumerable.Range(0, 4).Select(i => (i % 2, i / 2))) {
-                        using var image = tile(index + x + y * 0x10);
-                        g.DrawImage(image, origin + new Size(x * 8, y * 8));
-                    }
-                }
-
-                pasteSprite(0x26, new Point { X = offset * 16, Y = 8 }); // Body
-                pasteSprite(0x02, new Point { X = offset * 16, Y = 0 }); // Head
+                renderZ3Avatar(g, palette, offset, (index) => sprite.Fetch8x8(index));
             }
 
             montage.Save(filename, ImageFormat.Png);
+        }
+
+        public static void Run(SpriteZ3AvatarOptions opts) {
+            if (!File.Exists(opts.Z3File)) {
+                Console.Error.WriteLine($"The file {opts.Z3File} does not exist");
+                return;
+            }
+
+            using var avatar = new Bitmap(16, 24);
+            using var g = Graphics.FromImage(avatar);
+            g.Clear(Color.Transparent);
+
+            IList<Color> palette;
+            Func<int, byte[]> fetch;
+            switch (Path.GetExtension(opts.Z3File)) {
+            case ".rdc": {
+                    using var stream = File.OpenRead(opts.Z3File);
+                    var rdc = Rdc.Parse(stream);
+                    if (!rdc.TryParse<LinkSprite>(stream, out var block))
+                        throw new InvalidDataException($"RDC file at {opts.Z3File} is assumed to have a link sprite block");
+                    var sprite = (LinkSprite) block;
+                    palette = ConvertPalette(sprite.FetchPalette(0));
+                    fetch = (index) => sprite.Fetch8x8(index);
+                }
+                break;
+            case ".zspr": {
+                    using var stream = File.OpenRead(opts.Z3File);
+                    var zspr = Zspr.Parse(stream);
+                    palette = ConvertPalette(slice(zspr.Content, 0x7000, 30));
+                    fetch = (index) => slice(zspr.Content, index * 0x20, 0x20);
+
+                    byte[] slice(byte[] content, int index, int size) {
+                        byte[] bytes;
+                        content.AsSpan(index, size).CopyTo(bytes = new byte[size]);
+                        return bytes;
+                    }
+                }
+                break;
+            default:
+                Console.Error.WriteLine($"The file {opts.Z3File} is not an RDC or a ZSPR file");
+                return;
+            }
+
+            renderZ3Avatar(g, palette, 0, fetch);
+
+            avatar.Save(Path.ChangeExtension(opts.Z3File, ".png"), ImageFormat.Png);
+        }
+
+        static void renderZ3Avatar(Graphics g, IList<Color> palette, int offset, Func<int, byte[]> fetch) {
+            Bitmap tile(int index) {
+                var bytes = fetch(index);
+                var tile = ConvertTile(bytes);
+                return RenderTile(tile, palette);
+            }
+
+            void pasteSprite(int index, Point origin) {
+                foreach (var (x, y) in Enumerable.Range(0, 4).Select(i => (i % 2, i / 2))) {
+                    using var image = tile(index + x + y * 0x10);
+                    g.DrawImage(image, origin + new Size(x * 8, y * 8));
+                }
+            }
+
+            pasteSprite(0x26, new Point { X = offset * 16, Y = 8 }); // Body
+            pasteSprite(0x02, new Point { X = offset * 16, Y = 0 }); // Head
         }
 
         static void CompileSMMontage(string filename, IEnumerable<string> paths) {
