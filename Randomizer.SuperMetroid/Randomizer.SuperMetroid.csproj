@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Randomizer.Contracts\Randomizer.Shared.csproj" />
+    <ProjectReference Include="..\Randomizer.Shared\Randomizer.Shared.csproj" />
   </ItemGroup>
 
 </Project>

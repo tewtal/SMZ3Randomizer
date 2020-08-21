@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.28711.60
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebRandomizer", "WebRandomizer\WebRandomizer.csproj", "{D9B11803-4841-4C84-BCE6-069D3DF579C9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.Shared", "Randomizer.Contracts\Randomizer.Shared.csproj", "{6FC97209-C8F2-4F39-8F03-EAADEB33F092}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.SuperMetroid", "Randomizer.SuperMetroid\Randomizer.SuperMetroid.csproj", "{49C7747D-045A-4CC1-BEAA-526C53C89202}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.CLI", "Randomizer.CLI\Randomizer.CLI.csproj", "{E2F265D8-9953-4891-A27D-077F8509AFB1}"
@@ -15,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.SMZ3", "Randomiz
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.SMZ3.Tests", "Randomizer.SMZ3.Tests\Randomizer.SMZ3.Tests.csproj", "{C1FFF084-0ADD-44B0-A5AE-E1B5F88749BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebGameService", "WebGameService\WebGameService.csproj", "{A2316911-7424-4835-BD58-B630F4461060}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebGameService", "WebGameService\WebGameService.csproj", "{A2316911-7424-4835-BD58-B630F4461060}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.Shared", "Randomizer.Shared\Randomizer.Shared.csproj", "{3DA99948-6C0A-47E6-87AB-92672ED88C09}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,10 +27,6 @@ Global
 		{D9B11803-4841-4C84-BCE6-069D3DF579C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9B11803-4841-4C84-BCE6-069D3DF579C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9B11803-4841-4C84-BCE6-069D3DF579C9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6FC97209-C8F2-4F39-8F03-EAADEB33F092}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6FC97209-C8F2-4F39-8F03-EAADEB33F092}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6FC97209-C8F2-4F39-8F03-EAADEB33F092}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6FC97209-C8F2-4F39-8F03-EAADEB33F092}.Release|Any CPU.Build.0 = Release|Any CPU
 		{49C7747D-045A-4CC1-BEAA-526C53C89202}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{49C7747D-045A-4CC1-BEAA-526C53C89202}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49C7747D-045A-4CC1-BEAA-526C53C89202}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,6 +47,10 @@ Global
 		{A2316911-7424-4835-BD58-B630F4461060}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2316911-7424-4835-BD58-B630F4461060}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2316911-7424-4835-BD58-B630F4461060}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DA99948-6C0A-47E6-87AB-92672ED88C09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DA99948-6C0A-47E6-87AB-92672ED88C09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DA99948-6C0A-47E6-87AB-92672ED88C09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DA99948-6C0A-47E6-87AB-92672ED88C09}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
