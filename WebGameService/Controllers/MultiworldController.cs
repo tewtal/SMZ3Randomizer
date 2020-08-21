@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
-using Randomizer.Contracts;
-using WebRandomizer.Models;
-using WebRandomizer.Hubs;
+using Randomizer.Shared.Contracts;
+using Randomizer.Shared.Models;
+using WebGameService.Hubs;
 using Microsoft.EntityFrameworkCore;
 
-namespace WebRandomizer.Controllers {
+namespace WebGameService.Controllers {
 
     [Route("api/[controller]")]
     public class MultiworldController : Controller {

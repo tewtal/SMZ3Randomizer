@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using Randomizer.Contracts;
-using WebRandomizer.Models;
+using Randomizer.Shared.Contracts;
+using Randomizer.Shared.Models;
 using Newtonsoft.Json;
 using static WebRandomizer.Controllers.Helpers;
 

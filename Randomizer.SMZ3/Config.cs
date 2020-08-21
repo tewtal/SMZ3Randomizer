@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Randomizer.Contracts;
+using Randomizer.Shared.Contracts;
 
 namespace Randomizer.SMZ3 {
 

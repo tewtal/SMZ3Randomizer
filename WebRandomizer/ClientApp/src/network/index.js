@@ -53,7 +53,7 @@ export default class Network {
 
     init() {
         this.connection = new HubConnectionBuilder()
-            .withUrl('/multiworldHub')
+            .withUrl('https://localhost:5101/multiworldHub')
             .build();
 
         this.connection.onclose(() => {
@@ -85,7 +85,8 @@ export default class Network {
         this.react.setSessionStatus('Initializing session...');
 
         try {
-            const response = await fetch(`/api/multiworld/session/${this.session.guid}`);
+            const response = await fetch(`https://localhost:5101/api/multiworld/session/${this.session.guid}`);
+            console.log(response);
             if (response.status !== 200) {
                 this.session.state = 0;
                 this.updateState();

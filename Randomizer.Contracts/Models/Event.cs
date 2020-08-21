@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WebRandomizer.Models {
+namespace Randomizer.Shared.Models {
 
     public enum EventType {
         ItemReceived,       // Item received from player

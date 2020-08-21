@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Randomizer.Shared.Models;
 
-namespace WebRandomizer.Models {
+namespace Randomizer.Shared.Models {
 
     public class RandomizerContext : DbContext {
 

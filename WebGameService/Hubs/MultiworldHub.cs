@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using WebRandomizer.Models;
+using Randomizer.Shared.Models;
 
-namespace WebRandomizer.Hubs {
+namespace WebGameService.Hubs {
 
     public class MultiworldHub : Hub {
 

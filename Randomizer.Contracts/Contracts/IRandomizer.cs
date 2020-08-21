@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Randomizer.Contracts {
+namespace Randomizer.Shared.Contracts {
 
     public interface ILocationData
     {

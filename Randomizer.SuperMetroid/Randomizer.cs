@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Randomizer.Contracts;
-using static Randomizer.Contracts.RandomizerOptionType;
+using Randomizer.Shared.Contracts;
+using static Randomizer.Shared.Contracts.RandomizerOptionType;
 
 namespace Randomizer.SuperMetroid {
 

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace WebRandomizer.Models {
+namespace Randomizer.Shared.Models {
 
     public enum ClientState {
         Disconnected,

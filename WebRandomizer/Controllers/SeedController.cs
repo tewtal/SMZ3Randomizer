@@ -6,8 +6,8 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Randomizer.Contracts;
-using WebRandomizer.Models;
+using Randomizer.Shared.Contracts;
+using Randomizer.Shared.Models;
 
 namespace WebRandomizer.Controllers {
     [Route("api/[controller]")]

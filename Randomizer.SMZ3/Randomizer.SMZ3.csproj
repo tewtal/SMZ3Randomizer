@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Randomizer.Contracts\Randomizer.Contracts.csproj" />
+    <ProjectReference Include="..\Randomizer.Contracts\Randomizer.Shared.csproj" />
   </ItemGroup>
 
 </Project>

@@ -6,7 +6,7 @@ using System.Linq;
 using CommandLine;
 using Newtonsoft.Json;
 using Randomizer.CLI.FileData;
-using Randomizer.Contracts;
+using Randomizer.Shared.Contracts;
 
 namespace Randomizer.CLI.Verbs {
 
