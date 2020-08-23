@@ -16,15 +16,15 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
                     _ => new Requirement(items => items.CanPassBombPassages())
                 }),
                 new Location(this, 129, 0x8FC2E9, LocationType.Chozo, "Reserve Tank, Wrecked Ship", Logic switch {
-                    Normal => items => CanUnlockShip(items) && items.SpeedBooster && items.CanUsePowerBombs() &&
+                    Normal => items => CanUnlockShip(items) && items.CardWreckedShipL1 && items.SpeedBooster && items.CanUsePowerBombs() &&
                         (items.Grapple || items.SpaceJump || items.Varia && items.HasEnergyReserves(2) || items.HasEnergyReserves(3)),
-                    _ => new Requirement(items => CanUnlockShip(items) && items.CanUsePowerBombs() && items.SpeedBooster &&
+                    _ => new Requirement(items => CanUnlockShip(items) && items.CardWreckedShipL1 && items.CanUsePowerBombs() && items.SpeedBooster &&
                         (items.Varia || items.HasEnergyReserves(2)))
                 }),
                 new Location(this, 130, 0x8FC2EF, LocationType.Visible, "Missile (Gravity Suit)", Logic switch {
-                    Normal => items => CanUnlockShip(items) &&
+                    Normal => items => CanUnlockShip(items) && items.CardWreckedShipL1 &&
                         (items.Grapple || items.SpaceJump || items.Varia && items.HasEnergyReserves(2) || items.HasEnergyReserves(3)),
-                    _ => new Requirement(items => CanUnlockShip(items) && (items.Varia || items.HasEnergyReserves(1)))
+                    _ => new Requirement(items => CanUnlockShip(items) && items.CardWreckedShipL1 && (items.Varia || items.HasEnergyReserves(1)))
                 }),
                 new Location(this, 131, 0x8FC319, LocationType.Visible, "Missile (Wrecked Ship top)",
                     items => CanUnlockShip(items)),
@@ -39,9 +39,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
                 new Location(this, 134, 0x8FC365, LocationType.Visible, "Right Super, Wrecked Ship",
                     items => CanUnlockShip(items)),
                 new Location(this, 135, 0x8FC36D, LocationType.Chozo, "Gravity Suit", Logic switch {
-                    Normal => items => CanUnlockShip(items) &&
+                    Normal => items => CanUnlockShip(items) && items.CardWreckedShipL1 &&
                         (items.Grapple || items.SpaceJump || items.Varia && items.HasEnergyReserves(2) || items.HasEnergyReserves(3)),
-                    _ => new Requirement(items => CanUnlockShip(items) && (items.Varia || items.HasEnergyReserves(1)))
+                    _ => new Requirement(items => CanUnlockShip(items) && items.CardWreckedShipL1 && (items.Varia || items.HasEnergyReserves(1)))
                 })
             };
         }

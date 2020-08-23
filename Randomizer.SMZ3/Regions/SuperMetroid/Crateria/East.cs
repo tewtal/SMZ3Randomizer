@@ -35,12 +35,12 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
                     ((Config.Keysanity && items.CardCrateriaL2) || (!Config.Keysanity && items.CanUsePowerBombs())) && items.Super ||
                     ((Config.Keysanity && items.CardCrateriaL2) || (!Config.Keysanity && items.CanUsePowerBombs())) && items.CanAccessNorfairUpperPortal() && items.CanUsePowerBombs() && (items.Ice || items.HiJump || items.SpaceJump) ||
                     items.CanAccessMaridiaPortal(World) && items.Gravity && items.Super &&
-                        (items.CanDestroyBombWalls() || World.Locations.Get("Space Jump").Available(items)),
+                        ((items.CanDestroyBombWalls() && items.CardMaridiaL2) || World.Locations.Get("Space Jump").Available(items)),
                 _ =>
                     ((Config.Keysanity && items.CardCrateriaL2) || (!Config.Keysanity && items.CanUsePowerBombs())) && items.Super ||
                     ((Config.Keysanity && items.CardCrateriaL2) || (!Config.Keysanity && items.CanUsePowerBombs())) && items.CanAccessNorfairUpperPortal() && items.CanUsePowerBombs() && (items.Ice || items.HiJump || items.CanFly() || items.CanSpringBallJump()) ||
                     items.CanAccessMaridiaPortal(World) && (
-                        items.Super && items.HiJump && items.CanPassBombPassages() ||
+                        items.CardMaridiaL2 && items.Super && items.HiJump && items.CanPassBombPassages() ||
                         items.Gravity && (items.CanDestroyBombWalls() || World.Locations.Get("Space Jump").Available(items))
                     )
             };

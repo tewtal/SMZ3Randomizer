@@ -13,8 +13,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
         public East(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 73, 0x8F8F30, LocationType.Visible, "Missile (Mickey Mouse room)", Logic switch {
-                    Normal => new Requirement(items => items.CardLowerNorfairL1),
-                    _ => items => items.Morph && items.CanDestroyBombWalls()
+                    _ => new Requirement(items => items.Morph && items.CanDestroyBombWalls())
                 }),
                 new Location(this, 74, 0x8F8FCA, LocationType.Visible, "Missile (lower Norfair above fire flea room)", Logic switch {
                     _ => new Requirement(items => items.CardLowerNorfairL1)

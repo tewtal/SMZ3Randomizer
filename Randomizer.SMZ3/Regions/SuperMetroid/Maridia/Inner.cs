@@ -64,11 +64,11 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
                         items.Ice && items.HiJump && items.CanSpringBallJump() && items.SpaceJump))
                 }),
                 new Location(this, 151, 0x8FC74D, LocationType.Hidden, "Missile (Draygon)", Logic switch {
-                    Normal => items => ((items.CardMaridiaL1 && items.CardMaridiaL2) || items.CanAccessMaridiaPortal(World)) && CanDefeatBotwoon(items),
-                    _ => new Requirement(items => ((items.CardMaridiaL1 && items.CardMaridiaL2) || items.CanAccessMaridiaPortal(World)) && CanDefeatBotwoon(items) && items.Gravity)
+                    Normal => items => (items.CardMaridiaL1 && items.CardMaridiaL2 && CanDefeatBotwoon(items)) || items.CanAccessMaridiaPortal(World),
+                    _ => new Requirement(items => ((items.CardMaridiaL1 && items.CardMaridiaL2 && CanDefeatBotwoon(items)) || items.CanAccessMaridiaPortal(World)) && items.Gravity)
                 }),
                 new Location(this, 152, 0x8FC755, LocationType.Visible, "Energy Tank, Botwoon", Logic switch {
-                    _ => new Requirement(items => ((items.CardMaridiaL1 && items.CardMaridiaL2) || (items.CanAccessMaridiaPortal(World) && items.CardMaridiaL2)) && CanDefeatBotwoon(items))
+                    _ => new Requirement(items => (items.CardMaridiaL1 && items.CardMaridiaL2 && CanDefeatBotwoon(items)) || (items.CanAccessMaridiaPortal(World) && items.CardMaridiaL2))
                 }),
                 new Location(this, 154, 0x8FC7A7, LocationType.Chozo, "Space Jump", Logic switch {
                     _ => new Requirement(items => CanDefeatDraygon(items))
@@ -78,9 +78,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
 
         bool CanDefeatDraygon(Progression items) {
             return Logic switch {
-                Normal => ((items.CardMaridiaL1 && items.CardMaridiaL2) || items.CanAccessMaridiaPortal(World)) && CanDefeatBotwoon(items) && (!World.Config.Keysanity || items.CardMaridiaBoss) &&
+                Normal => ((items.CardMaridiaL1 && items.CardMaridiaL2 && CanDefeatBotwoon(items)) || items.CanAccessMaridiaPortal(World))  && (!World.Config.Keysanity || items.CardMaridiaBoss) &&
                     items.Gravity && (items.SpeedBooster && items.HiJump || items.CanFly()),
-                _ => ((items.CardMaridiaL1 && items.CardMaridiaL2) || items.CanAccessMaridiaPortal(World)) && CanDefeatBotwoon(items) && (!World.Config.Keysanity || items.CardMaridiaBoss) &&
+                _ => ((items.CardMaridiaL1 && items.CardMaridiaL2 && CanDefeatBotwoon(items)) || items.CanAccessMaridiaPortal(World)) && (!World.Config.Keysanity || items.CardMaridiaBoss) &&
                     items.Gravity
             };
         }
