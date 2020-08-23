@@ -49,7 +49,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                         items.SpeedBooster && items.Wave ||
                         items.CardNorfairL2 && items.Morph && (items.CanFly() || items.HiJump) && (items.CanPassBombPassages() || items.Gravity) && items.Wave
                     ),
-                _ => items.CardNorfairBoss && (
+                _ => (
                         (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
                         items.CanAccessNorfairUpperPortal()
                     ) &&
