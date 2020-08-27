@@ -18,7 +18,7 @@ export default function Multiworld(props) {
 
     useEffect(() => {
         const sessionGuid = decode(props.match.params.session_id).replace(/-/g, "");
-        network.current = new Network(sessionGuid, {
+        network.current = new Network(sessionGuid, getGameServiceUri(), {
             setState: setState,
             setSessionStatus: setSessionStatus,
             setGameStatus: setGameStatus
@@ -29,6 +29,11 @@ export default function Multiworld(props) {
             return () => network.current.stop();
         }
     }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
+
+    function getGameServiceUri() {
+        const baseHostname = new URL(document.baseURI).hostname;
+        return baseHostname.includes('localhost') ? 'localhost:5101' : `svc.${baseHostname}`;        
+    }
 
     function onRegisterPlayer(sessionGuid, clientGuid) {
         localStorage.setItem(sessionGuid, clientGuid);

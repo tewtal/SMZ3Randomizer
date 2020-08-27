@@ -4,7 +4,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 export default class Network {
 
-    constructor(sessionGuid, react) {
+    constructor(sessionGuid, gameServiceUri, react) {
         this.connection = null;
         this.socket = null;
         this.inPtr = -1;
@@ -14,6 +14,7 @@ export default class Network {
         this.eventLoopTimer = 0;
         this.MessageBaseAddress = null;
         this.ItemsBaseAddress = null;
+        this.GameServiceUri = gameServiceUri;
 
         this.session = {
             guid: sessionGuid,
@@ -53,7 +54,7 @@ export default class Network {
 
     init() {
         this.connection = new HubConnectionBuilder()
-            .withUrl('https://localhost:5101/multiworldHub')
+            .withUrl(`https://${this.GameServiceUri}/multiworldHub`)
             .build();
 
         this.connection.onclose(() => {
@@ -85,8 +86,7 @@ export default class Network {
         this.react.setSessionStatus('Initializing session...');
 
         try {
-            const response = await fetch(`https://localhost:5101/api/multiworld/session/${this.session.guid}`);
-            console.log(response);
+            const response = await fetch(`https://${this.GameServiceUri}/api/multiworld/session/${this.session.guid}`);
             if (response.status !== 200) {
                 this.session.state = 0;
                 this.updateState();

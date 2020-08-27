@@ -7,33 +7,33 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v1 
+    - uses: actions/checkout@v2 
       with:
         submodules: true   
     
-    - name: Publish to Registry
-      uses: elgohr/Publish-Docker-Github-Action@master
+    - name: Build and push webrandomizer Docker image
+      uses: docker/build-push-action@v1.1.0
       with:
-        name: tewtal/webrandomizer
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+        repository: tewtal/webrandomizer
+        tags: latest    
+
+    - name: Build and push webrandomizer-service Docker image
+      uses: docker/build-push-action@v1.1.0
+      with:
+        dockerfile: WebGameService/Dockerfile
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        repository: tewtal/webrandomizer-service
+        tags: latest    
     
-    - uses: Azure/setup-kubectl@v1
-      id: install
-
-    - uses: Azure/k8s-set-context@v1
+    - name: Deploy to k8s
+      uses: actions-hub/kubectl@master
+      env:
+        KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
       with:
-        kubeconfig: ${{ secrets.KUBE_CONFIG }}
-
-    - uses: Azure/k8s-deploy@v1
-      with:
-        manifests: |
-          .github/manifests/deployment.yml
-          .github/manifests/service.yml
-        images: |
-          tewtal/webrandomizer:latest
-        imagepullsecrets: |
-          dockerhubcred
+        args: rollout restart deployments/webrandomizer-deployment
