@@ -292,9 +292,9 @@ namespace Randomizer.SMZ3 {
             var item = location.Item;
             var value = location.Type == LocationType.NotInDungeon ||
                 !(item.IsDungeonItem && location.Region.IsRegionItem(item) && item.World == myWorld) ? item.Type : item switch {
-                    _ when item.IsKey && item.Type != KeyHC => Key,
+                    _ when item.IsKey && (!item.World.Config.Keysanity || item.Type != KeyHC) => Key,
                     _ when item.IsBigKey => BigKey,
-                    _ when item.IsMap && item.Type != MapHC => Map,
+                    _ when item.IsMap && (!item.World.Config.Keysanity || item.Type != MapHC) => Map,
                     _ when item.IsCompass => Compass,
                     _ => throw new InvalidOperationException($"Tried replacing {item} with a dungeon region item"),
                 };

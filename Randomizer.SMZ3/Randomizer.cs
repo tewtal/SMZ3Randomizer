@@ -24,6 +24,7 @@ namespace Randomizer.SMZ3 {
             //Config.GetRandomizerOption<Z3Logic>("A Link to the Past Logic"),
             Config.GetRandomizerOption<SwordLocation>("First Sword"),
             Config.GetRandomizerOption<MorphLocation>("Morph Ball"),
+            Config.GetRandomizerOption<KeyShuffle>("Key shuffle"),
             new RandomizerOption {
                 Key = "seed", Description = "Seed", Type = Seed
             },
@@ -53,7 +54,6 @@ namespace Randomizer.SMZ3 {
 
             var config = new Config(options);
             var worlds = new List<World>();
-            config.Keysanity = true;
 
             /* FIXME: Just here to semi-obfuscate race seeds until a better solution is in place */
             if (config.Race) {

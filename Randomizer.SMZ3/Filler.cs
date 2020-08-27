@@ -63,7 +63,7 @@ namespace Randomizer.SMZ3 {
             }
 
             GanonTowerFill(junkItems, 2);
-            AssumedFill(progressionItems, new List<Item>(), locations, Worlds);
+            AssumedFill(progressionItems, baseItems, locations, Worlds);
             FastFill(niceItems, locations);
             FastFill(junkItems, locations);
 
@@ -181,7 +181,7 @@ namespace Randomizer.SMZ3 {
 
         void FillItemAtLocation(List<Item> itemPool, ItemType itemType, Location location) {
             var itemToPlace = itemPool.Get(itemType);
-            location.Item = itemToPlace ?? throw new InvalidOperationException($"Tried to place item {itemType.ToString()} at {location.Name}, but there is no such item in the item pool");
+            location.Item = itemToPlace ?? throw new InvalidOperationException($"Tried to place item {itemType} at {location.Name}, but there is no such item in the item pool");
             itemPool.Remove(itemToPlace);
         }
 
