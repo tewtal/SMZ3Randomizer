@@ -9,7 +9,7 @@ namespace Randomizer.SMZ3 {
 
     public class Randomizer : IRandomizer {
 
-        public static readonly Version version = new Version(11, 0);
+        public static readonly Version version = new Version(11, 1);
 
         public string Id => "smz3";
         public string Name => "Super Metroid & A Link to the Past Combo Randomizer";
