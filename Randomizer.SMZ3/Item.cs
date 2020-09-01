@@ -5,149 +5,288 @@ using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.SMLogic;
 using static Randomizer.SMZ3.RewardType;
 using System.Text.RegularExpressions;
+using System.ComponentModel;
 
 namespace Randomizer.SMZ3 {
 
     public enum ItemType : byte {
+        [Description("Nothing")] 
         Nothing,
 
+        [Description("Brinstar Boss Keycard")] 
         KraidKey/* = ?*/,
+        [Description("Wrecked Ship Boss Keycard")] 
         PhantoonKey/* = ?*/,
+        [Description("Maridia Boss Keycard")] 
         DraygonKey/* = ?*/,
+        [Description("Ridley Boss Keycard")] 
         RidleyKey/* = ?*/,
 
+        [Description("Hyrule Castle Map")]
         MapHC = 0x7F,
+        [Description("Eastern Palace Map")]
         MapEP = 0x7D,
+        [Description("Desert Palace Map")]
         MapDP = 0x7C,
+        [Description("Tower of Hera Map")]
         MapTH = 0x75,
+        [Description("Palace of Darkness Map")]
         MapPD = 0x79,
+        [Description("Swamp Palace Map")]
         MapSP = 0x7A,
+        [Description("Skull Woods Map")]
         MapSW = 0x77,
+        [Description("Thieves Town Map")]
         MapTT = 0x74,
+        [Description("Ice Palace Map")]
         MapIP = 0x76,
+        [Description("Misery Mire Map")]
         MapMM = 0x78,
+        [Description("Turtle Rock Map")]
         MapTR = 0x73,
+        [Description("Ganons Tower Map")]
         MapGT = 0x72,
+
+        [Description("Eastern Palace Compass")]
         CompassEP = 0x8D,
+        [Description("Desert Palace Compass")]
         CompassDP = 0x8C,
+        [Description("Tower of Hera Compass")]
         CompassTH = 0x85,
+        [Description("Palace of Darkness Compass")]
         CompassPD = 0x89,
+        [Description("Swamp Palace Compass")]
         CompassSP = 0x8A,
+        [Description("Skull Woods Compass")]
         CompassSW = 0x87,
+        [Description("Thieves Town Compass")]
         CompassTT = 0x84,
+        [Description("Ice Palace Compass")]
         CompassIP = 0x86,
+        [Description("Misery Mire Compass")]
         CompassMM = 0x88,
+        [Description("Turtle Rock Compass")]
         CompassTR = 0x83,
+        [Description("Ganons Tower Compass")]
         CompassGT = 0x82,
+
+        [Description("Eastern Palace Big Key")]
         BigKeyEP = 0x9D,
+        [Description("Desert Palace Big Key")]
         BigKeyDP = 0x9C,
+        [Description("Tower of Hera Big Key")]
         BigKeyTH = 0x95,
+        [Description("Palace of Darkness Big Key")]
         BigKeyPD = 0x99,
+        [Description("Swamp Palace Big Key")]
         BigKeySP = 0x9A,
+        [Description("Skull Woods Big Key")]
         BigKeySW = 0x97,
+        [Description("Thieves Town Big Key")]
         BigKeyTT = 0x94,
+        [Description("Ice Palace Big Key")]
         BigKeyIP = 0x96,
+        [Description("Misery Mire Big Key")]
         BigKeyMM = 0x98,
+        [Description("Turtle Rock Big Key")]
         BigKeyTR = 0x93,
-        BigKeyGT = 0x92,
+        [Description("Ganons Tower Big Key")]
+        BigKeyGT = 0x92,       
+        
+        [Description("Sewer Key")]
         KeyHC = 0xA0,
+        [Description("Castle Tower Key")]
         KeyCT = 0xA4,
+        [Description("Desert Palace Key")]
         KeyDP = 0xA3,
+        [Description("Tower of Hera Key")]
         KeyTH = 0xAA,
+        [Description("Palace of Darkness Key")]
         KeyPD = 0xA6,
+        [Description("Swamp Palace Key")]
         KeySP = 0xA5,
+        [Description("Skull Woods Key")]
         KeySW = 0xA8,
+        [Description("Thieves Town Key")]
         KeyTT = 0xAB,
+        [Description("Ice Palace Key")]
         KeyIP = 0xA9,
+        [Description("Misery Mire Key")]
         KeyMM = 0xA7,
+        [Description("Turtle Rock Key")]
         KeyTR = 0xAC,
+        [Description("Ganons Tower Key")]
         KeyGT = 0xAD,
 
+        [Description("Small Key")]
         Key = 0x24,
+        [Description("Compass")]
         Compass = 0x25,
+        [Description("Big Key")]
         BigKey = 0x32,
+        [Description("Map")]
         Map = 0x33,
 
+
+        [Description("Progressive Mail")]
         ProgressiveTunic = 0x60,
+        [Description("Progressive Shield")]
         ProgressiveShield = 0x5F,
+        [Description("Progressive Sword")]
         ProgressiveSword = 0x5E,
+        [Description("Bow")]
         Bow = 0x0B,
+        [Description("Silver Arrows")]
         SilverArrows = 0x58,
+        [Description("Blue Boomerang")]
         BlueBoomerang = 0x0C,
+        [Description("Red Boomerang")]
         RedBoomerang = 0x2A,
+        [Description("Hookshot")]
         Hookshot = 0x0A,
+        [Description("Mushroom")]
         Mushroom = 0x29,
+        [Description("Magic Powder")]
         Powder = 0x0D,
+        [Description("Fire Rod")]
         Firerod = 0x07,
+        [Description("Ice Rod")]
         Icerod = 0x08,
+        [Description("Bombos")]
         Bombos = 0x0f,
+        [Description("Ether")]
         Ether = 0x10,
+        [Description("Quake")]
         Quake = 0x11,
+        [Description("Lamp")]
         Lamp = 0x12,
+        [Description("Hammer")]
         Hammer = 0x09,
+        [Description("Shovel")]
         Shovel = 0x13,
+        [Description("Flute")]
         Flute = 0x14,
+        [Description("Bug Catching Net")]
         Bugnet = 0x21,
+        [Description("Book of Mudora")]
         Book = 0x1D,
+        [Description("Bottle")]
         Bottle = 0x16,
+        [Description("Cane of Somaria")]
         Somaria = 0x15,
+        [Description("Cane of Byrna")]
         Byrna = 0x18,
+        [Description("Magic Cape")]
         Cape = 0x19,
+        [Description("Magic Mirror")]
         Mirror = 0x1A,
+        [Description("Pegasus Boots")]
         Boots = 0x4B,
+        [Description("Progressive Glove")]
         ProgressiveGlove = 0x61,
+        [Description("Zora's Flippers")]
         Flippers = 0x1E,
+        [Description("Moon Pearl")]
         MoonPearl = 0x1F,
+        [Description("Half Magic")]
         HalfMagic = 0x4E,
+        [Description("Piece of Heart")]
         HeartPiece = 0x17,
+        [Description("Heart Container")]
         HeartContainer = 0x3E,
+        [Description("Sanctuary Heart Container")]
         HeartContainerRefill = 0x3F,
+        [Description("Three Bombs")]
         ThreeBombs = 0x28,
+        [Description("Single Arrow")]
         Arrow = 0x43,
+        [Description("Ten Arrows")]
         TenArrows = 0x44,
+        [Description("One Rupee")]
         OneRupee = 0x34,
+        [Description("Five Rupees")]
         FiveRupees = 0x35,
+        [Description("Twenty Rupees")]
         TwentyRupees = 0x36,
+        [Description("Twenty Rupees")]
         TwentyRupees2 = 0x47,
+        [Description("Fifty Rupees")]
         FiftyRupees = 0x41,
+        [Description("One Hundred Rupees")]
         OneHundredRupees = 0x40,
+        [Description("Three Hundred Rupees")]
         ThreeHundredRupees = 0x46,
+        [Description("+5 Bomb Capacity")]
         BombUpgrade5 = 0x51,
+        [Description("+10 Bomb Capacity")]
         BombUpgrade10 = 0x52,
+        [Description("+5 Arrow Capacity")]
         ArrowUpgrade5 = 0x53,
+        [Description("+10 Arrow Capacity")]
         ArrowUpgrade10 = 0x54,
 
+        [Description("Missile")]
         Missile = 0xC2,
+        [Description("Super Missile")]
         Super = 0xC3,
+        [Description("Power Bomb")]
         PowerBomb = 0xC4,
+        [Description("Grappling Beam")]
         Grapple = 0xB0,
+        [Description("X-Ray Scope")]
         XRay = 0xB1,
+        [Description("Energy Tank")]
         ETank = 0xC0,
+        [Description("Reserve Tank")]
         ReserveTank = 0xC1,
+        [Description("Charge Beam")]
         Charge = 0xBB,
+        [Description("Ice Beam")]
         Ice = 0xBC,
+        [Description("Wave Beam")]
         Wave = 0xBD,
+        [Description("Spazer")]
         Spazer = 0xBE,
+        [Description("Plasma Beam")]
         Plasma = 0xBF,
+        [Description("Varia Suit")]
         Varia = 0xB2,
+        [Description("Gravity Suit")]
         Gravity = 0xB6,
+        [Description("Morphing Ball")]
         Morph = 0xB4,
+        [Description("Morph Bombs")]
         Bombs = 0xB9,
+        [Description("Spring Ball")]
         SpringBall = 0xB3,
+        [Description("Screw Attack")]
         ScrewAttack = 0xB5,
+        [Description("Hi-Jump Boots")]
         HiJump = 0xB7,
+        [Description("Space Jump")]
         SpaceJump = 0xB8,
+        [Description("Speed Booster")]
         SpeedBooster = 0xBA,
 
+        [Description("Bottle with Red Potion")]
         BottleWithRedPotion = 0x2B,
+        [Description("Bottle with Green Potion")]
         BottleWithGreenPotion = 0x2C,
+        [Description("Bottle with Blue Potion")]
         BottleWithBluePotion = 0x2D,
+        [Description("Bottle with Fairy")]
         BottleWithFairy = 0x3D,
+        [Description("Bottle with Bee")]
         BottleWithBee = 0x3C,
+        [Description("Bottle with Gold Bee")]
         BottleWithGoldBee = 0x48,
+        [Description("Red Potion Refill")]
         RedContent = 0x2E,
+        [Description("Green Potion Refill")]
         GreenContent = 0x2F,
+        [Description("Blue Potion Refill")]
         BlueContent = 0x30,
+        [Description("Bee Refill")]
         BeeContent = 0x0E,
     }
 
@@ -173,73 +312,82 @@ namespace Randomizer.SMZ3 {
         public bool Is(ItemType type, World world) => Type == type && World == world;
         public bool IsNot(ItemType type, World world) => !Is(type, world);
 
+        public Item(ItemType itemType) {
+            Name = itemType.GetDescription();
+            Type = itemType;
+        }
+
+        public Item(ItemType itemType, World world) : this(itemType) {
+            World = world;
+        }
+
         public static Item Nothing(World world) {
-            return new Item { Name = "Nothing", Type = ItemType.Nothing, World = world };
+            return new Item(ItemType.Nothing, world);
         }
 
         public static List<Item> CreateProgressionPool(World world) {
             var itemPool = new List<Item> {
-                new Item { Name = "Progressive Shield", Type = ProgressiveShield },
-                new Item { Name = "Progressive Shield", Type = ProgressiveShield },
-                new Item { Name = "Progressive Shield", Type = ProgressiveShield },
-                new Item { Name = "Progressive Sword", Type = ProgressiveSword },
-                new Item { Name = "Progressive Sword", Type = ProgressiveSword },
-                new Item { Name = "Bow", Type = Bow },
-                new Item { Name = "Hookshot", Type = Hookshot },
-                new Item { Name = "Mushroom", Type = Mushroom },
-                new Item { Name = "Powder", Type = Powder },
-                new Item { Name = "Fire Rod", Type = Firerod },
-                new Item { Name = "Ice Rod", Type = Icerod },
-                new Item { Name = "Bombos", Type = Bombos },
-                new Item { Name = "Ether", Type = Ether },
-                new Item { Name = "Quake", Type = Quake },
-                new Item { Name = "Lamp", Type = Lamp },
-                new Item { Name = "Hammer", Type = Hammer },
-                new Item { Name = "Shovel", Type = Shovel },
-                new Item { Name = "Flute", Type = Flute },
-                new Item { Name = "Bug Catching Net", Type = Bugnet },
-                new Item { Name = "Book of Mudora", Type = Book },
-                new Item { Name = "Bottle", Type = Bottle },
-                new Item { Name = "Cane of Somaria", Type = Somaria },
-                new Item { Name = "Cane of Byrna", Type = Byrna },
-                new Item { Name = "Cape", Type = Cape },
-                new Item { Name = "Magic Mirror", Type = Mirror },
-                new Item { Name = "Pegasus Boots", Type = Boots },
-                new Item { Name = "Progressive Glove", Type = ProgressiveGlove },
-                new Item { Name = "Progressive Glove", Type = ProgressiveGlove },
-                new Item { Name = "Flippers", Type = Flippers },
-                new Item { Name = "Moon Pearl", Type = MoonPearl },
-                new Item { Name = "Half Magic", Type = HalfMagic },
+                new Item(ProgressiveShield),
+                new Item(ProgressiveShield),
+                new Item(ProgressiveShield),
+                new Item(ProgressiveSword),
+                new Item(ProgressiveSword),
+                new Item(Bow),
+                new Item(Hookshot),
+                new Item(Mushroom),
+                new Item(Powder),
+                new Item(Firerod),
+                new Item(Icerod),
+                new Item(Bombos),
+                new Item(Ether),
+                new Item(Quake),
+                new Item(Lamp),
+                new Item(Hammer),
+                new Item(Shovel),
+                new Item(Flute),
+                new Item(Bugnet),
+                new Item(Book),
+                new Item(Bottle),
+                new Item(Somaria),
+                new Item(Byrna),
+                new Item(Cape),
+                new Item(Mirror),
+                new Item(Boots),
+                new Item(ProgressiveGlove),
+                new Item(ProgressiveGlove),
+                new Item(Flippers),
+                new Item(MoonPearl),
+                new Item(HalfMagic),
 
-                new Item { Name = "Grappling Beam", Type = Grapple },
-                new Item { Name = "Charge Beam", Type = Charge },
-                new Item { Name = "Ice Beam", Type = Ice },
-                new Item { Name = "Wave Beam", Type = Wave },
-                new Item { Name = "Plasma Beam", Type = Plasma },
-                new Item { Name = "Varia Suit", Type = Varia },
-                new Item { Name = "Gravity Suit", Type = Gravity },
-                new Item { Name = "Morphing Ball", Type = Morph },
-                new Item { Name = "Bombs", Type = Bombs },
-                new Item { Name = "Spring Ball", Type = SpringBall },
-                new Item { Name = "Screw Attack", Type = ScrewAttack },
-                new Item { Name = "Hi-Jump Boots", Type = HiJump },
-                new Item { Name = "Space Jump", Type = SpaceJump },
-                new Item { Name = "Speed Booster", Type = SpeedBooster },
+                new Item(Grapple),
+                new Item(Charge),
+                new Item(Ice),
+                new Item(Wave),
+                new Item(Plasma),
+                new Item(Varia),
+                new Item(Gravity),
+                new Item(Morph),
+                new Item(Bombs),
+                new Item(SpringBall),
+                new Item(ScrewAttack),
+                new Item(HiJump),
+                new Item(SpaceJump),
+                new Item(SpeedBooster),
 
-                new Item { Name = "Missile", Type = Missile },
-                new Item { Name = "Super", Type = Super },
-                new Item { Name = "Power Bomb", Type = PowerBomb },
-                new Item { Name = "Power Bomb", Type = PowerBomb },
-                new Item { Name = "Energy Tank", Type = ETank },
-                new Item { Name = "Energy Tank", Type = ETank },
-                new Item { Name = "Energy Tank", Type = ETank },
-                new Item { Name = "Energy Tank", Type = ETank },
-                new Item { Name = "Energy Tank", Type = ETank },
+                new Item(Missile),
+                new Item(Super),
+                new Item(PowerBomb),
+                new Item(PowerBomb),
+                new Item(ETank),
+                new Item(ETank),
+                new Item(ETank),
+                new Item(ETank),
+                new Item(ETank),
 
-                new Item { Name = "Reserve Tank", Type = ReserveTank },
-                new Item { Name = "Reserve Tank", Type = ReserveTank },
-                new Item { Name = "Reserve Tank", Type = ReserveTank },
-                new Item { Name = "Reserve Tank", Type = ReserveTank },
+                new Item(ReserveTank),
+                new Item(ReserveTank),
+                new Item(ReserveTank),
+                new Item(ReserveTank),
             };
 
             foreach (var item in itemPool) {
@@ -252,23 +400,23 @@ namespace Randomizer.SMZ3 {
 
         public static List<Item> CreateNicePool(World world) {
             var itemPool = new List<Item> {
-                new Item { Name = "Progressive Tunic", Type = ProgressiveTunic },
-                new Item { Name = "Progressive Tunic", Type = ProgressiveTunic },
-                new Item { Name = "Progressive Sword", Type = ProgressiveSword },
-                new Item { Name = "Progressive Sword", Type = ProgressiveSword },
-                new Item { Name = "Silver Arrows Upgrade", Type = SilverArrows },
-                new Item { Name = "Blue Boomerang", Type = BlueBoomerang },
-                new Item { Name = "Red Boomerang", Type = RedBoomerang },
-                new Item { Name = "Bottle", Type = Bottle },
-                new Item { Name = "Bottle", Type = Bottle },
-                new Item { Name = "Bottle", Type = Bottle },
-                new Item { Name = "Sanctuary Heart Container", Type = HeartContainerRefill },
+                new Item(ProgressiveTunic),
+                new Item(ProgressiveTunic),
+                new Item(ProgressiveSword),
+                new Item(ProgressiveSword),
+                new Item(SilverArrows),
+                new Item(BlueBoomerang),
+                new Item(RedBoomerang),
+                new Item(Bottle),
+                new Item(Bottle),
+                new Item(Bottle),
+                new Item(HeartContainerRefill),
 
-                new Item { Name = "Spazer", Type = Spazer },
-                new Item { Name = "X-Ray Scope", Type = XRay },
+                new Item(Spazer),
+                new Item(XRay),
             };
 
-            itemPool.AddRange(Copies(10, () => new Item { Name = "Boss Heart Container", Type = HeartContainer, World = world }));
+            itemPool.AddRange(Copies(10, () => new Item(HeartContainer, world)));
 
             foreach (var item in itemPool) item.World = world;
 
@@ -277,25 +425,25 @@ namespace Randomizer.SMZ3 {
 
         public static List<Item> CreateJunkPool(World world) {
             var itemPool = new List<Item> {
-                new Item { Name = "Single Arrow", Type = Arrow },
-                new Item { Name = "One Hundred Rupees", Type = OneHundredRupees }
+                new Item(Arrow),
+                new Item(OneHundredRupees)
             };
 
-            itemPool.AddRange(Copies(24, () => new Item { Name = "Piece of Heart", Type = HeartPiece }));
-            itemPool.AddRange(Copies(8,  () => new Item { Name = "Ten Arrows", Type = TenArrows }));
-            itemPool.AddRange(Copies(13, () => new Item { Name = "Three Bombs", Type = ThreeBombs }));
-            itemPool.AddRange(Copies(4,  () => new Item { Name = "Arrow Capacity Upgrade", Type = ArrowUpgrade5 }));
-            itemPool.AddRange(Copies(4,  () => new Item { Name = "Bomb Capacity Upgrade", Type = BombUpgrade5 }));
-            itemPool.AddRange(Copies(2,  () => new Item { Name = "One Rupee", Type = OneRupee }));
-            itemPool.AddRange(Copies(4,  () => new Item { Name = "Five Rupees", Type = FiveRupees }));
-            itemPool.AddRange(Copies(28, () => new Item { Name = "Twenty Rupees", Type = TwentyRupees }));
-            itemPool.AddRange(Copies(7,  () => new Item { Name = "Fifty Rupees", Type = FiftyRupees }));
-            itemPool.AddRange(Copies(5,  () => new Item { Name = "Three Hundred Rupees", Type = ThreeHundredRupees }));
+            itemPool.AddRange(Copies(24, () => new Item(HeartPiece)));
+            itemPool.AddRange(Copies(8,  () => new Item(TenArrows)));
+            itemPool.AddRange(Copies(13, () => new Item(ThreeBombs)));
+            itemPool.AddRange(Copies(4,  () => new Item(ArrowUpgrade5)));
+            itemPool.AddRange(Copies(4,  () => new Item(BombUpgrade5)));
+            itemPool.AddRange(Copies(2,  () => new Item(OneRupee)));
+            itemPool.AddRange(Copies(4,  () => new Item(FiveRupees)));
+            itemPool.AddRange(Copies(28, () => new Item(TwentyRupees)));
+            itemPool.AddRange(Copies(7,  () => new Item(FiftyRupees)));
+            itemPool.AddRange(Copies(5,  () => new Item(ThreeHundredRupees)));
 
-            itemPool.AddRange(Copies(9,  () => new Item { Name = "Energy Tank", Type = ETank }));
-            itemPool.AddRange(Copies(39, () => new Item { Name = "Missile", Type = Missile }));
-            itemPool.AddRange(Copies(15, () => new Item { Name = "Super Missile", Type = Super }));
-            itemPool.AddRange(Copies(8,  () => new Item { Name = "Power Bomb", Type = PowerBomb }));
+            itemPool.AddRange(Copies(9,  () => new Item(ETank)));
+            itemPool.AddRange(Copies(39, () => new Item(Missile)));
+            itemPool.AddRange(Copies(15, () => new Item(Super)));
+            itemPool.AddRange(Copies(8,  () => new Item(PowerBomb)));
 
             foreach (var item in itemPool) item.World = world;
 
@@ -307,57 +455,57 @@ namespace Randomizer.SMZ3 {
             var itemPool = new List<Item>();
 
             itemPool.AddRange(new[] {
-                new Item { Type = BigKeyEP, Name = "Eastern Palace Big Key" },
-                new Item { Type = BigKeyDP, Name = "Desert Palace Big Key" },
-                new Item { Type = BigKeyTH, Name = "Tower of Hera Big Key" },
-                new Item { Type = BigKeyPD, Name = "Palace of Darkness Big Key" },
-                new Item { Type = BigKeySP, Name = "Swamp Palace Big Key" },
-                new Item { Type = BigKeySW, Name = "Skull Woods Big Key" },
-                new Item { Type = BigKeyTT, Name = "Thieves Town Big Key" },
-                new Item { Type = BigKeyIP, Name = "Ice Palace Big Key" },
-                new Item { Type = BigKeyMM, Name = "Misery Mire Big Key" },
-                new Item { Type = BigKeyTR, Name = "Turtle Rock Big Key" },
-                new Item { Type = BigKeyGT, Name = "Ganons Tower Big Key" },
+                new Item(BigKeyEP),
+                new Item(BigKeyDP),
+                new Item(BigKeyTH),
+                new Item(BigKeyPD),
+                new Item(BigKeySP),
+                new Item(BigKeySW),
+                new Item(BigKeyTT),
+                new Item(BigKeyIP),
+                new Item(BigKeyMM),
+                new Item(BigKeyTR),
+                new Item(BigKeyGT),
             });
 
-            itemPool.AddRange(Copies(1, () => new Item { Type = KeyHC, Name = "Sewer Key" }));
-            itemPool.AddRange(Copies(2, () => new Item { Type = KeyCT, Name = "Castle Tower Key" }));
-            itemPool.AddRange(Copies(1, () => new Item { Type = KeyDP, Name = "Desert Palace Key" }));
-            itemPool.AddRange(Copies(1, () => new Item { Type = KeyTH, Name = "Tower of Hera Key" }));
-            itemPool.AddRange(Copies(6, () => new Item { Type = KeyPD, Name = "Palace of Darkness Key" }));
-            itemPool.AddRange(Copies(1, () => new Item { Type = KeySP, Name = "Swamp Palace Key" }));
-            itemPool.AddRange(Copies(3, () => new Item { Type = KeySW, Name = "Skull Woods Key" }));
-            itemPool.AddRange(Copies(1, () => new Item { Type = KeyTT, Name = "Thieves Town Key" }));
-            itemPool.AddRange(Copies(2, () => new Item { Type = KeyIP, Name = "Ice Palace Key" }));
-            itemPool.AddRange(Copies(3, () => new Item { Type = KeyMM, Name = "Misery Mire Key" }));
-            itemPool.AddRange(Copies(4, () => new Item { Type = KeyTR, Name = "Turtle Rock Key" }));
-            itemPool.AddRange(Copies(4, () => new Item { Type = KeyGT, Name = "Ganons Tower Key" }));
+            itemPool.AddRange(Copies(1, () => new Item(KeyHC)));
+            itemPool.AddRange(Copies(2, () => new Item(KeyCT)));
+            itemPool.AddRange(Copies(1, () => new Item(KeyDP)));
+            itemPool.AddRange(Copies(1, () => new Item(KeyTH)));
+            itemPool.AddRange(Copies(6, () => new Item(KeyPD)));
+            itemPool.AddRange(Copies(1, () => new Item(KeySP)));
+            itemPool.AddRange(Copies(3, () => new Item(KeySW)));
+            itemPool.AddRange(Copies(1, () => new Item(KeyTT)));
+            itemPool.AddRange(Copies(2, () => new Item(KeyIP)));
+            itemPool.AddRange(Copies(3, () => new Item(KeyMM)));
+            itemPool.AddRange(Copies(4, () => new Item(KeyTR)));
+            itemPool.AddRange(Copies(4, () => new Item(KeyGT)));
 
             itemPool.AddRange(new[] {
-                new Item { Type = MapHC, Name = "Sewer Map" },
-                new Item { Type = MapEP, Name = "Eastern Palace Map" },
-                new Item { Type = MapDP, Name = "Desert Palace Map" },
-                new Item { Type = MapTH, Name = "Tower of Hera Map" },
-                new Item { Type = MapPD, Name = "Palace of Darkness Map" },
-                new Item { Type = MapSP, Name = "Swamp Palace Map" },
-                new Item { Type = MapSW, Name = "Skull Woods Map" },
-                new Item { Type = MapTT, Name = "Thieves Town Map" },
-                new Item { Type = MapIP, Name = "Ice Palace Map" },
-                new Item { Type = MapMM, Name = "Misery Mire Map" },
-                new Item { Type = MapTR, Name = "Turtle Rock Map" },
-                new Item { Type = MapGT, Name = "Ganons Tower Map" },
+                new Item(MapHC),
+                new Item(MapEP),
+                new Item(MapDP),
+                new Item(MapTH),
+                new Item(MapPD),
+                new Item(MapSP),
+                new Item(MapSW),
+                new Item(MapTT),
+                new Item(MapIP),
+                new Item(MapMM),
+                new Item(MapTR),
+                new Item(MapGT),
 
-                new Item { Type = CompassEP, Name = "Eastern Palace Compass" },
-                new Item { Type = CompassDP, Name = "Desert Palace Compass" },
-                new Item { Type = CompassTH, Name = "Tower of Hera Compass" },
-                new Item { Type = CompassPD, Name = "Palace of Darkness Compass" },
-                new Item { Type = CompassSP, Name = "Swamp Palace Compass" },
-                new Item { Type = CompassSW, Name = "Skull Woods Compass" },
-                new Item { Type = CompassTT, Name = "Thieves Town Compass" },
-                new Item { Type = CompassIP, Name = "Ice Palace Compass" },
-                new Item { Type = CompassMM, Name = "Misery Mire Compass" },
-                new Item { Type = CompassTR, Name = "Turtle Rock Compass" },
-                new Item { Type = CompassGT, Name = "Ganons Tower Compass" },
+                new Item(CompassEP),
+                new Item(CompassDP),
+                new Item(CompassTH),
+                new Item(CompassPD),
+                new Item(CompassSP),
+                new Item(CompassSW),
+                new Item(CompassTT),
+                new Item(CompassIP),
+                new Item(CompassMM),
+                new Item(CompassTR),
+                new Item(CompassGT),
             });
 
             foreach (var item in itemPool) item.World = world;
