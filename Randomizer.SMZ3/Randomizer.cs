@@ -50,12 +50,12 @@ namespace Randomizer.SMZ3 {
             }
 
             var randoRnd = new Random(randoSeed);
-            
+
             var config = new Config(options);
             var worlds = new List<World>();
 
             /* FIXME: Just here to semi-obfuscate race seeds until a better solution is in place */
-            if(config.Race) {
+            if (config.Race) {
                 randoRnd = new Random(randoRnd.Next());
             }
 
@@ -107,9 +107,24 @@ namespace Randomizer.SMZ3 {
             return seedData;
         }
 
+        public Dictionary<int, ILocationTypeData> GetLocations() => 
+            new World(new Config(new Dictionary<string, string>()), "", 0, "")
+                .Locations.Select(location => new LocationTypeData {
+                    Id = location.Id,
+                    Name = location.Name,
+                    Type = location.Type.ToString(),
+                    Region = location.Region.Name,
+                    Area = location.Region.Area
+                }).Cast<ILocationTypeData>().ToDictionary(locationData => locationData.Id);
+
+        public Dictionary<int, IItemTypeData> GetItems() =>
+            Enum.GetValues(typeof(ItemType)).Cast<ItemType>().Select(i => new ItemTypeData {
+                Id = (int)i,
+                Name = i.GetDescription()
+            }).Cast<IItemTypeData>().ToDictionary(itemTypeData => itemTypeData.Id);
     }
 
-    public class RandomizerOption : IRandomizerOption { 
+    public class RandomizerOption : IRandomizerOption {
         public string Key { get; set; }
         public string Description { get; set; }
         public RandomizerOptionType Type { get; set; }
@@ -143,4 +158,22 @@ namespace Randomizer.SMZ3 {
         public int ItemId { get; set; }
         public int ItemWorldId { get; set; }
     }
+
+    public class ItemTypeData : IItemTypeData {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class LocationTypeData : ILocationTypeData {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Type { get; set; }
+
+        public string Region { get; set; }
+
+        public string Area { get; set; }
+    }
+
 }

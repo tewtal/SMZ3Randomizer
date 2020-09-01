@@ -40,7 +40,7 @@ namespace Randomizer.SMZ3.Tests {
         [TestCaseSource(nameof(ItemTypeNames))]
         public void GeneratesTheCorrectItemText(string name) {
             var table = ParseTableData("TestData.ItemTexts.json");
-            var item = new Item { Type = Enum.Parse<ItemType>(name) };
+            var item = new Item(Enum.Parse<ItemType>(name));
 
             var expected = table.TryGetValue(name, out var value) ? ParseHex(value) : null;
             var actual = Dialog.Simple(Texts.ItemTextbox(item));
@@ -61,7 +61,7 @@ namespace Randomizer.SMZ3.Tests {
             var itemTexts = ItemTypeNames().ToDictionary(
                 name => name,
                 name => {
-                    var item = new Item { Type = Enum.Parse<ItemType>(name) };
+                    var item = new Item(Enum.Parse<ItemType>(name));
                     var bytes = Dialog.Simple(Texts.ItemTextbox(item));
                     return string.Join("", from b in bytes select $"{b:X2}");
                 }
