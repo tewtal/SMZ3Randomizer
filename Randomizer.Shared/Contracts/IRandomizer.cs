@@ -28,12 +28,29 @@ namespace Randomizer.Shared.Contracts {
         List<Dictionary<string, string>> Playthrough { get; }
     }
 
+    public interface IItemTypeData
+    {
+        int Id { get; }
+        string Name { get; }
+    }
+
+    public interface ILocationTypeData
+    {
+        int Id { get; }
+        string Name { get; }
+        string Type { get; }
+        string Region { get; }
+        string Area { get; }
+    }
+
     public interface IRandomizer {
         string Id { get; }
         string Name { get; }
         string Version { get; }
         List<IRandomizerOption> Options { get; }
         ISeedData GenerateSeed(IDictionary<string, string> options, string seed);
+        Dictionary<int, IItemTypeData> GetItems();
+        Dictionary<int, ILocationTypeData> GetLocations();
     }
 
     public enum RandomizerOptionType
