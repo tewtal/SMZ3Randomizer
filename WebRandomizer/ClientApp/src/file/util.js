@@ -14,13 +14,13 @@ export async function readAsArrayBuffer(blob) {
     });
 }
 
-export function snes_to_pc(mode = {}, addr) {
-    if (mode.exhirom) {
+export function snes_to_pc(mapping, addr) {
+    if (mapping === 'exhirom') {
         const ex = addr < 0x800000 ? 0x400000 : 0;
         const pc = addr & 0x3FFFFF;
         return ex | pc;
     }
-    if (mode.lorom) {
+    if (mapping === 'lorom') {
         return ((addr & 0x7F0000) >>> 1) | (addr & 0x7FFF);
     }
     throw new Error('No known addressing mode supplied');

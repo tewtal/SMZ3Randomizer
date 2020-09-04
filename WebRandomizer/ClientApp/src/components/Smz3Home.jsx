@@ -1,7 +1,7 @@
 import React from 'react';
 import { Jumbotron, Container, Row, Col, Button } from 'reactstrap';
 
-export default function Home() {
+export default function Smz3Home() {
     return (
         <>
             <Jumbotron>

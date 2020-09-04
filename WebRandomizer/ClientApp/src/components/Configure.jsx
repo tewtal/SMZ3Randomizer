@@ -1,11 +1,16 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import { Container, Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
 import { Form, FormGroup, Button, Input } from 'reactstrap';
 import { Modal, ModalHeader, ModalBody, Progress } from 'reactstrap';
 import BootstrapSwitchButton from 'bootstrap-switch-button-react';
 import InputGroup from './util/PrefixInputGroup';
-import classNames from 'classnames';
+import MessageCard from './util/MessageCard';
+
+import { GameTraitsCtx } from '../game/traits';
+import { adjustHostname } from '../site';
+
+import { encode } from 'slugid';
 
 import map from 'lodash/map';
 import transform from 'lodash/transform';
@@ -14,10 +19,8 @@ import range from 'lodash/range';
 import attempt from 'lodash/attempt';
 import defaultTo from 'lodash/defaultTo';
 
-import { encode } from 'slugid';
-
 const InputWithoutSpinner = styled(Input)`
-  /* For firefox */
+  /* For Firefox */
   appearance: textfield;
   /* For Chromium */
   &::-webkit-inner-spin-button,
@@ -27,7 +30,7 @@ const InputWithoutSpinner = styled(Input)`
 `;
 
 export default function Configure(props) {
-    const randomizer_id = props.match.params.randomizer_id;
+    const gameId = props.match.params.randomizer_id;
 
     const [options, setOptions] = useState(null);
     const [names, setNames] = useState({});
@@ -35,10 +38,12 @@ export default function Configure(props) {
     const [modal, setModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
 
+    const game = useContext(GameTraitsCtx)
+
     useEffect(() => {
         attempt(async () => {
             try {
-                var response = await fetch(`/api/randomizers/${randomizer_id}`);
+                var response = await fetch(`/api/randomizers/${gameId}`);
                 if (response) {
                     const result = await response.json();
                     const options = transform(result.options,
@@ -66,7 +71,7 @@ export default function Configure(props) {
                 }
             }
 
-            const response = await fetch(`/api/randomizers/${randomizer_id}/generate`, {
+            const response = await fetch(`/api/randomizers/${gameId}/generate`, {
                 method: 'POST',
                 cache: 'no-cache',
                 headers: { 'Content-Type': 'application/json' },
@@ -89,8 +94,9 @@ export default function Configure(props) {
         setOptions({ ...options, [key]: value });
     }
 
-    const component = randomizer
-        ? (<>
+    const gameMismatch = gameId !== game.id;
+    const content = randomizer && !gameMismatch
+        ? (<Card>
             <CardHeader className="bg-primary text-white">
                 {randomizer.name} - {randomizer.version}
             </CardHeader>
@@ -120,27 +126,20 @@ export default function Configure(props) {
                     </FormGroup>
                 </Form>
             </CardBody>
-        </>)
-        : (<>
-            <CardHeader className={classNames({
-                'bg-danger': errorMessage,
-                'bg-primary': !errorMessage
-            }, 'text-white'
-            )}>
-                {errorMessage ? 'Something went wrong :(' : 'Create new randomized game'}
-            </CardHeader>
-            <CardBody>
-                {errorMessage || 'Please wait, loading...'}
-            </CardBody>
-        </>);
+        </Card>) :
+        errorMessage ? <MessageCard error={true} title="Something went wrong :(" msg={errorMessage} /> :
+        gameMismatch ? (
+            <MessageCard error={true} title="This is not quite right :O"
+                msg={<a href={adjustHostname(document.location.href, gameId)}>Go to the correct domain here</a>}
+            />
+        ) :
+        <MessageCard title="Create new randomized game" msg="Please wait, loading..." />;
 
     return (
         <Container>
             <Row className="justify-content-md-center">
                 <Col md="10">
-                    <Card>
-                        {component}
-                    </Card>
+                    {content}
                 </Col>
             </Row>
             <Modal isOpen={modal} backdrop="static" autoFocus>
