@@ -19,9 +19,5 @@ namespace Randomizer.Shared.Models {
         public int ItemIndex { get; set; }
         public DateTime TimeStamp { get; set; }
         public string Description { get; set; }
-        
-        [Timestamp]
-        public byte[] ConcurrencyTimestamp { get; set; }
     }
-
 }
