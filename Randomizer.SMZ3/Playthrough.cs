@@ -75,7 +75,7 @@ namespace Randomizer.SMZ3 {
             /* Add Medallion requirements to playthrough */
             foreach (var region in worlds.SelectMany(w => w.Regions.OfType<IMedallionAccess>())) {
                 var regionName = $"{((Region)region).Name}{(config.GameMode == GameMode.Multiworld ? $" - {((Region)region).World.Player}" : "")}";
-                rewardSphere.Add($"Medallion Required - {((Region)region).Name}", region.Medallion.GetDescription());
+                rewardSphere.Add($"Medallion Required - {regionName}", region.Medallion.GetDescription());
             }
 
             spheres.Add(rewardSphere);

@@ -2,7 +2,9 @@
 import { Row, Col, Card, CardHeader, CardBody, Button, Nav, NavItem, NavLink, InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
 import styled from 'styled-components';
 import isEmpty from 'lodash/isEmpty';
+import { saveAs } from 'file-saver';
 import { sortBy, uniq } from 'lodash';
+import { encode } from 'slugid';
 
 const SmallNavLink = styled(NavLink)`
         font-size: .87em;
@@ -14,7 +16,6 @@ const SmallNavLink = styled(NavLink)`
     `;
 
 const SearchInputGroup = styled(InputGroup)`
-        margin-top: 10px;
         margin-bottom: 15px;
     `;
 
@@ -24,6 +25,14 @@ const LocationTable = styled.table.attrs(props => ({
     margin-bottom: 25px;
     > tbody > tr { border-bottom: 1px solid #e0e0e0; };
 `;
+
+const DownloadIcon = () => (
+    <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-journal-arrow-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z" />
+        <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z" />
+        <path fillRule="evenodd" d="M8 5a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 9.293V5.5A.5.5 0 0 1 8 5z" />
+    </svg>
+);
 
 export default function Spoiler(props) {
     const [show, setShow] = useState(false);
@@ -48,6 +57,35 @@ export default function Spoiler(props) {
         if (e.target.value !== "" && spoilerArea === "playthrough") {
             setSpoilerArea("all");
         }
+    }
+
+    const downloadSpoiler = async () => {
+
+        /* Prepare a human-readable JSON dump of the spoiler data */
+        let s = {
+            seed: { ...spoiler.seed, spoiler: null },
+            playthrough: spoiler.seed.gameId === 'smz3' ? JSON.parse(spoiler.seed.spoiler).filter(sphere => !isEmpty(sphere)).slice(0, -1) : JSON.parse(spoiler.seed.spoiler).filter(sphere => !isEmpty(sphere)),
+            prizes: spoiler.seed.gameId === 'smz3' ? JSON.parse(spoiler.seed.spoiler).slice(-1) : [],
+            regions: uniq(sortBy(spoiler.locations.map(l => l.locationRegion))).map(r => {
+                return {
+                    region: r,
+                    locations: spoiler.locations.filter(l => l.locationRegion === r).map(l => {
+                        return {
+                            name: l.locationName,
+                            item: l.itemName
+                        };
+                    })
+                }
+            })
+        };
+
+        let spoilerText = unescape(JSON.stringify(s, null, 4));
+
+        var blob = new Blob([spoilerText], {
+            type: "text/plain;charset=utf-8"
+        });
+
+        saveAs(blob, `${props.seedData.gameName} v${props.seedData.gameVersion} - ${encode(props.seedData.guid)} - Spoiler.txt`);
     }
 
     if (props.seedData === null || props.seedData.spoiler === "[]")
@@ -76,12 +114,19 @@ export default function Spoiler(props) {
             {show && (<CardBody>
                 {spoiler
                     ? <div>
-                        <SearchInputGroup>
-                            <InputGroupAddon addonType="prepend">
-                                <InputGroupText><span role="img" aria-label="search">🔎</span></InputGroupText>
-                            </InputGroupAddon>
-                            <Input key="searchInput" placeholder="Find a location or item" onChange={updateSearchText} value={searchText} />
-                        </SearchInputGroup>
+                        <Row>
+                            <Col md="9">
+                            <SearchInputGroup>
+                                <InputGroupAddon addonType="prepend">
+                                    <InputGroupText><span role="img" aria-label="search">🔎</span></InputGroupText>
+                                </InputGroupAddon>
+                                <Input key="searchInput" placeholder="Find a location or item" onChange={updateSearchText} value={searchText} />
+                                </SearchInputGroup>
+                            </Col>
+                            <Col>
+                                <Button outline color="primary" className="float-right" onClick={downloadSpoiler}><DownloadIcon /> Download</Button>
+                            </Col>
+                        </Row>
                         <div>
                             <Nav pills style={{ marginBottom: "10px" }}>
                                 <NavItem>
