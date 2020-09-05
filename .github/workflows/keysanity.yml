@@ -1,4 +1,4 @@
-name: Build and deploy image
+name: Build and deploy keysanity image
 
 on:
   push:
@@ -7,16 +7,33 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v1 
+    - uses: actions/checkout@v2 
       with:
         submodules: true   
     
-    - name: Publish to Registry
-      uses: elgohr/Publish-Docker-Github-Action@master
+    - name: Build and push webrandomizer Docker image
+      uses: docker/build-push-action@v1.1.0
       with:
-        name: tewtal/webrandomizer-alpha
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+        repository: tewtal/webrandomizer-alpha
+        tags: latest    
+
+    - name: Build and push webrandomizer-service Docker image
+      uses: docker/build-push-action@v1.1.0
+      with:
+        dockerfile: WebGameService/Dockerfile
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        repository: tewtal/webrandomizer-alpha
+        tags: latest-service
+    
+    - name: Deploy to k8s
+      uses: actions-hub/kubectl@master
+      env:
+        KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+      with:
+        args: rollout restart deployments/webrandomizer-alpha-deployment

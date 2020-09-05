@@ -60,7 +60,7 @@ namespace Randomizer.SMZ3 {
             return RegionItems.Contains(item.Type);
         }
 
-        public virtual bool CanFill(Item item) {
+        public virtual bool CanFill(Item item, Progression items) {
             return Config.Keysanity || !item.IsDungeonItem || IsRegionItem(item);
         }
 
