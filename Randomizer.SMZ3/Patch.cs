@@ -698,19 +698,6 @@ namespace Randomizer.SMZ3 {
             patches.Add((Snes(0x8f0000 + plmTablePos), new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }));
         }
 
-        void WriteWishingWellRoomData() {
-            patches.Add((Snes(0x3F714), wishingWellRoomData));
-        }
-
-        void WriteWishingWellChests() {
-            patches.Add((Snes(0x1E9AE), new byte[] { 0x14, 0x01 }));
-            patches.Add((Snes(0x1E9CF), new byte[] { 0x14, 0x01 }));
-        }
-
-        void WritePyramidFairyChests() {
-            patches.Add((Snes(0x3FC16), new byte[] { 0xB1, 0xC6, 0xF9, 0xC9, 0xC6, 0xF9 }));
-        }
-
         void WriteDiggingGameRng() {
             byte digs = (byte)(rnd.Next(30) + 1);
             patches.Add((Snes(0x308020), new byte[] { digs }));
