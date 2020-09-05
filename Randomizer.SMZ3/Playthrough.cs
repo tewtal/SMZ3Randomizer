@@ -38,14 +38,14 @@ namespace Randomizer.SMZ3 {
                     var n = 0;
                     foreach (var location in inaccessibleLocations) {
                         if (config.GameMode == GameMode.Multiworld) {
-                            sphere.Add($"Inaccessable Item #{n += 1}: {location.Name} ({location.Region.World.Player})", $"{location.Item.Name} ({location.Item.World.Player})");
+                            sphere.Add($"Inaccessible Item #{n += 1}: {location.Name} ({location.Region.World.Player})", $"{location.Item.Name} ({location.Item.World.Player})");
                         }
                         else {
-                            sphere.Add($"Inaccessable Item #{n += 1}: {location.Name}", $"{location.Item.Name}");
+                            sphere.Add($"Inaccessible Item #{n += 1}: {location.Name}", $"{location.Item.Name}");
                         }
                     }
                     spheres.Add(sphere);
-                    return spheres;
+                    break;
                 }
 
                 foreach (var location in newLocations) {
@@ -65,6 +65,20 @@ namespace Randomizer.SMZ3 {
                     throw new Exception("Too many spheres, seed likely impossible.");
             }
 
+            /* Add Crystal/Pendant Prizes to playthrough */
+            var rewardSphere = new Dictionary<string, string>();
+            foreach (var region in worlds.SelectMany(w => w.Regions.OfType<IReward>().Where(r => r.Reward != RewardType.GoldenFourBoss && r.Reward != RewardType.Agahnim))) {
+                var regionName = $"{((Region)region).Name}{(config.GameMode == GameMode.Multiworld ? $" - {((Region)region).World.Player}" : "")}";
+                rewardSphere.Add($"Prize - {regionName}", region.Reward.GetDescription());
+            }
+
+            /* Add Medallion requirements to playthrough */
+            foreach (var region in worlds.SelectMany(w => w.Regions.OfType<IMedallionAccess>())) {
+                var regionName = $"{((Region)region).Name}{(config.GameMode == GameMode.Multiworld ? $" - {((Region)region).World.Player}" : "")}";
+                rewardSphere.Add($"Medallion Required - {((Region)region).Name}", region.Medallion.GetDescription());
+            }
+
+            spheres.Add(rewardSphere);
             return spheres;
         }
 

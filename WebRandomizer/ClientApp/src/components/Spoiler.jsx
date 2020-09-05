@@ -37,7 +37,7 @@ export default function Spoiler(props) {
                 let response = await fetch(`/api/spoiler/${props.seedData.guid}`);
                 let result = await response.json();
                 setSpoiler(result);
-            } catch {}
+            } catch { }
         }
 
         setShow(s => !s);
@@ -48,7 +48,7 @@ export default function Spoiler(props) {
         if (e.target.value !== "" && spoilerArea === "playthrough") {
             setSpoilerArea("all");
         }
-    }    
+    }
 
     if (props.seedData === null || props.seedData.spoiler === "[]")
         return null;
@@ -58,10 +58,12 @@ export default function Spoiler(props) {
         const re = new RegExp(searchText, "i");
         locations = spoiler.locations.filter(l => l.locationName.match(re) || l.itemName.match(re));
 
-        if (spoilerArea !== "all" && spoilerArea !== "playthrough" && !locations.find(l => l.locationArea === spoilerArea)) {
+        if (spoilerArea !== "all" && spoilerArea !== "playthrough" && spoilerArea !== "prizes" && !locations.find(l => l.locationArea === spoilerArea)) {
             setSpoilerArea("all");
         }
     }
+
+    let playthrough = JSON.parse(props.seedData.spoiler).filter(sphere => !isEmpty(sphere));
 
     return (
         <Card>
@@ -85,6 +87,9 @@ export default function Spoiler(props) {
                                 <NavItem>
                                     <SmallNavLink href="#" active={spoilerArea === "playthrough"} onClick={() => setSpoilerArea("playthrough")}>Playthrough</SmallNavLink>
                                 </NavItem>
+                                {props.seedData.gameId === 'smz3' && <NavItem>
+                                    <SmallNavLink href="#" active={spoilerArea === "prizes"} onClick={() => setSpoilerArea("prizes")}>Prizes</SmallNavLink>
+                                </NavItem>}
                                 <NavItem>
                                     <SmallNavLink href="#" active={spoilerArea === "all"} onClick={() => setSpoilerArea("all")}>All</SmallNavLink>
                                 </NavItem>
@@ -97,9 +102,9 @@ export default function Spoiler(props) {
                             {spoilerArea === 'playthrough'
                                 ? <Card>
                                     <CardBody>
-                                        {JSON.parse(props.seedData.spoiler).filter(sphere => !isEmpty(sphere)).map((sphere, i) => (
+                                        {playthrough.map((sphere, i) => (
                                             <div key={i}>
-                                                <h6>Sphere {i + 1}</h6>
+                                                {i < (playthrough.length - 1) || props.seedData.gameId === 'sm' ? <h6>Sphere {i + 1}</h6> : <h6>Prizes and Requirements</h6>}
                                                 <LocationTable>
                                                     <tbody>
                                                         {Object.entries(sphere).map(([location, item], j) => (
@@ -114,6 +119,24 @@ export default function Spoiler(props) {
                                         ))}
                                     </CardBody>
                                   </Card>                                        
+                                : spoilerArea === 'prizes'
+                                    ? <Card>
+                                        <CardBody>
+                                            <div>
+                                                <h6>Prizes and Requirements</h6>
+                                                <LocationTable>
+                                                    <tbody>
+                                                        {Object.entries(playthrough[playthrough.length - 1]).map(([location, item], i) => (
+                                                            <tr key={i}>
+                                                                <td style={{ width: '60%' }}>{location}</td>
+                                                                <td>{item}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </LocationTable>
+                                            </div>
+                                        </CardBody>
+                                    </Card>  
                                 : <Card>
                                     <CardBody>
                                         {uniq(sortBy(locations.filter(l => spoilerArea === 'all' || l.locationArea === spoilerArea), l => l.locationRegion).map(l => l.locationRegion)).map((r, i) => (
