@@ -21,6 +21,9 @@ Filename parts legend:
   * Randomized if missing
   * Original location if \`o\`
   * Early location if \`e\`
+* \`K\`: Key shuffle
+  * None if missing
+  * Keysanity if \`k\`
 * Seed number, or seed guid for race roms
 * Player name for Multiworld roms
 `;

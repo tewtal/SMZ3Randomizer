@@ -47,7 +47,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
         }
 
         bool CanUnlockShip(Progression items) {
-            return items.CardWreckedShipBoss;
+            return items.CardWreckedShipBoss && items.CanPassBombPassages();
         }
 
         public override bool CanEnter(Progression items) {
