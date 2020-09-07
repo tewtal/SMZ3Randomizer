@@ -761,8 +761,10 @@ namespace Randomizer.SMZ3 {
                 Normal =>
                     items.Varia && items.Super && (items.Gravity && items.SpaceJump) && items.CanUsePowerBombs(),
                 _ =>
-                    items.Varia && items.Super && (items.Gravity || items.HiJump) && items.CanUsePowerBombs()
-            };
+                    items.Varia && items.Super && (
+                        items.CanFly() || items.HiJump || items.SpeedBooster || items.CanSpringBallJump() || items.Ice
+                   ) && (items.Gravity || items.HiJump) && items.CanUsePowerBombs()
+             };
         }
 
         public static bool CanIbj(this Progression items) {
