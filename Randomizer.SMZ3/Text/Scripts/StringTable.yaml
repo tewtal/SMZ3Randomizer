@@ -394,7 +394,7 @@
 # $170
 - ganon_phase_3: "Can you beat\nmy darkness\ntechnique?"
 - lost_woods_thief: "Have you seen Andy?\n\nHe was out looking for our prized Ether medallion.\nI wonder when he will be back?"
-- blinds_hut_dude: "I'm just some dude. This is Blind's hut.\n# @ ¤"
+- blinds_hut_dude: "I'm just some dude. This is Blind's hut."
 - end_triforce: "{SPEED2}\n{MENU}\n{NOBORDER}\n     G G"
 # $174
 - toppi_fallen: "Ouch!\n\nYou Jerk!"
