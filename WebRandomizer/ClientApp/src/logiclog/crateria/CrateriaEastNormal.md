@@ -12,34 +12,12 @@
   - Grapple
   - SpaceJump
   - Gravity *and either* CanFly *or* HiJump
-  - CanAccessMaridiaPortal
+  - *can enter* **Wrecked Ship**
 
-**Missile (outside Wrecked Ship top)**
-
-- *each of*
-  - CanPassBombPassages
-  - *one of*
-    - Super *and one of*
-      - SpeedBooster
-      - Grapple
-      - SpaceJump
-      - Gravity *and either* CanFly *or* HiJump
-    - CanAccessMaridiaPortal
-  - HiJump *or* CanFly *or* SpeedBooster
-  - *if keysanity* PhantoonKey
-
+**Missile (outside Wrecked Ship top)**  
 **Missile (outside Wrecked Ship middle)**
 
-- *each of*
-  - CanPassBombPassages *and* Super
-  - *one of*
-    - Super *and one of*
-      - SpeedBooster
-      - Grapple
-      - SpaceJump
-      - Gravity *and either* CanFly *or* HiJump
-    - CanAccessMaridiaPortal
-- *and if keysanity* PhantoonKey
+*can enter* **Wrecked Ship** *and if keysanity* PhantoonKey
 
 **Missile (Crateria moat)**
 

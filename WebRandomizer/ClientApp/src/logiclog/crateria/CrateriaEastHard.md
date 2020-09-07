@@ -11,13 +11,10 @@
 
 *Available*
 
-**Missile (outside Wrecked Ship top)**
-
-Super *and* CanPassBombPassages *and if keysanity* PhantoonKey
-
+**Missile (outside Wrecked Ship top)**  
 **Missile (outside Wrecked Ship middle)**
 
-Super *and* CanPassBombPassages *and if keysanity* PhantoonKey
+*can enter* **Wrecked Ship** *and if keysanity* PhantoonKey
 
 **Missile (Crateria moat)**
 

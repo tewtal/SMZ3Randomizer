@@ -5,8 +5,10 @@
     - SpeedBooster
     - Grapple
     - SpaceJump
-    - Gravity *and either* CanFly *or* HiJump
-  - CanAccessMaridiaPortal *and* Gravity *and* CanPassBombPassages
+    - Gravity
+  - CanAccessMaridiaPortal *and* Gravity *and one of*
+    - CanDestroyBombWalls
+    - *can reach location* **Space Jump**
 
 **Missile (Wrecked Ship middle)**
 

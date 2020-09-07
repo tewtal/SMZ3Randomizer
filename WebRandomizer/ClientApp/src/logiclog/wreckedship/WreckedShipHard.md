@@ -2,7 +2,11 @@
 
 - Super *and one of*
   - CanUsePowerBombs
-  - CanAccessMaridiaPortal *and either* HiJump *or* Gravity *and also* CanPassBombPassages
+  - CanAccessMaridiaPortal *and one of*
+    - HiJump *and* CanPassBombPassages
+    - Gravity *and one of*
+      - CanDestroyBombWalls
+      - *can reach location* **Space Jump**
 
 **Missile (Wrecked Ship middle)**
 

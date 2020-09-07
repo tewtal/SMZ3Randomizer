@@ -55,7 +55,7 @@ CanDefeatBotwoon
 
 **Space Jump**
 
-CanDefeatDraygon *and either* CanFly *or* SpeedBooster *with* HiJump
+CanDefeatDraygon
 
 **CanDefeatDraygon**
 

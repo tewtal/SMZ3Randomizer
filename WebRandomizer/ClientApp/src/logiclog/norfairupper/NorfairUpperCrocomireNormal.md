@@ -7,7 +7,11 @@
   - Varia *and* Super *and one of*
     - CanUsePowerBombs *and* SpeedBooster
     - SpeedBooster *and* Wave
-    - Morph *and either* CanFly *or* HiJump *and also* Gravity *and* Wave
+    - *each of*
+      - Morph
+      - CanFly *or* HiJump
+      - CanPassBombPassages *or* Gravity
+      - Wave
 
 **Energy Tank, Crocomire**  
 **Power Bomb (Crocomire)**
