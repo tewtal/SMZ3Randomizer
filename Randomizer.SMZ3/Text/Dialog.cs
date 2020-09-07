@@ -159,7 +159,6 @@ namespace Randomizer.SMZ3.Text {
             return c switch {
                 _ when digit.IsMatch(c.ToString()) => new byte[] { (byte)(c - '0' + 0xA0) },
                 _ when uppercaseLetter.IsMatch(c.ToString()) => new byte[] { (byte)(c - 'A' + 0xAA) },
-                // TODO: The lowercase character ID range is not yet fully decided
                 _ when lowercaseLetter.IsMatch(c.ToString()) => new byte[] { (byte)(c - 'a' + 0x30) },
                 _ => letters.TryGetValue(c, out byte[] bytes) ? bytes : new byte[] { 0xFF },
             };
@@ -179,7 +178,11 @@ namespace Randomizer.SMZ3.Text {
             { '～', new byte[] { 0xCE } },
             { '\'', new byte[] { 0xD8 } },
             { '’', new byte[] { 0xD8 } },
-            { '@', new byte[] { 0xFE, 0x6A } }, // link's name compressed
+            { ':', new byte[] { 0x4A } },
+            { '@', new byte[] { 0x4B } },
+            { '#', new byte[] { 0x4C } },
+            { '¤', new byte[] { 0x4D, 0x4E } }, // Morphing ball            
+            { '£', new byte[] { 0xFE, 0x6A } }, // link's name compressed
             { '>', new byte[] { 0xD2, 0xD3 } }, // link face
             { '%', new byte[] { 0xDD } }, // Hylian Bird
             { '^', new byte[] { 0xDE } }, // Hylian Ankh
@@ -245,40 +248,6 @@ namespace Randomizer.SMZ3.Text {
             { 'ぞ', new byte[] { 0x2D } },
             { 'だ', new byte[] { 0x2E } },
             { 'ぢ', new byte[] { 0x2F } },
-
-            // TODO: Remove these when the lowercase character ID range is completely decided
-            //{ 'ま', new byte[] { 0x30 } },
-            //{ 'み', new byte[] { 0x31 } },
-            //{ 'む', new byte[] { 0x32 } },
-            //{ 'め', new byte[] { 0x33 } },
-            //{ 'も', new byte[] { 0x34 } },
-            //{ 'づ', new byte[] { 0x35 } },
-            //{ 'で', new byte[] { 0x36 } },
-            //{ 'ど', new byte[] { 0x37 } },
-            //{ 'ら', new byte[] { 0x38 } },
-            //{ 'り', new byte[] { 0x39 } },
-            //{ 'る', new byte[] { 0x3A } },
-            //{ 'れ', new byte[] { 0x3B } },
-            //{ 'ろ', new byte[] { 0x3C } },
-            //{ 'ば', new byte[] { 0x3D } },
-            //{ 'び', new byte[] { 0x3E } },
-            //{ 'ぶ', new byte[] { 0x3F } },
-            //{ 'べ', new byte[] { 0x40 } },
-            //{ 'ぼ', new byte[] { 0x41 } },
-            //{ 'ぱ', new byte[] { 0x42 } },
-            //{ 'ぴ', new byte[] { 0x43 } },
-            //{ 'ぷ', new byte[] { 0x44 } },
-            //{ 'ぺ', new byte[] { 0x45 } },
-            //{ 'ぽ', new byte[] { 0x46 } },
-            //{ 'ゃ', new byte[] { 0x47 } },
-            //{ 'ゅ', new byte[] { 0x48 } },
-            //{ 'ょ', new byte[] { 0x49 } },
-            //{ 'っ', new byte[] { 0x4A } },
-            //{ 'ぁ', new byte[] { 0x4B } },
-            //{ 'ぃ', new byte[] { 0x4C } },
-            //{ 'ぅ', new byte[] { 0x4D } },
-            //{ 'ぇ', new byte[] { 0x4E } },
-            //{ 'ぉ', new byte[] { 0x4F } },
             
             { 'ア', new byte[] { 0x50 } },
             { 'イ', new byte[] { 0x51 } },
