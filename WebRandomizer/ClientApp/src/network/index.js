@@ -218,7 +218,22 @@ export default class Network {
                 return;
             }
 
-            this.socket = await connect('ws://localhost:8080');
+            try {
+                this.socket = await connect('ws://localhost:23074');
+                this.socket.onclose = this.socket_onclose;
+            } catch {
+                try {
+                    this.socket = await connect('ws://localhost:8080');
+                } catch (error) {
+                    console.log('Could not connect to the USB2SNES service, retrying:', error);
+                    this.device.state = 0;
+                    this.game.state = 0;
+                    this.updateState();
+                    setTimeout(this.onConnect, 5000);
+                    return;
+                }
+            }
+
             this.socket.onclose = this.socket_onclose;
 
             const response = await send(create_message('DeviceList', []));
