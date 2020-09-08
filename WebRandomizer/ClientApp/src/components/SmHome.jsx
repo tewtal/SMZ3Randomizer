@@ -5,7 +5,7 @@ const homeMarkdown =
 `
 ## Super Metroid Randomizer
 
-To generate a Super Metroid seed, go to the [Generate game](/configure/sm) page.
+To generate a Super Metroid seed, go to the [Generate game](/configure) page.
 
 `;
 

@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import { Form, Row, Col, Card, CardBody } from 'reactstrap';
 import { Label, Button, Input, InputGroupAddon, InputGroupText } from 'reactstrap';
@@ -8,13 +8,14 @@ import DropdownSelect from './util/DropdownSelect';
 import DownloadInfoTooltip from './util/DownloadInfoTooltip';
 import Upload from './Upload';
 
+import { GameTraitsCtx } from '../game/traits';
+
 import { prepareRom } from '../file/rom';
 
 import localForage from 'localforage';
 import { saveAs } from 'file-saver';
 import { encode } from 'slugid';
 
-import includes from 'lodash/includes';
 import compact from 'lodash/compact';
 import join from 'lodash/join';
 import set from 'lodash/set';
@@ -68,18 +69,14 @@ export default function Patch(props) {
     const [z3HeartBeep, setZ3HeartBeep] = useState('half');
     const [smEnergyBeep, setSMEnergyBeep] = useState(true);
 
+    const game = useContext(GameTraitsCtx);
+
     const sprites = {
         z3: [{ title: 'Link' }, ...inventory.z3],
         sm: [{ title: 'Samus' }, ...inventory.sm]
     };
 
     const { seed, world } = props;
-    const { gameId } = seed;
-    const game = {
-        smz3: gameId === 'smz3',
-        z3: gameId === 'smz3',
-        sm: includes(['smz3', 'sm'], gameId)
-    };
 
     useEffect(() => {
         attempt(async () => {
@@ -109,7 +106,7 @@ export default function Patch(props) {
         try {
             if (world !== null) {
                 const settings = { z3Sprite, smSprite, smSpinjumps, z3HeartColor, z3HeartBeep, smEnergyBeep };
-                const patchedData = await prepareRom(world.patch, settings, baseIps[gameId], game);
+                const patchedData = await prepareRom(world.patch, settings, baseIps[game.id], game);
                 saveAs(new Blob([patchedData]), constructFileName());
             }
         } catch (error) {
@@ -118,7 +115,7 @@ export default function Patch(props) {
     }
 
     function constructFileName() {
-        const { gameVersion, guid, seedNumber, mode } = seed;
+        const { gameId, gameVersion, guid, seedNumber, mode } = seed;
         const settings = world.settings && JSON.parse(world.settings);
 
         /* compact works as long as seedNumber is string, since 0 is a valid number */
@@ -188,7 +185,7 @@ export default function Patch(props) {
         localStorage.setItem('persist', JSON.stringify(values));
     }
 
-    const component = patchState === 'upload' ? <Upload game={game} onUpload={onUploadRoms} /> : (
+    const component = patchState === 'upload' ? <Upload onUpload={onUploadRoms} /> : (
         <Form onSubmit={(e) => e.preventDefault()}>
             <Row className="mb-3">
                 <Col md={game.smz3 ? 10 : 6}>
@@ -236,7 +233,7 @@ export default function Patch(props) {
             <Row>
                 <Col className="d-flex align-items-center" md="6">
                     <Button color="primary" onClick={onDownloadRom}>Download ROM</Button>
-                    <DownloadInfoTooltip className="ml-2" gameId={gameId} />
+                    <DownloadInfoTooltip className="ml-2" gameId={game.id} />
                 </Col>
             </Row>
         </Form>
@@ -252,8 +249,9 @@ export default function Patch(props) {
 }
 
 function SpriteSettings(props) {
-    const { game, sprites, settings } = props;
+    const { sprites, settings } = props;
     const { z3Sprite, smSprite, smSpinjumps } = settings;
+    const game = useContext(GameTraitsCtx);
 
     let value;
     return (

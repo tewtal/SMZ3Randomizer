@@ -28,7 +28,7 @@
 
 ## Quick guide to getting started
 
-To create a new randomized game, head over to the [Generate Randomizer Game](/configure/sm) page.
+To create a new randomized game, head over to the [Generate Randomizer Game](/configure) page.
 
 1. Select the options you want to use for the game, and then press **Generate
    Game** to generate a new game.

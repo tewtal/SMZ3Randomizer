@@ -4,7 +4,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 export default class Network {
 
-    constructor(sessionGuid, gameServiceUri, react) {
+    constructor(sessionGuid, gameServiceHost, react) {
         this.connection = null;
         this.socket = null;
         this.inPtr = -1;
@@ -14,7 +14,7 @@ export default class Network {
         this.eventLoopTimer = 0;
         this.MessageBaseAddress = null;
         this.ItemsBaseAddress = null;
-        this.GameServiceUri = gameServiceUri;
+        this.GameServiceHost = gameServiceHost;
 
         this.session = {
             guid: sessionGuid,
@@ -54,7 +54,7 @@ export default class Network {
 
     init() {
         this.connection = new HubConnectionBuilder()
-            .withUrl(`https://${this.GameServiceUri}/multiworldHub`)
+            .withUrl(`https://${this.GameServiceHost}/multiworldHub`)
             .build();
 
         this.connection.onclose(() => {
@@ -86,7 +86,7 @@ export default class Network {
         this.react.setSessionStatus('Initializing session...');
 
         try {
-            const response = await fetch(`https://${this.GameServiceUri}/api/multiworld/session/${this.session.guid}`);
+            const response = await fetch(`https://${this.GameServiceHost}/api/multiworld/session/${this.session.guid}`);
             if (response.status !== 200) {
                 this.session.state = 0;
                 this.updateState();
@@ -218,7 +218,22 @@ export default class Network {
                 return;
             }
 
-            this.socket = await connect('ws://localhost:8080');
+            try {
+                this.socket = await connect('ws://localhost:23074');
+                this.socket.onclose = this.socket_onclose;
+            } catch {
+                try {
+                    this.socket = await connect('ws://localhost:8080');
+                } catch (error) {
+                    console.log('Could not connect to the USB2SNES service, retrying:', error);
+                    this.device.state = 0;
+                    this.game.state = 0;
+                    this.updateState();
+                    setTimeout(this.onConnect, 5000);
+                    return;
+                }
+            }
+
             this.socket.onclose = this.socket_onclose;
 
             const response = await send(create_message('DeviceList', []));

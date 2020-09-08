@@ -1,7 +1,9 @@
-﻿import React, { useState, useRef } from 'react';
+﻿import React, { useState, useRef, useContext } from 'react';
 import { Form, Row, Col, Button } from 'reactstrap';
 import { readAsArrayBuffer } from '../file/util';
 import { h32 } from 'xxhashjs';
+
+import { GameTraitsCtx } from '../game/traits';
 
 import localForage from 'localforage';
 
@@ -19,8 +21,7 @@ export default function Upload(props) {
     const [canUpload, setCanUpload] = useState(false);
     const fileInputSM = useRef(null);
     const fileInputZ3 = useRef(null);
-
-    const { game } = props;
+    const game = useContext(GameTraitsCtx);
 
     async function onSubmitRom() {
         const smFile = fileInputSM.current.files[0];

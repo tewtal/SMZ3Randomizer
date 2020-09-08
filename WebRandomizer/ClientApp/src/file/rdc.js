@@ -129,16 +129,14 @@ function parse_block(block, manifest) {
     return content;
 }
 
-function apply_block(rom, mode, content, manifest) {
+function apply_block(rom, mapping, content, manifest) {
     let index = -1;
     for (const [addrs, length, entries = 1, offset = 0] of manifest) {
-        const _addrs = isPlainObject(addrs)
-            ? addrs[mode.exhirom || mode.lorom]
-            : addrs;
+        const _addrs = isPlainObject(addrs) ? addrs[mapping] : addrs;
         const entry = content[index += 1];
         for (const addr of _addrs) {
             for (let i = 0; i < entries; i += 1) {
-                const dest = snes_to_pc(mode, addr + (isArray(offset) ? offset[i] : offset * i));
+                const dest = snes_to_pc(mapping, addr + (isArray(offset) ? offset[i] : offset * i));
                 const src = length * i;
                 rom.set(entry.slice(src, src + length), dest);
             }

@@ -7,7 +7,7 @@ export default function Seed(props) {
     const { session, sessionStatus } = props;
     const { seed, clients } = session.data || {};
 
-    const onRegisterPlayer = props.onRegisterPlayer;
+    const { onRegisterPlayer } = props;
 
     return (
         <Card>
@@ -27,15 +27,16 @@ export default function Seed(props) {
                 <Row>
                     {session.state > 0 && seed.worlds.map((world, i) => {
                         const client = clients.find(client => client.guid === world.guid);
-                        return (<Col key={`player-${i}`} md="3">
-                            <h5>{world.player}</h5>
-                            {client == null ?
-                                <Button color="primary" onClick={() => onRegisterPlayer(session.guid, world.guid)}>Register as this player</Button> :
-                                <Button disabled color={client.state < 5 ? 'secondary' : client.state === 5 ? 'warning' : 'success'}>
-                                    {client.state < 5 ? 'Registered' : client.state === 5 ? 'Connected' : 'Ready'}
-                                </Button>
-                            }
-                        </Col>
+                        return (
+                            <Col key={`player-${i}`} md="3">
+                                <h5>{world.player}</h5>
+                                {client == null ?
+                                    <Button color="primary" onClick={() => onRegisterPlayer(session.guid, world.guid)}>Register as this player</Button> :
+                                    <Button disabled color={client.state < 5 ? 'secondary' : client.state === 5 ? 'warning' : 'success'}>
+                                        {client.state < 5 ? 'Registered' : client.state === 5 ? 'Connected' : 'Ready'}
+                                    </Button>
+                                }
+                            </Col>
                         );
                     })}
                 </Row>

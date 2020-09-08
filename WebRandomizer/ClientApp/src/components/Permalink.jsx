@@ -1,9 +1,11 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect, useContext } from 'react';
 import { Container, Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
+import MessageCard from './util/MessageCard';
 import Patch from './Patch';
 import Spoiler from './Spoiler';
 
-import classNames from 'classnames';
+import { GameTraitsCtx } from '../game/traits';
+import { adjustHostname } from '../site';
 
 import { decode } from 'slugid';
 
@@ -11,10 +13,12 @@ import attempt from 'lodash/attempt';
 
 export default function Permalink(props) {
     const seedSlug = props.match.params.seed_id;
-    const seedGuid = decode(seedSlug).replace(/-/g, "");
+    const seedGuid = decode(seedSlug).replace(/-/g, '');
 
     const [seed, setSeed] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
+
+    const game = useContext(GameTraitsCtx);
 
     useEffect(() => {
         attempt(async () => {
@@ -24,19 +28,19 @@ export default function Permalink(props) {
                     var result = await response.json();
                     setSeed(result);
                 } else {
-                    setErrorMessage("Cannot load metadata for the specified seed.");
+                    setErrorMessage('Cannot load metadata for the specified seed.');
                 }
             } catch (error) {
                 setErrorMessage(error.toString());
             }
-        })
+        });
     }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
 
-    let content;
-    if (seed) {
-        const world = seed.worlds[0];
-        const settings = JSON.parse(world.settings);
-        content = (<>
+    const gameMismatch = seed && seed.gameId !== game.id;
+    const world = seed && seed.worlds[0];
+    const settings = world && tryParseJson(world.settings);
+    const content = seed && !gameMismatch ? (
+        <>
             <Card className="mb-3">
                 <CardHeader className="bg-primary text-white">
                     {seed.gameName}
@@ -50,7 +54,7 @@ export default function Permalink(props) {
                             <Col>Seed number: {seed.seedNumber}</Col>
                         </Row>
                     )}
-                    {settings && seed.gameId === 'smz3' && (<>
+                    {settings && game.id === 'smz3' && (<>
                         <Row>
                             <Col>Super Metroid Logic: {{
                                 normal: 'Normal',
@@ -75,7 +79,7 @@ export default function Permalink(props) {
                             }</Col>
                         </Row>
                     </>)}
-                    {settings && seed.gameId === 'sm' && (<>
+                    {settings && game.id === 'sm' && (<>
                         <Row>
                             <Col>Logic: {{
                                 casual: 'Casual',
@@ -105,24 +109,14 @@ export default function Permalink(props) {
                 </CardBody>
             </Card>
             <Spoiler seedData={seed} />
-        </>);
-    }
-    else {
-        content = (
-            <Card>
-                <CardHeader className={classNames({
-                        'bg-danger': errorMessage,
-                        'bg-primary': !errorMessage
-                    }, 'text-white'
-                )}>
-                    {errorMessage ? <div>Something went wrong :(</div> : <div>Game information</div>}
-                </CardHeader>
-                <CardBody>
-                    {errorMessage ? <p>{errorMessage}</p> : <p>Please wait, loading...</p>}
-                </CardBody>
-            </Card>
-        );
-    }
+        </>) :
+        errorMessage ? <MessageCard error={true} title="Something went wrong :(" msg={errorMessage} /> :
+        gameMismatch ? (
+            <MessageCard error={true} title="This is not quite right :O"
+                msg={<a href={adjustHostname(document.location.href, seed.gameId)}>Go to the correct domain here</a>}
+            />
+        ) :
+        <MessageCard title="Game information" msg="Please wait, loading..." />;
 
     return (
         <Container>
@@ -133,4 +127,12 @@ export default function Permalink(props) {
             </Row>
         </Container>
     );
+}
+
+function tryParseJson(text) {
+    try {
+        return JSON.parse(text);
+    } catch (syntaxerror) {
+        return null;
+    }
 }
