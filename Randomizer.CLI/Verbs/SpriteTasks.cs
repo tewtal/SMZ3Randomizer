@@ -9,6 +9,7 @@ using CommandLine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Randomizer.CLI.FileData;
+using static Randomizer.CLI.FileHelper;
 
 namespace Randomizer.CLI.Verbs {
 
@@ -62,9 +63,12 @@ namespace Randomizer.CLI.Verbs {
             }
 
             var root = opts.Directory;
-            var files = Directory.EnumerateFiles(root, "*.rdc", SearchOption.AllDirectories);
+            var files = Enumerable.Concat(
+                Directory.EnumerateFiles(root, "*.rdc", SearchOption.AllDirectories),
+                Directory.EnumerateFiles(root, "*.rdc.gz", SearchOption.AllDirectories)
+            );
             var sprites = files.Select(path => {
-                using var stream = File.OpenRead(path);
+                using var stream = OpenReadInnerStream(path);
                 var rdc = Rdc.Parse(stream);
 
                 var game =
@@ -146,7 +150,7 @@ namespace Randomizer.CLI.Verbs {
 
             foreach (var path in paths) {
                 offset += 1;
-                using var stream = File.OpenRead(path);
+                using var stream = OpenReadInnerStream(path);
                 var rdc = Rdc.Parse(stream);
                 if (!rdc.TryParse<LinkSprite>(stream, out var block))
                     throw new InvalidDataException($"RDC file at {path} is assumed to have a link sprite block");
@@ -172,31 +176,29 @@ namespace Randomizer.CLI.Verbs {
 
             IList<Color> palette;
             Func<int, byte[]> fetch;
-            switch (Path.GetExtension(opts.Z3File)) {
-            case ".rdc": {
-                    using var stream = File.OpenRead(opts.Z3File);
-                    var rdc = Rdc.Parse(stream);
-                    if (!rdc.TryParse<LinkSprite>(stream, out var block))
-                        throw new InvalidDataException($"RDC file at {opts.Z3File} is assumed to have a link sprite block");
-                    var sprite = (LinkSprite) block;
-                    palette = ConvertPalette(sprite.FetchPalette(0));
-                    fetch = (index) => sprite.Fetch8x8(index);
-                }
-                break;
-            case ".zspr": {
-                    using var stream = File.OpenRead(opts.Z3File);
-                    var zspr = Zspr.Parse(stream);
-                    palette = ConvertPalette(slice(zspr.Content, 0x7000, 30));
-                    fetch = (index) => slice(zspr.Content, index * 0x20, 0x20);
+            var filename = Path.GetFileName(opts.Z3File);
+            if (filename.Contains(".rdc")) {
+                using var stream = OpenReadInnerStream(opts.Z3File);
+                var rdc = Rdc.Parse(stream);
+                if (!rdc.TryParse<LinkSprite>(stream, out var block))
+                    throw new InvalidDataException($"RDC file at {opts.Z3File} is assumed to have a link sprite block");
+                var sprite = (LinkSprite) block;
+                palette = ConvertPalette(sprite.FetchPalette(0));
+                fetch = (index) => sprite.Fetch8x8(index);
+            }
+            else if (filename.Contains(".zspr")) {
+                using var stream = OpenReadInnerStream(opts.Z3File);
+                var zspr = Zspr.Parse(stream);
+                palette = ConvertPalette(slice(zspr.Content, 0x7000, 30));
+                fetch = (index) => slice(zspr.Content, index * 0x20, 0x20);
 
-                    byte[] slice(byte[] content, int index, int size) {
-                        byte[] bytes;
-                        content.AsSpan(index, size).CopyTo(bytes = new byte[size]);
-                        return bytes;
-                    }
+                byte[] slice(byte[] content, int index, int size) {
+                    byte[] bytes;
+                    content.AsSpan(index, size).CopyTo(bytes = new byte[size]);
+                    return bytes;
                 }
-                break;
-            default:
+            }
+            else {
                 Console.Error.WriteLine($"The file {opts.Z3File} is not an RDC or a ZSPR file");
                 return;
             }
@@ -239,7 +241,7 @@ namespace Randomizer.CLI.Verbs {
             var poseOffset = 6 * 1024;
             foreach (var path in paths) {
                 offset += 1;
-                using var stream = File.OpenRead(path);
+                using var stream = OpenReadInnerStream(path);
                 var rdc = Rdc.Parse(stream);
                 if (!rdc.TryParse<SamusSprite>(stream, out var block))
                     throw new InvalidDataException($"RDC file at {path} is assumed to have a samus sprite block");

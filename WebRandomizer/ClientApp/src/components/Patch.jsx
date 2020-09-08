@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import { Form, Row, Col, Card, CardBody } from 'reactstrap';
 import { Label, Button, Input, InputGroupAddon, InputGroupText } from 'reactstrap';
@@ -188,8 +188,8 @@ export default function Patch(props) {
     const component = patchState === 'upload' ? <Upload onUpload={onUploadRoms} /> : (
         <Form onSubmit={(e) => e.preventDefault()}>
             <Row className="mb-3">
-                <Col md={game.smz3 ? 8 : 6}>
-                    <SpriteSettings sprites={sprites} settings={{ z3Sprite, smSprite, smSpinjumps }}
+                <Col md={game.smz3 ? 10 : 6}>
+                    <SpriteSettings game={game} sprites={sprites} settings={{ z3Sprite, smSprite, smSpinjumps }}
                         onZ3SpriteChange={onZ3SpriteChange}
                         onSMSpriteChange={onSMSpriteChange}
                         onSpinjumpToggle={onSpinjumpToggle}
