@@ -25,23 +25,23 @@ export async function prepareRom(world_patch, settings, baseIps, game) {
     const base_patch = maybeCompressed(new Uint8Array(await (await fetch(baseIps, { cache: 'no-store' })).arrayBuffer()));
     world_patch = Uint8Array.from(atob(world_patch), c => c.charCodeAt(0));
 
-    const mode = modeFromGame(game);
+    const { mapping } = game;
     applyIps(rom, base_patch);
 
     if (game.z3) {
-        await applySprite(rom, mode, 'link_sprite', settings.z3Sprite);
+        await applySprite(rom, mapping, 'link_sprite', settings.z3Sprite);
     }
-    await applySprite(rom, mode, 'samus_sprite', settings.smSprite);
+    await applySprite(rom, mapping, 'samus_sprite', settings.smSprite);
     if (settings.smSpinjumps) {
-        smSpinjumps(rom, mode);
+        smSpinjumps(rom, mapping);
     }
 
     if (game.z3) {
-        z3HeartColor(rom, mode, settings.z3HeartColor);
+        z3HeartColor(rom, mapping, settings.z3HeartColor);
         z3HeartBeep(rom, settings.z3HeartBeep);
     }
     if (!settings.smEnergyBeep) {
-        smEnergyBeepOff(rom, mode);
+        smEnergyBeepOff(rom, mapping);
     }
 
     applySeed(rom, world_patch);
@@ -49,27 +49,17 @@ export async function prepareRom(world_patch, settings, baseIps, game) {
     return rom;
 }
 
-/* Combines a mode lookup with accessing the name of the mode. This way code
-   can either satisfy boolean checks or key lookups in other objects.
-*/
-function modeFromGame(game) {
-    return {
-        exhirom: game.smz3 && 'exhirom',
-        lorom: !game.smz3 && 'lorom'
-    };
-}
-
-async function applySprite(rom, mode, block, sprite) {
+async function applySprite(rom, mapping, block, sprite) {
     if (sprite.path) {
         const url = `${process.env.PUBLIC_URL}/sprites/${sprite.path}`;
         const rdc = maybeCompressed(new Uint8Array(await (await fetch(url)).arrayBuffer()));
         const [blocks, author] = parse_rdc(rdc);
-        blocks[block] && blocks[block](rom, mode);
-        applySpriteAuthor(rom, mode, block, author);
+        blocks[block] && blocks[block](rom, mapping);
+        applySpriteAuthor(rom, mapping, block, author);
     }
 }
 
-function applySpriteAuthor(rom, mode, block, author) {
+function applySpriteAuthor(rom, mapping, block, author) {
     author = author.toUpperCase();
     /* Author field that is empty or has no accepted characters */
     if (!author.match(/[A-Z0-9]/))
@@ -82,15 +72,13 @@ function applySpriteAuthor(rom, mode, block, author) {
         link_sprite: [0xF47002, 0xFD1480],
         samus_sprite: { exhirom: [0xF47004, 0xFD1600], lorom: [0xCEFF02, 0xCEC740] },
     }[block];
-    const [enable, tilemap] = isPlainObject(addrs)
-        ? addrs[mode.exhirom || mode.lorom]
-        : addrs;
+    const [enable, tilemap] = isPlainObject(addrs) ? addrs[mapping] : addrs;
 
-    rom[snes_to_pc(mode, enable)] = 0x01;
+    rom[snes_to_pc(mapping, enable)] = 0x01;
     each(author, (char, i) => {
         const bytes = bigText[char];
-        rom[snes_to_pc(mode, tilemap + 2 * (center + i))] = bytes[0];
-        rom[snes_to_pc(mode, tilemap + 2 * (center + i + 32))] = bytes[1];
+        rom[snes_to_pc(mapping, tilemap + 2 * (center + i))] = bytes[0];
+        rom[snes_to_pc(mapping, tilemap + 2 * (center + i + 32))] = bytes[1];
     });
 }
 
@@ -105,11 +93,11 @@ function formatAuthor(author) {
 }
 
 /* Enables separate spinjump behavior */
-function smSpinjumps(rom, mode) {
-    rom[snes_to_pc(mode, 0x9B93FE)] = 0x01;
+function smSpinjumps(rom, mapping) {
+    rom[snes_to_pc(mapping, 0x9B93FE)] = 0x01;
 }
 
-function z3HeartColor(rom, mode, setting) {
+function z3HeartColor(rom, mapping, setting) {
     const values = {
         red:    [0x24, [0x18, 0x00]],
         yellow: [0x28, [0xBC, 0x02]],
@@ -119,10 +107,10 @@ function z3HeartColor(rom, mode, setting) {
     const [hud, file_select] = defaultTo(values[setting], values.red);
 
     each(range(0, 20, 2), i => {
-        rom[snes_to_pc(mode, 0xDFA1E + i)] = hud;
+        rom[snes_to_pc(mapping, 0xDFA1E + i)] = hud;
     });
 
-    rom.set(file_select, snes_to_pc(mode, 0x1BD6AA));
+    rom.set(file_select, snes_to_pc(mapping, 0x1BD6AA));
 }
 
 function z3HeartBeep(rom, setting) {
@@ -137,13 +125,13 @@ function z3HeartBeep(rom, setting) {
     rom[0x400033] = defaultTo(values[setting], values.half);
 }
 
-function smEnergyBeepOff(rom, mode) {
+function smEnergyBeepOff(rom, mapping) {
     each([
         [0x90EA9B, 0x80],
         [0x90F337, 0x80],
         [0x91E6D5, 0x80]
     ],
-        ([addr, value]) => rom[snes_to_pc(mode, addr)] = value
+        ([addr, value]) => rom[snes_to_pc(mapping, addr)] = value
     );
 }
 

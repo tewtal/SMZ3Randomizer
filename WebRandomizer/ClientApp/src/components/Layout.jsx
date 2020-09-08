@@ -12,13 +12,13 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-export default function Layout(props) {
+export default function Layout({ children }) {
     return (
         <>
             <GlobalStyle />
-            <NavMenu gameId={props.gameId} />
+            <NavMenu />
             <Container className="mb-5">
-                {props.children}
+                {children}
             </Container>
         </>
     );
