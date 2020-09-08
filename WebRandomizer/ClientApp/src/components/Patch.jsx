@@ -191,7 +191,7 @@ export default function Patch(props) {
     const component = patchState === 'upload' ? <Upload game={game} onUpload={onUploadRoms} /> : (
         <Form onSubmit={(e) => e.preventDefault()}>
             <Row className="mb-3">
-                <Col md={game.smz3 ? 8 : 6}>
+                <Col md={game.smz3 ? 10 : 6}>
                     <SpriteSettings game={game} sprites={sprites} settings={{ z3Sprite, smSprite, smSpinjumps }}
                         onZ3SpriteChange={onZ3SpriteChange}
                         onSMSpriteChange={onSMSpriteChange}
