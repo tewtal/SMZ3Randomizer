@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using CommandLine;
 using Newtonsoft.Json;
 using Randomizer.CLI.FileData;
 using Randomizer.Shared.Contracts;
+using static Randomizer.CLI.FileHelper;
 
 namespace Randomizer.CLI.Verbs {
 
@@ -68,17 +68,6 @@ namespace Randomizer.CLI.Verbs {
 
         public abstract IRandomizer NewRandomizer();
         public abstract byte[] BaseRom();
-
-        protected Stream OpenReadInnerStream(string filename) {
-            Stream file = File.OpenRead(filename);
-            if (Path.GetExtension(filename).ToLower() != ".gz")
-                return file;
-
-            using var source = new GZipStream(file, CompressionMode.Decompress);
-            var stream = new MemoryStream();
-            source.CopyTo(stream);
-            return stream;
-        }
 
     }
 
@@ -209,14 +198,14 @@ namespace Randomizer.CLI.Verbs {
 
         static void AdditionalPatches(byte[] rom, IEnumerable<string> ips) {
             foreach (var patch in ips) {
-                using var stream = File.OpenRead(patch);
+                using var stream = OpenReadInnerStream(patch);
                 Rom.ApplyIps(rom, stream);
             }
         }
 
         static void ApplyRdcResources(byte[] rom, IEnumerable<string> rdc) {
             foreach (var resource in rdc) {
-                using var stream = File.OpenRead(resource);
+                using var stream = OpenReadInnerStream(resource);
                 var content = Rdc.Parse(stream);
                 if (content.TryParse<LinkSprite>(stream, out var block))
                     (block as DataBlock)?.Apply(rom);
