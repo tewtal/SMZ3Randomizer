@@ -35,6 +35,8 @@ export default function App() {
                         <Route path="/information" render={(props) => <Markdown {...props} source={gameId === 'sm' ? SmInformationMd : Smz3InformationMd} />} />
                         <Route path="/resources" render={(props) => <Markdown {...props} source={ResourcesMd} />} />
                         <Route path="/changelog" render={(props) => <Markdown {...props} source={gameId === 'sm' ? SmChangelogMd : Smz3ChangelogMd} />} />
+                        <Route exact path="/configure" component={Configure} />
+                        {/* Todo: Remove this game specific configure path in v12 */}
                         <Route path="/configure/:randomizer_id" component={Configure} />
                         <Route path="/multiworld/:session_id" component={Multiworld} />
                         <Route path="/seed/:seed_id" component={Permalink} />

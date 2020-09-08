@@ -30,15 +30,16 @@ const InputWithoutSpinner = styled(Input)`
 `;
 
 export default function Configure(props) {
-    const gameId = props.match.params.randomizer_id;
+    const game = useContext(GameTraitsCtx)
+
+    // Todo: Remove the game specific configure path in v12
+    const gameId = props.match.params.randomizer_id || game.id;
 
     const [options, setOptions] = useState(null);
     const [names, setNames] = useState({});
     const [randomizer, setRandomizer] = useState(null);
     const [modal, setModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
-
-    const game = useContext(GameTraitsCtx)
 
     useEffect(() => {
         attempt(async () => {

@@ -30,7 +30,7 @@ export default function NavMenu() {
                     <Collapse className="d-sm-inline-flex flex-sm-row-reverse" navbar isOpen={showMenu}>
                         <Nav className="flex-grow" navbar>
                             <NavItem>
-                                <NavLink {...linkProps} to={`/configure/${game.id}`}>Generate randomized game</NavLink>
+                                <NavLink {...linkProps} to={"/configure"}>Generate randomized game</NavLink>
                             </NavItem>
                             <UncontrolledDropdown nav inNavbar>
                                 <DropdownToggle className="text-dark" nav caret>Help</DropdownToggle>

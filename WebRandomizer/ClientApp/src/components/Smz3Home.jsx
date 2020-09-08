@@ -18,7 +18,7 @@ export default function Smz3Home() {
                     <Col md="4">
                         <h2>Get started</h2>
                         <p>Follow the link below to get to the game generation page and head directly into the action.</p>
-                        <span className="align-bottom"><a href="/configure/smz3"><Button color="primary">Generate game</Button></a></span>
+                        <span className="align-bottom"><a href="/configure"><Button color="primary">Generate game</Button></a></span>
                     </Col>
                     <Col md="4">
                         <h2>Get help</h2>
