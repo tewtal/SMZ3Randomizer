@@ -57,7 +57,7 @@ export default function Configure(props) {
                     setErrorMessage('Cannot load metadata for the specified randomizer.');
                 }
             } catch (error) {
-                setErrorMessage(error);
+                setErrorMessage(`${error}`);
             }
         });
     }, []); /* eslint-disable-line react-hooks/exhaustive-deps */

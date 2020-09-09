@@ -31,7 +31,7 @@ export default function Permalink(props) {
                     setErrorMessage('Cannot load metadata for the specified seed.');
                 }
             } catch (error) {
-                setErrorMessage(error.toString());
+                setErrorMessage(`${error}`);
             }
         });
     }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
