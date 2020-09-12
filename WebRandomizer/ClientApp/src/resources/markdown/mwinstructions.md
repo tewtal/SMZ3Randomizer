@@ -47,24 +47,21 @@ the section that describes the setup you will be playing on.
 
 ##### Required software:
 
-* QUSB2SNES v0.7.16.1 [[Download](https://github.com/Skarsnik/QUsb2snes/releases/download/v0.7.16.1/QUsb2Snes-v0.7.16.1.7z)]
+* QUSB2SNES latest version [[Download](https://github.com/Skarsnik/QUsb2snes/releases)]
+  * In the rare case of issues with the latest version, try the version prior.
 
 #### Snes9x
 
 If you want to play using Snes9x you'll need the following additional software:
 
-* Snes9x-rr-1.55-multitroid2-r4 [[Download](https://drive.google.com/open?id=1xFw994dDl_yhwj0f0d1_nC9ZmX6wUFiE)]
-    * Combo: multibridge_smz3_r2.lua [[Download](/lua/multibridge_smz3_r2.lua)]
-    * SM: The included multibridge.lua
+* Snes9x-rr-1.60 32-bit [[Download](https://github.com/gocha/snes9x-rr/releases/download/1.60/snes9x-rr-1.60-win32.zip)]
 
 ##### Instructions:
 
 1. Unzip QUSB2SNES and then run "QUSB2SNES.exe" to start the QUSB2SNES tray app.
 2. Right click on the QUSB2SNES tray icon and under "Devices" select "Enable Lua bridge (snes9x-rr)".
 3. Unzip Snes9x-rr and start it.
-4. Go to File -> Lua scripting -> New Lua script window.
-    * If playing Combo Randomizer, load "multibridge_smz3_r2.lua".
-    * If playing Super Metroid Randomizer, load "multibridge.lua".
+4. Go to File -> Lua scripting -> New Lua script window. Load the included "luabridge.lua".
 5. When ready, load the ROM you get from the randomizer.
 
 #### Retroarch
@@ -123,8 +120,13 @@ Hard reset, either through your console or emulator, severs the connection to
 the server. Instead the ROM's provide an in-game soft reset feature which is
 activated by pressing L+select+start+R.
 
-## Softlock Edge Cases
+## Softlock edge cases
 
-### Tourian Point of No Return Save
+### Tourian point of no return save
 
-If you have already completed LTTP and save at the final Tourian save point, you will be no longer be able to access either game and can perform no further item checks. If other players are dependent on an item from your world to complete their game, they will be locked out of completion. Make sure to either skip this save point, beat SM first, or wait for all players to have the items they need to finish to prevent this problem.
+If you have already completed ALttP and save at the final Tourian save point,
+you will be no longer be able to access either game and can perform no further
+item checks. If other players are dependent on an item from your world to
+complete their game, they will be locked out of completion. Make sure to either
+skip this save point, beat SM first, or wait for all players to have the items
+they need to finish to prevent this problem.
