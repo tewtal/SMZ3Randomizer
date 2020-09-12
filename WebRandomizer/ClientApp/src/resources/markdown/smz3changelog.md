@@ -1,6 +1,43 @@
 # Randomizer Changes
 
+## 2020-09-18 - Version 11.1
+
+* Systems Changes
+  * The selection of custom sprites has been extended to include 168 of the sprites (up from 9) from the ALttP randomizer
+    v31.0.5, as well as 9 Samus sprites (up from 3).
+  * The spoiler log has been enhanced
+    * All locations are listed, grouped by area, as well as dungeon prizes and medallion requirements.
+    * The log can be searched as well as downloaded.
+  * ALTTP has a new text font and a more narrow spacing between letters which allow for 19 characters per line instead of 14.
+  * A temporary light cone is shown on item pickup in dark rooms to make the item recieved visible.
+  * The Lower Norfair energy refill room is reinstated, and the cross-game portal has been moved inside it to a new door on the right side.
+  * Mother Brain phase 2 will now start faster similar to the Super Metroid randomizer.
+  * It's now possible to register to multiple Multiworld sessions at the same time.
+
+* Logic Changes
+  * The top item location at West Ocean is now considered accessible without jump assist.
+  * Allow for access to Wrecked Ship through Forgotten Highway with the following changes:
+    * CanFly and Hi-Jump are removed from Gravity requirement through The Moat.
+    * Screw Attack or defeating Draygon which enable Cactus Alley (together with Gravity) are added to access Forgotten Highway.
+  * Access to Crocomire through Bubble Mountain for Normal logic was accidentally limited to Gravity through Volcano Room.
+    CanPassBombPassages has been added as the alternative to Gravity to allow for the top -> bottom Bubble Mountain route.
+  * The SM -> Misery Mire portal logic was missing correct logical access through Cathedral/Speedway for Hard logic.
+  * The Space Jump location logic is simplified to only check if Draygon can be defeated. Hard logic mistakenly, but redundantly, had duplicate requirements.
+  * The Logic Log has been updated accordingly.
+
+* Technical Changes
+  * The soft reset feature has been improved to be more safe to use. This means it's disabled where resetting could cause issues,
+    such as during saving, during game intros and bootup and when the games are uploading audio data.
+  * Multiworld sessions are now executing on a separate process. This will allow for most randomizer updates to not distrupt ongoing sessions.
+    Any issues while using the multiworld session page *should* be simply a matter of refreshing the page and reconnecting.
+  * Checks have been added to make sure the correct page is loaded depending on what randomizer (SM or SMZ3) a seed was generated with.
+  * Best effort basic support for older browsers like IE/Edge have been added.
+  * The multiworld instruction page has been updated.
+
+#### Thanks to all contributors for helping out with fixes and patches for V11.1
+
 ## 2020-04-11 - Version 11.0
+
 * Systems Changes
   * Complete rewrite from PHP to C#
   * Multiworld support (See the [Multiworld Instructions](/mwinstructions) page for more information)
@@ -44,6 +81,7 @@
   * Everyone in the SMZ3 community for supporting and playing this randomizer.
 
 ## 2019-02-17 - Version 10.2
+
 * This version fixes an issue with item placement where progression items ended up being significantly more likely to show up in ALTTP dungeons than would be expected.
 * The Super Metroid map should now correctly mark visited areas as visited.
 * The Super Metroid map has some graphical changes that indicates portals to A Link to the Past
@@ -57,12 +95,14 @@
   * Using Gravity Suit and either IBJ or Hi-Jump to get past the moat before Wrecked Ship is now in logic.
 
 #### Huge thanks to all contributors to Version 10.2
+
   * Lenophis - New map graphics and porting Personitis max ammo display patch
   * qwertymodo - Fixing map corruption when teleporting between games
   * Natalie - New ALTTP item graphics in SM
   * NDIAZ - Fixing maridia portal music issue
 
 ## 2018-11-25 - Version 10.1
+
 * Checkerboard cave now correctly has a requirement for gloves when accessed through the Lower Norfair to Misery Mire portal.
 * Suitless mama turtle now always requires high-jump. (Hard mode)
 * Right side upper norfair hellruns is now in logic with only speedbooster. (Hard mode)
@@ -76,6 +116,7 @@
 #### Huge thanks to all contributors for helping out with fixes and patches for V10.1
 
 ## 2018-07-27 - Version 10
+
 * Dynamic text is now added back in, which means that checking pedestal and tables will now give a hint to what items is at those locations.
 * Progressive items in the same room in SM now works properly, although the second item will show incorrect graphics.
 * A bunch of general logic bugfixes that should fix a few weird possible edge cases.
