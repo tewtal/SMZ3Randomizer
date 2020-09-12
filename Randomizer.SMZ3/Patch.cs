@@ -56,16 +56,10 @@ namespace Randomizer.SMZ3 {
 
             WritePrizeShuffle();
 
-            WriteOpenModeFlags();
-
             WriteRemoveEquipmentFromUncle(myWorld.Locations.Get("Link's Uncle").Item);
 
-            WriteLockAgahnimDoorInEscape();
-            WriteWishingWellUpgradeFalse();
-            WriteRestrictFairyPonds();
             WriteGanonInvicible(config.GanonInvincible);
             WriteRngBlock();
-            WriteSmithyQuickItemGive();
 
             WriteSaveAndQuitFromBossRoom();
             WriteWorldOnAgahnimDeath();
@@ -529,6 +523,7 @@ namespace Randomizer.SMZ3 {
         }
 
         void WriteStringTable() {
+            // Todo: v12, base table in asm, use move instructions in seed patch
             patches.Add((Snes(0x1C8000), stringTable.GetPaddedBytes()));
         }
 
@@ -592,15 +587,6 @@ namespace Randomizer.SMZ3 {
             patches.Add((Snes(0x1DFD95), new byte[] { digs }));
         }
 
-        void WriteOpenModeFlags() {
-            patches.AddRange(new[] {
-                (Snes(0x308032), new byte[] { 0x01 }),
-                (Snes(0x308038), new byte[] { 0x00 }),
-                (Snes(0x308039), new byte[] { 0x00 }),
-                (Snes(0x30803A), new byte[] { 0x00 }),
-            });
-        }
-
         // Removes Sword/Shield from Uncle by moving the tiles for
         // sword/shield to his head and replaces them with his head.
         void WriteRemoveEquipmentFromUncle(Item item) {
@@ -631,20 +617,8 @@ namespace Randomizer.SMZ3 {
             }
         }
 
-        void WriteLockAgahnimDoorInEscape() {
-            patches.Add((Snes(0x308169), new byte[] { 0x01 }));
-        }
-
-        void WriteWishingWellUpgradeFalse() {
-            patches.Add((Snes(0x6C8DB), new byte[] { 0x2A }));
-            patches.Add((Snes(0x6C8EB), new byte[] { 0x05 }));
-        }
-
-        void WriteRestrictFairyPonds() {
-            patches.Add((Snes(0x30817E), new byte[] { 0x01 }));
-        }
-
         void WriteGanonInvicible(GanonInvincible invincible) {
+            /* Defaults to $00 (never) at [asm]/z3/randomizer/tables.asm */
             var value = invincible switch {
                 GanonInvincible.Never => 0x00,
                 GanonInvincible.Always => 0x01,
@@ -660,16 +634,15 @@ namespace Randomizer.SMZ3 {
             patches.Add((0x420000, Range(0, 1024).Select(x => (byte)rnd.Next(0x100)).ToArray()));
         }
 
-        void WriteSmithyQuickItemGive() {
-            patches.Add((Snes(0x308029), new byte[] { 0x01 }));
-        }
-
         void WriteSaveAndQuitFromBossRoom() {
+            /* Defaults to $00 at [asm]/z3/randomizer/tables.asm */
             patches.Add((Snes(0x308042), new byte[] { 0x01 }));
         }
 
         void WriteWorldOnAgahnimDeath() {
-            patches.Add((Snes(0x3080A3), new byte[] { 0x01 }));
+            /* Defaults to $01 at [asm]/z3/randomizer/tables.asm */
+            // Todo: Z3r major glitches disables this, reconsider extending or dropping with glitched logic later.
+            //patches.Add((Snes(0x3080A3), new byte[] { 0x01 }));
         }
 
         int Snes(int addr) {
