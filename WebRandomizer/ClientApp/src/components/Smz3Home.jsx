@@ -31,6 +31,20 @@ export default function Smz3Home() {
                         <span className="align-bottom"><a href="/resources"><Button color="primary">Resources</Button></a></span>
                     </Col>
                 </Row>
+                <Row style={{ marginTop: "30px" }}>
+                    <Col md={{ size: 4, offset: 8 }}>
+                        <h2>Donate</h2>
+                        <p>Donations to help out with costs for keeping the randomizer running for everyone is greatly appreciated.</p>
+                        <span className="align-bottom">
+                            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                                <input type="hidden" name="cmd" value="_s-xclick" />
+                                <input type="hidden" name="hosted_button_id" value="TD6E7WSKHXFA2" />
+                                <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+                                <img alt="" border="0" src="https://www.paypal.com/en_SE/i/scr/pixel.gif" width="1" height="1" />
+                            </form>
+                        </span>
+                    </Col>
+                </Row>
             </Container>
         </>
     );
