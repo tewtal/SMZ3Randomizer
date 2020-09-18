@@ -1,4 +1,4 @@
-name: Create and publish docker image (production)
+name: Build and deploy image
 
 on:
   push:
@@ -7,15 +7,26 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v1 
+    - uses: actions/checkout@v2 
       with:
         submodules: true   
-    - name: Publish to Registry
-      uses: elgohr/Publish-Docker-Github-Action@master
+    
+    - name: Build and push webrandomizer Docker image
+      uses: docker/build-push-action@v1.1.0
       with:
-        name: tewtal/webrandomizer:live
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+        repository: tewtal/webrandomizer
+        tags: live
+
+    - name: Build and push webrandomizer-service Docker image
+      uses: docker/build-push-action@v1.1.0
+      with:
+        dockerfile: WebGameService/Dockerfile
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        repository: tewtal/webrandomizer-service
+        tags: live
