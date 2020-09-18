@@ -544,6 +544,8 @@ namespace Randomizer.SMZ3 {
 
         void WriteSeedData() {
             var configField =
+                ((myWorld.Config.Race ? 1 : 0) << 15) |
+                ((myWorld.Config.Keysanity ? 1 : 0) << 13) |
                 ((myWorld.Config.GameMode == GameMode.Multiworld ? 1 : 0) << 12) |
                 ((int)myWorld.Config.Z3Logic << 10) |
                 ((int)myWorld.Config.SMLogic << 8) |
