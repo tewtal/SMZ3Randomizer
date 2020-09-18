@@ -84,9 +84,9 @@ function applySpriteAuthor(rom, mapping, block, author) {
 
 function formatAuthor(author) {
     /* Replace non-alphanum with space */
-    author = author.replace(/[^A-Z0-9]/, ' ');
+    author = author.replace(/[^A-Z0-9]/g, ' ');
     /* Normalize spaces */
-    author = author.replace(/ +/, ' ');
+    author = author.replace(/ +/g, ' ');
     /* Keep at most 30 non-whitespace characters */
     /* A limit of 30 guarantee a margin at the edges */
     return author.trimStart().slice(0, 30).trimEnd();
