@@ -107,10 +107,11 @@ namespace Randomizer.SMZ3 {
             WriteStringTable();
 
             WriteKeyCardDoors();
+
             WritePlayerNames();
             WriteSeedData();
             WriteGameTitle();
-            WriteGameModeData();
+            WriteCommonFlags();
 
             return patches.ToDictionary(x => x.offset, x => x.bytes);
         }
@@ -594,9 +595,13 @@ namespace Randomizer.SMZ3 {
             patches.Add((Snes(0x80FF80), AsAscii(myWorld.Guid)));
         }
 
-        void WriteGameModeData() {
+        void WriteCommonFlags() {
+            /* Common Combo Configuration flags at [asm]/config.asm */
             if (myWorld.Config.GameMode == GameMode.Multiworld) {
                 patches.Add((Snes(0xF47000), UshortBytes(0x0001)));
+            }
+            if (myWorld.Config.Keysanity) {
+                patches.Add((Snes(0xF47006), UshortBytes(0x0001)));
             }
         }
 
