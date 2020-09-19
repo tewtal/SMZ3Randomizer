@@ -23,8 +23,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
                     _ => new Requirement(items => items.CanUsePowerBombs() && items.HasEnergyReserves(2) && items.SpeedBooster)
                 }),
                 new Location(this, 7, 0x8F8404, LocationType.Chozo, "Bombs", Logic switch {
-                    Normal => items => items.CanOpenRedDoors() && items.CanPassBombPassages(),
-                    _ => new Requirement(items => items.CanOpenRedDoors() && items.Morph)
+                    Normal => items => ((config.Keysanity && items.CardCrateriaBoss) || (!config.Keysanity && items.CanOpenRedDoors())) && items.CanPassBombPassages(),
+                    _ => new Requirement(items => ((config.Keysanity && items.CardCrateriaBoss) || (!config.Keysanity && items.CanOpenRedDoors())) && items.Morph)
                 })
             };
         }
