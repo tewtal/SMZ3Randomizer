@@ -26,11 +26,11 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                 new Location(this, 58, 0x8F8C14, LocationType.Visible, "Missile (below Crocomire)", Logic switch {
                     _ => new Requirement(items => items.CardNorfairBoss && items.Morph)
                 }),
-                new Location(this, 59, 0x8F8C2A, LocationType.Visible, "Missile (Grapple Beam)", Logic switch {
+                new Location(this, 59, 0x8F8C2A, LocationType.Visible, "Missile (Grappling Beam)", Logic switch {
                     Normal => items => items.CardNorfairBoss && (items.Morph && (items.CanFly() || items.SpeedBooster && items.CanUsePowerBombs())),
                     _ => new Requirement(items => items.CardNorfairBoss && (items.SpeedBooster || items.Morph && (items.CanFly() || items.Grapple)))
                 }),
-                new Location(this, 60, 0x8F8C36, LocationType.Chozo, "Grapple Beam", Logic switch {
+                new Location(this, 60, 0x8F8C36, LocationType.Chozo, "Grappling Beam", Logic switch {
                     Normal => items => items.CardNorfairBoss && (items.Morph && (items.CanFly() || items.SpeedBooster && items.CanUsePowerBombs())),
                     _ => new Requirement(items => items.CardNorfairBoss && (items.SpaceJump || items.Morph || items.Grapple ||
                         items.HiJump && items.SpeedBooster))
