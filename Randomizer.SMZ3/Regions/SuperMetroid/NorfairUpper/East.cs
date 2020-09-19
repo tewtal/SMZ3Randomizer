@@ -47,13 +47,13 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                 new Location(this, 67, 0x8F8CBC, LocationType.Visible, "Missile (Wave Beam)", Logic switch {
                     Normal => items => (items.CardNorfairL2 && (items.CanFly() || items.Morph && (items.SpeedBooster || items.CanPassBombPassages()) || items.HiJump || items.Ice)) ||
                                        (items.SpeedBooster && items.Wave && items.Morph && items.Super),
-                    _ => new Requirement(items => true)
+                    _ => new Requirement(items => items.CardNorfairL2 || items.Varia)
                 }),
                 new Location(this, 68, 0x8F8CCA, LocationType.Chozo, "Wave Beam", Logic switch {
                     Normal => items => items.Morph && (
                         (items.CardNorfairL2 && (items.CanFly() || items.Morph && (items.SpeedBooster || items.CanPassBombPassages()) ||
                         items.HiJump || items.Ice)) || (items.SpeedBooster && items.Wave && items.Morph && items.Super)),
-                    _ => new Requirement(items => items.CanOpenRedDoors() &&
+                    _ => new Requirement(items => items.CanOpenRedDoors() && (items.CardNorfairL2 || items.Varia) &&
                         (items.Morph || items.Grapple || items.HiJump && items.Varia || items.SpaceJump))
                 }),
             };

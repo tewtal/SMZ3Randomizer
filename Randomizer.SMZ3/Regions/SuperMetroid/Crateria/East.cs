@@ -15,7 +15,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
                         items.SpeedBooster || items.Grapple || items.SpaceJump ||
                         items.Gravity && (items.CanFly() || items.HiJump) ||
                         World.CanEnter("Wrecked Ship", items)),
-                    _ => new Requirement(items => true)
+                    _ => new Requirement(items => items.Morph)
                 }),
                 new Location(this, 2, 0x8F81EE, LocationType.Hidden, "Missile (outside Wrecked Ship top)", Logic switch {
                     _ => new Requirement(items => World.CanEnter("Wrecked Ship", items) && (!Config.Keysanity || items.CardWreckedShipBoss) && items.CanPassBombPassages())
