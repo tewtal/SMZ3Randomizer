@@ -237,7 +237,7 @@ namespace Randomizer.SMZ3 {
         CardMaridiaL1 = 0xD9,
         [Description("Maridia Level 2 Keycard")]
         CardMaridiaL2 = 0xDA,
-        [Description("Maridida Boss Keycard")]
+        [Description("Maridia Boss Keycard")]
         CardMaridiaBoss = 0xDB,
         [Description("Wrecked Ship Level 1 Keycard")]
         CardWreckedShipL1 = 0xDC,
