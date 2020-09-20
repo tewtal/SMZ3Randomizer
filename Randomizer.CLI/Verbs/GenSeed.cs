@@ -6,6 +6,7 @@ using CommandLine;
 using Newtonsoft.Json;
 using Randomizer.CLI.FileData;
 using Randomizer.Shared.Contracts;
+using Randomizer.Shared.Models;
 using static Randomizer.CLI.FileHelper;
 
 namespace Randomizer.CLI.Verbs {
@@ -60,8 +61,24 @@ namespace Randomizer.CLI.Verbs {
             HelpText = "Show json formated patch for each world in the seed")]
         public bool Patch { get; set; }
 
+        [Option(
+            HelpText = "Use keysanity mode for SMZ3")]
+        public bool Keysanity { get; set; }
+
+        [Option(
+            HelpText = "\"vanilla\" for vanilla placement, \"early\" for early placement, default for randomized")]
+        public string Morph { get; set; }
+
+        [Option(
+            HelpText = "\"vanilla\" for vanilla placement, \"early\" for early placement, default for randomized")]
+        public string Sword { get; set; }
+
+
         public virtual string LogicName { get; }
         public virtual string LogicValue { get; }
+        public virtual string KeyShuffle { get; }
+        public virtual string SwordLocation { get; }
+        public virtual string MorphLocation { get; }
 
         protected const string smFile = @".\Super_Metroid_JU_.sfc";
         protected const string z3File = @".\Zelda_no_Densetsu_-_Kamigami_no_Triforce_Japan.sfc";
@@ -109,6 +126,21 @@ namespace Randomizer.CLI.Verbs {
             _ => "normal"
         };
 
+        public override string KeyShuffle => this switch {
+            var o when o.Keysanity => "Keysanity",
+            _ => "None"
+        };
+
+        public override string MorphLocation =>
+            (this.Morph == "early") ? "early" :
+            (this.Morph == "vanilla") ? "original" :
+            "randomized";
+
+        public override string SwordLocation =>
+            (this.Morph == "early") ? "early" :
+            (this.Morph == "vanilla") ? "uncle" :
+            "randomized";
+
         public SMZ3SeedOptions() {
             smz3Rom = new Lazy<byte[]>(() => {
                 using var sm = File.OpenRead(smFile);
@@ -135,6 +167,9 @@ namespace Randomizer.CLI.Verbs {
                 ("gamemode", opts.Single ? "normal" : "multiworld"),
                 (opts.LogicName, opts.LogicValue),
                 ("players", opts.Players.ToString()),
+                ("keyshuffle", opts.KeyShuffle),
+                ("swordlocation", opts.SwordLocation),
+                ("morphlocation", opts.MorphLocation),
             };
             var players = from n in Enumerable.Range(0, opts.Players)
                           select ($"player-{n}", $"Player {n + 1}");
@@ -148,6 +183,21 @@ namespace Randomizer.CLI.Verbs {
             } catch (Exception e) {
                 Console.Error.WriteLine(e.Message);
             }
+        }
+
+        static string ComposeFileName(IRandomizer rando, ISeedData data, IWorldData world, GenSeedOptions opts) {
+            string fname = rando.Id.ToUpper();
+            fname += "-V" + rando.Version;
+            fname += "-ZLn+SL" + data.Logic[0];
+            var sword = opts.SwordLocation[0];
+            var morph = opts.MorphLocation[0];
+            if(sword != 'R') { fname += "-S" + sword; }
+            if(morph != 'R') { fname += "-M" + morph; }
+            if(opts.Keysanity) { fname += "-KK"; }
+            fname += "-" + data.Seed;
+            if(data.Mode == "multiworld") { fname += "-" + world.Player; }
+            fname += ".sfc";
+            return fname;
         }
 
         static void MakeSeed(Dictionary<string, string> options, GenSeedOptions opts) {
@@ -168,7 +218,9 @@ namespace Randomizer.CLI.Verbs {
                     Rom.ApplySeed(rom, world.Patches);
                     AdditionalPatches(rom, opts.Ips.Skip(1));
                     ApplyRdcResources(rom, opts.Rdc);
-                    File.WriteAllBytes($"{data.Game} {data.Logic} - {data.Seed}{(!opts.Single ? $" - {world.Player}" : "")}.sfc", rom);
+                    var fname = ComposeFileName(rando, data, world, opts);
+                    //$"{data.Game} {data.Logic} - {data.Seed}{(!opts.Single ? $" - {world.Player}" : "")}.sfc"
+                    File.WriteAllBytes(fname, rom);
                 } catch (Exception e) {
                     Console.Error.WriteLine(e.Message);
                 }
