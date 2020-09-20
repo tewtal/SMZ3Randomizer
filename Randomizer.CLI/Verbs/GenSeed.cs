@@ -61,15 +61,15 @@ namespace Randomizer.CLI.Verbs {
             HelpText = "Show json formated patch for each world in the seed")]
         public bool Patch { get; set; }
 
-        [Option(
+        [Option('k', "keysanity",
             HelpText = "Use keysanity mode for SMZ3")]
         public bool Keysanity { get; set; }
 
-        [Option(
+        [Option("morph",
             HelpText = "\"vanilla\" for vanilla placement, \"early\" for early placement, default for randomized")]
         public string Morph { get; set; }
 
-        [Option(
+        [Option("sword",
             HelpText = "\"vanilla\" for vanilla placement, \"early\" for early placement, default for randomized")]
         public string Sword { get; set; }
 
@@ -218,9 +218,8 @@ namespace Randomizer.CLI.Verbs {
                     Rom.ApplySeed(rom, world.Patches);
                     AdditionalPatches(rom, opts.Ips.Skip(1));
                     ApplyRdcResources(rom, opts.Rdc);
-                    var fname = ComposeFileName(rando, data, world, opts);
-                    //$"{data.Game} {data.Logic} - {data.Seed}{(!opts.Single ? $" - {world.Player}" : "")}.sfc"
-                    File.WriteAllBytes(fname, rom);
+                    //var fname = ComposeFileName(rando, data, world, opts);
+                    File.WriteAllBytes($"{data.Game} {data.Logic} - {data.Seed}{(!opts.Single ? $" - {world.Player}" : "")}.sfc", rom);
                 } catch (Exception e) {
                     Console.Error.WriteLine(e.Message);
                 }
