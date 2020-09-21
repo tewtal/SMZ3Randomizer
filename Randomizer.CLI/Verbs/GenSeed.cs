@@ -86,7 +86,9 @@ namespace Randomizer.CLI.Verbs {
         public SMSeedOptions() {
             smRom = new Lazy<byte[]>(() => {
                 using var ips = OpenReadInnerStream(Ips.First());
-                var rom = File.ReadAllBytes(smFile);
+                using var sm = File.OpenRead(smFile);
+                /* Account for custom sprites */
+                var rom = FileData.Rom.ExpandRom(sm, 0x400000);
                 FileData.Rom.ApplyIps(rom, ips);
                 return rom;
             });
