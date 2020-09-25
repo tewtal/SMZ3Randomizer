@@ -21,11 +21,11 @@ namespace Randomizer.CLI.Verbs {
         public int Players { get; set; }
 
         [Option('n', "normal",
-            HelpText = "Generate seeds with Normal SM logic (default)")]
+            HelpText = "Generate seeds with Normal (Casual) SM logic (default)")]
         public bool Normal { get; set; }
 
         [Option('h', "hard",
-            HelpText = "Generate seeds with Hard SM logic")]
+            HelpText = "Generate seeds with Hard (Tournament) SM logic")]
         public bool Hard { get; set; }
 
         [Option('l', "loop",
@@ -60,8 +60,10 @@ namespace Randomizer.CLI.Verbs {
             HelpText = "Show json formated patch for each world in the seed")]
         public bool Patch { get; set; }
 
-        public virtual string LogicName { get; }
-        public virtual string LogicValue { get; }
+        public virtual string LogicName { get; } = "";
+        public virtual string LogicValue { get; } = "";
+
+        public bool Multi => !Single;
 
         protected const string smFile = @".\Super_Metroid_JU_.sfc";
         protected const string z3File = @".\Zelda_no_Densetsu_-_Kamigami_no_Triforce_Japan.sfc";
@@ -74,6 +76,14 @@ namespace Randomizer.CLI.Verbs {
     [Verb("sm", HelpText = "Generate Super Metroid seeds")]
     class SMSeedOptions : GenSeedOptions {
 
+        [Option(
+            HelpText = "Generate seeds with full randomization")]
+        public bool Full { get; set; }
+
+        [Option(
+            HelpText = "Generate seeds with Major/Minor split (default)")]
+        public bool Split { get; set; }
+
         readonly Lazy<byte[]> smRom;
 
         public override string LogicName => "logic";
@@ -81,6 +91,12 @@ namespace Randomizer.CLI.Verbs {
             var o when o.Hard => "tournament",
             var o when o.Normal => "casual",
             _ => "casual",
+        };
+
+        public string Placement => this switch {
+            var o when o.Full => "full",
+            var o when o.Split => "split",
+            _ => "split",
         };
 
         public SMSeedOptions() {
@@ -102,6 +118,26 @@ namespace Randomizer.CLI.Verbs {
     [Verb("smz3", HelpText = "Generate SMZ3 combo seeds")]
     class SMZ3SeedOptions : GenSeedOptions {
 
+        [Option(
+            HelpText = "Generate seeds with keysanity")]
+        public bool Keysanity { get; set; }
+
+        [Option(
+            HelpText = "Generate seeds with original morph placement (defaults to randomized)")]
+        public bool OriginalMorph { get; set; }
+
+        [Option(
+            HelpText = "Generate seeds with early morph placement (defaults to randomized)")]
+        public bool EarlyMorph { get; set; }
+
+        [Option(
+            HelpText = "Generate seeds with uncle sword placement (defaults to randomized)")]
+        public bool UncleSword { get; set; }
+
+        [Option(
+            HelpText = "Generate seeds with early sword placement (defaults to randomized)")]
+        public bool EarlySword { get; set; }
+
         readonly Lazy<byte[]> smz3Rom;
 
         public override string LogicName => "smlogic";
@@ -109,6 +145,21 @@ namespace Randomizer.CLI.Verbs {
             var o when o.Hard => "hard",
             var o when o.Normal => "normal",
             _ => "normal"
+        };
+
+        public string KeyShuffle =>
+            Keysanity ? "keysanity" : "none";
+
+        public string MorphLocation => this switch {
+            var o when o.EarlyMorph => "early",
+            var o when o.OriginalMorph => "original",
+            _ => "randomized",
+        };
+
+        public string SwordLocation => this switch {
+            var o when o.EarlySword => "early",
+            var o when o.UncleSword => "uncle",
+            _ => "randomized",
         };
 
         public SMZ3SeedOptions() {
@@ -133,11 +184,23 @@ namespace Randomizer.CLI.Verbs {
             if (opts.Players < 1 || opts.Players > 64)
                 throw new ArgumentOutOfRangeException("players", "The players parameter must fall within the range 1-64");
 
-            var optionList = new[] {
+            var optionList = new List<(string, string)> {
                 ("gamemode", opts.Single ? "normal" : "multiworld"),
                 (opts.LogicName, opts.LogicValue),
                 ("players", opts.Players.ToString()),
             };
+            if (opts is SMZ3SeedOptions smz3) {
+                optionList.AddRange(new[] {
+                    ("keyshuffle", smz3.KeyShuffle),
+                    ("swordlocation", smz3.SwordLocation),
+                    ("morphlocation", smz3.MorphLocation),
+                });
+            }
+            if (opts is SMSeedOptions sm) {
+                optionList.AddRange(new[] {
+                    ("placement", sm.Placement),
+                });
+            }
             var players = from n in Enumerable.Range(0, opts.Players)
                           select ($"player-{n}", $"Player {n + 1}");
             var options = optionList.Concat(players).ToDictionary(x => x.Item1, x => x.Item2);
@@ -163,14 +226,15 @@ namespace Randomizer.CLI.Verbs {
                 $"Spheres: {data.Playthrough.Count}",
                 $"Generation time: {end - start}"
             ));
+            var world = data.Worlds.First();
+            var filename = ComposeFilename(rando, opts, data.Seed, world.Player);
             if (opts.Rom) {
                 try {
-                    var world = data.Worlds.First();
                     var rom = opts.BaseRom();
                     Rom.ApplySeed(rom, world.Patches);
                     AdditionalPatches(rom, opts.Ips.Skip(1));
                     ApplyRdcResources(rom, opts.Rdc);
-                    File.WriteAllBytes($"{data.Game} {data.Logic} - {data.Seed}{(!opts.Single ? $" - {world.Player}" : "")}.sfc", rom);
+                    File.WriteAllBytes($"{filename}.sfc", rom);
                 } catch (Exception e) {
                     Console.Error.WriteLine(e.Message);
                 }
@@ -181,7 +245,7 @@ namespace Randomizer.CLI.Verbs {
                     Console.WriteLine(text);
                     Console.ReadLine();
                 } else {
-                    File.WriteAllText($"playthrough-{data.Logic}-{data.Seed}.json", text);
+                    File.WriteAllText($"{filename}-playthrough.json", text);
                 }
             }
             if (opts.Patch) {
@@ -193,7 +257,7 @@ namespace Randomizer.CLI.Verbs {
                     Console.WriteLine(text);
                     Console.ReadLine();
                 } else {
-                    File.WriteAllText($"patch-{data.Logic}-{data.Seed}.json", text);
+                    File.WriteAllText($"{filename}-patch.json", text);
                 }
             }
         }
@@ -214,6 +278,30 @@ namespace Randomizer.CLI.Verbs {
                 if (content.TryParse<SamusSprite>(stream, out block))
                     (block as DataBlock)?.Apply(rom);
             }
+        }
+
+        static string ComposeFilename(IRandomizer rando, GenSeedOptions opts, string seed, string player) {
+            var parts = new[] {
+                new[] {
+                    rando.Id.ToUpper(),
+                    $"V{rando.Version}",
+                },
+                opts is SMZ3SeedOptions smz3 ? new[] {
+                    $"ZLn+SL{smz3.LogicValue[0]}",
+                    smz3.SwordLocation != "randomized" ? $"S{smz3.SwordLocation[0]}" : null,
+                    smz3.MorphLocation != "randomized" ? $"M{smz3.MorphLocation[0]}" : null,
+                    smz3.Keysanity ? "Kk" : null,
+                } : opts is SMSeedOptions sm ? new[] {
+                    $"L{sm.LogicValue[0]}",
+                    $"I{sm.Placement[0]}",
+                } : new string[] { },
+                new[] {
+                    seed,
+                    opts.Multi ? player : null,
+                }
+            };
+            /* Flatten, then keep non-null parts */
+            return string.Join("-", parts.SelectMany(x => x).Where(x => x != null));
         }
 
         public class PatchWriteConverter : JsonConverter<IDictionary<int, byte[]>> {
