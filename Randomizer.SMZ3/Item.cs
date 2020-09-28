@@ -13,6 +13,7 @@ namespace Randomizer.SMZ3 {
         [Description("Nothing")] 
         Nothing,
 
+        [Description("Hyrule Castle Map")]
         MapHC = 0x7F,
         [Description("Eastern Palace Map")]
         MapEP = 0x7D,
