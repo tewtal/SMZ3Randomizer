@@ -10,6 +10,19 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
 
         public West(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
+                new Location(this, 49, 0x8F8AE4, LocationType.Hidden, "Missile (lava room)", Logic switch {
+                    Normal => items => items.Varia && (
+                            items.CanOpenRedDoors() && (items.CanFly() || items.HiJump || items.SpeedBooster) ||
+                            World.CanEnter("Norfair Upper East", items) && items.CardNorfairL2
+                        ) && items.Morph,
+                    _ => new Requirement(items => items.CanHellRun() && (
+                            items.CanOpenRedDoors() && (
+                                items.CanFly() || items.HiJump || items.SpeedBooster ||
+                                items.CanSpringBallJump() || items.Varia && items.Ice
+                            ) ||
+                            World.CanEnter("Norfair Upper East", items) && items.CardNorfairL2
+                        ) && items.Morph),
+                }),
                 new Location(this, 50, 0x8F8B24, LocationType.Chozo, "Ice Beam", Logic switch {
                     Normal => items => (config.Keysanity ? items.CardNorfairL1 : items.Super) && items.CanPassBombPassages() && items.Varia && items.SpeedBooster,
                     _ => new Requirement(items => (config.Keysanity ? items.CardNorfairL1 : items.Super) && items.Morph && (items.Varia || items.HasEnergyReserves(3)))
