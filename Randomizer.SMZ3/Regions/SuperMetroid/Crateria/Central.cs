@@ -11,7 +11,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
         public Central(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 0, 0x8F81CC, LocationType.Visible, "Power Bomb (Crateria surface)", Logic switch {
-                    _ => new Requirement(items => ((config.Keysanity && items.CardCrateriaL1) || (!config.Keysanity && items.CanUsePowerBombs())) && (items.SpeedBooster || items.CanFly()))
+                    _ => new Requirement(items => (config.Keysanity ? items.CardCrateriaL1 : items.CanUsePowerBombs()) && (items.SpeedBooster || items.CanFly()))
                 }),
                 new Location(this, 12, 0x8F8486, LocationType.Visible, "Missile (Crateria middle)", Logic switch {
                     _ => new Requirement(items => items.CanPassBombPassages())
@@ -23,8 +23,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
                     _ => new Requirement(items => items.CanUsePowerBombs() && items.HasEnergyReserves(2) && items.SpeedBooster)
                 }),
                 new Location(this, 7, 0x8F8404, LocationType.Chozo, "Bombs", Logic switch {
-                    Normal => items => ((config.Keysanity && items.CardCrateriaBoss) || (!config.Keysanity && items.CanOpenRedDoors())) && items.CanPassBombPassages(),
-                    _ => new Requirement(items => ((config.Keysanity && items.CardCrateriaBoss) || (!config.Keysanity && items.CanOpenRedDoors())) && items.Morph)
+                    Normal => items => (config.Keysanity ? items.CardCrateriaBoss : items.CanOpenRedDoors()) && items.CanPassBombPassages(),
+                    _ => new Requirement(items => (config.Keysanity ? items.CardCrateriaBoss : items.CanOpenRedDoors()) && items.Morph)
                 })
             };
         }
