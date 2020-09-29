@@ -54,7 +54,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
             return Logic switch {
                 Normal =>
                     items.Super && (
-                        ((Config.Keysanity && items.CardCrateriaL2) || (!Config.Keysanity && items.CanUsePowerBombs())) && (
+                        (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && (
                             items.SpeedBooster || items.Grapple || items.SpaceJump || items.Gravity
                         ) ||
                         items.CanAccessMaridiaPortal(World) && items.Gravity && items.CardMaridiaL2 && (
@@ -64,7 +64,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
                     ),
                 _ =>
                     items.Super && (
-                        ((Config.Keysanity && items.CardCrateriaL2) || (!Config.Keysanity && items.CanUsePowerBombs())) ||
+                        (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) ||
                         items.CanAccessMaridiaPortal(World) && ( 
                             items.HiJump && items.CanPassBombPassages() && items.CardMaridiaL2 ||
                             items.Gravity && (

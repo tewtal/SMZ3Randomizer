@@ -38,11 +38,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
             };
         }
 
-        private bool CanExit(Progression items) {
-            return Logic switch
-            {
-                Normal => !Config.Keysanity || (items.CardNorfairL2 || items.Wave && items.Gravity),
-                _ => true
+        bool CanExit(Progression items) {
+            return Logic switch {
+                Normal => items.CardNorfairL2 || items.Wave && items.Gravity,
+                _ => items.CardNorfairL2 || items.Missile || items.Super || items.Wave /* Blue Gate */
             };
         }
 
