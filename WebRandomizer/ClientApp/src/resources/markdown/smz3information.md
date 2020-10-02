@@ -69,6 +69,10 @@ This option selects what kind of logic to use for item placement inside Super Me
     * Shinesparks in any direction (short charging for these is not expected)
     * Infinite Bomb Jumps
 
+* Normal Keysanity - In this mode one specific glitch may also be required with Normal logic.
+
+    * Spore spawn super block wrap-around
+
 * Hard - Hard logic is based upon the "no major glitches" ruleset and includes
   most tricks that are considered minor glitches, with some restrictions.
   You'll want to be somewhat of a Super Metroid veteran for this logic.
