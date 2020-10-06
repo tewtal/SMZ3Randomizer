@@ -1,10 +1,15 @@
 ﻿import React, { useState } from 'react';
-import { Row, Col, Card, CardHeader, CardBody, Button, Nav, NavItem, NavLink, InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
+import { Row, Col, Card, CardHeader, CardBody, Nav, NavItem, NavLink } from 'reactstrap';
+import { InputGroup, InputGroupAddon, InputGroupText, Input, Button } from 'reactstrap';
 import styled from 'styled-components';
-import isEmpty from 'lodash/isEmpty';
+
 import { saveAs } from 'file-saver';
-import { sortBy, uniq } from 'lodash';
 import { encode } from 'slugid';
+
+import isEmpty from 'lodash/isEmpty';
+import sortBy from 'lodash/sortBy';
+import uniq from 'lodash/uniq';
+import escapeRegExp from 'lodash/escapeRegExp';
 
 const SmallNavLink = styled(NavLink)`
         font-size: .87em;
@@ -92,8 +97,8 @@ export default function Spoiler(props) {
         return null;
 
     let locations = spoiler ? spoiler.locations : [];
-    if (spoiler && searchText && searchText !== "") {
-        const re = new RegExp(searchText, "i");
+    if (spoiler && searchText) {
+        const re = new RegExp(escapeRegExp(searchText), 'i');
         locations = spoiler.locations.filter(l => l.locationName.match(re) || l.itemName.match(re));
 
         if (spoilerArea !== "all" && spoilerArea !== "playthrough" && spoilerArea !== "prizes" && !locations.find(l => l.locationArea === spoilerArea)) {
