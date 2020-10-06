@@ -302,6 +302,7 @@ namespace Randomizer.SuperMetroid {
 
         void WriteSeedData() {
             var configField =
+                ((myWorld.Config.Race ? 1 : 0) << 15) |
                 ((myWorld.Config.GameMode == GameMode.Multiworld ? 1 : 0) << 12) |
                 /* Gap of 2 bits, taken by Z3 logic in combo */
                 ((int)myWorld.Config.Logic << 8) |
