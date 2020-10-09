@@ -57,6 +57,10 @@
       "path": "z3/blacksmith_link.1.z3.rdc"
     },
     {
+      "title": "BotW Zelda",
+      "path": "z3/botw_zelda.1.z3.rdc"
+    },
+    {
       "title": "Bowser",
       "path": "z3/bowser.1.z3.rdc"
     },
@@ -162,7 +166,7 @@
     },
     {
       "title": "Finn Merten",
-      "path": "z3/finn_merten.1.z3.rdc"
+      "path": "z3/finn_merten.3.z3.rdc"
     },
     {
       "title": "Finny Bear",
@@ -179,6 +183,10 @@
     {
       "title": "Fox Link",
       "path": "z3/fox_link.1.z3.rdc"
+    },
+    {
+      "title": "Freya Crescent",
+      "path": "z3/freya_crescent.1.z3.rdc"
     },
     {
       "title": "Frog Link",
@@ -219,6 +227,10 @@
     {
       "title": "GrandPOOBear",
       "path": "z3/grandpoobear.2.z3.rdc"
+    },
+    {
+      "title": "GuizDP",
+      "path": "z3/guizdp.1.z3.rdc"
     },
     {
       "title": "Hat Kid",
@@ -385,6 +397,10 @@
       "path": "z3/ms_paint_dog.1.z3.rdc"
     },
     {
+      "title": "Ned Flanders",
+      "path": "z3/ned_flanders.1.z3.rdc"
+    },
+    {
       "title": "Ness (Earthbound)",
       "path": "z3/ness_earthbound.1.z3.rdc"
     },
@@ -531,6 +547,10 @@
     {
       "title": "Shuppet",
       "path": "z3/shuppet.1.z3.rdc"
+    },
+    {
+      "title": "Shy Gal",
+      "path": "z3/shy_gal.1.z3.rdc"
     },
     {
       "title": "Shy Guy",
