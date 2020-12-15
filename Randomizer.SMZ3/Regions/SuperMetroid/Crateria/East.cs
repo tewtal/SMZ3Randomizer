@@ -13,7 +13,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
                 new Location(this, 1, 0x8F81E8, LocationType.Visible, "Missile (outside Wrecked Ship bottom)", Logic switch {
                     Normal => items => items.Morph && (
                         items.SpeedBooster || items.Grapple || items.SpaceJump ||
-                        items.Gravity && (items.CanFly() || items.HiJump) ||
+                        items.Gravity && (items.CanIbj() || items.HiJump) ||
                         World.CanEnter("Wrecked Ship", items)),
                     _ => new Requirement(items => items.Morph)
                 }),
