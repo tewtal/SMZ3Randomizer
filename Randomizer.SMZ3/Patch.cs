@@ -539,7 +539,7 @@ namespace Randomizer.SMZ3 {
                 name = name.PadLeft(name.Length + (int)Math.Ceiling(pad));
                 name = name.PadRight(name.Length + (int)Math.Floor(pad));
             }
-            return AsAscii(name.ToUpper()).Concat(UintBytes(0)).ToArray();
+            return AsAscii(name).Concat(UintBytes(0)).ToArray();
         }
 
         void WriteSeedData() {
