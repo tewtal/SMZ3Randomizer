@@ -15,7 +15,7 @@ namespace Randomizer.SMZ3.Text {
 
         public static byte[] Simple(string text) {
             const int maxBytes = 256;
-            const int wrap = 19;
+            const int wrap = 27;
 
             var bytes = new List<byte>();
             var lines = text.Split('\n');
@@ -54,7 +54,7 @@ namespace Randomizer.SMZ3.Text {
 
         public static byte[] Compiled(string text, bool pause = true) {
             const int maxBytes = 2046;
-            const int wrap = 19;
+            const int wrap = 27;
 
             if (invalid.IsMatch(text))
                 throw new ArgumentException("Dialog commands must be placed on separate lines", nameof(text));
@@ -167,7 +167,7 @@ namespace Randomizer.SMZ3.Text {
         #region letter bytes lookup
 
         static readonly IDictionary<char, byte[]> letters = new Dictionary<char, byte[]> {
-            { ' ', new byte[] { 0xFF } },
+            { ' ', new byte[] { 0x4F } },
             { '?', new byte[] { 0xC6 } },
             { '!', new byte[] { 0xC7 } },
             { ',', new byte[] { 0xC8 } },
@@ -181,7 +181,8 @@ namespace Randomizer.SMZ3.Text {
             { ':', new byte[] { 0x4A } },
             { '@', new byte[] { 0x4B } },
             { '#', new byte[] { 0x4C } },
-            { '¤', new byte[] { 0x4D, 0x4E } }, // Morphing ball            
+            { '¤', new byte[] { 0x4D, 0x4E } }, // Morphing ball
+            { '_', new byte[] { 0xFF } }, // Full width space
             { '£', new byte[] { 0xFE, 0x6A } }, // link's name compressed
             { '>', new byte[] { 0xD2, 0xD3 } }, // link face
             { '%', new byte[] { 0xDD } }, // Hylian Bird
