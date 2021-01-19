@@ -12,7 +12,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
 
         public WreckedShip(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
-                new Location(this, 128, 0x8FC265, LocationType.Visible, "Missile (Wrecked Ship middle)"),
+                new Location(this, 128, 0x8FC265, LocationType.Visible, "Missile (Wrecked Ship middle)", Logic switch {
+                    _ => new Requirement(items => items.CanPassBombPassages())
+                }),
                 new Location(this, 129, 0x8FC2E9, LocationType.Chozo, "Reserve Tank, Wrecked Ship", Logic switch {
                     Normal => items => CanUnlockShip(items) && items.SpeedBooster && items.CanUsePowerBombs() &&
                         (items.Grapple || items.SpaceJump || items.Varia && items.HasEnergyReserves(2) || items.HasEnergyReserves(3)),
@@ -45,7 +47,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
         }
 
         bool CanUnlockShip(Progression items) {
-            return !Config.Keysanity || items.PhantoonKey;
+            return items.CanPassBombPassages() && (!Config.Keysanity || items.PhantoonKey);
         }
 
         public override bool CanEnter(Progression items) {
