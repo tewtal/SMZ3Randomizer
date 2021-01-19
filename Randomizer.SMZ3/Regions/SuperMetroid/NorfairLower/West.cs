@@ -28,14 +28,26 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
             };
         }
 
+        // Todo: account for Croc Speedway once Norfair Upper East also do so, otherwise it would be inconsistent to do so here
         public override bool CanEnter(Progression items) {
             return Logic switch {
                 Normal =>
                     items.Varia && (
-                        World.CanEnter("Norfair Upper East", items) && items.CanUsePowerBombs() && items.SpaceJump && items.Gravity && (items.CardNorfairL1 && items.SpeedBooster || items.CardNorfairL2 || items.Wave && items.SpeedBooster) ||
-                        items.CanAccessNorfairLowerPortal() && items.CanDestroyBombWalls()),
+                        World.CanEnter("Norfair Upper East", items) && items.CanUsePowerBombs() && items.SpaceJump && items.Gravity && (
+                            /* Trivial case, Bubble Mountain access */
+                            items.CardNorfairL2 ||
+                            /* Frog Speedway -> UN Farming Room gate */
+                            items.SpeedBooster && items.Wave
+                        ) ||
+                        items.CanAccessNorfairLowerPortal() && items.CanDestroyBombWalls()
+                    ),
                 _ =>
-                    World.CanEnter("Norfair Upper East", items) && items.CanUsePowerBombs() && items.Varia && (items.HiJump || items.Gravity) ||
+                    World.CanEnter("Norfair Upper East", items) && items.CanUsePowerBombs() && items.Varia && (items.HiJump || items.Gravity) && (
+                        /* Trivial case, Bubble Mountain access */
+                        items.CardNorfairL2 ||
+                        /* Frog Speedway -> UN Farming Room gate */
+                        items.SpeedBooster && (items.Missile || items.Super || items.Wave) /* Blue Gate */
+                    ) ||
                     items.CanAccessNorfairLowerPortal() && items.CanDestroyBombWalls()
             };
         }
