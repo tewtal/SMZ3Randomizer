@@ -29,6 +29,14 @@
       "path": "z3/astronaut.1.z3.rdc"
     },
     {
+      "title": "B.S. Boy",
+      "path": "z3/bs_boy.1.z3.rdc"
+    },
+    {
+      "title": "B.S. Girl",
+      "path": "z3/bs_girl.1.z3.rdc"
+    },
+    {
       "title": "Bananas In Pyjamas",
       "path": "z3/bananas_in_pyjamas.1.z3.rdc"
     },
@@ -63,14 +71,6 @@
     {
       "title": "Brian",
       "path": "z3/brian.1.z3.rdc"
-    },
-    {
-      "title": "B.S. Boy",
-      "path": "z3/bs_boy.1.z3.rdc"
-    },
-    {
-      "title": "B.S. Girl",
-      "path": "z3/bs_girl.1.z3.rdc"
     },
     {
       "title": "Cadence",
@@ -119,10 +119,6 @@
     {
       "title": "D.Owls",
       "path": "z3/d_owls.1.z3.rdc"
-    },
-    {
-      "title": "Dark Link",
-      "path": "z3/dark_link.1.z3.rdc"
     },
     {
       "title": "Dark Panda",
@@ -217,10 +213,6 @@
       "path": "z3/geno.1.z3.rdc"
     },
     {
-      "title": "GrandPOOBear",
-      "path": "z3/grandpoobear.2.z3.rdc"
-    },
-    {
       "title": "Hat Kid",
       "path": "z3/hat_kid.1.z3.rdc"
     },
@@ -239,10 +231,6 @@
     {
       "title": "Homer Simpson",
       "path": "z3/homer_simpson.1.z3.rdc"
-    },
-    {
-      "title": "iBazly",
-      "path": "z3/ibazly.1.z3.rdc"
     },
     {
       "title": "Informant Woman",
@@ -421,6 +409,10 @@
       "path": "z3/pikachu.1.z3.rdc"
     },
     {
+      "title": "Pink Ribbon Link",
+      "path": "z3/pinkribbonlink.2.z3.rdc"
+    },
+    {
       "title": "Plague Knight",
       "path": "z3/plague_knight.1.z3.rdc"
     },
@@ -437,8 +429,16 @@
       "path": "z3/poppy.1.z3.rdc"
     },
     {
+      "title": "Power Up with Pride Mushroom",
+      "path": "z3/mushy.1.z3.rdc"
+    },
+    {
       "title": "Powerpuff Girl",
       "path": "z3/powerpuff_girl.1.z3.rdc"
+    },
+    {
+      "title": "Pride Link",
+      "path": "z3/pridelink.2.z3.rdc"
     },
     {
       "title": "Primm",
@@ -451,10 +451,6 @@
     {
       "title": "Psyduck",
       "path": "z3/psyduck.2.z3.rdc"
-    },
-    {
-      "title": "The Pug",
-      "path": "z3/pug.1.z3.rdc"
     },
     {
       "title": "Pyro",
@@ -585,6 +581,10 @@
       "path": "z3/tgh.1.z3.rdc"
     },
     {
+      "title": "The Pug",
+      "path": "z3/pug.1.z3.rdc"
+    },
+    {
       "title": "Thomcrow",
       "path": "z3/thomcrow.1.z3.rdc"
     },
@@ -679,16 +679,16 @@
   ],
   "sm": [
     {
+      "title": "Dark Samus",
+      "path": "sm/dark_samus.2.sm.rdc.gz"
+    },
+    {
       "title": "Alice Margatroid",
       "path": "sm/alice_margatroid.1.sm.rdc.gz"
     },
     {
       "title": "Alucard",
       "path": "sm/alucard.1.sm.rdc.gz"
-    },
-    {
-      "title": "Dark Samus",
-      "path": "sm/dark_samus.2.sm.rdc.gz"
     },
     {
       "title": "Federation Trooper",
