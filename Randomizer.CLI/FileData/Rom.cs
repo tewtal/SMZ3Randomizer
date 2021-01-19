@@ -34,6 +34,12 @@ namespace Randomizer.CLI.FileData {
             return combined;
         }
 
+        public static byte[] ExpandRom(Stream rom, int size) {
+            var expanded = new byte[size];
+            rom.Read(expanded, 0, size);
+            return expanded;
+        }
+
         public static void ApplyIps(byte[] rom, Stream ips) {
             const int header = 5;
             const int footer = 3;
