@@ -178,10 +178,11 @@ namespace Randomizer.SMZ3.Text {
             { '～', new byte[] { 0xCE } },
             { '\'', new byte[] { 0xD8 } },
             { '’', new byte[] { 0xD8 } },
+            { '"', new byte[] { 0xD8 } },
             { ':', new byte[] { 0x4A } },
             { '@', new byte[] { 0x4B } },
             { '#', new byte[] { 0x4C } },
-            { '¤', new byte[] { 0x4D, 0x4E } }, // Morphing ball            
+            { '¤', new byte[] { 0x4D, 0x4E } }, // Morphing ball
             { '£', new byte[] { 0xFE, 0x6A } }, // link's name compressed
             { '>', new byte[] { 0xD2, 0xD3 } }, // link face
             { '%', new byte[] { 0xDD } }, // Hylian Bird
@@ -200,6 +201,7 @@ namespace Randomizer.SMZ3.Text {
             { 'ᚌ', new byte[] { 0xFE, 0x6C, 0x01 } }, // var 1
             { 'ᚍ', new byte[] { 0xFE, 0x6C, 0x02 } }, // var 2
             { 'ᚎ', new byte[] { 0xFE, 0x6C, 0x03 } }, // var 3
+
             { 'あ', new byte[] { 0x00 } },
             { 'い', new byte[] { 0x01 } },
             { 'う', new byte[] { 0x02 } },
@@ -248,7 +250,7 @@ namespace Randomizer.SMZ3.Text {
             { 'ぞ', new byte[] { 0x2D } },
             { 'だ', new byte[] { 0x2E } },
             { 'ぢ', new byte[] { 0x2F } },
-            
+
             { 'ア', new byte[] { 0x50 } },
             { 'イ', new byte[] { 0x51 } },
             { 'ウ', new byte[] { 0x52 } },

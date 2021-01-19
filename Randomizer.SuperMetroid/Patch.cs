@@ -290,13 +290,13 @@ namespace Randomizer.SuperMetroid {
         }
         
         byte[] PlayerNameBytes(string name) {
-            name = name.Length > 12 ? name[..12] : name;
-            int padding = 12 - name.Length;
-            if (padding > 0) {
-                double pad = padding / 2.0;
-                name = name.PadLeft(name.Length + (int)Math.Ceiling(pad));
-                name = name.PadRight(name.Length + (int)Math.Floor(pad));
-            }
+            name = name.Length > 12 ? name[..12].TrimEnd() : name;
+
+            const int width = 12;
+            var pad = (width - name.Length) / 2;
+            name = name.PadLeft(name.Length + pad);
+            name = name.PadRight(width);
+
             return AsAscii(name.ToUpper()).Concat(UintBytes(0)).ToArray();
         }
 

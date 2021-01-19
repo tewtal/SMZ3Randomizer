@@ -10,6 +10,10 @@ import range from 'lodash/range';
 import defaultTo from 'lodash/defaultTo';
 import isPlainObject from 'lodash/isPlainObject';
 
+const legal_characters = /[A-Z0-9]/;
+const illegal_characters = /[^A-Z0-9]/g;
+const continous_space = / +/g;
+
 export async function prepareRom(world_patch, settings, baseIps, game) {
     let rom = null;
     if (game.smz3) {
@@ -62,11 +66,12 @@ async function applySprite(rom, mapping, block, sprite) {
 function applySpriteAuthor(rom, mapping, block, author) {
     author = author.toUpperCase();
     /* Author field that is empty or has no accepted characters */
-    if (!author.match(/[A-Z0-9]/))
+    if (!author.match(legal_characters))
         return;
 
     author = formatAuthor(author);
-    const center = 16 - ((author.length + 1) >> 1);
+    const width = 32;
+    const pad = (width - author.length) >> 1; /* shift => div + floor */
 
     const addrs = {
         link_sprite: [0xF47002, 0xFD1480],
@@ -77,16 +82,14 @@ function applySpriteAuthor(rom, mapping, block, author) {
     rom[snes_to_pc(mapping, enable)] = 0x01;
     each(author, (char, i) => {
         const bytes = bigText[char];
-        rom[snes_to_pc(mapping, tilemap + 2 * (center + i))] = bytes[0];
-        rom[snes_to_pc(mapping, tilemap + 2 * (center + i + 32))] = bytes[1];
+        rom[snes_to_pc(mapping, tilemap + 2 * (pad + i))] = bytes[0];
+        rom[snes_to_pc(mapping, tilemap + 2 * (pad + i + 32))] = bytes[1];
     });
 }
 
 function formatAuthor(author) {
-    /* Replace non-alphanum with space */
-    author = author.replace(/[^A-Z0-9]/g, ' ');
-    /* Normalize spaces */
-    author = author.replace(/ +/g, ' ');
+    author = author.replace(illegal_characters, ' ');
+    author = author.replace(continous_space, ' ');
     /* Keep at most 30 non-whitespace characters */
     /* A limit of 30 guarantee a margin at the edges */
     return author.trimStart().slice(0, 30).trimEnd();
