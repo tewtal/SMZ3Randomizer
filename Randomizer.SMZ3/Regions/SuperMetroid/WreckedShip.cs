@@ -54,9 +54,14 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
             return Logic switch {
                 Normal =>
                     items.Super && (
-                        ((Config.Keysanity && items.CardCrateriaL2) || (!Config.Keysanity && items.CanUsePowerBombs())) && (
-                            items.SpeedBooster || items.Grapple || items.SpaceJump || items.Gravity
+                        /* Over the Moat */
+                        (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && (
+                            items.SpeedBooster || items.Grapple || items.SpaceJump ||
+                            items.Gravity && (items.CanIbj() || items.HiJump)
                         ) ||
+                        /* Through Maridia -> Forgotten Highway */
+                        items.CanUsePowerBombs() && items.Gravity ||
+                        /* From Maridia portal -> Forgotten Highway */
                         items.CanAccessMaridiaPortal(World) && items.Gravity && items.CardMaridiaL2 && (
                             items.CanDestroyBombWalls() ||
                             World.Locations.Get("Space Jump").Available(items)
@@ -64,7 +69,15 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
                     ),
                 _ =>
                     items.Super && (
-                        ((Config.Keysanity && items.CardCrateriaL2) || (!Config.Keysanity && items.CanUsePowerBombs())) ||
+                        /* Over the Moat */
+                        (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) ||
+                        /* Through Maridia -> Forgotten Highway */
+                        items.CanUsePowerBombs() && (
+                            items.Gravity ||
+                            /* Climb Mt. Everest */
+                            items.HiJump && (items.Ice || items.CanSpringBallJump()) && items.Grapple && items.CardMaridiaL1
+                        ) ||
+                        /* From Maridia portal -> Forgotten Highway */
                         items.CanAccessMaridiaPortal(World) && ( 
                             items.HiJump && items.CanPassBombPassages() && items.CardMaridiaL2 ||
                             items.Gravity && (
