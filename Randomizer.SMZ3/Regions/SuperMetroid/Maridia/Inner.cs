@@ -87,7 +87,12 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
         }
 
         bool CanReachAqueduct(Progression items) {
-            return items.CardMaridiaL1 || items.CardMaridiaL2 && items.CanAccessMaridiaPortal(World);
+            return Logic switch { 
+               Normal => items.CardMaridiaL1 && (items.CanFly() || items.SpeedBooster || items.Grapple) 
+                        || items.CardMaridiaL2 && items.CanAccessMaridiaPortal(World),
+               _ => items.CardMaridiaL1 && (items.Gravity || items.HiJump && (items.Ice || items.CanSpringBallJump()) && items.Grapple) 
+                        || items.CardMaridiaL2 && items.CanAccessMaridiaPortal(World)
+            };
         }
 
         bool CanDefeatDraygon(Progression items) {
