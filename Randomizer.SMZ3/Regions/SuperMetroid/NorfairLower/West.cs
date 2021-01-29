@@ -25,6 +25,22 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
                     Normal => items => items.CanDestroyBombWalls() && (items.SpaceJump && items.CanUsePowerBombs() || items.CanAccessNorfairLowerPortal()),
                     _ => new Requirement(items => items.CanDestroyBombWalls() && (items.Varia || items.CanAccessNorfairLowerPortal()))
                 }),
+                new Location(this, 73, 0x8F8F30, LocationType.Visible, "Missile (Mickey Mouse room)", Logic switch {
+                    Normal => items => items.CanFly() && items.Morph && items.Super &&
+                        /*Exit to Upper Norfair*/
+                        ((items.CardLowerNorfairL1 || items.Gravity /*Vanilla or Reverse Lava Dive*/) && items.CardNorfairL2 /*Bubble Mountain*/ ||
+                        items.Gravity && items.Wave /* Volcano Room and Blue Gate */ && (items.Grapple || items.SpaceJump) /*Spikey Acid Snakes and Croc Escape*/ ||
+                        /*Exit via GT fight and Portal*/
+                        (items.CanUsePowerBombs() && items.SpaceJump && (items.Super || items.Charge)),
+                    _ => new Requirement(items => 
+                         items.Morph && items.Varia && items.Super && (items.CanFly() || items.CanSpringballJump() ||
+                                         items.Speedbooster && (items.HiJump && items.CanUsePowerBombs() || items.Charge && items.Ice)) &&
+                         /*Exit to Upper Norfair*/
+                         (items.CardNorfairL2 || (items.SpeedBooster || items.CanFly() || items.Grapple || items.HiJump &&
+                        (items.CanSpringBallJump() || items.Ice))) ||
+                         /*Return to Portal*/
+                         items.CanUsePowerBombs()
+                }),
             };
         }
 
