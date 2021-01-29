@@ -62,8 +62,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
                         /* Through Maridia -> Forgotten Highway */
                         items.CanUsePowerBombs() && items.Gravity ||
                         /* From Maridia portal -> Forgotten Highway */
-                        items.CanAccessMaridiaPortal(World) && items.Gravity && items.CardMaridiaL2 && (
-                            items.CanDestroyBombWalls() ||
+                        items.CanAccessMaridiaPortal(World) && items.Gravity && (
+                            items.CanDestroyBombWalls() && items.CardMaridiaL2 ||
                             World.Locations.Get("Space Jump").Available(items)
                         )
                     ),
