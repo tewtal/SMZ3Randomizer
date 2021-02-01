@@ -141,7 +141,7 @@ namespace Randomizer.SMZ3 {
             var remainingLocations = worlds.SelectMany(l => l.Locations).Filled().ToList();
 
             while (true) {
-                var availableLocations = remainingLocations.AvailableWithinWorld(assumedItems);
+                var availableLocations = remainingLocations.AvailableWithinWorld(assumedItems).ToList();
                 remainingLocations = remainingLocations.Except(availableLocations).ToList();
                 var foundItems = availableLocations.Select(x => x.Item).ToList();
                 if (foundItems.Count == 0)
