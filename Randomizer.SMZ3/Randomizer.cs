@@ -16,7 +16,9 @@ namespace Randomizer.SMZ3 {
 
         public string Version => version.ToString();
 
-        static Regex alphaNumeric = new Regex(@"[A-Z\d]", RegexOptions.IgnoreCase);
+        static readonly Regex legalCharacters = new Regex(@"[A-Z0-9]", RegexOptions.IgnoreCase);
+        static readonly Regex illegalCharacters = new Regex(@"[^A-Z0-9]", RegexOptions.IgnoreCase);
+        static readonly Regex continousSpace = new Regex(@" +");
 
         public List<IRandomizerOption> Options => new List<IRandomizerOption> {
             Config.GetRandomizerOption<SMLogic>("Super Metroid Logic"),
@@ -66,8 +68,11 @@ namespace Randomizer.SMZ3 {
                 int players = options.ContainsKey("players") ? int.Parse(options["players"]) : 1;
                 for (int p = 0; p < players; p++) {
                     var found = options.TryGetValue($"player-{p}", out var player);
-                    if (!found || !alphaNumeric.IsMatch(player))
-                        throw new ArgumentException($"Name for player {p + 1} not provided, or contains no alphanumeric characters");
+                    if (!found)
+                        throw new ArgumentException($"No name provided for player {p + 1}");
+                    if (!legalCharacters.IsMatch(player))
+                        throw new ArgumentException($"No alphanumeric characters found in name for player {p + 1}");
+                    player = CleanPlayerName(player);
                     worlds.Add(new World(config, player, p, new HexGuid()));
                 }
             }
@@ -122,6 +127,13 @@ namespace Randomizer.SMZ3 {
                 Id = (int)i,
                 Name = i.GetDescription()
             }).Cast<IItemTypeData>().ToDictionary(itemTypeData => itemTypeData.Id);
+
+        static string CleanPlayerName(string name) {
+            name = illegalCharacters.Replace(name, " ");
+            name = continousSpace.Replace(name, " ");
+            return name.Trim();
+        }
+
     }
 
     public class RandomizerOption : IRandomizerOption {
