@@ -44,7 +44,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
                                      (items.SpeedBooster || items.CanFly() || items.Grapple || items.HiJump && 
                                      (items.CanSpringBallJump() || items.Ice) /*Frog Speedway or Croc Escape*/)) ||
                     /*Reverse Amphitheater*/
-                     items.HasEnergyReserves(5),
+                     items.HasEnergyReserves(5)),
             };
         }
 
