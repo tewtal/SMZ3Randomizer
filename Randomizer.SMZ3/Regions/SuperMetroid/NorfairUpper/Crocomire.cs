@@ -57,7 +57,11 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                         items.CanOpenRedDoors() && (Config.Keysanity ? items.CardNorfairL2 : items.Super) &&
                             (items.CanFly() || items.HiJump || items.SpeedBooster) &&
                             (items.CanPassBombPassages() || items.Gravity && items.Morph) && items.Wave
-                    ),
+                        ||
+                        /* Reverse Lava Dive */
+                        items.CanAccessNorfairLowerPortal() && items.ScrewAttack && items.SpaceJump && items.Super && 
+                        items.Gravity && items.Wave && (items.CardNorfairL2 || items.Morph)
+                      ),
                 _ => (
                         (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
                         items.CanAccessNorfairUpperPortal()
@@ -73,9 +77,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                             (items.CanFly() || items.HiJump || items.SpeedBooster || items.CanSpringBallJump() || items.Varia && items.Ice) &&
                             (items.CanPassBombPassages() || items.Varia && items.Morph) &&
                             (items.Missile || items.Super || items.Wave) /* Blue Gate */
-                    ) ||
-                    /* Reverse Lava Dive */
-                    items.CanAccessNorfairLowerPortal() && items.ScrewAttack && items.SpaceJump && items.Varia && items.Super && items.HasEnergyReserves(2)
+                        ) ||
+                        /* Reverse Lava Dive */
+                        items.CanAccessNorfairLowerPortal() && items.ScrewAttack && items.SpaceJump && items.Varia && items.Super && 
+                        items.HasEnergyReserves(2) && (items.CardNorfairL2 || items.Morph)
             };
         }
 
