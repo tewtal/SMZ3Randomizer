@@ -37,18 +37,22 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
                     /* UN Portal -> Red Tower -> Moat */
                     (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && items.CanAccessNorfairUpperPortal() &&
                         (items.Ice || items.HiJump || items.SpaceJump) ||
+                    /*Through Maridia From Portal*/
                     items.CanAccessMaridiaPortal(World) && items.Gravity && items.Super && (
                         /* Oasis -> Forgotten Highway */
                         items.CardMaridiaL2 && items.CanDestroyBombWalls() ||
                         /* Draygon -> Cactus Alley -> Forgotten Highway */
-                        World.Locations.Get("Space Jump").Available(items)
-                    ),
+                        World.Locations.Get("Space Jump").Available(items)) ||
+                    /*Through Maridia from Pipe*/
+                    items.CanUsePowerBombs() && items.Super && items.Gravity
+                    ,
                 _ =>
                     /* Ship -> Moat */
                     (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && items.Super ||
                     /* UN Portal -> Red Tower -> Moat */
                     (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && items.CanAccessNorfairUpperPortal() &&
                         (items.Ice || items.HiJump || items.CanFly() || items.CanSpringBallJump()) ||
+                    /*Through Maridia From Portal*/
                     items.CanAccessMaridiaPortal(World) && (
                         /* Oasis -> Forgotten Highway */
                         items.CardMaridiaL2 && items.Super && (
@@ -56,8 +60,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
                             items.Gravity && items.CanDestroyBombWalls()
                         ) ||
                         /* Draygon -> Cactus Alley -> Forgotten Highway */
-                        items.Gravity && World.Locations.Get("Space Jump").Available(items)
-                    )
+                        items.Gravity && World.Locations.Get("Space Jump").Available(items)) ||
+                    /*Through Maridia from Pipe*/
+                    items.CanUsePowerBombs() && items.Super && (items.Gravity || items.HiJump && (items.Ice || items.CanSpringBallJump()) 
+                                                                && items.Grapple && items.CardMaridiaL1)
             };
         }
 
