@@ -78,6 +78,13 @@ export default function Permalink(props) {
                             }[settings.morphlocation]
                             }</Col>
                         </Row>
+                        <Row>
+                            <Col>Key Shuffle: {{
+                                none: 'None',
+                                keysanity: 'Keysanity',
+                            }[settings.keyshuffle]
+                            }</Col>
+                        </Row>
                     </>)}
                     {settings && game.id === 'sm' && (<>
                         <Row>

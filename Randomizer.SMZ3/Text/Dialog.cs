@@ -15,7 +15,7 @@ namespace Randomizer.SMZ3.Text {
 
         public static byte[] Simple(string text) {
             const int maxBytes = 256;
-            const int wrap = 27;
+            const int wrap = 19;
 
             var bytes = new List<byte>();
             var lines = text.Split('\n');
@@ -54,7 +54,7 @@ namespace Randomizer.SMZ3.Text {
 
         public static byte[] Compiled(string text, bool pause = true) {
             const int maxBytes = 2046;
-            const int wrap = 27;
+            const int wrap = 19;
 
             if (invalid.IsMatch(text))
                 throw new ArgumentException("Dialog commands must be placed on separate lines", nameof(text));
