@@ -13,6 +13,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
 
             Locations = new List<Location> {
                 new Location(this, 14, 0x8F84E4, LocationType.Chozo, "Super Missile (pink Brinstar)", Logic switch {
+                    Normal => new Requirement(items => items.CardBrinstarBoss && items.CanPassBombPassages() && items.Super),
                     _ => new Requirement(items => (items.CardBrinstarBoss || items.CardBrinstarL2) && items.CanPassBombPassages() && items.Super)
                 }),
                 new Location(this, 21, 0x8F8608, LocationType.Visible, "Missile (pink Brinstar top)"),
