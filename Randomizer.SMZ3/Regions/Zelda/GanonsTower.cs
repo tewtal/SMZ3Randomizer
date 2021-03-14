@@ -145,13 +145,18 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                 World.CanAquireAll(items, new[] { CrystalBlue, CrystalRed, GoldenFourBoss });
         }
 
-        public override bool CanFill(Item item) {
+        public override bool CanFill(Item item, Progression items) {
             if (Config.GameMode == GameMode.Multiworld) {
-                if (item.World != World || item.Progression)
+                if (item.World != World || item.Progression) {
                     return false;
+                }
+
+                if (Config.KeyShuffle == KeyShuffle.Keysanity && !((item.Type == BigKeyGT || item.Type == KeyGT) && item.World == World) && (item.IsKey || item.IsBigKey || item.IsKeycard)) {
+                    return false;
+                }
             }
 
-            return base.CanFill(item);
+            return base.CanFill(item, items);
         }
 
     }

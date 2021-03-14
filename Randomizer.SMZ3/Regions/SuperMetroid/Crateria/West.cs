@@ -33,14 +33,17 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
         private bool CanEnterAndLeaveGauntlet(Progression items) {
             return Logic switch {
                 Normal =>
-                    items.Morph && (items.CanFly() || items.SpeedBooster) && (
+                    items.CardCrateriaL1 && items.Morph && (items.CanFly() || items.SpeedBooster) && (
                         items.CanIbj() ||
                         items.CanUsePowerBombs() && items.TwoPowerBombs ||
-                        items.ScrewAttack),
+                        items.ScrewAttack
+                    ),
                 _ =>
-                    items.Morph && (items.Bombs || items.TwoPowerBombs) ||
-                    items.ScrewAttack ||
-                    items.SpeedBooster && items.CanUsePowerBombs() && items.HasEnergyReserves(2)
+                    items.CardCrateriaL1 && (
+                        items.Morph && (items.Bombs || items.TwoPowerBombs) ||
+                        items.ScrewAttack ||
+                        items.SpeedBooster && items.CanUsePowerBombs() && items.HasEnergyReserves(2)
+                    )
             };
         }
 

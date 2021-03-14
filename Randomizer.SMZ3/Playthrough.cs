@@ -18,6 +18,12 @@ namespace Randomizer.SMZ3 {
             var spheres = new List<Dictionary<string, string>>();
             var locations = new List<Location>();
             var items = new List<Item>();
+            
+            foreach (var world in worlds) {
+                if (!world.Config.Keysanity) {
+                    items.AddRange(Item.CreateKeycards(world));
+                }
+            }
 
             var totalItemCount = worlds.SelectMany(w => w.Items).Count();
             while (items.Count < totalItemCount) {
@@ -32,7 +38,7 @@ namespace Randomizer.SMZ3 {
                 if (!newItems.Any()) {
                     /* With no new items added we might have a problem, so list inaccessable items */
                     var inaccessibleLocations = worlds.SelectMany(w => w.Locations).Where(l => !locations.Contains(l)).ToList();
-                    if (inaccessibleLocations.Select(l => l.Item).Count() >= (5 * worlds.Count))
+                    if (inaccessibleLocations.Select(l => l.Item).Count() >= (15 * worlds.Count))
                         throw new Exception("Too many inaccessible items, seed likely impossible.");
 
                     var n = 0;
@@ -49,7 +55,7 @@ namespace Randomizer.SMZ3 {
                 }
 
                 foreach (var location in newLocations) {
-                    if (!location.Item.Progression)
+                    if ((config.Keysanity && !location.Item.Progression && !location.Item.IsDungeonItem && !location.Item.IsKeycard) || (!config.Keysanity && !location.Item.Progression))
                         continue;
 
                     if (config.GameMode == GameMode.Multiworld) {

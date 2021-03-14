@@ -32,12 +32,12 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
             return Logic switch {
                 Normal => items.Gravity && (
                         World.CanEnter("Norfair Upper West", items) && items.CanUsePowerBombs() ||
-                        items.CanAccessMaridiaPortal(World) && (items.CanPassBombPassages() || items.ScrewAttack)
+                        items.CanAccessMaridiaPortal(World) && items.CardMaridiaL1 && items.CardMaridiaL2 && (items.CanPassBombPassages() || items.ScrewAttack)
                     ),
                 _ =>
                     World.CanEnter("Norfair Upper West", items) && items.CanUsePowerBombs() &&
                         (items.Gravity || items.HiJump && (items.CanSpringBallJump() || items.Ice)) ||
-                    items.CanAccessMaridiaPortal(World) && (
+                    items.CanAccessMaridiaPortal(World) && items.CardMaridiaL1 && items.CardMaridiaL2 && (
                         items.CanPassBombPassages() ||
                         items.Gravity && items.ScrewAttack ||
                         items.Super && (items.Gravity || items.HiJump && (items.CanSpringBallJump() || items.Ice))

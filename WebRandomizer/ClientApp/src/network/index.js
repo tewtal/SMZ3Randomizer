@@ -210,13 +210,12 @@ export default class Network {
     };
 
     onConnect = async () => {
-        try {
-            if (this.device.state === 1) {
-                this.device.state = 0;
-                this.updateState();
-                this.socket.close();
-                return;
-            }
+        if (this.device.state === 1) {
+            this.device.state = 0;
+            this.updateState();
+            this.socket.close();
+            return;
+        }
 
             try {
                 this.socket = await connect('ws://localhost:23074');
@@ -236,6 +235,7 @@ export default class Network {
 
             this.socket.onclose = this.socket_onclose;
 
+        try {
             const response = await send(create_message('DeviceList', []));
             const deviceList = JSON.parse(response.data);
             const firstDevice = deviceList.Results[0];

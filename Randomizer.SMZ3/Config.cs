@@ -40,7 +40,7 @@ namespace Randomizer.SMZ3 {
         Early,
         [Description("Uncle assured")]
         Uncle
-    }
+    }    
 
     [DefaultValue(Randomized)]
     enum MorphLocation {
@@ -56,6 +56,14 @@ namespace Randomizer.SMZ3 {
     enum Goal {
         [Description("Defeat Ganon and Mother Brain")]
         DefeatBoth,
+    }
+
+    [DefaultValue(None)]
+    enum KeyShuffle {
+        [Description("None")]
+        None,
+        [Description("Keysanity")]
+        Keysanity
     }
 
     enum GanonInvincible {
@@ -76,7 +84,8 @@ namespace Randomizer.SMZ3 {
         public SwordLocation SwordLocation { get; set; } = SwordLocation.Randomized;
         public MorphLocation MorphLocation { get; set; } = MorphLocation.Randomized;
         public Goal Goal { get; set; } = Goal.DefeatBoth;
-        public bool Keysanity { get; set; } = false;
+        public KeyShuffle KeyShuffle { get; set; } = KeyShuffle.None;
+        public bool Keysanity => KeyShuffle != KeyShuffle.None;
         public bool Race { get; set; } = false;
         public GanonInvincible GanonInvincible { get; set; } = GanonInvincible.BeforeCrystals;
 
@@ -88,8 +97,8 @@ namespace Randomizer.SMZ3 {
             MorphLocation = ParseOption(options, MorphLocation.Randomized);
             Goal = ParseOption(options, Goal.DefeatBoth);
             GanonInvincible = ParseOption(options, GanonInvincible.BeforeCrystals);
+            KeyShuffle = ParseOption(options, KeyShuffle.None);
             Race = ParseOption(options, "Race", false);
-            Keysanity = false;
         }
 
         private TEnum ParseOption<TEnum>(IDictionary<string, string> options, TEnum defaultValue) where TEnum: Enum {

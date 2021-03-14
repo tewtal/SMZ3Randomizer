@@ -22,6 +22,7 @@ namespace Randomizer.SMZ3 {
 
         public void Fill() {
             var progressionItems = new List<Item>();
+            var baseItems = new List<Item>();
 
             foreach (var world in Worlds) {
                 /* The dungeon pool order is significant, don't shuffle */
@@ -32,7 +33,11 @@ namespace Randomizer.SMZ3 {
 
                 if (Config.Keysanity == false) {
                     var worldLocations = world.Locations.Empty().Shuffle(Rnd);
-                    AssumedFill(dungeon, progression, worldLocations, new[] { world });
+                    var keyCards = Item.CreateKeycards(world);
+                    AssumedFill(dungeon, progression.Concat(keyCards).ToList(), worldLocations, new[] { world });
+                    baseItems = baseItems.Concat(keyCards).ToList();
+                } else {
+                    progressionItems.AddRange(Item.CreateKeycards(world));
                 }
 
                 progressionItems.AddRange(dungeon);
@@ -43,6 +48,10 @@ namespace Randomizer.SMZ3 {
             var niceItems = Worlds.SelectMany(world => Item.CreateNicePool(world)).Shuffle(Rnd);
             var junkItems = Worlds.SelectMany(world => Item.CreateJunkPool(world)).Shuffle(Rnd);
 
+            var locations = Worlds.SelectMany(x => x.Locations).Empty().Shuffle(Rnd);
+            if (Config.GameMode != GameMode.Multiworld)
+                locations = ApplyLocationWeighting(locations).ToList();
+            
             if (Config.GameMode == GameMode.Multiworld) {
                 /* Place moonpearls and morphs in last 40%/20% of the pool so that
                  * they will tend to place in earlier locations.
@@ -53,15 +62,11 @@ namespace Randomizer.SMZ3 {
                 });
             }
 
-            GanonTowerFill(junkItems);
-
-            var locations = Worlds.SelectMany(x => x.Locations).Empty().Shuffle(Rnd);
-            if (Config.GameMode != GameMode.Multiworld)
-                locations = ApplyLocationWeighting(locations).ToList();
-
-            AssumedFill(progressionItems, new List<Item>(), locations, Worlds);
+            GanonTowerFill(junkItems, 2);
+            AssumedFill(progressionItems, baseItems, locations, Worlds);
             FastFill(niceItems, locations);
             FastFill(junkItems, locations);
+
         }
 
         void ApplyItemBias(List<Item> itemPool, IEnumerable<(ItemType type, double weight)> reorder) {
@@ -127,7 +132,7 @@ namespace Randomizer.SMZ3 {
                 }
 
                 location.Item = item;
-                itemPool.Remove(item);
+                itemPool.Remove(item);                
             }
         }
 
@@ -136,7 +141,7 @@ namespace Randomizer.SMZ3 {
             var remainingLocations = worlds.SelectMany(l => l.Locations).Filled().ToList();
 
             while (true) {
-                var availableLocations = remainingLocations.AvailableWithinWorld(assumedItems);
+                var availableLocations = remainingLocations.AvailableWithinWorld(assumedItems).ToList();
                 remainingLocations = remainingLocations.Except(availableLocations).ToList();
                 var foundItems = availableLocations.Select(x => x.Item).ToList();
                 if (foundItems.Count == 0)
@@ -159,12 +164,12 @@ namespace Randomizer.SMZ3 {
             itemPool.Remove(item);
         }
 
-        void GanonTowerFill(List<Item> itemPool) {
+        void GanonTowerFill(List<Item> itemPool, double factor) {
             var locations = Worlds
                 .SelectMany(x => x.Locations)
                 .Where(x => x.Region is Regions.Zelda.GanonsTower)
                 .Empty().Shuffle(Rnd);
-            FastFill(itemPool, locations.Take(locations.Count / 2));
+            FastFill(itemPool, locations.Take((int)(locations.Count / factor)));
         }
 
         void FastFill(List<Item> itemPool, IEnumerable<Location> locations) {
@@ -176,7 +181,7 @@ namespace Randomizer.SMZ3 {
 
         void FillItemAtLocation(List<Item> itemPool, ItemType itemType, Location location) {
             var itemToPlace = itemPool.Get(itemType);
-            location.Item = itemToPlace ?? throw new InvalidOperationException($"Tried to place item {itemType.ToString()} at {location.Name}, but there is no such item in the item pool");
+            location.Item = itemToPlace ?? throw new InvalidOperationException($"Tried to place item {itemType} at {location.Name}, but there is no such item in the item pool");
             itemPool.Remove(itemToPlace);
         }
 

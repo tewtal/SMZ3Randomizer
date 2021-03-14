@@ -20,5 +20,4 @@ namespace Randomizer.Shared.Models {
         public DateTime TimeStamp { get; set; }
         public string Description { get; set; }
     }
-
 }

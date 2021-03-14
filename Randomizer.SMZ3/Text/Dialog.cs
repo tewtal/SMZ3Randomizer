@@ -167,7 +167,7 @@ namespace Randomizer.SMZ3.Text {
         #region letter bytes lookup
 
         static readonly IDictionary<char, byte[]> letters = new Dictionary<char, byte[]> {
-            { ' ', new byte[] { 0xFF } },
+            { ' ', new byte[] { 0x4F } },
             { '?', new byte[] { 0xC6 } },
             { '!', new byte[] { 0xC7 } },
             { ',', new byte[] { 0xC8 } },
@@ -183,6 +183,7 @@ namespace Randomizer.SMZ3.Text {
             { '@', new byte[] { 0x4B } },
             { '#', new byte[] { 0x4C } },
             { '¤', new byte[] { 0x4D, 0x4E } }, // Morphing ball
+            { '_', new byte[] { 0xFF } }, // Full width space
             { '£', new byte[] { 0xFE, 0x6A } }, // link's name compressed
             { '>', new byte[] { 0xD2, 0xD3 } }, // link face
             { '%', new byte[] { 0xDD } }, // Hylian Bird

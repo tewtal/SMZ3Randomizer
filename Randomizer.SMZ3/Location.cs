@@ -78,7 +78,7 @@ namespace Randomizer.SMZ3 {
         public bool CanFill(Item item, Progression items) {
             var oldItem = Item;
             Item = item;
-            bool fillable = alwaysAllow(item, items) || (Region.CanFill(item) && allow(item, items) && Available(items));
+            bool fillable = alwaysAllow(item, items) || (Region.CanFill(item, items) && allow(item, items) && Available(items));
             Item = oldItem;
             return fillable;
         }

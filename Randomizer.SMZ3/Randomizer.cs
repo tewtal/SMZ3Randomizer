@@ -9,7 +9,7 @@ namespace Randomizer.SMZ3 {
 
     public class Randomizer : IRandomizer {
 
-        public static readonly Version version = new Version(11, 1);
+        public static readonly Version version = new Version(11, 2);
 
         public string Id => "smz3";
         public string Name => "Super Metroid & A Link to the Past Combo Randomizer";
@@ -26,6 +26,7 @@ namespace Randomizer.SMZ3 {
             //Config.GetRandomizerOption<Z3Logic>("A Link to the Past Logic"),
             Config.GetRandomizerOption<SwordLocation>("First Sword"),
             Config.GetRandomizerOption<MorphLocation>("Morph Ball"),
+            Config.GetRandomizerOption<KeyShuffle>("Key shuffle"),
             new RandomizerOption {
                 Key = "seed", Description = "Seed", Type = Seed
             },
