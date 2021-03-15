@@ -51,11 +51,17 @@ namespace WebRandomizer.Controllers {
                 /* Initialize the randomizer and generate a seed with the given options */
                 IRandomizer randomizer = randomizers.FirstOrDefault(x => x.Id == randomizerId);
 
-                if(randomizer == null) {
+                if (randomizer == null) {
                     return new StatusCodeResult(400);
                 }
 
-                var seedData = randomizer.GenerateSeed(options, options["seed"]);
+                /* Let the randomizer run for at most 4 minutes */
+                var task = Task.Run(() => randomizer.GenerateSeed(options, options["seed"]));
+                if (!task.Wait(TimeSpan.FromMinutes(4))) {
+                    return new StatusCodeResult(408);
+                }
+
+                var seedData = task.Result;
 
                 /* Store this seed to the database */
                 var seed = new Seed {
