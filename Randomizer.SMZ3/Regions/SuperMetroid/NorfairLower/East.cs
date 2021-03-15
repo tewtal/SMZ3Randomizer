@@ -66,7 +66,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
         }
 
         public bool CanComplete(Progression items) {
-            return Locations.Get("Energy Tank, Ridley").Available(items);
+            return GetLocation("Energy Tank, Ridley").Available(items);
         }
 
     }

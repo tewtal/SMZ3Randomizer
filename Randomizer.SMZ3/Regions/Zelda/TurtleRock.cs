@@ -23,8 +23,8 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                     items => items.KeyTR >= 1),
                 new Location(this, 256+181, 0x1EA25, LocationType.Regular, "Turtle Rock - Big Key Chest",
                     items => items.KeyTR >=
-                        (!Config.Keysanity || Locations.Get("Turtle Rock - Big Key Chest").ItemIs(BigKeyTR, World) ? 2 :
-                            Locations.Get("Turtle Rock - Big Key Chest").ItemIs(KeyTR, World) ? 3 : 4))
+                        (!Config.Keysanity || GetLocation("Turtle Rock - Big Key Chest").ItemIs(BigKeyTR, World) ? 2 :
+                            GetLocation("Turtle Rock - Big Key Chest").ItemIs(KeyTR, World) ? 3 : 4))
                     .AlwaysAllow((item, items) => item.Is(KeyTR, World) && items.KeyTR >= 3),
                 new Location(this, 256+182, 0x1EA19, LocationType.Regular, "Turtle Rock - Big Chest",
                     items => items.BigKeyTR && items.KeyTR >= 2)
@@ -59,7 +59,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         }
 
         public bool CanComplete(Progression items) {
-            return Locations.Get("Turtle Rock - Trinexx").Available(items);
+            return GetLocation("Turtle Rock - Trinexx").Available(items);
         }
 
     }

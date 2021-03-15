@@ -43,7 +43,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         }
 
         public bool CanComplete(Progression items) {
-            return Locations.Get("Desert Palace - Lanmolas").Available(items);
+            return GetLocation("Desert Palace - Lanmolas").Available(items);
         }
 
     }

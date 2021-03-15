@@ -17,21 +17,21 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                 new Location(this, 256+161, 0x1E9D4, LocationType.Regular, "Ice Palace - Compass Chest"),
                 new Location(this, 256+162, 0x1E9E0, LocationType.Regular, "Ice Palace - Spike Room",
                     items => items.Hookshot || items.KeyIP >= 1 && CanNotWasteKeysBeforeAccessible(items, new[] {
-                        Locations.Get("Ice Palace - Map Chest"),
-                        Locations.Get("Ice Palace - Big Key Chest")
+                        GetLocation("Ice Palace - Map Chest"),
+                        GetLocation("Ice Palace - Big Key Chest")
                     })),
                 new Location(this, 256+163, 0x1E9DD, LocationType.Regular, "Ice Palace - Map Chest",
                     items => items.Hammer && items.CanLiftLight() && (
                         items.Hookshot || items.KeyIP >= 1 && CanNotWasteKeysBeforeAccessible(items, new[] {
-                            Locations.Get("Ice Palace - Spike Room"),
-                            Locations.Get("Ice Palace - Big Key Chest")
+                            GetLocation("Ice Palace - Spike Room"),
+                            GetLocation("Ice Palace - Big Key Chest")
                         })
                     )),
                 new Location(this, 256+164, 0x1E9A4, LocationType.Regular, "Ice Palace - Big Key Chest",
                     items => items.Hammer && items.CanLiftLight() && (
                         items.Hookshot || items.KeyIP >= 1 && CanNotWasteKeysBeforeAccessible(items, new[] {
-                            Locations.Get("Ice Palace - Spike Room"),
-                            Locations.Get("Ice Palace - Map Chest")
+                            GetLocation("Ice Palace - Spike Room"),
+                            GetLocation("Ice Palace - Map Chest")
                         })
                     )),
                 new Location(this, 256+165, 0x1E9E3, LocationType.Regular, "Ice Palace - Iced T Room"),
@@ -53,7 +53,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         }
 
         public bool CanComplete(Progression items) {
-            return Locations.Get("Ice Palace - Kholdstare").Available(items);
+            return GetLocation("Ice Palace - Kholdstare").Available(items);
         }
 
     }

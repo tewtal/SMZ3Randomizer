@@ -205,14 +205,14 @@ namespace Randomizer.CLI.Verbs {
                           select ($"player-{n}", $"Player {n + 1}");
             var options = optionList.Concat(players).ToDictionary(x => x.Item1, x => x.Item2);
 
-            try {
+            //try {
                 while (true) {
                     MakeSeed(options, opts);
                     if (!opts.Loop) break;
                 }
-            } catch (Exception e) {
-                Console.Error.WriteLine(e.Message);
-            }
+            //} catch (Exception e) {
+            //    Console.Error.WriteLine(e.Message);
+            //}
         }
 
         static void MakeSeed(Dictionary<string, string> options, GenSeedOptions opts) {

@@ -91,7 +91,7 @@ namespace Randomizer.SMZ3 {
 
             WritePrizeShuffle();
 
-            WriteRemoveEquipmentFromUncle(myWorld.Locations.Get("Link's Uncle").Item);
+            WriteRemoveEquipmentFromUncle(myWorld.GetLocation("Link's Uncle").Item);
 
             WriteGanonInvicible(config.GanonInvincible);
             WriteRngBlock();
