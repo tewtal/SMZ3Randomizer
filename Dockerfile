@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:5.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build-env
 RUN apt-get update -yq && apt-get install nodejs npm cmake build-essential python3.7 -yq
 RUN ln -s /usr/bin/python3.7 /usr/bin/python3
 
@@ -37,7 +37,7 @@ WORKDIR /app
 RUN dotnet publish -c Release -o out
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/core/aspnet:5.0
+FROM mcr.microsoft.com/dotnet/aspnet:5.0
 WORKDIR /app
 COPY --from=build-env /app/out .
 COPY docker-entrypoint.sh /usr/local/bin/
