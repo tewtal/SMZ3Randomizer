@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using static Randomizer.SMZ3.RewardType;
@@ -17,6 +18,12 @@ namespace Randomizer.SMZ3 {
         public IEnumerable<Item> Items {
             get { return Locations.Select(l => l.Item).Where(i => i != null); }
         }
+
+        private Dictionary<string, Location> locationLookup { get; set; }
+        private Dictionary<string, Region> regionLookup { get; set; }
+
+        public Location GetLocation(string name) => locationLookup[name];
+        public Region GetRegion(string name) => regionLookup[name];
 
         public World(Config config, string player, int id, string guid) {
             Config = config;
@@ -68,17 +75,24 @@ namespace Randomizer.SMZ3 {
             };
 
             Locations = Regions.SelectMany(x => x.Locations).ToList();
+
+            regionLookup = Regions.ToDictionary(r => r.Name, r => r);
+            locationLookup = Locations.ToDictionary(l => l.Name, l => l);
+            
+            foreach(var region in Regions) {
+                region.GenerateLocationLookup();
+            }
         }
 
         public bool CanEnter(string regionName, Progression items) {
-            var region = Regions.Find(r => r.Name == regionName);
+            var region = regionLookup[regionName];
             if (region == null)
                 throw new ArgumentException($"World.CanEnter: Invalid region name {regionName}", nameof(regionName));
             return region.CanEnter(items);
         }
 
         public bool CanAquire(Progression items, RewardType reward) {
-            return Regions.OfType<IReward>().First(x => reward == x.Reward).CanComplete(items);
+                return Regions.OfType<IReward>().First(x => reward == x.Reward).CanComplete(items);
         }
 
         public bool CanAquireAll(Progression items, params RewardType[] rewards) {

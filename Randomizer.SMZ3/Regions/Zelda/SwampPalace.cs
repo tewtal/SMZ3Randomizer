@@ -42,7 +42,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         }
 
         public bool CanComplete(Progression items) {
-            return Locations.Get("Swamp Palace - Arrghus").Available(items);
+            return GetLocation("Swamp Palace - Arrghus").Available(items);
         }
 
     }

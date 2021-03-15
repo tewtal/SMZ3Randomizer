@@ -130,7 +130,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
         }
 
         public bool CanComplete(Progression items) {
-            return Locations.Get("Space Jump").Available(items);
+            return GetLocation("Space Jump").Available(items);
         }
 
     }

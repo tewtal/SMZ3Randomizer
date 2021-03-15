@@ -16,7 +16,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
             Locations = new List<Location> {
                 new Location(this, 256+121, 0x1EA5B, LocationType.Regular, "Palace of Darkness - Shooter Room"),
                 new Location(this, 256+122, 0x1EA37, LocationType.Regular, "Palace of Darkness - Big Key Chest",
-                    items => items.KeyPD >= (Locations.Get("Palace of Darkness - Big Key Chest").ItemIs(KeyPD, World) ? 1 :
+                    items => items.KeyPD >= (GetLocation("Palace of Darkness - Big Key Chest").ItemIs(KeyPD, World) ? 1 :
                         (items.Hammer && items.Bow && items.Lamp) || config.Keysanity ? 6 : 5))
                     .AlwaysAllow((item, items) => item.Is(KeyPD, World) && items.KeyPD >= 5),
                 new Location(this, 256+123, 0x1EA49, LocationType.Regular, "Palace of Darkness - Stalfos Basement",
@@ -30,7 +30,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                 new Location(this, 256+127, 0x1EA43, LocationType.Regular, "Palace of Darkness - Compass Chest",
                     items => items.KeyPD >= ((items.Hammer && items.Bow && items.Lamp) || config.Keysanity ? 4 : 3)),
                 new Location(this, 256+128, 0x1EA46, LocationType.Regular, "Palace of Darkness - Harmless Hellway",
-                    items => items.KeyPD >= (Locations.Get("Palace of Darkness - Harmless Hellway").ItemIs(KeyPD, World) ?
+                    items => items.KeyPD >= (GetLocation("Palace of Darkness - Harmless Hellway").ItemIs(KeyPD, World) ?
                         (items.Hammer && items.Bow && items.Lamp) || config.Keysanity ? 4 : 3 :
                         (items.Hammer && items.Bow && items.Lamp) || config.Keysanity ? 6 : 5))
                     .AlwaysAllow((item, items) => item.Is(KeyPD, World) && items.KeyPD >= 5),
@@ -54,7 +54,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         }
 
         public bool CanComplete(Progression items) {
-            return Locations.Get("Palace of Darkness - Helmasaur King").Available(items);
+            return GetLocation("Palace of Darkness - Helmasaur King").Available(items);
         }
 
     }

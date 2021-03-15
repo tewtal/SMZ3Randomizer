@@ -36,7 +36,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         }
 
         public bool CanComplete(Progression items) {
-            return Locations.Get("Tower of Hera - Moldorm").Available(items);
+            return GetLocation("Tower of Hera - Moldorm").Available(items);
         }
 
     }

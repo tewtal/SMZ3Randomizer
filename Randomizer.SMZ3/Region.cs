@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace Randomizer.SMZ3 {
 
@@ -51,9 +52,17 @@ namespace Randomizer.SMZ3 {
         protected Config Config { get; set; }
         protected IList<ItemType> RegionItems { get; set; } = new List<ItemType>();
 
+        private Dictionary<string, Location> locationLookup { get; set; }
+        public Location GetLocation(string name) => locationLookup[name];
+
         public Region(World world, Config config) {
             Config = config;
             World = world;
+            locationLookup = new Dictionary<string, Location>();
+        }
+
+        public void GenerateLocationLookup() {
+            locationLookup = Locations.ToDictionary(l => l.Name, l => l);
         }
 
         public bool IsRegionItem(Item item) {
