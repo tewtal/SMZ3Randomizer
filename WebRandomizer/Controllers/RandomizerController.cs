@@ -8,6 +8,8 @@ using Randomizer.Shared.Contracts;
 using Randomizer.Shared.Models;
 using Newtonsoft.Json;
 using static WebRandomizer.Controllers.Helpers;
+using System.Threading;
+using System.ComponentModel;
 
 namespace WebRandomizer.Controllers {
 
@@ -42,7 +44,7 @@ namespace WebRandomizer.Controllers {
         [ProducesResponseType(typeof(ISeedData), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Generate(string randomizerId, [FromBody] Dictionary<string, string> options) {
+        public async Task<IActionResult> Generate(string randomizerId, [FromBody] Dictionary<string, string> options, CancellationToken cancellationToken) {
             if (options.Count < 1) {
                 return new StatusCodeResult(400);
             }
@@ -55,13 +57,7 @@ namespace WebRandomizer.Controllers {
                     return new StatusCodeResult(400);
                 }
 
-                /* Let the randomizer run for at most 4 minutes */
-                var task = Task.Run(() => randomizer.GenerateSeed(options, options["seed"]));
-                if (!task.Wait(TimeSpan.FromMinutes(4))) {
-                    return new StatusCodeResult(408);
-                }
-
-                var seedData = task.Result;
+                var seedData = randomizer.GenerateSeed(options, options["seed"], cancellationToken);
 
                 /* Store this seed to the database */
                 var seed = new Seed {

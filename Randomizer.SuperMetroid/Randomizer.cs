@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Randomizer.Shared.Contracts;
 using static Randomizer.Shared.Contracts.RandomizerOptionType;
 
@@ -34,7 +35,7 @@ namespace Randomizer.SuperMetroid {
             },
         };
 
-        public ISeedData GenerateSeed(IDictionary<string, string> options, string seed) {
+        public ISeedData GenerateSeed(IDictionary<string, string> options, string seed, CancellationToken cancellationToken) {
             int randoSeed;
             if (string.IsNullOrEmpty(seed)) {
                 randoSeed = System.Security.Cryptography.RandomNumberGenerator.GetInt32(0, int.MaxValue);
@@ -73,7 +74,7 @@ namespace Randomizer.SuperMetroid {
                 }
             }
 
-            var filler = new Filler(worlds, config, rnd);
+            var filler = new Filler(worlds, config, rnd, cancellationToken);
             filler.Fill();
 
             var playthrough = new Playthrough(worlds, config);

@@ -218,7 +218,7 @@ namespace Randomizer.CLI.Verbs {
         static void MakeSeed(Dictionary<string, string> options, GenSeedOptions opts) {
             var rando = opts.NewRandomizer();
             var start = DateTime.Now;
-            var data = rando.GenerateSeed(options, opts.Seed);
+            var data = rando.GenerateSeed(options, opts.Seed, new System.Threading.CancellationToken());
             var end = DateTime.Now;
             Console.WriteLine(string.Join(" - ",
                 $"Generated seed: {data.Seed}",

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using static Randomizer.SuperMetroid.ItemType;
+using System.Threading;
 
 namespace Randomizer.SuperMetroid {
     class Filler {
@@ -13,10 +14,13 @@ namespace Randomizer.SuperMetroid {
         Random Rnd { get; set; }
         Config Config { get; set; }
 
-        public Filler(List<World> worlds, Config config, Random rnd) {
+        private CancellationToken CancellationToken { get; set; }
+
+        public Filler(List<World> worlds, Config config, Random rnd, CancellationToken cancellationToken) {
             Worlds = worlds;
             Rnd = rnd;
             Config = config;
+            CancellationToken = cancellationToken;
 
             /* Populate filler item pool with items for each world */
             foreach (var world in worlds) {
@@ -117,6 +121,10 @@ namespace Randomizer.SuperMetroid {
                 world.Items.Add(itemToPlace);
                 items.Remove(itemToPlace);
                 locations.Remove(locationToPlace);
+
+                if (CancellationToken.IsCancellationRequested) {
+                    throw new OperationCanceledException("The operation has been cancelled.");
+                }
             }
         }
 

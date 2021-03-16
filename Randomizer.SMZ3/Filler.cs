@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace Randomizer.SMZ3 {
 
@@ -10,10 +11,13 @@ namespace Randomizer.SMZ3 {
         Config Config { get; set; }
         Random Rnd { get; set; }
 
-        public Filler(List<World> worlds, Config config, Random rnd) {
+        private CancellationToken CancellationToken { get; set; }
+
+        public Filler(List<World> worlds, Config config, Random rnd, CancellationToken cancellationToken) {
             Worlds = worlds;
             Config = config;
             Rnd = rnd;
+            CancellationToken = cancellationToken;
 
             foreach (var world in worlds) {
                 world.Setup(Rnd);
@@ -132,7 +136,11 @@ namespace Randomizer.SMZ3 {
                 }
 
                 location.Item = item;
-                itemPool.Remove(item);                
+                itemPool.Remove(item);   
+                
+                if(CancellationToken.IsCancellationRequested) {
+                    throw new OperationCanceledException("The operation has been cancelled.");
+                }
             }
         }
 

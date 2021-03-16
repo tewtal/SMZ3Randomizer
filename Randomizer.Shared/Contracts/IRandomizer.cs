@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Threading;
 
 namespace Randomizer.Shared.Contracts {
 
@@ -48,7 +49,7 @@ namespace Randomizer.Shared.Contracts {
         string Name { get; }
         string Version { get; }
         List<IRandomizerOption> Options { get; }
-        ISeedData GenerateSeed(IDictionary<string, string> options, string seed);
+        ISeedData GenerateSeed(IDictionary<string, string> options, string seed, CancellationToken cancellationToken);
         Dictionary<int, IItemTypeData> GetItems();
         Dictionary<int, ILocationTypeData> GetLocations();
     }
