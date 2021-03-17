@@ -1,5 +1,36 @@
 # Randomizer Changes
 
+## 2021-03-17 - Version 11.2
+
+* Systems Changes
+  * Keysanity support has been added as an option under the "Key Shuffle" header.
+    * Enabling Keysanity will allow A Link to the Past Maps, Small Keys and Big Keys to be found anywhere.
+    * It will also add a set of locked doors for Super Metroid that require new "Keycards" to be found before they can be opened.
+    * More detailed information about this mode can be found at the [Information](/information) page.
+  * The file select screen in A Link to the Past has been removed and Saving and Quitting will now go directly to the start location dialog.
+  * Save files B and C in Super Metroid has been removed to prevent issues from selecting them since using them would cause the game to malfunction.
+  * Added a lowercase font to the Super Metroid dialog boxes.
+  * All Super Metroid map tiles should now be properly revealed from the start.
+
+* Logic Changes
+  * An issue with Wrecked Ship logic where it didn't properly check if bomb passages could be traversed has been fixed.
+  * Moat logic has been updated to include options with Gravity + (Hi Jump or Bombs), as well as removing some logic requirement from Moat Missiles.
+  * Forgotten Highway logic has been adjusted to allow for access through the "Toilet"
+  * A lot more logic changes done to account for Keysanity key door changes in Super Metroid.
+    * There could still be logic issues, so if you find something that seems off please report it and we'll get it fixed as soon as we can.
+  * The logic log has not yet been updated with these changes and will be updated in a future minor update.
+
+* Technical Changes
+  * Multiworld names should now preserve proper casing inside the game as well instead of being forced to CAPS.
+  * The spoiler log search box now works properly with certain special characters.
+  * Creating a race ROM now properly sets the race bit in the ROM.
+  * The CLI tools have been updated to support generating keysanity seeds.
+  * Seed generation performance has been optimized and runs quite a bit faster now.
+  * The codebase has been updated from .NET 3.1 to .NET 5.0.
+  * An issue where the randomizer could get stuck if someone tried to generate a multiworld seed with an excessive amount of player has been fixed.
+
+#### Thanks to all contributors for helping out with fixes and patches for V11.2
+
 ## 2020-09-18 - Version 11.1
 
 * Systems Changes
