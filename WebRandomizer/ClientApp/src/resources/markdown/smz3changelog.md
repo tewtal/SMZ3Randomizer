@@ -13,9 +13,9 @@
   * All Super Metroid map tiles should now be properly revealed from the start.
 
 * Logic Changes
-  * An issue with Wrecked Ship logic where it didn't properly check if bomb passages could be traversed has been fixed.
-  * Moat logic has been updated to include options with Gravity + (Hi Jump or Bombs), as well as removing some logic requirement from Moat Missiles.
+  * An issue with Wrecked Ship logic where it didn't properly check if bomb passages could be traversed has been fixed.  
   * Forgotten Highway logic has been adjusted to allow for access through the "Toilet"
+  * Accessing Crocomire from the Lower Norfair portal via reverse Lava Dive without Morph added to Normal.
   * A lot more logic changes done to account for Keysanity key door changes in Super Metroid.
     * There could still be logic issues, so if you find something that seems off please report it and we'll get it fixed as soon as we can.
   * The logic log has not yet been updated with these changes and will be updated in a future minor update.
