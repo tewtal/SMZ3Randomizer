@@ -4,7 +4,7 @@
 
 The Super Metroid and A Link to the Past Crossover Randomizer is an item
 randomizer that combines Super Metroid and A Link to the Past into one
-experience and shuffles all the items and spreads the out in random locations
+experience and shuffles all the items and spreads them out in random locations
 in any of the games.
 
 Travel between the games is possible through the use of four cross-game portals
@@ -44,7 +44,7 @@ To create a new randomized game, head over to the [Generate Randomizer Game](/co
 2. After doing so you will be redirected to the "permalink" page where you need
    to select your original Super Metroid and A Link to the Past (Japanese 1.0)
    ROM's to continue.
-3. There's also a few extra customization settings that can be done here such
+3. There are also a few extra customization settings that can be done here such
    as changing the sprites of Samus and Link as well as some other options.
 4. When you're happy with the options, hit *Download ROM* and you'll get a new
    ROM that you can play with an emulator or SD2SNES.
@@ -106,20 +106,20 @@ This option decides where the morph ball will be placed.
 
 ### Key Shuffle
 
-This option decides how dungeon items such as keys and more is shuffled.
+This option decides how dungeon items such as keys are shuffled.
 
 * None - A Link to the Past dungeon items can only be placed inside the dungeon they belong to, and there are no changes to Super Metroid.
 * Keysanity
-    * Maps, Small Keys and Big Keys can no be found anywhere in either game.
+    * Maps, Small Keys and Big Keys can now be found anywhere in either game.
     * There are now new Keycard items for Super Metroid that unlocks new types of doors.
     * Three different levels of keycards exists:
-      * Level 1 - Lets you to open all the doors with a matching Level 1 marker above it for the specified area.
-      * Level 2 - Lets you to open all the doors with a matching Level 2 marker above it for the specified area.
+      * Level 1 - Lets you open all the doors with a matching Level 1 marker above it for the specified area.
+      * Level 2 - Lets you open all the doors with a matching Level 2 marker above it for the specified area.
       * Boss - Opens the door to the boss for the specified area (The crateria Boss Keycard opens both Bomb Torizo and the Golden 4 Statue room)
     * Each area in Super Metroid has either 2 (Wrecked Ship and Lower Norfair) or 3 keycards that can be found.
-    * Markers showing the locked doors and their keycard type in Super Metroid has been added to the in-game map.
+    * Markers showing the locked doors and their keycard type in Super Metroid have been added to the in-game map.
     * There is also a tracker showing what Keycards you have found overlaid in the bottom right of the in-game map screen in Super Metroid.
-    * A Link to the Past Compasses have been removed from the item pool to make place for the Super Metroid Keycards.
+    * A Link to the Past Compasses have been removed from the item pool to make space for the Super Metroid Keycards.
 
 ### Seed
 
