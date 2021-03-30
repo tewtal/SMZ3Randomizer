@@ -33,8 +33,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
                         /*Exit via GT fight and Portal*/
                         (items.CanUsePowerBombs() && items.SpaceJump && (items.Super || items.Charge))),
                     _ => new Requirement(items => 
-                         items.Morph && items.Varia && items.Super && ((items.CanFly() || items.CanSpringBallJump() ||
-                                         items.SpeedBooster && (items.HiJump && items.CanUsePowerBombs() || items.Charge && items.Ice)) &&
+                         items.Morph && items.Varia && items.Super && ((items.CanFly() || items.CanSpringBallJump() && items.CanPassBombPassages() ||
+                                         (items.CardNorfairL2 && (items.HiJump || items.Gravity) || items.SpeedBooster)
+                                           && (items.HiJump && items.CanUsePowerBombs() || items.Charge && items.Ice)) &&
                          /*Exit to Upper Norfair*/
                          (items.CardNorfairL2 || (items.SpeedBooster || items.CanFly() || items.Grapple || items.HiJump &&
                         (items.CanSpringBallJump() || items.Ice))) ||
