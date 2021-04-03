@@ -91,11 +91,15 @@ namespace Randomizer.SMZ3 {
             return region.CanEnter(items);
         }
 
-        public bool CanAquire(Progression items, RewardType reward) {
+        public bool CanAcquire(Progression items, RewardType reward) {
                 return Regions.OfType<IReward>().First(x => reward == x.Reward).CanComplete(items);
         }
 
-        public bool CanAquireAll(Progression items, params RewardType[] rewards) {
+        public bool CanAcquireX(Progression items, int goal, params RewardType[] rewards) {
+            return Regions.OfType<IReward>().Where(x => rewards.Contains(x.Reward)).Count(x => x.CanComplete(items)) >= goal;
+        }
+
+        public bool CanAcquireAll(Progression items, params RewardType[] rewards) {
             return Regions.OfType<IReward>().Where(x => rewards.Contains(x.Reward)).All(x => x.CanComplete(items));
         }
 

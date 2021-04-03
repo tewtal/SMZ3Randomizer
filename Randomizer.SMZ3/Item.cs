@@ -883,16 +883,27 @@ namespace Randomizer.SMZ3 {
             return items.Flute && items.CanLiftHeavy();
         }
 
+        public static bool CanAcquireCrystals(this Progression items, World world) {
+            if (world.Config.GameMode == GameMode.Multiworld)
+                return world.CanAcquireAll(items, new[] { CrystalBlue, CrystalRed, GoldenFourBoss });
+
+            // We can't guarantee the Golden Four if Crystals < 7
+            if (world.Config.TowerCrystals < 7)
+                return world.CanAcquireX(items, world.Config.TowerCrystals, new[] { CrystalBlue, CrystalRed });
+
+            return world.CanAcquireAll(items, new[] { CrystalBlue, CrystalRed, GoldenFourBoss });
+        }
+
         public static bool CanAccessMaridiaPortal(this Progression items, World world) {
             return world.Config.SMLogic switch {
                 Normal =>
                     items.MoonPearl && items.Flippers &&
                     items.Gravity && items.Morph &&
-                    (world.CanAquire(items, Agahnim) || items.Hammer && items.CanLiftLight() || items.CanLiftHeavy()),
+                    (world.CanAcquire(items, Agahnim) || items.Hammer && items.CanLiftLight() || items.CanLiftHeavy()),
                 _ =>
                     items.MoonPearl && items.Flippers &&
                     (items.CanSpringBallJump() || items.HiJump || items.Gravity) && items.Morph &&
-                    (world.CanAquire(items, Agahnim) || items.Hammer && items.CanLiftLight() || items.CanLiftHeavy())
+                    (world.CanAcquire(items, Agahnim) || items.Hammer && items.CanLiftLight() || items.CanLiftHeavy())
             };
         }
 

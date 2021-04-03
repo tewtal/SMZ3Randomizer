@@ -93,7 +93,10 @@ namespace Randomizer.SMZ3 {
 
             WriteRemoveEquipmentFromUncle(myWorld.GetLocation("Link's Uncle").Item);
 
+            WriteCrystalsNeeded(config.TowerCrystals, config.GanonCrystals);
+            WriteBossesNeeded(config.GoldenNumber);
             WriteGanonInvicible(config.GanonInvincible);
+            WriteGoals(config.Goal, config.GoalBosses);
             WriteRngBlock();
 
             WriteSaveAndQuitFromBossRoom();
@@ -606,6 +609,42 @@ namespace Randomizer.SMZ3 {
             }
         }
 
+        /* RE: GoalBosses...
+           Config:
+            1  == Phantoon
+            2  == Ridley
+            4  == Draygon
+            8  == Kraid
+           Event Array:
+            6 == Phantoon
+            7 == Ridley
+            8 == Draygon (bit 1 of the next byte)
+            9 == Kraid   (bit 2 of the next byte)
+        */
+        void WriteGoals(Goal goal, int SMbosses) {
+            var GanonValue = goal switch {
+                Goal.FastGanon => 0x01,
+                Goal.FastBoth  => 0x01,
+                _              => 0x00
+            };
+
+            var MBValue = goal switch {
+                Goal.FastMotherBrain => new byte[] { 0x01, 0x04 },
+                Goal.FastBoth        => new byte[] { 0x01, 0x04 },
+                _                    => new byte[] { 0x01, 0x00 },
+            };
+
+            if (SMbosses > 0) {
+                MBValue[0] |= (byte)((1 & SMbosses) << 6);
+                MBValue[0] |= (byte)((2 & SMbosses) << 6);
+                MBValue[1] |= (byte)((4 & SMbosses) >> 2);
+                MBValue[1] |= (byte)((8 & SMbosses) >> 2);
+            }
+
+            patches.Add((Snes(0x30808B), new byte[] { (byte)GanonValue }));
+            patches.Add((Snes(0xF47008), MBValue));
+        }
+
         void WriteGameTitle() {
             var z3Glitch = myWorld.Config.Z3Logic switch {
                 Z3Logic.Nmg => "N",
@@ -756,6 +795,15 @@ namespace Randomizer.SMZ3 {
                     (Snes(0xDD313), new byte[] { 0x00, 0x00, 0xE4, 0xFF, 0x08, 0x0E }),
                 });
             }
+        }
+
+        void WriteBossesNeeded(int num_bosses) {
+            patches.Add((Snes(0xF4700A), UintBytes(num_bosses)));
+        }
+
+        void WriteCrystalsNeeded(int tower, int ganon) {
+            patches.Add(( Snes(0x30805E), UintBytes(tower) ));
+            patches.Add(( Snes(0x30805F), UintBytes(ganon) ));
         }
 
         void WriteGanonInvicible(GanonInvincible invincible) {

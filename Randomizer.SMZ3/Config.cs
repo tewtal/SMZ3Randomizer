@@ -56,6 +56,12 @@ namespace Randomizer.SMZ3 {
     enum Goal {
         [Description("Defeat Ganon and Mother Brain")]
         DefeatBoth,
+        [Description("Fast Ganon and Defeat Mother Brain")]
+        FastGanon,
+        [Description("Defeat Ganon and Fast Mother Brain")]
+        FastMotherBrain,
+        [Description("Fast Ganon and Fast Mother Brain")]
+        FastBoth,
     }
 
     [DefaultValue(None)]
@@ -87,6 +93,10 @@ namespace Randomizer.SMZ3 {
         public KeyShuffle KeyShuffle { get; set; } = KeyShuffle.None;
         public bool Keysanity => KeyShuffle != KeyShuffle.None;
         public bool Race { get; set; } = false;
+        public int GoalBosses { get; set; } = 0;
+        public int GoldenNumber { get; set; } = 4;
+        public int TowerCrystals { get; set; } = 7;
+        public int GanonCrystals { get; set; } = 7;
         public GanonInvincible GanonInvincible { get; set; } = GanonInvincible.BeforeCrystals;
 
         public Config(IDictionary<string, string> options) {
@@ -96,6 +106,10 @@ namespace Randomizer.SMZ3 {
             SwordLocation = ParseOption(options, SwordLocation.Randomized);
             MorphLocation = ParseOption(options, MorphLocation.Randomized);
             Goal = ParseOption(options, Goal.DefeatBoth);
+            GoalBosses = ParseOption(options, "GoalBosses", 0);
+            GoldenNumber = ParseOption(options, "GoldenNumber", 4);
+            TowerCrystals = ParseOption(options, "TowerCrystals", 7);
+            GanonCrystals = ParseOption(options, "GanonCrystals", 7);
             GanonInvincible = ParseOption(options, GanonInvincible.BeforeCrystals);
             KeyShuffle = ParseOption(options, KeyShuffle.None);
             Race = ParseOption(options, "Race", false);
@@ -111,9 +125,9 @@ namespace Randomizer.SMZ3 {
             return defaultValue;
         }
 
-        private bool ParseOption(IDictionary<string, string> options, string option, bool defaultValue) {
-            if(options.ContainsKey(option.ToLower())) {
-                return bool.Parse(options[option.ToLower()]);
+        private T ParseOption<T>(IDictionary<string, string> options, string option, T defaultValue) {
+            if (options.ContainsKey(option.ToLower())) {
+                return (T) Convert.ChangeType(options[option.ToLower()], typeof(T));
             } else {
                 return defaultValue;
             }
