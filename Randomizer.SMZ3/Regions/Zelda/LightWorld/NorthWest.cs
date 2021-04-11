@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using static Randomizer.SMZ3.Z3Logic;
 using static Randomizer.SMZ3.RewardType;
 
 namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
@@ -40,8 +41,10 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
                 new Location(this, 256+33, 0x6B9CF, LocationType.Regular, "Sick Kid",
                     items => items.Bottle),
                 new Location(this, 256+34, 0x1E9CE, LocationType.Regular, "Kakariko Tavern").Weighted(sphereOne),
-                new Location(this, 256+35, 0x308015, LocationType.Regular, "Magic Bat",
-                    items => items.Powder && (items.Hammer || items.MoonPearl && items.Mirror && items.CanLiftHeavy())),
+                new Location(this, 256+35, 0x308015, LocationType.Regular, "Magic Bat", Logic switch {
+                    Normal => items => items.Powder && (items.Hammer || items.MoonPearl && items.Mirror && items.CanLiftHeavy()),
+                    _      => items => (items.Powder || items.Somaria && items.Mushroom) && (items.Hammer || items.MoonPearl && items.Mirror && items.CanLiftHeavy()),
+                }),
             };
         }
 

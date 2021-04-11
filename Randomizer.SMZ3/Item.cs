@@ -875,8 +875,11 @@ namespace Randomizer.SMZ3 {
             return items.Missile || items.Super;
         }
 
-        public static bool CanAccessNorfairUpperPortal(this Progression items) {
-            return items.Flute || items.CanLiftLight() && items.Lamp;
+        public static bool CanAccessNorfairUpperPortal(this Progression items, World world) {
+            return world.Config.Z3Logic switch {
+                Z3Logic.Normal => items.Flute || items.CanLiftLight() && items.Lamp,
+                _ => items.Flute || items.CanLiftLight() && (items.Lamp || items.Sword),
+            };
         }
 
         public static bool CanAccessNorfairLowerPortal(this Progression items) {

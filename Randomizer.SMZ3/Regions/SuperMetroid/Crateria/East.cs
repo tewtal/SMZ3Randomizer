@@ -35,7 +35,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
                     /* Ship -> Moat */
                     (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && items.Super ||
                     /* UN Portal -> Red Tower -> Moat */
-                    (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && items.CanAccessNorfairUpperPortal() &&
+                    (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && items.CanAccessNorfairUpperPortal(World) &&
                         (items.Ice || items.HiJump || items.SpaceJump) ||
                     /*Through Maridia From Portal*/
                     items.CanAccessMaridiaPortal(World) && items.Gravity && items.Super && (
@@ -50,7 +50,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
                     /* Ship -> Moat */
                     (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && items.Super ||
                     /* UN Portal -> Red Tower -> Moat */
-                    (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && items.CanAccessNorfairUpperPortal() &&
+                    (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && items.CanAccessNorfairUpperPortal(World) &&
                         (items.Ice || items.HiJump || items.CanFly() || items.CanSpringBallJump()) ||
                     /*Through Maridia From Portal*/
                     items.CanAccessMaridiaPortal(World) && (

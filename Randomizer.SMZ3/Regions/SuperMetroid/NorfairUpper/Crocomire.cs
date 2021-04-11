@@ -46,7 +46,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
             return Logic switch {
                 Normal => (
                         (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
-                        items.CanAccessNorfairUpperPortal()
+                        items.CanAccessNorfairUpperPortal(World)
                     ) &&
                     items.Varia && (
                         /* Ice Beam -> Croc Speedway */
@@ -64,7 +64,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                       ),
                 _ => (
                         (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
-                        items.CanAccessNorfairUpperPortal()
+                        items.CanAccessNorfairUpperPortal(World)
                     ) && (
                         /* Ice Beam -> Croc Speedway */
                         (Config.Keysanity ? items.CardNorfairL1 : items.Super) && items.CanUsePowerBombs() &&

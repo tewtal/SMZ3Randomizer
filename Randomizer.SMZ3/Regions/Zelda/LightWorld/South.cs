@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using static Randomizer.SMZ3.Z3Logic;
 
 namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
 
@@ -39,8 +40,10 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
                     items => items.Flippers && items.MoonPearl && items.Mirror && (
                         World.CanEnter("Dark World South", items) ||
                         World.CanEnter("Dark World North East", items))),
-                new Location(this, 256+62, 0x6BE7D, LocationType.Regular, "Hobo",
-                    items => items.Flippers),
+                new Location(this, 256+62, 0x6BE7D, LocationType.Regular, "Hobo", Logic switch {
+                    Normal => items => items.Flippers,
+                    _ => new Requirement(items => true),
+                }),
                 new Location(this, 256+63, 0x1EB4E, LocationType.Regular, "Ice Rod Cave").Weighted(sphereOne),
             };
 

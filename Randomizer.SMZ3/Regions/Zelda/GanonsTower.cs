@@ -122,14 +122,14 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         }
 
         private bool BigKeyRoom(Progression items) {
-            return items.KeyGT >= 3 && CanBeatArmos(items) 
+            return items.KeyGT >= 3 && CanBeatArmos(items)
                 && (items.Hammer && items.Hookshot || items.Firerod && items.Somaria);
         }
 
         private bool TowerAscend(Progression items) {
             return items.BigKeyGT && items.KeyGT >= 3 && items.Bow && items.CanLightTorches();
-        }   
-            
+        }
+
         private bool CanBeatArmos(Progression items) {
             return items.Sword || items.Hammer || items.Bow ||
                 items.CanExtendMagic(2) && (items.Somaria || items.Byrna) ||

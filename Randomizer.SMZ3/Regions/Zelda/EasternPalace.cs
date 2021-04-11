@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using static Randomizer.SMZ3.Z3Logic;
 using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda {
@@ -18,10 +19,14 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                 new Location(this, 256+105, 0x1E977, LocationType.Regular, "Eastern Palace - Compass Chest"),
                 new Location(this, 256+106, 0x1E97D, LocationType.Regular, "Eastern Palace - Big Chest",
                     items => items.BigKeyEP),
-                new Location(this, 256+107, 0x1E9B9, LocationType.Regular, "Eastern Palace - Big Key Chest",
-                    items => items.Lamp),
-                new Location(this, 256+108, 0x308150, LocationType.Regular, "Eastern Palace - Armos Knights",
-                    items => items.BigKeyEP && items.Bow && items.Lamp),
+                new Location(this, 256+107, 0x1E9B9, LocationType.Regular, "Eastern Palace - Big Key Chest", Logic switch {
+                    Normal => items => items.Lamp,
+                    _ => new Requirement(items => items.Lamp || items.Sword)
+                }),
+                new Location(this, 256+108, 0x308150, LocationType.Regular, "Eastern Palace - Armos Knights", Logic switch {
+                    Normal => items => items.BigKeyEP && items.Bow && items.Lamp,
+                    _      => new Requirement(items => items.BigKeyEP && items.Bow && (items.Lamp || items.Firerod))
+                }),
             };
         }
 

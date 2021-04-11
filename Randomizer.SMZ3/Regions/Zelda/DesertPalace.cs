@@ -26,7 +26,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                     items => (
                         items.CanLiftLight() ||
                         items.CanAccessMiseryMirePortal(Config) && items.Mirror
-                    ) && items.BigKeyDP && items.KeyDP && items.CanLightTorches() && CanBeatBoss(items)),
+                    ) && items.BigKeyDP && items.CanLightTorches() && CanBeatBoss(items)),
             };
         }
 

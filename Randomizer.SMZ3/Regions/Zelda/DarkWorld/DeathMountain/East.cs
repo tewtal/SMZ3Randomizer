@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using static Randomizer.SMZ3.Z3Logic;
+using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain {
 
@@ -15,12 +17,18 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain {
                     items => items.MoonPearl && items.Hookshot),
                 new Location(this, 256+67, 0x1EB57, LocationType.Regular, "Hookshot Cave - Bottom Left",
                     items => items.MoonPearl && items.Hookshot),
-                new Location(this, 256+68, 0x1EB5A, LocationType.Regular, "Hookshot Cave - Bottom Right",
-                    items => items.MoonPearl && (items.Hookshot || items.Boots)),
-                new Location(this, 256+69, 0x1EA7C, LocationType.Regular, "Superbunny Cave - Top",
-                    items => items.MoonPearl),
-                new Location(this, 256+70, 0x1EA7F, LocationType.Regular, "Superbunny Cave - Bottom",
-                    items => items.MoonPearl),
+                new Location(this, 256+68, 0x1EB5A, LocationType.Regular, "Hookshot Cave - Bottom Right", Logic switch {
+                    Normal => items => items.MoonPearl && items.Hookshot,
+                    _ => new Requirement(items => items.MoonPearl && (items.Hookshot || items.Boots)),
+                }),
+                new Location(this, 256+69, 0x1EA7C, LocationType.Regular, "Superbunny Cave - Top", Logic switch {
+                    Normal => items => items.MoonPearl,
+                    _ => new Requirement(items => true),
+                }),
+                new Location(this, 256+70, 0x1EA7F, LocationType.Regular, "Superbunny Cave - Bottom", Logic switch {
+                    Normal => items => items.MoonPearl,
+                    _ => new Requirement(items => true),
+                }),
             };
         }
 

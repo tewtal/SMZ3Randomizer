@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using static Randomizer.SMZ3.Z3Logic;
 using static Randomizer.SMZ3.RewardType;
 
 namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld {
@@ -10,8 +11,10 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld {
 
         public NorthWest(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
-                new Location(this, 256+71, 0x308146, LocationType.Regular, "Bumper Cave",
-                    items => items.CanLiftLight() && items.Cape),
+                new Location(this, 256+71, 0x308146, LocationType.Regular, "Bumper Cave", Logic switch {
+                    Normal => items => items.CanLiftLight() && items.Hookshot && items.Cape,
+                    _ => new Requirement(items => items.CanLiftLight() && items.Cape)
+                }),
                 new Location(this, 256+72, 0x1EDA8, LocationType.Regular, "Chest Game"),
                 new Location(this, 256+73, 0x1E9EF, LocationType.Regular, "C-Shaped House"),
                 new Location(this, 256+74, 0x1E9EC, LocationType.Regular, "Brewery"),
