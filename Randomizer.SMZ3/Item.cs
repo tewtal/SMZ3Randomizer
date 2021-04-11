@@ -836,7 +836,7 @@ namespace Randomizer.SMZ3 {
                 Medium =>
                     (items.CardNorfairL2 || items.SpeedBooster) && items.Varia && items.Super && (
                         items.CanFly() || items.HiJump || items.SpeedBooster || items.Ice
-                    ) && (items.Gravity || items.HiJump) && items.CanUsePowerBombs()
+                    ) && (items.Gravity || items.HiJump) && items.CanUsePowerBombs(),
                 _ =>
                     (items.CardNorfairL2 || items.SpeedBooster) && items.Varia && items.Super && (
                         items.CanFly() || items.HiJump || items.SpeedBooster || items.CanSpringBallJump() || items.Ice
@@ -909,7 +909,7 @@ namespace Randomizer.SMZ3 {
                 Medium =>
                     items.MoonPearl && items.Flippers &&
                     (items.HiJump || items.Gravity) && items.Morph &&
-                    (world.CanAquire(items, Agahnim) || items.Hammer && items.CanLiftLight() || items.CanLiftHeavy())
+                    (world.CanAquire(items, Agahnim) || items.Hammer && items.CanLiftLight() || items.CanLiftHeavy()),
                 _ =>
                     items.MoonPearl && items.Flippers &&
                     (items.CanSpringBallJump() || items.HiJump || items.Gravity) && items.Morph &&

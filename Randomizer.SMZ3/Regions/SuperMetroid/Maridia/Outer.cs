@@ -41,7 +41,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
                         items.CanPassBombPassages() ||
                         items.Gravity && items.ScrewAttack ||
                         items.Super && (items.Gravity || items.HiJump && items.Ice)
-                    )
+                    ),
                 _ =>
                     World.CanEnter("Norfair Upper West", items) && items.CanUsePowerBombs() &&
                         (items.Gravity || items.HiJump && (items.CanSpringBallJump() || items.Ice)) ||
