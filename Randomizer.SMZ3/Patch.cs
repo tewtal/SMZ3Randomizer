@@ -614,6 +614,7 @@ namespace Randomizer.SMZ3 {
             };
             var smGlitch = myWorld.Config.SMLogic switch {
                 SMLogic.Normal => "N",
+                SMLogic.Medium => "M",
                 SMLogic.Hard => "H",
                 _ => "X",
             };

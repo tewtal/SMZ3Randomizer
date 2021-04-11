@@ -831,11 +831,16 @@ namespace Randomizer.SMZ3 {
         public static bool CanAccessMiseryMirePortal(this Progression items, Config config) {
             return config.SMLogic switch {
                 Normal =>
-                    (items.CardNorfairL2 || (items.SpeedBooster && items.Wave)) && items.Varia && items.Super && (items.Gravity && items.SpaceJump) && items.CanUsePowerBombs(),
+                    (items.CardNorfairL2 || (items.SpeedBooster && items.Wave)) && items.Varia && items.Super &&
+                    (items.Gravity && items.SpaceJump) && items.CanUsePowerBombs(),
+                Medium =>
+                    (items.CardNorfairL2 || items.SpeedBooster) && items.Varia && items.Super && (
+                        items.CanFly() || items.HiJump || items.SpeedBooster || items.Ice
+                    ) && (items.Gravity || items.HiJump) && items.CanUsePowerBombs()
                 _ =>
                     (items.CardNorfairL2 || items.SpeedBooster) && items.Varia && items.Super && (
                         items.CanFly() || items.HiJump || items.SpeedBooster || items.CanSpringBallJump() || items.Ice
-                   ) && (items.Gravity || items.HiJump) && items.CanUsePowerBombs()
+                    ) && (items.Gravity || items.HiJump) && items.CanUsePowerBombs()
              };
         }
 
@@ -863,6 +868,10 @@ namespace Randomizer.SMZ3 {
             return items.Morph && items.SpringBall;
         }
 
+        public static bool CanHeckRun(this Progression items) {
+            return items.Varia || items.HasEnergyReserves(7);
+        }
+
         public static bool CanHellRun(this Progression items) {
             return items.Varia || items.HasEnergyReserves(5);
         }
@@ -883,12 +892,24 @@ namespace Randomizer.SMZ3 {
             return items.Flute && items.CanLiftHeavy();
         }
 
+        public static bool CanPassWaveGates(this Progression items, World world) {
+            return world.Config.SMLogic switch {
+                Normal => items.Wave,
+                Medium => items.Super || items.Wave,
+                _      => items.Missile || items.Super || items.Wave
+            };
+        }
+
         public static bool CanAccessMaridiaPortal(this Progression items, World world) {
             return world.Config.SMLogic switch {
                 Normal =>
                     items.MoonPearl && items.Flippers &&
                     items.Gravity && items.Morph &&
                     (world.CanAquire(items, Agahnim) || items.Hammer && items.CanLiftLight() || items.CanLiftHeavy()),
+                Medium =>
+                    items.MoonPearl && items.Flippers &&
+                    (items.HiJump || items.Gravity) && items.Morph &&
+                    (world.CanAquire(items, Agahnim) || items.Hammer && items.CanLiftLight() || items.CanLiftHeavy())
                 _ =>
                     items.MoonPearl && items.Flippers &&
                     (items.CanSpringBallJump() || items.HiJump || items.Gravity) && items.Morph &&

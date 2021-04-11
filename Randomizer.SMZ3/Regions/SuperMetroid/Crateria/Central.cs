@@ -20,11 +20,15 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
                     _ => new Requirement(items => items.CanDestroyBombWalls())
                 }),
                 new Location(this, 11, 0x8F8478, LocationType.Visible, "Super Missile (Crateria)", Logic switch {
+                    Normal => items => items.CanUsePowerBombs() && items.SpeedBooster && items.Ice &&
+                        (items.HasEnergyReserves(4) || (items.HasEnergyReserves(3) && (items.Grapple || items.SpaceJump))),
+                    Medium => items => items.CanUsePowerBombs() && items.SpeedBooster &&
+                        (items.HasEnergyReserves(3) || (items.HasEnergyReserves(2) && (items.Grapple || items.SpaceJump))),
                     _ => new Requirement(items => items.CanUsePowerBombs() && items.HasEnergyReserves(2) && items.SpeedBooster)
                 }),
                 new Location(this, 7, 0x8F8404, LocationType.Chozo, "Bombs", Logic switch {
-                    Normal => items => (config.Keysanity ? items.CardCrateriaBoss : items.CanOpenRedDoors()) && items.CanPassBombPassages(),
-                    _ => new Requirement(items => (config.Keysanity ? items.CardCrateriaBoss : items.CanOpenRedDoors()) && items.Morph)
+                    Hard => items => (config.Keysanity ? items.CardCrateriaBoss : items.CanOpenRedDoors()) && items.Morph,
+                    _ => new Requirement(items => (config.Keysanity ? items.CardCrateriaBoss : items.CanOpenRedDoors()) && items.CanPassBombPassages()),
                 })
             };
         }

@@ -12,7 +12,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
             Locations = new List<Location> {
                 new Location(this, 61, 0x8F8C3E, LocationType.Chozo, "Reserve Tank, Norfair", Logic switch {
                     Normal => items => items.CardNorfairL2 && items.Morph && (
-                        items.CanFly() ||
+                        items.SpaceJump ||
                         items.Grapple && (items.SpeedBooster || items.CanPassBombPassages()) ||
                         items.HiJump || items.Ice
                     ),
@@ -20,7 +20,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                 }),
                 new Location(this, 62, 0x8F8C44, LocationType.Hidden, "Missile (Norfair Reserve Tank)", Logic switch {
                     Normal => items => items.CardNorfairL2 && items.Morph && (
-                        items.CanFly() ||
+                        items.SpaceJump ||
                         items.Grapple && (items.SpeedBooster || items.CanPassBombPassages()) ||
                         items.HiJump || items.Ice
                     ),
@@ -28,7 +28,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                 }),
                 new Location(this, 63, 0x8F8C52, LocationType.Visible, "Missile (bubble Norfair green door)", Logic switch {
                     Normal => items => items.CardNorfairL2 && (
-                        items.CanFly() ||
+                        items.SpaceJump ||
                         items.Grapple && items.Morph && (items.SpeedBooster || items.CanPassBombPassages()) ||
                         items.HiJump || items.Ice
                     ),
@@ -39,7 +39,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                 }),
                 new Location(this, 65, 0x8F8C74, LocationType.Hidden, "Missile (Speed Booster)", Logic switch {
                     Normal => items => items.CardNorfairL2 && (
-                        items.CanFly() ||
+                        items.SpaceJump ||
                         items.Morph && (items.SpeedBooster || items.CanPassBombPassages()) ||
                         items.HiJump || items.Ice
                     ),
@@ -47,7 +47,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                 }),
                 new Location(this, 66, 0x8F8C82, LocationType.Chozo, "Speed Booster", Logic switch {
                     Normal => items => items.CardNorfairL2 && (
-                        items.CanFly() ||
+                        items.SpaceJump ||
                         items.Morph && (items.SpeedBooster || items.CanPassBombPassages()) ||
                         items.HiJump || items.Ice
                     ),
@@ -55,20 +55,18 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                 }),
                 new Location(this, 67, 0x8F8CBC, LocationType.Visible, "Missile (Wave Beam)", Logic switch {
                     Normal => items => items.CardNorfairL2 && (
-                        items.CanFly() ||
+                        items.SpaceJump ||
                         items.Morph && (items.SpeedBooster || items.CanPassBombPassages()) ||
                         items.HiJump || items.Ice
-                    ) ||
-                    items.SpeedBooster && items.Wave && items.Morph && items.Super,
-                    _ => new Requirement(items => items.CardNorfairL2 || items.Varia)
+                    ) || items.SpeedBooster && items.Wave && items.Morph && items.Super,
+                    _ => new Requirement(items => items.CanOpenRedDoors() && (items.CardNorfairL2 || items.Varia))
                 }),
                 new Location(this, 68, 0x8F8CCA, LocationType.Chozo, "Wave Beam", Logic switch {
-                    Normal => items => items.Morph && (
-                        items.CardNorfairL2 && (
-                            items.CanFly() ||
-                            items.Morph && (items.SpeedBooster || items.CanPassBombPassages()) ||
-                            items.HiJump || items.Ice
-                        ) ||
+                    Normal => items => items.CardNorfairL2 && (
+                        items.SpaceJump ||
+                        items.Morph && (items.SpeedBooster || items.CanPassBombPassages()) ||
+                        items.HiJump || items.Ice
+                    ) || (
                         items.SpeedBooster && items.Wave && items.Morph && items.Super
                     ),
                     _ => new Requirement(items => items.CanOpenRedDoors() && (items.CardNorfairL2 || items.Varia) &&
@@ -87,14 +85,28 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                     ) && items.Varia && items.Super && (
                         /* Cathedral */
                         items.CanOpenRedDoors() && (Config.Keysanity ? items.CardNorfairL2 : items.Super) &&
-                            (items.CanFly() || items.HiJump || items.SpeedBooster) ||
+                            (items.CanFly() || items.HiJump) ||
                         /* Frog Speedway */
                         items.SpeedBooster && (items.CardNorfairL2 || items.Wave) && items.CanUsePowerBombs()
+                    ),
+                Medium => ( // Norfair Main Street Access
+                        (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
+                        items.CanAccessNorfairUpperPortal()
+                    ) &&
+                    // "Heck" Run and Green Door
+                    items.CanHeckRun() && (
+                        items.CanOpenRedDoors() && (Config.Keysanity ? items.CardNorfairL2 : items.Super) && (
+                            /* Cathedral */
+                            items.CanFly() || items.HiJump || items.SpeedBooster || items.Varia && items.Ice
+                        ) ||
+                        /* Frog Speedway */
+                        items.SpeedBooster && (items.CardNorfairL2 || items.Super || items.Wave) && items.CanUsePowerBombs()
                     ),
                 _ => (
                         (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
                         items.CanAccessNorfairUpperPortal()
                     ) &&
+                    // Hell Run and Green Door
                     items.CanHellRun() && (
                         /* Cathedral */
                         items.CanOpenRedDoors() && (Config.Keysanity ? items.CardNorfairL2 : items.Super) && (

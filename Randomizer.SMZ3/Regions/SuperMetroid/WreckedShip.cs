@@ -41,6 +41,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
                 new Location(this, 135, 0x8FC36D, LocationType.Chozo, "Gravity Suit", Logic switch {
                     Normal => items => CanUnlockShip(items) && items.CardWreckedShipL1 &&
                         (items.Grapple || items.SpaceJump || items.Varia && items.HasEnergyReserves(2) || items.HasEnergyReserves(3)),
+                    Medium => items => CanUnlockShip(items) && items.CardWreckedShipL1 &&
+                        (items.Grapple || items.SpaceJump || items.Varia && items.HasEnergyReserves(1) || items.HasEnergyReserves(2)),
                     _ => new Requirement(items => CanUnlockShip(items) && items.CardWreckedShipL1 && (items.Varia || items.HasEnergyReserves(1)))
                 })
             };
@@ -55,16 +57,34 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
                 Normal =>
                     items.Super && (
                         /* Over the Moat */
-                        (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && (
-                            items.SpeedBooster || items.Grapple || items.SpaceJump ||
-                            items.Gravity && (items.CanIbj() || items.HiJump)
-                        ) ||
+                        (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && (items.Grapple || items.SpaceJump) ||
                         /* Through Maridia -> Forgotten Highway */
                         items.CanUsePowerBombs() && items.Gravity ||
                         /* From Maridia portal -> Forgotten Highway */
                         items.CanAccessMaridiaPortal(World) && items.Gravity && (
                             items.CanDestroyBombWalls() && items.CardMaridiaL2 ||
                             World.GetLocation("Space Jump").Available(items)
+                        )
+                    ),
+                Medium =>
+                    items.Super && (
+                        /* Over the Moat */
+                        (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && (
+                            items.SpeedBooster || items.Grapple || items.SpaceJump || items.Gravity
+                        ) ||
+                        /* Through Maridia -> Forgotten Highway */
+                        items.CanUsePowerBombs() && (
+                            items.Gravity ||
+                            /* Climb Mt. Everest */
+                            items.HiJump && items.Ice && items.Grapple && items.CardMaridiaL1
+                        ) ||
+                        /* From Maridia portal -> Forgotten Highway */
+                        items.CanAccessMaridiaPortal(World) && (
+                            items.HiJump && items.CanPassBombPassages() && items.CardMaridiaL2 ||
+                            items.Gravity && (
+                                items.CardMaridiaL2 && items.CanDestroyBombWalls() ||
+                                World.GetLocation("Space Jump").Available(items)
+                            )
                         )
                     ),
                 _ =>
@@ -78,7 +98,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
                             items.HiJump && (items.Ice || items.CanSpringBallJump()) && items.Grapple && items.CardMaridiaL1
                         ) ||
                         /* From Maridia portal -> Forgotten Highway */
-                        items.CanAccessMaridiaPortal(World) && ( 
+                        items.CanAccessMaridiaPortal(World) && (
                             items.HiJump && items.CanPassBombPassages() && items.CardMaridiaL2 ||
                             items.Gravity && (
                                 items.CanDestroyBombWalls() && items.CardMaridiaL2 ||

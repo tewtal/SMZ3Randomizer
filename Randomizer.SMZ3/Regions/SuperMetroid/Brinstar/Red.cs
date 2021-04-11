@@ -11,7 +11,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
         public Red(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 38, 0x8F8876, LocationType.Chozo, "X-Ray Scope", Logic switch {
-                    Normal => items => items.CanUsePowerBombs() && items.CanOpenRedDoors() && (items.Grapple || items.SpaceJump),
+                    Normal => items => items.CanUsePowerBombs() && items.CanOpenRedDoors() && (items.Grapple || items.SpaceJump) &&
+                        (items.Varia || items.HasEnergyReserves(3)),
+                    Medium => items => items.CanUsePowerBombs() && items.CanOpenRedDoors() && (items.Grapple || items.SpaceJump),
                     _ => new Requirement(items => items.CanUsePowerBombs() && items.CanOpenRedDoors() && (
                         items.Grapple || items.SpaceJump ||
                         (items.CanIbj() || items.HiJump && items.SpeedBooster || items.CanSpringBallJump()) &&
@@ -38,6 +40,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
                 Normal =>
                     (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
                     items.CanAccessNorfairUpperPortal() && (items.Ice || items.HiJump || items.SpaceJump),
+                Medium =>
+                    (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
+                    items.CanAccessNorfairUpperPortal() && (items.Ice || items.HiJump || items.CanFly()),
                 _ =>
                     (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
                     items.CanAccessNorfairUpperPortal() && (items.Ice || items.CanSpringBallJump() || items.HiJump || items.CanFly())

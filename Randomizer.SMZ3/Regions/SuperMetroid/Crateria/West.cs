@@ -27,22 +27,24 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
         }
 
         public override bool CanEnter(Progression items) {
-            return items.CanDestroyBombWalls() || items.SpeedBooster;
+            return Logic switch {
+                Normal => items.CanDestroyBombWalls(),
+                _ =>items.CanDestroyBombWalls() || items.SpeedBooster,
+            };
         }
 
         private bool CanEnterAndLeaveGauntlet(Progression items) {
             return Logic switch {
                 Normal =>
-                    items.CardCrateriaL1 && items.Morph && (items.CanFly() || items.SpeedBooster) && (
-                        items.CanIbj() ||
-                        items.CanUsePowerBombs() && items.TwoPowerBombs ||
-                        items.ScrewAttack
-                    ),
+                    items.CardCrateriaL1 && items.Morph && (items.SpaceJump || items.SpeedBooster) &&
+                        (items.CanIbj() || items.CanUsePowerBombs() && items.TwoPowerBombs || items.ScrewAttack),
+                Medium =>
+                    items.CardCrateriaL1 && items.Morph && (items.CanFly() || items.SpeedBooster) &&
+                        (items.CanIbj() || items.CanUsePowerBombs() && items.TwoPowerBombs || items.ScrewAttack),
                 _ =>
                     items.CardCrateriaL1 && (
                         items.Morph && (items.Bombs || items.TwoPowerBombs) ||
-                        items.ScrewAttack ||
-                        items.SpeedBooster && items.CanUsePowerBombs() && items.HasEnergyReserves(2)
+                        items.ScrewAttack || items.SpeedBooster && items.CanUsePowerBombs() && items.HasEnergyReserves(2)
                     )
             };
         }

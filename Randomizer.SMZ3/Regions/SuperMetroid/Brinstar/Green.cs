@@ -44,7 +44,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
         }
 
         public override bool CanEnter(Progression items) {
-            return items.CanDestroyBombWalls() || items.SpeedBooster;
+            return Logic switch {
+                Normal => items.CanDestroyBombWalls(),
+                _ => items.CanDestroyBombWalls() || items.SpeedBooster
+            };
         }
 
     }

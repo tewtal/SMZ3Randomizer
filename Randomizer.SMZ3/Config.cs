@@ -28,6 +28,8 @@ namespace Randomizer.SMZ3 {
     enum SMLogic {
         [Description("Normal")]
         Normal,
+        [Description("Medium")]
+        Medium,
         [Description("Hard")]
         Hard,
     }
