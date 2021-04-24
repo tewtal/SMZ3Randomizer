@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using static Randomizer.SMZ3.Z3Logic;
 using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.RewardType;
 
@@ -23,10 +24,12 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                     items => items.Hammer && items.Hookshot),
                 new Location(this, 256+193, 0x1EAC1, LocationType.Regular, "Ganon's Tower - DMs Room - Bottom Right",
                     items => items.Hammer && items.Hookshot),
-                new Location(this, 256+194, 0x1EAD3, LocationType.Regular, "Ganon's Tower - Map Chest",
-                    items => items.Hammer && (items.Hookshot || items.Boots) && items.KeyGT >=
-                        (new[] { BigKeyGT, KeyGT }.Any(type => GetLocation("Ganon's Tower - Map Chest").ItemIs(type, World)) ? 3 : 4))
-                    .AlwaysAllow((item, items) => item.Is(KeyGT, World) && items.KeyGT >= 3),
+                new Location(this, 256+194, 0x1EAD3, LocationType.Regular, "Ganon's Tower - Map Chest", Logic switch {
+                        Normal => items => items.Hammer && items.Hookshot && items.KeyGT >=
+                            (new[] { BigKeyGT, KeyGT }.Any(type => GetLocation("Ganon's Tower - Map Chest").ItemIs(type, World)) ? 3 : 4),
+                        _ => items => items.Hammer && (items.Hookshot || items.Boots) && items.KeyGT >=
+                            (new[] { BigKeyGT, KeyGT }.Any(type => GetLocation("Ganon's Tower - Map Chest").ItemIs(type, World)) ? 3 : 4),
+                    }).AlwaysAllow((item, items) => item.Is(KeyGT, World) && items.KeyGT >= 3),
                 new Location(this, 256+195, 0x1EAD0, LocationType.Regular, "Ganon's Tower - Firesnake Room",
                     items => items.Hammer && items.Hookshot && items.KeyGT >= (new[] {
                             GetLocation("Ganon's Tower - Randomizer Room - Top Right"),

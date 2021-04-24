@@ -875,6 +875,8 @@ namespace Randomizer.SMZ3 {
             return items.Missile || items.Super;
         }
 
+        /* We can't import Z3Logic because we've already imported M3Logic and "Normal" conflicts
+            Have to use full scope here as a result */
         public static bool CanAccessNorfairUpperPortal(this Progression items, World world) {
             return world.Config.Z3Logic switch {
                 Z3Logic.Normal => items.Flute || items.CanLiftLight() && items.Lamp,

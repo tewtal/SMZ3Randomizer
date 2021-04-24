@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using static Randomizer.SMZ3.Z3Logic;
 using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda {
@@ -35,13 +36,18 @@ namespace Randomizer.SMZ3.Regions.Zelda {
 
         // Need "CanKillManyEnemies" if implementing swordless
         public override bool CanEnter(Progression items) {
-            return Medallion switch {
-                    Bombos => items.Bombos,
-                    Ether => items.Ether,
-                    _ => items.Quake
-                } && items.Sword &&
-                items.MoonPearl && (items.Boots || items.Hookshot) &&
-                World.CanEnter("Dark World Mire", items);
+            var medal = Medallion switch {
+                Bombos => items.Bombos,
+                Ether => items.Ether,
+                _ => items.Quake
+            };
+
+            return Logic switch {
+                Normal => medal && items.Sword && items.MoonPearl && items.Hookshot &&
+                    World.CanEnter("Dark World Mire", items),
+                _ =>  medal && items.Sword && items.MoonPearl && (items.Boots || items.Hookshot) &&
+                    World.CanEnter("Dark World Mire", items),
+            };
         }
 
         public bool CanComplete(Progression items) {
