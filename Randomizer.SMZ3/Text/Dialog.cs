@@ -7,11 +7,11 @@ namespace Randomizer.SMZ3.Text {
 
     static class Dialog {
 
-        static readonly Regex command = new Regex(@"^\{[^}]*\}");
-        static readonly Regex invalid = new Regex(@"(?<!^)\{[^}]*\}(?!$)", RegexOptions.Multiline);
-        static readonly Regex digit = new Regex(@"\d");
-        static readonly Regex uppercaseLetter = new Regex("[A-Z]");
-        static readonly Regex lowercaseLetter = new Regex("[a-z]");
+        static readonly Regex command = new(@"^\{[^}]*\}");
+        static readonly Regex invalid = new(@"(?<!^)\{[^}]*\}(?!$)", RegexOptions.Multiline);
+        static readonly Regex digit = new(@"[0-9]");
+        static readonly Regex uppercaseLetter = new(@"[A-Z]");
+        static readonly Regex lowercaseLetter = new(@"[a-z]");
 
         public static byte[] Simple(string text) {
             const int maxBytes = 256;
@@ -22,9 +22,9 @@ namespace Randomizer.SMZ3.Text {
             var lineIndex = 0;
             foreach (var line in lines) {
                 bytes.Add(lineIndex switch {
-                    0 => (byte)0x74,
-                    1 => (byte)0x75,
-                    _ => (byte)0x76,
+                    0 => 0x74,
+                    1 => 0x75,
+                    _ => 0x76,
                 });
                 var letters = line.Length > wrap ? line[..wrap] : line;
                 foreach (var letter in letters) {
