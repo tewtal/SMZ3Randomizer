@@ -5,16 +5,6 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="TestData\ItemTexts.json" />
-    <None Remove="TestData\StringTableData.txt" />
-    <None Remove="TestData\StringTableEntries.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestData\ItemTexts.json" />
-    <EmbeddedResource Include="TestData\StringTableEntries.json" />
-    <EmbeddedResource Include="TestData\StringTableData.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="nunit" Version="3.13.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0">
