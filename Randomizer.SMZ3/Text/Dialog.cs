@@ -52,7 +52,7 @@ namespace Randomizer.SMZ3.Text {
             return bytes.ToArray();
         }
 
-        public static byte[] Compiled(string text, bool pause = true) {
+        public static byte[] Compiled(string text) {
             const int maxBytes = 2046;
             const int wrap = 19;
 
@@ -60,6 +60,7 @@ namespace Randomizer.SMZ3.Text {
                 throw new ArgumentException("Dialog commands must be placed on separate lines", nameof(text));
 
             bool padOut = false;
+            bool pause = true;
 
             var bytes = new List<byte> { 0xFB };
             var lines = Wordwrap(text, wrap);
@@ -72,6 +73,10 @@ namespace Randomizer.SMZ3.Text {
                         return new byte[] { 0xFB, 0xFE, 0x6E, 0x00, 0xFE, 0x6B, 0x04 };
                     if (match.Value == "{INTRO}")
                         padOut = true;
+                    if (match.Value == "{NOPAUSE}") {
+                        pause = false;
+                        continue;
+                    }
 
                     bytes.AddRange(match.Value switch {
                         "{SPEED0}" => new byte[] { 0xFC, 0x00 },

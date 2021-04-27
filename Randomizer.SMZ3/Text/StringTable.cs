@@ -46,7 +46,7 @@ namespace Randomizer.SMZ3.Text {
         }
 
         public void SetTriforceRoomText(string text) {
-            SetText("end_triforce", "{NOBORDER}\n" + text);
+            SetText("end_triforce", $"{{NOBORDER}}\n{text}");
         }
 
         public void SetPedestalText(string text) {
@@ -97,7 +97,6 @@ namespace Randomizer.SMZ3.Text {
                         select (byte)convert.ConvertFromInvariantString(b)
                     ).ToArray(),
                     YamlValue text => Dialog.Compiled(text.Value),
-                    YamlMapping inner => Dialog.Compiled((inner["NoPause"] as YamlValue).Value, pause: false),
                     var o => throw new InvalidOperationException($"Did not expect an object of type {o.GetType()}"),
                 })
             ).ToList();

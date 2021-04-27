@@ -199,8 +199,9 @@ namespace Randomizer.SMZ3.Tests.Text {
             [Test]
             public void WrapsOneLongLine() {
                 var lineOfAWords = string.Join("", Enumerable.Repeat("a ", 11));
+                var text = Lines("{NOPAUSE}", lineOfAWords);
 
-                var actual = Dialog.Compiled(lineOfAWords, pause: false);
+                var actual = Dialog.Compiled(text);
 
                 Assert.That(actual, Is.EquivalentTo(Bytes(
                     Byte(DialogStart), Repeat(Seq(0x30, NarrowSpace), 9), Byte(0x30),
@@ -212,9 +213,9 @@ namespace Randomizer.SMZ3.Tests.Text {
             public void WrapsTwoLongLines() {
                 var lineOfAWords = string.Join("", Enumerable.Repeat("a ", 11));
                 var lineOfBWords = string.Join("", Enumerable.Repeat("b ", 11));
-                var text = Lines(lineOfAWords, lineOfBWords);
+                var text = Lines("{NOPAUSE}", lineOfAWords, lineOfBWords);
 
-                var actual = Dialog.Compiled(text, pause: false);
+                var actual = Dialog.Compiled(text);
 
                 Assert.That(actual, Is.EquivalentTo(Bytes(
                     Byte(DialogStart), Repeat(Seq(0x30, NarrowSpace), 9), Byte(0x30),
@@ -227,9 +228,9 @@ namespace Randomizer.SMZ3.Tests.Text {
             [Test]
             public void WrapsOneLongWord() {
                 var longWord = new string('b', 38);
-                var text = $"a {longWord}";
+                var text = Lines("{NOPAUSE}", $"a {longWord}");
 
-                var actual = Dialog.Compiled(text, pause: false);
+                var actual = Dialog.Compiled(text);
 
                 Assert.That(actual, Is.EquivalentTo(Bytes(
                     Byte(DialogStart), Byte(0x30),
@@ -276,14 +277,15 @@ namespace Randomizer.SMZ3.Tests.Text {
             }
 
             [Test]
-            public void ManyLinesWithoutPauseOnlyAddsScroll() {
+            public void ManyLinesWithNoPauseOnlyAddsScroll() {
                 var text = Lines(
+                    "{NOPAUSE}",
                     "a", "b", "c",
                     "d", "e", "f",
                     "g", "h", "i"
                 );
 
-                var actual = Dialog.Compiled(text, pause: false);
+                var actual = Dialog.Compiled(text);
 
                 Assert.That(actual, Is.EquivalentTo(Bytes(
                     Byte(DialogStart), Byte(0x30),
@@ -300,9 +302,9 @@ namespace Randomizer.SMZ3.Tests.Text {
 
             [Test]
             public void IntroPadsFirstThreeLines() {
-                var text = Lines("{INTRO}", "a", "b", "c", "d", "e", "f");
+                var text = Lines("{NOPAUSE}", "{INTRO}", "a", "b", "c", "d", "e", "f");
 
-                var actual = Dialog.Compiled(text, pause: false);
+                var actual = Dialog.Compiled(text);
 
                 Assert.That(actual, Is.EquivalentTo(Bytes(
                     Byte(DialogStart), Intro, Byte(0x30), Repeat(NarrowSpace, 18),
@@ -317,9 +319,10 @@ namespace Randomizer.SMZ3.Tests.Text {
             [Test]
             public void HasASizeLimit() {
                 var n = MinLinesGeneratingMoreThan2046Bytes();
-                var text = Lines(Enumerable.Repeat(new string('a', 19), n));
+                var lines = Lines(Enumerable.Repeat(new string('a', 19), n));
+                var text = Lines("{NOPAUSE}", lines);
 
-                var actual = Dialog.Compiled(text, pause: false);
+                var actual = Dialog.Compiled(text);
 
                 Assert.That(actual, Has.Length.EqualTo(2046));
             }
