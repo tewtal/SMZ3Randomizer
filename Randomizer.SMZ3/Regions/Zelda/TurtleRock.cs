@@ -48,8 +48,10 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                     Normal => LaserBridge,
                     _ => NMGLaserBridge,
                 }),
-                new Location(this, 256+188, 0x308159, LocationType.Regular, "Turtle Rock - Trinexx",
-                    items => items.BigKeyTR && items.KeyTR >= 4 && items.Lamp && CanBeatBoss(items)),
+                new Location(this, 256+188, 0x308159, LocationType.Regular, "Turtle Rock - Trinexx", Logic switch {
+                    Normal => items => items.BigKeyTR && items.KeyTR >= 4 && items.Lamp && CanBeatBoss(items),
+                    _ => new Requirement(items => items.BigKeyTR && items.KeyTR >= 4 && CanBeatBoss(items))
+                }),
             };
         }
 

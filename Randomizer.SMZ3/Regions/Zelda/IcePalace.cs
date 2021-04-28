@@ -50,14 +50,21 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                             GetLocation("Ice Palace - Map Chest")
                         })
                     ),
-                    _ => new Requirement(items => items.Somaria),
+                    _ => new Requirement(items => items.Somaria || (items.Hammer && (
+                        items.Hookshot || items.KeyIP >= 1 && CanNotWasteKeysBeforeAccessible(items, new[] {
+                            GetLocation("Ice Palace - Spike Room"),
+                            GetLocation("Ice Palace - Map Chest")
+                        }))
+                    )),
                 }),
                 new Location(this, 256+165, 0x1E9E3, LocationType.Regular, "Ice Palace - Iced T Room"),
                 new Location(this, 256+166, 0x1E995, LocationType.Regular, "Ice Palace - Freezor Chest"),
                 new Location(this, 256+167, 0x1E9AA, LocationType.Regular, "Ice Palace - Big Chest",
                     items => items.BigKeyIP),
-                new Location(this, 256+168, 0x308157, LocationType.Regular, "Ice Palace - Kholdstare",
-                    items => items.BigKeyIP && items.Hammer && items.KeyIP >= (items.Somaria ? 1 : 2)),
+                new Location(this, 256+168, 0x308157, LocationType.Regular, "Ice Palace - Kholdstare", Logic switch {
+                    Normal => items => items.BigKeyIP && items.Hammer && items.KeyIP >= (items.Somaria ? 1 : 2),
+                    _ => new Requirement(items => items.Hammer && items.Somaria || (items.BigKeyIP && items.KeyIP >= 2))
+                }),
             };
         }
 

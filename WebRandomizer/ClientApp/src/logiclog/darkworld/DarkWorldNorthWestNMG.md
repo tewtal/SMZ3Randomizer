@@ -9,7 +9,7 @@
 
 **Bumper Cave**
 
-CanLiftLight *and* Hookshot *and* Cape
+CanLiftLight *and* Cape
 
 **Chest Game**  
 **C-Shaped House**  

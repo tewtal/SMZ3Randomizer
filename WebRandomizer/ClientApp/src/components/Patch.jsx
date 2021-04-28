@@ -131,9 +131,9 @@ export default function Patch(props) {
             mode === 'multiworld' ? world.player : null
         ]);
 
-        function smz3Parts({ smlogic, swordlocation, morphlocation, keyshuffle }) {
+        function smz3Parts({ z3logic, smlogic, swordlocation, morphlocation, keyshuffle }) {
             return [
-                `ZLn+SL${smlogic[0]}`,
+                `ZL{z3logic[0]}+SL${smlogic[0]}`,
                 swordlocation && swordlocation !== 'randomized' ? `S${swordlocation[0]}` : null,
                 morphlocation && morphlocation !== 'randomized' ? `M${morphlocation[0]}` : null,
                 keyshuffle && keyshuffle !== 'none' ? `K${keyshuffle[0]}` : null

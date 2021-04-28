@@ -56,6 +56,13 @@ export default function Permalink(props) {
                     )}
                     {settings && game.id === 'smz3' && (<>
                         <Row>
+                            <Col>Zelda Logic: {{
+                                normal: 'Normal',
+                                nmg: 'NMG'
+                            }[settings.z3logic]
+                            }</Col>
+                        </Row>
+                        <Row>
                             <Col>Super Metroid Logic: {{
                                 normal: 'Normal',
                                 hard: 'Hard'
