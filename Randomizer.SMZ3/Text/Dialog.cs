@@ -7,11 +7,9 @@ namespace Randomizer.SMZ3.Text {
 
     static class Dialog {
 
-        static readonly Regex command = new Regex(@"^\{[^}]*\}");
-        static readonly Regex invalid = new Regex(@"(?<!^)\{[^}]*\}(?!$)", RegexOptions.Multiline);
-        static readonly Regex digit = new Regex(@"\d");
-        static readonly Regex uppercaseLetter = new Regex("[A-Z]");
-        static readonly Regex lowercaseLetter = new Regex("[a-z]");
+        static readonly Regex command = new(@"^\{[^}]*\}");
+        static readonly Regex invalid = new(@"(?<!^)\{[^}]*\}(?!$)", RegexOptions.Multiline);
+        static readonly Regex character = new(@"(?<digit>[0-9])|(?<upper>[A-Z])|(?<lower>[a-z])");
 
         public static byte[] Simple(string text) {
             const int maxBytes = 256;
@@ -22,9 +20,9 @@ namespace Randomizer.SMZ3.Text {
             var lineIndex = 0;
             foreach (var line in lines) {
                 bytes.Add(lineIndex switch {
-                    0 => (byte)0x74,
-                    1 => (byte)0x75,
-                    _ => (byte)0x76,
+                    0 => 0x74, // row 1
+                    1 => 0x75, // row 2
+                    _ => 0x76, // row 3
                 });
                 var letters = line.Length > wrap ? line[..wrap] : line;
                 foreach (var letter in letters) {
@@ -39,20 +37,18 @@ namespace Randomizer.SMZ3.Text {
 
                 lineIndex += 1;
 
-                if (lineIndex % 3 == 0 && lineIndex < lines.Length)
-                    bytes.Add(0x7E);
-                if (lineIndex >= 3 && lineIndex < lines.Length)
-                    bytes.Add(0x73);
+                if (lineIndex < lines.Length) {
+                    if (lineIndex % 3 == 0)
+                        bytes.Add(0x7E); // pause for input
+                    if (lineIndex >= 3)
+                        bytes.Add(0x73); // scroll
+                }
             }
 
-            bytes.Add(0x7F);
-            if (bytes.Count > maxBytes)
-                return bytes.Take(maxBytes - 1).Append<byte>(0x7F).ToArray();
-
-            return bytes.ToArray();
+            return bytes.Take(maxBytes - 1).Append<byte>(0x7F).ToArray();
         }
 
-        public static byte[] Compiled(string text, bool pause = true) {
+        public static byte[] Compiled(string text) {
             const int maxBytes = 2046;
             const int wrap = 19;
 
@@ -60,6 +56,7 @@ namespace Randomizer.SMZ3.Text {
                 throw new ArgumentException("Dialog commands must be placed on separate lines", nameof(text));
 
             bool padOut = false;
+            bool pause = true;
 
             var bytes = new List<byte> { 0xFB };
             var lines = Wordwrap(text, wrap);
@@ -70,35 +67,16 @@ namespace Randomizer.SMZ3.Text {
                 if (match.Success) {
                     if (match.Value == "{NOTEXT}")
                         return new byte[] { 0xFB, 0xFE, 0x6E, 0x00, 0xFE, 0x6B, 0x04 };
-                    if (match.Value == "{INTRO}")
-                        padOut = true;
 
-                    bytes.AddRange(match.Value switch {
-                        "{SPEED0}" => new byte[] { 0xFC, 0x00 },
-                        "{SPEED2}" => new byte[] { 0xFC, 0x02 },
-                        "{SPEED6}" => new byte[] { 0xFC, 0x06 },
-                        "{PAUSE1}" => new byte[] { 0xFE, 0x78, 0x01 },
-                        "{PAUSE3}" => new byte[] { 0xFE, 0x78, 0x03 },
-                        "{PAUSE5}" => new byte[] { 0xFE, 0x78, 0x05 },
-                        "{PAUSE7}" => new byte[] { 0xFE, 0x78, 0x07 },
-                        "{PAUSE9}" => new byte[] { 0xFE, 0x78, 0x09 },
-                        "{INPUT}" => new byte[] { 0xFA },
-                        "{CHOICE}" => new byte[] { 0xFE, 0x68 },
-                        "{ITEMSELECT}" => new byte[] { 0xFE, 0x69 },
-                        "{CHOICE2}" => new byte[] { 0xFE, 0x71 },
-                        "{CHOICE3}" => new byte[] { 0xFE, 0x72 },
-                        "{C:GREEN}" => new byte[] { 0xFE, 0x77, 0x07 },
-                        "{C:YELLOW}" => new byte[] { 0xFE, 0x77, 0x02 },
-                        "{HARP}" => new byte[] { 0xFE, 0x79, 0x2D },
-                        "{MENU}" => new byte[] { 0xFE, 0x6D, 0x00 },
-                        "{BOTTOM}" => new byte[] { 0xFE, 0x6D, 0x01 },
-                        "{NOBORDER}" => new byte[] { 0xFE, 0x6B, 0x02 },
-                        "{CHANGEPIC}" => new byte[] { 0xFE, 0x67, 0xFE, 0x67 },
-                        "{CHANGEMUSIC}" => new byte[] { 0xFE, 0x67 },
-                        "{INTRO}" => new byte[] { 0xFE, 0x6E, 0x00, 0xFE, 0x77, 0x07, 0xFC, 0x03, 0xFE, 0x6B, 0x02, 0xFE, 0x67 },
-                        "{IBOX}" => new byte[] { 0xFE, 0x6B, 0x02, 0xFE, 0x77, 0x07, 0xFC, 0x03, 0xF7 },
-                        var command => throw new ArgumentException($"Dialog text contained unknown command {command}", nameof(text)),
-                    });
+                    if (match.Value == "{INTRO}") {
+                        padOut = true;
+                    }
+                    if (match.Value == "{NOPAUSE}") {
+                        pause = false;
+                        continue;
+                    }
+
+                    bytes.AddRange(CommandBytesFor(match.Value));
 
                     if (bytes.Count > maxBytes)
                         throw new ArgumentException("Command overflowed maximum byte length", nameof(text));
@@ -106,12 +84,13 @@ namespace Randomizer.SMZ3.Text {
                     continue;
                 }
 
-                if (lineIndex == 1)
-                    bytes.Add(0xF8); // row 2
-                else if (lineIndex >= 3 && lineIndex < lineCount)
-                    bytes.Add(0xF6); // scroll
-                else if (lineIndex >= 2)
-                    bytes.Add(0xF9); // row 3
+                if (lineIndex > 0) {
+                    bytes.Add(lineIndex switch {
+                        1 => 0xF8, // row 2
+                        2 => 0xF9, // row 3
+                        _ => 0xF6, // scroll
+                    });
+                }
 
                 // The first box needs to fill the full width with spaces as the palette is loaded weird.
                 var letters = padOut && lineIndex < 3 ? line.PadRight(wrap) : line;
@@ -120,10 +99,38 @@ namespace Randomizer.SMZ3.Text {
                 lineIndex += 1;
 
                 if (pause && lineIndex % 3 == 0 && lineIndex < lineCount)
-                    bytes.Add(0xFA); // wait for input
+                    bytes.Add(0xFA); // pause for input
             }
 
             return bytes.Take(maxBytes).ToArray();
+
+            static byte[] CommandBytesFor(string text) => text switch {
+                "{SPEED0}" => new byte[] { 0xFC, 0x00 },
+                "{SPEED2}" => new byte[] { 0xFC, 0x02 },
+                "{SPEED6}" => new byte[] { 0xFC, 0x06 },
+                "{PAUSE1}" => new byte[] { 0xFE, 0x78, 0x01 },
+                "{PAUSE3}" => new byte[] { 0xFE, 0x78, 0x03 },
+                "{PAUSE5}" => new byte[] { 0xFE, 0x78, 0x05 },
+                "{PAUSE7}" => new byte[] { 0xFE, 0x78, 0x07 },
+                "{PAUSE9}" => new byte[] { 0xFE, 0x78, 0x09 },
+                "{INPUT}" => new byte[] { 0xFA },
+                "{CHOICE}" => new byte[] { 0xFE, 0x68 },
+                "{ITEMSELECT}" => new byte[] { 0xFE, 0x69 },
+                "{CHOICE2}" => new byte[] { 0xFE, 0x71 },
+                "{CHOICE3}" => new byte[] { 0xFE, 0x72 },
+                "{C:GREEN}" => new byte[] { 0xFE, 0x77, 0x07 },
+                "{C:YELLOW}" => new byte[] { 0xFE, 0x77, 0x02 },
+                "{HARP}" => new byte[] { 0xFE, 0x79, 0x2D },
+                "{MENU}" => new byte[] { 0xFE, 0x6D, 0x00 },
+                "{BOTTOM}" => new byte[] { 0xFE, 0x6D, 0x01 },
+                "{NOBORDER}" => new byte[] { 0xFE, 0x6B, 0x02 },
+                "{CHANGEPIC}" => new byte[] { 0xFE, 0x67, 0xFE, 0x67 },
+                "{CHANGEMUSIC}" => new byte[] { 0xFE, 0x67 },
+                "{INTRO}" => new byte[] { 0xFE, 0x6E, 0x00, 0xFE, 0x77, 0x07, 0xFC, 0x03, 0xFE, 0x6B, 0x02, 0xFE, 0x67 },
+                "{IBOX}" => new byte[] { 0xFE, 0x6B, 0x02, 0xFE, 0x77, 0x07, 0xFC, 0x03, 0xF7 },
+                var command => throw new ArgumentException($"Dialog text contained unknown command {command}", nameof(text)),
+            };
+
         }
 
         static IEnumerable<string> Wordwrap(string text, int width) {
@@ -156,10 +163,11 @@ namespace Randomizer.SMZ3.Text {
         }
 
         static byte[] LetterToBytes(char c) {
+            var match = character.Match(c.ToString());
             return c switch {
-                _ when digit.IsMatch(c.ToString()) => new byte[] { (byte)(c - '0' + 0xA0) },
-                _ when uppercaseLetter.IsMatch(c.ToString()) => new byte[] { (byte)(c - 'A' + 0xAA) },
-                _ when lowercaseLetter.IsMatch(c.ToString()) => new byte[] { (byte)(c - 'a' + 0x30) },
+                _ when match.Groups["digit"].Success => new byte[] { (byte)(c - '0' + 0xA0) },
+                _ when match.Groups["upper"].Success => new byte[] { (byte)(c - 'A' + 0xAA) },
+                _ when match.Groups["lower"].Success => new byte[] { (byte)(c - 'a' + 0x30) },
                 _ => letters.TryGetValue(c, out byte[] bytes) ? bytes : new byte[] { 0xFF },
             };
         }

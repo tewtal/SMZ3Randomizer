@@ -249,6 +249,7 @@ namespace Randomizer.SMZ3 {
         [Description("Lower Norfair Boss Keycard")]
         CardLowerNorfairBoss = 0xDF,
 
+        [Description("Missile")]
         Missile = 0xC2,
         [Description("Super Missile")]
         Super = 0xC3,
@@ -320,12 +321,12 @@ namespace Randomizer.SMZ3 {
         public bool Progression { get; set; }
         public World World { get; set; }
 
-        static readonly Regex dungeon = new Regex("^(BigKey|Key|Map|Compass)");
-        static readonly Regex bigKey = new Regex("^BigKey");
-        static readonly Regex key = new Regex("^Key");
-        static readonly Regex map = new Regex("^Map");
-        static readonly Regex compass = new Regex("^Compass");
-        static readonly Regex keycard = new Regex("^Card");
+        static readonly Regex dungeon = new("^(BigKey|Key|Map|Compass)");
+        static readonly Regex bigKey = new("^BigKey");
+        static readonly Regex key = new("^Key");
+        static readonly Regex map = new("^Map");
+        static readonly Regex compass = new("^Compass");
+        static readonly Regex keycard = new("^Card");
 
         public bool IsDungeonItem => dungeon.IsMatch(Type.ToString());
         public bool IsBigKey => bigKey.IsMatch(Type.ToString());

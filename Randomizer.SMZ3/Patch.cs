@@ -271,16 +271,16 @@ namespace Randomizer.SMZ3 {
                     var text = Texts.ItemTextbox(location.Item);
                     var dialog = Dialog.Simple(text);
                     if (location.Type == LocationType.Pedestal) {
-                        stringTable.SetPedestalText(text);
                         patches.Add((Snes(0x308300), dialog));
+                        stringTable.SetPedestalText(text);
                     }
                     else if (location.Type == LocationType.Ether) {
-                        stringTable.SetEtherText(text);
                         patches.Add((Snes(0x308F00), dialog));
+                        stringTable.SetEtherText(text);
                     }
                     else if (location.Type == LocationType.Bombos) {
-                        stringTable.SetBombosText(text);
                         patches.Add((Snes(0x309000), dialog));
+                        stringTable.SetBombosText(text);
                     }
                 }
 
