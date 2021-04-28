@@ -24,11 +24,11 @@ const GanonsTowerNMG = raw('./GanonsTowerNMG.md');
 
 export default [
     { name: 'Hyrule Castle', normal: HyruleCastleNormal, nmg: HyruleCastleNMG },
-    { name: 'Eastern Palace', normal: EasternPalaceNormal, nmg: EasterPalaceNMG },
+    { name: 'Eastern Palace', normal: EasternPalaceNormal, nmg: EasternPalaceNMG },
     { name: 'Desert Palace', normal: DesertPalace },
     { name: 'Tower of Hera', normal: TowerOfHeraNormal, nmg: TowerOfHeraNMG },
-    { name: 'Castle Tower', normal: CastleTower, nmg: CastleTowerNMG },
-    { name: 'Palace of Darkness', normal: PalaceOfDarknessNormal, nmg: PalaceaOfDarknessNMG },
+    { name: 'Castle Tower', normal: CastleTowerNormal, nmg: CastleTowerNMG },
+    { name: 'Palace of Darkness', normal: PalaceOfDarknessNormal, nmg: PalaceOfDarknessNMG },
     { name: 'Swamp Palace', normal: SwampPalace },
     { name: 'Skull Woods', normal: SkullWoods },
     { name: "Thieves' Town", normal: ThievesTown },

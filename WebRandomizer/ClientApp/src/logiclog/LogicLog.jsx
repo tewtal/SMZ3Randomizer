@@ -92,11 +92,12 @@ Green, and Pink Brinstar are weighted down slightly.
 export default function LogicLog() {
     const [showIntro, setShowIntro] = useState(false);
     const [SMLogic, setSMLogic] = useState('normal');
+    const [Z3Logic, setZ3Logic] = useState('normal');
     const [tabState, setTabState] = useState({});
 
     const parts = active(tabState, content);
     const bars = initial(parts);
-    const { normal, hard } = last(parts);
+    const { normal, nmg, hard } = last(parts);
 
     const Icon = showIntro ? DashSquareFill : PlusSquareFill;
 
@@ -112,7 +113,7 @@ export default function LogicLog() {
         </>
     );
 
-    const logicButton = (logic, name) => (
+    const SMlogicButton = (logic, name) => (
         <InputGroupAddon addonType="append">
             <ToggleButton
                 color={logic === name ? 'primary' : 'light'}
@@ -122,11 +123,27 @@ export default function LogicLog() {
             </ToggleButton>
         </InputGroupAddon>
     );
-
-    const toggle = (
+    const SMtoggle = (
         <InputGroup prefix="SM Logic" className="mb-3">
-            {logicButton(SMLogic, 'normal')}
-            {logicButton(SMLogic, 'hard')}
+            {SMlogicButton(SMLogic, 'normal')}
+            {SMlogicButton(SMLogic, 'hard')}
+        </InputGroup>
+    );
+
+    const Z3logicButton = (logic, name) => (
+        <InputGroupAddon addonType="append">
+            <ToggleButton
+                color={logic === name ? 'primary' : 'light'}
+                onClick={() => setZ3Logic(name)}
+            >
+                {capitalize(name)}
+            </ToggleButton>
+        </InputGroupAddon>
+    );
+    const Z3toggle = (
+        <InputGroup prefix="Z3 Logic" className="mb-3">
+            {Z3logicButton(Z3Logic, 'normal')}
+            {Z3logicButton(Z3Logic, 'nmg')}
         </InputGroup>
     );
 
@@ -151,7 +168,7 @@ export default function LogicLog() {
                 ))
             }
             <CardBody>
-                <StyledMarkdown text={SMLogic === 'hard' && hard || normal} />
+                <StyledMarkdown text={SMLogic === 'hard' && hard || Z3Logic === 'nmg' && nmg || normal} />
             </CardBody>
         </Card>
     );
@@ -165,7 +182,10 @@ export default function LogicLog() {
             </Row>
             <Row>
                 <Col>
-                    {toggle}
+                    {SMtoggle}
+                </Col>
+                <Col>
+                    {Z3toggle}
                 </Col>
             </Row>
             <Row>
