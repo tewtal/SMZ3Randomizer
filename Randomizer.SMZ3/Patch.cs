@@ -609,7 +609,7 @@ namespace Randomizer.SMZ3 {
         void WriteGameTitle() {
             var z3Glitch = myWorld.Config.Z3Logic switch {
                 Z3Logic.Nmg => "N",
-                Z3Logic.Owg => "O",
+                // Z3Logic.Owg => "O",
                 _ => "C",
             };
             var smGlitch = myWorld.Config.SMLogic switch {

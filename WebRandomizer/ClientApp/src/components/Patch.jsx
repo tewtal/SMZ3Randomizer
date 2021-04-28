@@ -132,8 +132,9 @@ export default function Patch(props) {
         ]);
 
         function smz3Parts({ z3logic, smlogic, swordlocation, morphlocation, keyshuffle }) {
+            let z3l = z3logic == 'nmg' ? 'g' : 'n';
             return [
-                `ZL{z3logic[0]}+SL${smlogic[0]}`,
+                `ZL${z3l}+SL${smlogic[0]}`,
                 swordlocation && swordlocation !== 'randomized' ? `S${swordlocation[0]}` : null,
                 morphlocation && morphlocation !== 'randomized' ? `M${morphlocation[0]}` : null,
                 keyshuffle && keyshuffle !== 'none' ? `K${keyshuffle[0]}` : null

@@ -20,8 +20,8 @@ namespace Randomizer.SMZ3 {
         Normal,
         [Description("No major glitches")]
         Nmg,
-        [Description("Overworld glitches")]
-        Owg,
+        // [Description("Overworld glitches")]
+        // Owg,
     }
 
     [DefaultValue(Normal)]
