@@ -812,8 +812,11 @@ namespace Randomizer.SMZ3 {
                 items.Somaria || items.Byrna && items.CanExtendMagic();
         }
 
-        public static bool CanAccessDeathMountainPortal(this Progression items) {
-            return (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph;
+        public static bool CanAccessDeathMountainPortal(this Progression items, Config config) {
+            return config.SMLogic switch {
+                Normal => items.CanDestroyBombWalls() && items.Super && items.Morph,
+                _ => (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph
+            };
         }
 
         public static bool CanAccessDarkWorldPortal(this Progression items, Config config) {

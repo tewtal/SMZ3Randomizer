@@ -2,7 +2,7 @@
 
 **CanAccessDeathMountainPortal**
 
-*either* CanDestroyBombWalls *or* SpeedBooster *and also* Super *and* Morph
+CanDestroyBombWalls *and* Super *and* Morph
 
 **CanAccessDarkWorldPortal**
 

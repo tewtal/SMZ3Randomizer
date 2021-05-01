@@ -1,6 +1,6 @@
-﻿**CanEnter**
+﻿***can enter***
 
-CanDestroyBombWalls
+CanDestroyBombWalls *or* SpeedBooster
 
 **Power Bomb (green Brinstar bottom)**
 
@@ -13,15 +13,19 @@ CanPassBombPassages *and* CanOpenRedDoors
 **Super Missile (green Brinstar top)**  
 **Reserve Tank, Brinstar**
 
-CanOpenRedDoors *and* SpeedBooster
+CanOpenRedDoors *and either* Morph *or* SpeedBooster
 
 **Missile (green Brinstar behind reserve tank)**
 
-SpeedBooster *and* CanOpenRedDoors *and* Morph
+CanOpenRedDoors *and* Morph
 
 **Missile (green Brinstar behind missile)**
 
-SpeedBooster *and* CanPassBombPassages *and* CanOpenRedDoors
+- *each of*
+  - *one of*
+    - CanPassBombPassages
+    - Morph *and* ScrewAttack
+  - CanOpenRedDoors
 
 **Energy Tank, Etecoons**
 

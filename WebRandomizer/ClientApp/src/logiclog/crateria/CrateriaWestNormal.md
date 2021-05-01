@@ -1,6 +1,6 @@
 ﻿***can enter***
 
-CanDestroyBombWalls *or* SpeedBooster
+CanDestroyBombWalls
 
 **Energy Tank, Terminator**
 
@@ -18,7 +18,7 @@ CanEnterAndLeaveGauntlet *and* CanPassBombPassages *and* 2 EnergyReserves
 **CanEnterAndLeaveGauntlet**
 
 - *each of*
-  - Morph *and either* CanFly *or* SpeedBooster
+  - Morph *and either* SpaceJump *or* SpeedBooster
   - *one of*
     - CanIbj
     - CanUsePowerBombs *and* TwoPowerBombs

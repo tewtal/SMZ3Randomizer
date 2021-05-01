@@ -1,7 +1,7 @@
 ﻿***can enter***
 
 - Gravity *and one of*
-  - *can enter* **Upper Norfair West** *and* Super *and* CanUsePowerBombs *and either* CanFly *or* SpeedBooster *or* Grapple
+  - *can enter* **Upper Norfair West** *and* Super *and* CanUsePowerBombs *and either* SpaceJump *or* SpeedBooster *or* Grapple
   - CanAccessMaridiaPortal
 
 **Super Missile (yellow Maridia)**  
@@ -15,22 +15,22 @@ CanPassBombPassages
 - *each of*
   - CanDefeatDraygon
   - ScrewAttack *or* Plasma
-  - HiJump *or* CanFly
+  - SpaceJump
 
 **Missile (left Maridia sand pit room)**  
 **Reserve Tank, Maridia**
 
-Super *and* CanPassBombPassages
+CanReachAqueduct *and* Super *and* CanPassBombPassages
 
 **Missile (right Maridia sand pit room)**  
 **Power Bomb (right Maridia sand pit room)**
 
-Super
+CanReachAqueduct *and* Super
 
 **Missile (pink Maridia)**  
 **Super Missile (pink Maridia)**
 
-SpeedBooster
+CanReachAqueduct *and* SpeedBooster
 
 **Spring Ball**
 
@@ -51,10 +51,17 @@ CanDefeatDraygon
 **CanDefeatDraygon**
 
 - *each of*
-  - CanDefeatBotwoon *and* Gravity
-  - SpeedBooster *with* HiJump *or* CanFly
+  - CanDefeatBotwoon *or*CanAccessMaridiaPortal
+  - Gravity
+  - SpaceJump
   - *if keysanity* DraygonKey
 
 **CanDefeatBotwoon**
 
 SpeedBooster *or* CanAccessMaridiaPortal
+
+**CanReachAqueduct**
+
+- *each of*
+  - SpaceJump *or* SpeedBooster *or* Grapple
+  - CanAccessMaridiaPortal

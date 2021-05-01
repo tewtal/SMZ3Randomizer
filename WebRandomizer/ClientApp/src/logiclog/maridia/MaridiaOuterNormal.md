@@ -16,7 +16,7 @@ SpeedBooster
 
 - *each of*
   - CanOpenRedDoors
-  - CanFly *or* SpeedBooster *or* Grapple
+  - SpaceJump *or* SpeedBooster *or* Grapple
 
 **Missile (green Maridia tatori)**
 

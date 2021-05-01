@@ -54,7 +54,7 @@ CanPassBombPassages *or* ScrewAttack
 
 **CanPassWaveGates**
 
-Wave
+Wave *or* Super *or* Missile
 
 **CanSpringBallJump**
 

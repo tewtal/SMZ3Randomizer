@@ -2,8 +2,11 @@
 
 - *one of*
   - CanUsePowerBombs *and* Super
-  - CanAccessNorfairUpperPortal *and* CanUsePowerBombs *and either* Ice *or* HiJump *or* SpaceJump
-  - CanAccessMaridiaPortal *and* Gravity *and* Super *and either* CanDestroyBombWalls *or* *can reach location* **Space Jump**
+  - CanAccessNorfairUpperPortal *and* CanUsePowerBombs *and either* Ice *or* SpaceJump
+  - CanAccessMaridiaPortal *and* Gravity *and* Super *and one of*
+    - CanDestroyBombWalls
+    - *can reach location* **Space Jump**
+  - CanUsePowerBombs *and* Gravity *and* Super
 
 **Missile (outside Wrecked Ship bottom)**
 

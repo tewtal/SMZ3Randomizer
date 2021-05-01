@@ -16,7 +16,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
                 new Location(this, 137, 0x8FC43D, LocationType.Visible, "Super Missile (green Maridia)"),
                 new Location(this, 138, 0x8FC47D, LocationType.Visible, "Energy Tank, Mama turtle", Logic switch {
                     Normal => items => items.CanOpenRedDoors() && (items.SpaceJump || items.SpeedBooster || items.Grapple),
-                    Medium => items => items.Gravity && items.CanOpenRedDoors() && (items.CanFly() || items.SpeedBooster || items.Grapple),
+                    Medium => items => items.CanOpenRedDoors() && (items.CanFly() || items.SpeedBooster || items.Grapple),
                     _ => new Requirement(items => items.CanOpenRedDoors() && (
                         items.CanFly() || items.SpeedBooster || items.Grapple ||
                         items.CanSpringBallJump() && (items.Gravity || items.HiJump)

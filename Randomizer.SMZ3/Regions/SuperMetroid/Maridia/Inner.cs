@@ -32,7 +32,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
                 }),
                 new Location(this, 143, 0x8FC559, LocationType.Chozo, "Plasma Beam", Logic switch {
                     Normal => items => CanDefeatDraygon(items) && (items.ScrewAttack || items.Plasma) && items.SpaceJump,
-                    Medium => items => CanDefeatDraygon(items) && (items.ScrewAttack || items.Plasma) && (items.HiJump || items.CanFly()),
+                    Medium => items => CanDefeatDraygon(items) &&
+                        (items.Charge && items.HasEnergyReserves(5) || items.ScrewAttack || items.Plasma) &&
+                        (items.HiJump || items.CanFly() || items.SpeedBooster),
                     _ => new Requirement(items => CanDefeatDraygon(items) &&
                         (items.Charge && items.HasEnergyReserves(3) || items.ScrewAttack || items.Plasma || items.SpeedBooster) &&
                         (items.HiJump || items.CanSpringBallJump() || items.CanFly() || items.SpeedBooster))
@@ -67,8 +69,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
                     _ => new Requirement(items => CanReachAqueduct(items) && items.SpeedBooster)
                 }),
                 new Location(this, 150, 0x8FC6E5, LocationType.Chozo, "Spring Ball", Logic switch {
-                    Normal => items => items.Super && items.Grapple && items.CanUsePowerBombs() && (items.SpaceJump || items.HiJump),
-                    Medium => items => items.Super && items.Grapple && items.CanUsePowerBombs() && (items.CanFly() || items.HiJump),
+                    Normal => items => items.Super && items.Grapple && items.CanUsePowerBombs() &&
+                        (items.SpaceJump || items.HiJump),
+                    Medium => items => items.Super && items.Grapple && items.CanUsePowerBombs() &&
+                        items.Gravity && (items.CanFly() || items.HiJump),
                     _ => new Requirement(items => items.Super && items.Grapple && items.CanUsePowerBombs() && (
                         items.Gravity && (items.CanFly() || items.HiJump) ||
                         items.Ice && items.HiJump && items.CanSpringBallJump() && items.SpaceJump)

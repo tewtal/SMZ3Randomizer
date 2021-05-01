@@ -17,8 +17,8 @@ CanDestroyBombWalls
 **Super Missile (Crateria)**
 
 CanUsePowerBombs *and* SpeedBooster *and either*
-- 4 EnergyReserves
-- 3 EnergyReserves *and either* Grapple *or* SpaceJump
+- 3 EnergyReserves
+- 2 EnergyReserves *and either* Grapple *or* SpaceJump
 
 **Bombs**
 

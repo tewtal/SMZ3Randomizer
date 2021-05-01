@@ -22,22 +22,22 @@ CanPassBombPassages *and either* Gravity *or* Ice *or* CanSpringBallJump *with* 
 **Missile (left Maridia sand pit room)**  
 **Reserve Tank, Maridia**
 
-- Super *and one of*
+- CanReachAqueduct *and* Super *and one of*
   - HiJump *and either* SpaceJump *or* CanSpringBallJump
   - Gravity
 
 **Missile (right Maridia sand pit room)**
 
-Super *and either* HiJump *or* Gravity
+CanReachAqueduct *and* Super *and either* HiJump *or* Gravity
 
 **Power Bomb (right Maridia sand pit room)**
 
-Super *and either* CanSpringBallJump *with* HiJump *or* Gravity
+CanReachAqueduct *and* Super *and either* CanSpringBallJump *with* HiJump *or* Gravity
 
 **Missile (pink Maridia)**  
 **Super Missile (pink Maridia)**
 
-Gravity
+CanReachAqueduct *and* Gravity
 
 **Spring Ball**
 
@@ -66,3 +66,11 @@ CanDefeatDraygon
 **CanDefeatBotwoon**
 
 Ice *or* SpeedBooster *with* Gravity *or* CanAccessMaridiaPortal
+
+**CanReachAqueduct**
+
+- *each of*
+  - *one of*
+    - Gravity
+    - HiJump *and* Grapple *and either* Ice *or* CanSpringBallJump
+  - CanAccessMaridiaPortal

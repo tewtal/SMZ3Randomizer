@@ -96,7 +96,7 @@ export default function LogicLog() {
 
     const parts = active(tabState, content);
     const bars = initial(parts);
-    const { normal, hard } = last(parts);
+    const { normal, medium, hard } = last(parts);
 
     const Icon = showIntro ? DashSquareFill : PlusSquareFill;
 
@@ -126,6 +126,7 @@ export default function LogicLog() {
     const toggle = (
         <InputGroup prefix="SM Logic" className="mb-3">
             {logicButton(SMLogic, 'normal')}
+            {logicButton(SMLogic, 'medium')}
             {logicButton(SMLogic, 'hard')}
         </InputGroup>
     );

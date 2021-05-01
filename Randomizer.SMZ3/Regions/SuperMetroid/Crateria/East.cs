@@ -38,14 +38,16 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
                     /* UN Portal -> Red Tower -> Moat */
                     (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && items.CanAccessNorfairUpperPortal() &&
                         (items.Ice || items.SpaceJump) ||
-                    /* Through Maridia From Portal */
-                    items.CanAccessMaridiaPortal(World) && items.Gravity && items.Super && (
-                        /* Oasis -> Forgotten Highway */
-                        items.CardMaridiaL2 && items.CanDestroyBombWalls() ||
-                        /* Draygon -> Cactus Alley -> Forgotten Highway */
-                        World.GetLocation("Space Jump").Available(items) ||
+                    items.Gravity && items.Super && (
+                        /* Through Maridia From Portal */
+                        items.CanAccessMaridiaPortal(World) && (
+                            /* Oasis -> Forgotten Highway */
+                            items.CardMaridiaL2 && items.CanDestroyBombWalls() ||
+                            /* Draygon -> Cactus Alley -> Forgotten Highway */
+                            World.GetLocation("Space Jump").Available(items)
+                        ) ||
                         /*Through Maridia from Pipe*/
-                        items.CanUsePowerBombs() && items.Super && items.Gravity
+                        items.CanUsePowerBombs()
                     ),
                 Medium =>
                     /* Ship -> Moat */
@@ -54,13 +56,18 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
                     (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && items.CanAccessNorfairUpperPortal() &&
                         (items.Ice || items.HiJump || items.CanFly()) ||
                     /* Through Maridia From Portal */
-                    items.CanAccessMaridiaPortal(World) && items.Gravity && items.Super && (
+                    items.CanAccessMaridiaPortal(World) && (
                         /* Oasis -> Forgotten Highway */
-                        items.CardMaridiaL2 && items.CanDestroyBombWalls() ||
+                        items.CardMaridiaL2 && items.Super && (
+                            items.HiJump && items.CanPassBombPassages() ||
+                            items.Gravity &&items.CanDestroyBombWalls()
+                        ) ||
                         /* Draygon -> Cactus Alley -> Forgotten Highway */
-                        World.GetLocation("Space Jump").Available(items) ||
-                        /*Through Maridia from Pipe*/
-                        items.CanUsePowerBombs() && items.Super && (items.Gravity || items.HiJump && items.Ice && items.Grapple && items.CardMaridiaL1)
+                        items.Gravity && World.GetLocation("Space Jump").Available(items)
+                    )  ||
+                    /*Through Maridia from Pipe*/
+                    items.CanUsePowerBombs() && items.Super && (
+                        items.Gravity || items.HiJump && items.Ice && items.Grapple && items.CardMaridiaL1
                     ),
                 _ =>
                     /* Ship -> Moat */
@@ -76,7 +83,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
                             items.Gravity && items.CanDestroyBombWalls()
                         ) ||
                         /* Draygon -> Cactus Alley -> Forgotten Highway */
-                        items.Gravity && World.GetLocation("Space Jump").Available(items)) ||
+                        items.Gravity && World.GetLocation("Space Jump").Available(items)
+                    ) ||
                     /*Through Maridia from Pipe*/
                     items.CanUsePowerBombs() && items.Super && (
                         items.Gravity || items.HiJump && (items.Ice || items.CanSpringBallJump()) && items.Grapple && items.CardMaridiaL1
