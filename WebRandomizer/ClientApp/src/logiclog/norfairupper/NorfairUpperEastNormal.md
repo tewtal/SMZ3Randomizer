@@ -4,7 +4,9 @@
   - *one of*
     - *either* CanDestroyBombWalls *or* SpeedBooster *and also* Super *and* Morph
     - CanAccessNorfairUpperPortal
-  - Varia *and* Super *and either* CanFly *or* HiJump *or* SpeedBooster
+  - Varia *and* Super *and* CanOpenRedDoors *and* Super *and one of*
+    - SpaceJump *or* HiJump
+    - SpeedBooster *and* Wave *and* CanUsePowerBombs
 
 **Missile (lava room)**
 
@@ -18,7 +20,7 @@ Morph
 **Missile (Norfair Reserve Tank)**
 
 -Morph *and one of*
-  - CanFly
+  - SpaceJump
   - Grapple *and either* SpeedBooster *or* CanPassBombPassages
   - HiJump
   - Ice
@@ -26,7 +28,7 @@ Morph
 **Missile (bubble Norfair green door)**
 
 - *one of*
-  - CanFly
+  - SpaceJump
   - Grapple *and* Morph *and either* SpeedBooster *or* CanPassBombPassages
   - HiJump
   - Ice
@@ -36,15 +38,17 @@ Morph
 **Missile (Wave Beam)**
 
 - *one of*
-  - CanFly
+  - SpaceJump
   - Morph *and either* SpeedBooster *or* CanPassBombPassages
   - HiJump
   - Ice
 
 **Wave Beam**
 
-- Morph *and one of*
-  - CanFly
-  - Morph *and either* SpeedBooster *or* CanPassBombPassages
-  - HiJump
-  - Ice
+- *one of*
+  - *if keysanity* Norfair Keycard 2 *and one of*
+    - SpaceJump
+    - Morph *and either* SpeedBooster *or* CanPassBombPassages
+    - HiJump
+    - Ice
+  - SpeedBooster *and* CanPassWaveGates *and* Morph *and* Super

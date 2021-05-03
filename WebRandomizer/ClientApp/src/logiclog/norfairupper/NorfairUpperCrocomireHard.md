@@ -5,11 +5,13 @@
     - *one of*
       - *either* CanDestroyBombWalls *or* SpeedBooster *and also* Super *and* Morph
       - CanAccessNorfairUpperPortal
-    - Super
-    - SpeedBooster *with* 2 EnergyReserves *or* CanHellRun
-    - CanFly *or* HiJump *or* CanSpringBallJump *or* Varia *with* Ice *or* SpeedBooster
-    - CanPassBombPassages *or* SpeedBooster *or* Varia *with* Morph
-  - CanAccessNorfairLowerPortal *and* ScrewAttack *and* SpaceJump *and* Varia *and* Super *and* 2 EnergyReserves
+    - Super *and* CanUsePowerBombs *and* SpeedBooster *and either* Varia *or* 3 EnergyReserves
+    - SpeedBooster *and* CanPassWaveGates *and either* 2 EnergyReserves *or* Varia
+    - CanHellRun *and* CanOpenRedDoors *and* Super *and each of*
+      - CanFly *or* HiJump *or* SpeedBooster *or* CanSpringBallJump *or* Varia *with* Ice
+      - CanPassBombPassages *or* Varia *with* Morph
+      - CanPassWaveGates
+  - CanAccessNorfairLowerPortal *and* ScrewAttack *and* SpaceJump *and* Varia *and* Super *and* 2 EnergyReserves *and* Morph
 
 **Energy Tank, Crocomire**  
 **Power Bomb (Crocomire)**
@@ -37,4 +39,4 @@ Morph
 
 **Grapple Beam**
 
-SpaceJump *or* Morph *or* Grapple *or* HiJump *with* SpeedBooster
+CanFly *or* Morph *or* Grapple *or* HiJump *with* SpeedBooster

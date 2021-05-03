@@ -4,14 +4,15 @@
   - *one of*
     - *either* CanDestroyBombWalls *or* SpeedBooster *and also* Super *and* Morph
     - CanAccessNorfairUpperPortal
-  - CanHellRun *and one of*
+  - CanHeckRun *and one of*
     - Super *and one of*
       - CanFly
       - HiJump
       - SpeedBooster
-      - CanSpringBallJump
       - Varia *with* Ice
-    - SpeedBooster *and* CanPassWaveGates *and* CanUsePowerBombs
+    - SpeedBooster *and* CanUsePowerBombs *and one of*
+      - *if keysanity* Norfair Keycard 2
+      - CanPassWaveGates
 
 **Missile (lava room)**
 
@@ -34,7 +35,9 @@ Super
 
 **Missile (Wave Beam)**
 
-*Available*
+CanOpenRedDoors *and one of*
+  - *if keysanity* Norfair Keycard 2
+  - Varia
 
 **Wave Beam**
 

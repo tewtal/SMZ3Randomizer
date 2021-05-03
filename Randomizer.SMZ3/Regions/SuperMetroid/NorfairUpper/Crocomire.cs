@@ -22,7 +22,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                         (items.SpeedBooster || items.CanSpringBallJump() || items.Varia && items.Ice)) && items.CanHellRun())
                 }),
                 new Location(this, 57, 0x8F8C04, LocationType.Visible, "Power Bomb (Crocomire)", Logic switch {
-                    Normal => items => CanAccessCrocomire(items) && (items.CanFly() || items.HiJump || items.Grapple),
+                    Normal => items => CanAccessCrocomire(items) && (items.SpaceJump || items.Grapple),
                     _ => new Requirement(items => CanAccessCrocomire(items))
                 }),
                 new Location(this, 58, 0x8F8C14, LocationType.Visible, "Missile (below Crocomire)", Logic switch {

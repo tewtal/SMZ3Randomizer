@@ -87,7 +87,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                         items.CanOpenRedDoors() && (Config.Keysanity ? items.CardNorfairL2 : items.Super) &&
                             (items.CanFly() || items.HiJump) ||
                         /* Frog Speedway */
-                        items.SpeedBooster && (items.CardNorfairL2 || items.Wave) && items.CanUsePowerBombs()
+                        items.SpeedBooster && (items.CardNorfairL2 || items.CanPassWaveGates(World)) && items.CanUsePowerBombs()
                     ),
                 Medium => ( // Norfair Main Street Access
                         (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
@@ -100,7 +100,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                             items.CanFly() || items.HiJump || items.SpeedBooster || items.Varia && items.Ice
                         ) ||
                         /* Frog Speedway */
-                        items.SpeedBooster && (items.CardNorfairL2 || items.Super || items.Wave) && items.CanUsePowerBombs()
+                        items.SpeedBooster && (items.CardNorfairL2 || items.CanPassWaveGates(World)) && items.CanUsePowerBombs()
                     ),
                 _ => (
                         (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
@@ -114,7 +114,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                             items.CanSpringBallJump() || items.Varia && items.Ice
                         ) ||
                         /* Frog Speedway */
-                        items.SpeedBooster && (items.CardNorfairL2 || items.Missile || items.Super || items.Wave) && items.CanUsePowerBombs()
+                        items.SpeedBooster && (items.CardNorfairL2 || items.CanPassWaveGates(World)) && items.CanUsePowerBombs()
                     ),
             };
         }
