@@ -10,7 +10,7 @@ const CrateriaEastMedium = raw('./CrateriaEastMedium.md');
 const CrateriaEastHard = raw('./CrateriaEastHard.md');
 
 export default [
-    { name: 'West', normal: CrateriaWestNormal, medium: CarderaWestMedium,hard: CrateriaWestHard },
-    { name: 'Central', normal: CrateriaCentralNormal, medium: CarderaCentralMedium, hard: CrateriaCentralHard },
-    { name: 'East', normal: CrateriaEastNormal, medium: CarderaEastMedium, hard: CrateriaEastHard }
+    { name: 'West', normal: CrateriaWestNormal, medium: CrateriaWestMedium,hard: CrateriaWestHard },
+    { name: 'Central', normal: CrateriaCentralNormal, medium: CrateriaCentralMedium, hard: CrateriaCentralHard },
+    { name: 'East', normal: CrateriaEastNormal, medium: CrateriaEastMedium, hard: CrateriaEastHard }
 ];

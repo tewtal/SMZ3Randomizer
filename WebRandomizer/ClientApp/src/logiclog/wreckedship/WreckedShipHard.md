@@ -20,7 +20,7 @@ CanPassBombPassages
 **Super Missile (Wrecked Ship left)**  
 **Right Super, Wrecked Ship**
 
-*if keysanity* PhantoonKey
+CanUnlockShip
 
 **Reserve Tank, Wrecked Ship**
 

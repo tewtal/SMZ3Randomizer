@@ -25,7 +25,7 @@ CanUnlockShip
 
 **Reserve Tank, Wrecked Ship**
 
-- CanUnlockShip  *and also* SpeedBooster *and* CanUsePowerBombs *and one of*
+- CanUnlockShip *and also* SpeedBooster *and* CanUsePowerBombs *and one of*
   - Grapple
   - SpaceJump
   - Varia *and* 2 EnergyReserves
@@ -42,7 +42,7 @@ CanUnlockShip
 
 **Energy Tank, Wrecked Ship**
 
-- *if keysanity* PhantoonKey *and also one of*
+- CanUnlockShip *and also one of*
   - HiJump
   - SpaceJump
   - SpeedBooster

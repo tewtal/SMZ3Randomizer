@@ -7,6 +7,6 @@ const PortalsMedium = raw('./portalsMedium.md');
 const PortalsHard = raw('./portalsHard.md');
 
 export default [
-    { name: 'Aliases', normal: Aliases, medium: AliasesMedium, hard: AliasesHard },
+    { name: 'Aliases', normal: AliasesNormal, medium: AliasesMedium, hard: AliasesHard },
     { name: 'Portals', normal: PortalsNormal, medium: PortalsMedium, hard: PortalsHard },
 ];

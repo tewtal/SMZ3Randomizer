@@ -152,7 +152,7 @@ export default function LogicLog() {
                 ))
             }
             <CardBody>
-                <StyledMarkdown text={SMLogic === 'hard' && hard || normal} />
+                <StyledMarkdown text={SMLogic === 'hard' && hard || SMLogic === 'medium' && medium || normal} />
             </CardBody>
         </Card>
     );

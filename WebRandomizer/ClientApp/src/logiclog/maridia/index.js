@@ -7,6 +7,6 @@ const MaridiaInnerMedium = raw('./MaridiaInnerMedium.md');
 const MaridiaInnerHard = raw('./MaridiaInnerHard.md');
 
 export default [
-    { name: 'Outer', normal: MaridiaOuterNormal, medium: MaridiaOuterMedioum, hard: MaridiaOuterHard },
-    { name: 'Inner', normal: MaridiaInnerNormal, medium: MaridiaInnerMedioum, hard: MaridiaInnerHard }
+    { name: 'Outer', normal: MaridiaOuterNormal, medium: MaridiaOuterMedium, hard: MaridiaOuterHard },
+    { name: 'Inner', normal: MaridiaInnerNormal, medium: MaridiaInnerMedium, hard: MaridiaInnerHard }
 ];
