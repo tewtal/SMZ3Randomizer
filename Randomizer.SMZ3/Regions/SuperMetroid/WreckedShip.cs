@@ -31,6 +31,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
                 new Location(this, 132, 0x8FC337, LocationType.Visible, "Energy Tank, Wrecked Ship", Logic switch {
                     Normal => items => CanUnlockShip(items) &&
                         (items.HiJump || items.SpaceJump || items.SpeedBooster || items.Gravity),
+                    Medium => items => CanUnlockShip(items) && (items.HiJump || items.SpaceJump || items.SpeedBooster || items.Gravity),
                     _ => new Requirement(items => CanUnlockShip(items) && (items.Bombs || items.PowerBomb || items.CanSpringBallJump() ||
                         items.HiJump || items.SpaceJump || items.SpeedBooster || items.Gravity))
                 }),

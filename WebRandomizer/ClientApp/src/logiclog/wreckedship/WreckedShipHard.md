@@ -8,9 +8,13 @@
       - CanDestroyBombWalls
       - *can reach location* **Space Jump**
 
+***can unlock ship***
+
+CanPassBombPassages *and if keysanity* PhantoonKey
+
 **Missile (Wrecked Ship middle)**
 
-*Available*
+CanPassBombPassages
 
 **Missile (Wrecked Ship top)**  
 **Super Missile (Wrecked Ship left)**  
@@ -20,16 +24,16 @@
 
 **Reserve Tank, Wrecked Ship**
 
-*if keysanity* PhantoonKey *and also* CanUsePowerBombs *and* SpeedBooster *and either* Varia *or* 2 EnergyReserves
+CanUnlockShip *and also* CanUsePowerBombs *and* SpeedBooster *and either* Varia *or* 2 EnergyReserves
 
 **Missile (Gravity Suit)**  
 **Gravity Suit**
 
-*if keysanity* PhantoonKey *and also either* Varia *or* 1 EnergyReserves
+CanUnlockShip *and also either* Varia *or* 1 EnergyReserves
 
 **Energy Tank, Wrecked Ship**
 
-- *if keysanity* PhantoonKey *and also one of*
+- CanUnlockShip *and also one of*
   - Bombs
   - PowerBomb
   - CanSpringBallJump

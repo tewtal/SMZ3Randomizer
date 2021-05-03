@@ -6,32 +6,35 @@
     - CanAccessNorfairLowerPortal *and* CanDestroyBombWalls *and* Super *and either* CanFly *or* CanSpringBallJump *or* SpeedBooster
   - CanFly *or* HiJump *or* CanSpringBallJump *or* Ice *with* Charge
   - CanPassBombPassages *or* ScrewAttack *with* SpaceJump
-  - Morph *or* 5 EnergyReserves
 
-**Missile (Mickey Mouse room)**
+***can exit***
 
-Morph *and* CanDestroyBombWalls
+- *one of*
+  - Morph *and each of*
+    - CanPassWaveGates
+    - SpeedBooster *or* CanFly *or* Grapple *or* HiJump *with either* CanSpringBallJump *or* Ice
+  - 5 EnergyReserves
 
 **Missile (lower Norfair above fire flea room)**
 
-*Available*
+CanExit
 
 **Power Bomb (lower Norfair above fire flea room)**
 
-CanPassBombPassages
+CanExit *and* CanPassBombPassages
 
 **Missile (lower Norfair near Wave Beam)**
 
-Morph *and* CanDestroyBombWalls
+CanExit *and* Morph *and* CanDestroyBombWalls
 
 **Power Bomb (Power Bombs of shame)**
 
-CanUsePowerBombs
+CanExit *and* CanUsePowerBombs
 
 **Energy Tank, Ridley**
 
-CanUsePowerBombs *and* Super *and if keysanity* RidleyKey
+CanExit *and* CanUsePowerBombs *and* Super *and if keysanity* RidleyKey
 
 **Energy Tank, Firefleas**
 
-*Available*
+CanExit

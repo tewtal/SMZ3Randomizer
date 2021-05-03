@@ -1,13 +1,15 @@
 ﻿***can enter***
 
 - Super *and one of*
+  - CanUsePowerBombs *and either* SpeedBooster *or* Grapple *or* SpaceJump *or* Gravity
   - CanUsePowerBombs *and one of*
-    - Grapple
-    - SpaceJump
     - Gravity
-  - CanAccessMaridiaPortal *and* Gravity *and one of*
-    - CanDestroyBombWalls
-    - *can reach location* **Space Jump**
+    - HiJump *and* Ice *and* Grapple
+  - CanAccessMaridiaPortal *and one of*
+    - HiJump *and* CanPassBombPassages
+    - Gravity *and one of*
+      - CanDestroyBombWalls
+      - *can reach location* **Space Jump**
 
 ***can unlock ship***
 
@@ -25,24 +27,22 @@ CanUnlockShip
 
 **Reserve Tank, Wrecked Ship**
 
-- CanUnlockShip  *and also* SpeedBooster *and* CanUsePowerBombs *and one of*
-  - Grapple
-  - SpaceJump
-  - Varia *and* 2 EnergyReserves
-  - 3 EnergyReserves
+CanUnlockShip *and* SpeedBooster *and each of*
+  - CanUsePowerBombs
+  - Varia *or* 2 EnergyReserves
 
 **Missile (Gravity Suit)**  
 **Gravity Suit**
 
-- CanUnlockShip *and also one of*
+- CanUnlockShip *and one of*
   - Grapple
   - SpaceJump
-  - Varia *and* 2 EnergyReserves
-  - 3 EnergyReserves
+  - Varia *and* 1 EnergyReserves
+  - 2 Energy Reserves
 
 **Energy Tank, Wrecked Ship**
 
-- *if keysanity* PhantoonKey *and also one of*
+- CanUnlockShip *and also one of*
   - HiJump
   - SpaceJump
   - SpeedBooster

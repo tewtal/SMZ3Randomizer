@@ -1,24 +1,27 @@
 ﻿***can enter***
 
-- Varia *and one of*
-  - *can enter* **Upper Norfair East** *and* CanUsePowerBombs *and* SpaceJump *and* Gravity
-  - CanAccessNorfairLowerPortal *and* CanDestroyBombWalls *and* Super *and* CanUsePowerBombs *and* CanFly
+- Varia *and* SpaceJump *and one of*
+  - *can enter* **Upper Norfair East** *and* CanUsePowerBombs *and* Gravity
+  - CanAccessNorfairLowerPortal *and* CanDestroyBombWalls *and* Super *and* CanUsePowerBombs
 
-**Missile (Mickey Mouse room)**  
+***can exit***
+
+Gravity *and* CanPassWaveGates *and either* Grapple *or* SpaceJump
+
 **Missile (lower Norfair above fire flea room)**  
 **Power Bomb (lower Norfair above fire flea room)**  
 **Missile (lower Norfair near Wave Beam)**
 
-*Available*
+CanExit
 
 **Power Bomb (Power Bombs of shame)**
 
-CanUsePowerBombs
+CanExit *and* CanUsePowerBombs
 
 **Energy Tank, Ridley**
 
-CanUsePowerBombs *and* Super *and if keysanity* RidleyKey
+CanExit *and* CanUsePowerBombs *and* Super *and if keysanity* RidleyKey
 
 **Energy Tank, Firefleas**
 
-*Available*
+CanExit
