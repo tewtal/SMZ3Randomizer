@@ -11,7 +11,7 @@ Filename parts legend:
 * \`SMZ3\`: Super Metroid / Link to the Past Randomizer
 * \`V\`: Major.Minor version
 * \`ZL+SL\`: LttP and SM logic
-  * LttP: Normal, \`n\`
+  * LttP: Normal, \`n\`, or Nmg, \`g\`
   * SM: Normal, \`n\`, or Hard, \`h\`
 * \`S\`: Sword location
   * Randomized if missing

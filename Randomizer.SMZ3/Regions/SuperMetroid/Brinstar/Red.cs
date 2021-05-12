@@ -37,10 +37,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
             return Logic switch {
                 Normal =>
                     (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
-                    items.CanAccessNorfairUpperPortal() && (items.Ice || items.HiJump || items.SpaceJump),
+                    items.CanAccessNorfairUpperPortal(World) && (items.Ice || items.HiJump || items.SpaceJump),
                 _ =>
                     (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
-                    items.CanAccessNorfairUpperPortal() && (items.Ice || items.CanSpringBallJump() || items.HiJump || items.CanFly())
+                    items.CanAccessNorfairUpperPortal(World) && (items.Ice || items.CanSpringBallJump() || items.HiJump || items.CanFly())
             };
         }
 

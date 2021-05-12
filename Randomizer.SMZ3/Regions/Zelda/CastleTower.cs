@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using static Randomizer.SMZ3.Z3Logic;
 using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda {
@@ -14,8 +15,10 @@ namespace Randomizer.SMZ3.Regions.Zelda {
 
             Locations = new List<Location> {
                 new Location(this, 256+101, 0x1EAB5, LocationType.Regular, "Castle Tower - Foyer"),
-                new Location(this, 256+102, 0x1EAB2, LocationType.Regular, "Castle Tower - Dark Maze",
-                    items => items.Lamp && items.KeyCT >= 1),
+                new Location(this, 256+102, 0x1EAB2, LocationType.Regular, "Castle Tower - Dark Maze", Logic switch {
+                    Normal => items => items.Lamp && items.KeyCT >= 1,
+                    _ => new Requirement(items => (items.Lamp || items.Firerod) && items.KeyCT >= 1),
+                })
             };
         }
 

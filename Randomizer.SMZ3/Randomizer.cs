@@ -22,9 +22,9 @@ namespace Randomizer.SMZ3 {
         static readonly Regex continousSpace = new Regex(@" +");
 
         public List<IRandomizerOption> Options => new List<IRandomizerOption> {
+            Config.GetRandomizerOption<Z3Logic>("A Link to the Past Logic"),
             Config.GetRandomizerOption<SMLogic>("Super Metroid Logic"),
             Config.GetRandomizerOption<Goal>("Goal"),
-            //Config.GetRandomizerOption<Z3Logic>("A Link to the Past Logic"),
             Config.GetRandomizerOption<SwordLocation>("First Sword"),
             Config.GetRandomizerOption<MorphLocation>("Morph Ball"),
             Config.GetRandomizerOption<KeyShuffle>("Key shuffle"),

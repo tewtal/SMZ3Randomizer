@@ -83,7 +83,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
             return Logic switch {
                 Normal => (
                         (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
-                        items.CanAccessNorfairUpperPortal()
+                        items.CanAccessNorfairUpperPortal(World)
                     ) && items.Varia && items.Super && (
                         /* Cathedral */
                         items.CanOpenRedDoors() && (Config.Keysanity ? items.CardNorfairL2 : items.Super) &&
@@ -93,7 +93,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                     ),
                 _ => (
                         (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
-                        items.CanAccessNorfairUpperPortal()
+                        items.CanAccessNorfairUpperPortal(World)
                     ) &&
                     items.CanHellRun() && (
                         /* Cathedral */

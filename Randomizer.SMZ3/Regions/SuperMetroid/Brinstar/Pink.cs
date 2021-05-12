@@ -27,7 +27,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
                 }),
                 new Location(this, 25, 0x8F8676, LocationType.Visible, "Missile (green Brinstar pipe)", Logic switch {
                     _ => new Requirement(items => items.Morph &&
-                        (items.PowerBomb || items.Super || items.CanAccessNorfairUpperPortal()))
+                        (items.PowerBomb || items.Super || items.CanAccessNorfairUpperPortal(World)))
                 }),
                 new Location(this, 33, 0x8F87FA, LocationType.Visible, "Energy Tank, Waterway", Logic switch {
                     _ => new Requirement(items => items.CanUsePowerBombs() && items.CanOpenRedDoors() && items.SpeedBooster &&
@@ -45,12 +45,12 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
                 Normal =>
                     items.CanOpenRedDoors() && (items.CanDestroyBombWalls() || items.SpeedBooster) ||
                     items.CanUsePowerBombs() ||
-                    items.CanAccessNorfairUpperPortal() && items.Morph && items.Wave &&
+                    items.CanAccessNorfairUpperPortal(World) && items.Morph && items.Wave &&
                         (items.Ice || items.HiJump || items.SpaceJump),
                 _ =>
                     items.CanOpenRedDoors() && (items.CanDestroyBombWalls() || items.SpeedBooster) ||
                     items.CanUsePowerBombs() ||
-                    items.CanAccessNorfairUpperPortal() && items.Morph && (items.CanOpenRedDoors() || items.Wave) &&
+                    items.CanAccessNorfairUpperPortal(World) && items.Morph && (items.CanOpenRedDoors() || items.Wave) &&
                         (items.Ice || items.HiJump || items.CanSpringBallJump() || items.CanFly())
             };
         }

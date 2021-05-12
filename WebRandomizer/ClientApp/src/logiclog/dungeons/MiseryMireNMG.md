@@ -1,6 +1,6 @@
 ﻿***can enter***
 
-Medallion access *and* Sword *and* MoonPearl *and* Hookshot *and also* *can enter* **Dark World Mire**
+Medallion access *and* Sword *and* MoonPearl *and either* Boots *or* Hookshot *and also* *can enter* **Dark World Mire**
 
 **Misery Mire - Main Lobby**  
 **Misery Mire - Map Chest**

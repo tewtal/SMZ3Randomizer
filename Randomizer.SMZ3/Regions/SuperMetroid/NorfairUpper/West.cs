@@ -49,7 +49,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
 
         public override bool CanEnter(Progression items) {
             return (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
-                items.CanAccessNorfairUpperPortal();
+                items.CanAccessNorfairUpperPortal(World);
         }
 
     }

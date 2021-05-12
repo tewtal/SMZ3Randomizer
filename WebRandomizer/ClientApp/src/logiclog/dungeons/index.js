@@ -1,30 +1,39 @@
 ﻿import raw from "raw.macro";
-const HyruleCastle = raw('./HyruleCastle.md');
-const EasternPalace = raw('./EasternPalace.md');
+const HyruleCastleNormal = raw('./HyruleCastle.md');
+const HyruleCastleNMG = raw('./HyruleCastleNMG.md');
+const EasternPalaceNormal = raw('./EasternPalace.md');
+const EasternPalaceNMG = raw('./EasternPalaceNMG.md');
 const DesertPalace = raw('./DesertPalace.md');
-const TowerOfHera = raw('./TowerOfHera.md');
-const CastleTower = raw('./CastleTower.md');
-const PalaceOfDarkness = raw('./PalaceOfDarkness.md');
+const TowerOfHeraNormal = raw('./TowerOfHera.md');
+const TowerOfHeraNMG = raw('./TowerOfHeraNMG.md');
+const CastleTowerNormal = raw('./CastleTower.md');
+const CastleTowerNMG = raw('./CastleTowerNMG.md');
+const PalaceOfDarknessNormal = raw('./PalaceOfDarkness.md');
+const PalaceOfDarknessNMG = raw('./PalaceOfDarknessNMG.md');
 const SwampPalace = raw('./SwampPalace.md');
 const SkullWoods = raw('./SkullWoods.md');
 const ThievesTown = raw('./ThievesTown.md');
-const IcePalace = raw('./IcePalace.md');
-const MiseryMire = raw('./MiseryMire.md');
-const TurtleRock = raw('./TurtleRock.md');
-const GanonsTower = raw('./GanonsTower.md');
+const IcePalaceNormal = raw('./IcePalace.md');
+const IcePalaceNMG = raw('./IcePalaceNMG.md');
+const MiseryMireNormal = raw('./MiseryMire.md');
+const MiseryMireNMG = raw('./MiseryMireNMG.md');
+const TurtleRockNormal = raw('./TurtleRock.md');
+const TurtleRockNMG = raw('./TurtleRockNMG.md');
+const GanonsTowerNormal = raw('./GanonsTower.md');
+const GanonsTowerNMG = raw('./GanonsTowerNMG.md');
 
 export default [
-    { name: 'Hyrule Castle', normal: HyruleCastle },
-    { name: 'Eastern Palace', normal: EasternPalace },
+    { name: 'Hyrule Castle', normal: HyruleCastleNormal, nmg: HyruleCastleNMG },
+    { name: 'Eastern Palace', normal: EasternPalaceNormal, nmg: EasternPalaceNMG },
     { name: 'Desert Palace', normal: DesertPalace },
-    { name: 'Tower of Hera', normal: TowerOfHera },
-    { name: 'Castle Tower', normal: CastleTower },
-    { name: 'Palace of Darkness', normal: PalaceOfDarkness },
+    { name: 'Tower of Hera', normal: TowerOfHeraNormal, nmg: TowerOfHeraNMG },
+    { name: 'Castle Tower', normal: CastleTowerNormal, nmg: CastleTowerNMG },
+    { name: 'Palace of Darkness', normal: PalaceOfDarknessNormal, nmg: PalaceOfDarknessNMG },
     { name: 'Swamp Palace', normal: SwampPalace },
     { name: 'Skull Woods', normal: SkullWoods },
     { name: "Thieves' Town", normal: ThievesTown },
-    { name: 'Ice Palace', normal: IcePalace },
-    { name: 'Misery Mire', normal: MiseryMire },
-    { name: 'Turtle Rock', normal: TurtleRock },
-    { name: "Ganon's Tower", normal: GanonsTower }
+    { name: 'Ice Palace', normal: IcePalaceNormal, nmg: IcePalaceNMG },
+    { name: 'Misery Mire', normal: MiseryMireNormal, nmg: MiseryMireNMG },
+    { name: 'Turtle Rock', normal: TurtleRockNormal, nmg: TurtleRockNMG },
+    { name: "Ganon's Tower", normal: GanonsTowerNormal, nmg: GanonsTowerNMG }
 ];

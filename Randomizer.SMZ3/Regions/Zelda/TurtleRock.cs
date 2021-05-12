@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using static Randomizer.SMZ3.Z3Logic;
 using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda {
@@ -31,17 +32,36 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                     .Allow((item, items) => item.IsNot(BigKeyTR, World)),
                 new Location(this, 256+183, 0x1EA34, LocationType.Regular, "Turtle Rock - Crystaroller Room",
                     items => items.BigKeyTR && items.KeyTR >= 2),
-                new Location(this, 256+184, 0x1EA28, LocationType.Regular, "Turtle Rock - Eye Bridge - Top Right", LaserBridge),
-                new Location(this, 256+185, 0x1EA2B, LocationType.Regular, "Turtle Rock - Eye Bridge - Top Left", LaserBridge),
-                new Location(this, 256+186, 0x1EA2E, LocationType.Regular, "Turtle Rock - Eye Bridge - Bottom Right", LaserBridge),
-                new Location(this, 256+187, 0x1EA31, LocationType.Regular, "Turtle Rock - Eye Bridge - Bottom Left", LaserBridge),
-                new Location(this, 256+188, 0x308159, LocationType.Regular, "Turtle Rock - Trinexx",
-                    items => items.BigKeyTR && items.KeyTR >= 4 && items.Lamp && CanBeatBoss(items)),
+                new Location(this, 256+184, 0x1EA28, LocationType.Regular, "Turtle Rock - Eye Bridge - Top Right", Logic switch {
+                    Normal => LaserBridge,
+                    _ => NMGLaserBridge,
+                }),
+                new Location(this, 256+185, 0x1EA2B, LocationType.Regular, "Turtle Rock - Eye Bridge - Top Left", Logic switch {
+                    Normal => LaserBridge,
+                    _ => NMGLaserBridge,
+                }),
+                new Location(this, 256+186, 0x1EA2E, LocationType.Regular, "Turtle Rock - Eye Bridge - Bottom Right", Logic switch {
+                    Normal => LaserBridge,
+                    _ => NMGLaserBridge,
+                }),
+                new Location(this, 256+187, 0x1EA31, LocationType.Regular, "Turtle Rock - Eye Bridge - Bottom Left", Logic switch {
+                    Normal => LaserBridge,
+                    _ => NMGLaserBridge,
+                }),
+                new Location(this, 256+188, 0x308159, LocationType.Regular, "Turtle Rock - Trinexx", Logic switch {
+                    Normal => items => items.BigKeyTR && items.KeyTR >= 4 && items.Lamp && CanBeatBoss(items),
+                    _ => new Requirement(items => items.BigKeyTR && items.KeyTR >= 4 && CanBeatBoss(items))
+                }),
             };
         }
 
         bool LaserBridge(Progression items) {
             return items.BigKeyTR && items.KeyTR >= 3 && items.Lamp && (items.Cape || items.Byrna || items.CanBlockLasers);
+        }
+
+        // celestial navigation + dodge lasers
+        bool NMGLaserBridge(Progression items) {
+            return items.BigKeyTR && items.KeyTR >= 3;
         }
 
         bool CanBeatBoss(Progression items) {

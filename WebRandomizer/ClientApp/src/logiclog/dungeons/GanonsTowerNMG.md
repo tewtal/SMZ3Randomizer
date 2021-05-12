@@ -20,7 +20,7 @@ Hammer *and* Hookshot
 Can always hold a Key *if having* 3 Keys
 
 - *each of*
-  - Hammer *and* Hookshot
+  - Hammer *and either* Hookshot *or* Boots
   - 3 Keys *if* **Ganon's Tower - Map Chest** *has* BigKey/Key, *otherwise* 4 Keys
 
 **Ganon's Tower - Firesnake Room**
