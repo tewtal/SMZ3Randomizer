@@ -13,13 +13,13 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
         public Inner(World world, Config config) : base(world, config) {
             Locations = new List<Location> {
                 new Location(this, 140, 0x8FC4AF, LocationType.Visible, "Super Missile (yellow Maridia)", Logic switch {
-                    _ => new Requirement(items => items.CardMaridiaL1 && items.CanPassBombPassages() && items.CanReachAqueduct())
+                    _ => new Requirement(items => items.CardMaridiaL1 && items.CanPassBombPassages() && CanReachAqueduct(items))
                 }),
                 new Location(this, 141, 0x8FC4B5, LocationType.Visible, "Missile (yellow Maridia super missile)", Logic switch {
-                    _ => new Requirement(items => items.CardMaridiaL1 && items.CanPassBombPassages() && items.CanReachAqueduct())
+                    _ => new Requirement(items => items.CardMaridiaL1 && items.CanPassBombPassages() && CanReachAqueduct(items))
                 }),
                 new Location(this, 142, 0x8FC533, LocationType.Visible, "Missile (yellow Maridia false wall)", Logic switch {
-                    _ => new Requirement(items => items.CardMaridiaL1 && items.CanPassBombPassages() && items.CanReachAqueduct())
+                    _ => new Requirement(items => items.CardMaridiaL1 && items.CanPassBombPassages() && CanReachAqueduct(items))
                 }),
                 new Location(this, 143, 0x8FC559, LocationType.Chozo, "Plasma Beam", Logic switch {
                     Normal => items => CanDefeatDraygon(items) && (items.ScrewAttack || items.Plasma) && (items.HiJump || items.CanFly()),
