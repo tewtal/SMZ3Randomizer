@@ -25,7 +25,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
                 new Location(this, 256+42, 0x1EA85, LocationType.Regular, "Sahasrahla's Hut - Middle").Weighted(sphereOne),
                 new Location(this, 256+43, 0x1EA88, LocationType.Regular, "Sahasrahla's Hut - Right").Weighted(sphereOne),
                 new Location(this, 256+44, 0x5F1FC, LocationType.Regular, "Sahasrahla",
-                    items => World.CanAquire(items, PendantGreen)),
+                    items => World.CanAcquire(items, PendantGreen)),
             };
         }
 
