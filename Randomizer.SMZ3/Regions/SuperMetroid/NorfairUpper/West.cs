@@ -31,9 +31,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                     Normal => items => (config.Keysanity ? items.CardNorfairL1 : items.Super) && items.CanUsePowerBombs() && items.Varia && items.SpeedBooster,
                     _ => new Requirement(items =>
                         (config.Keysanity ? items.CardNorfairL1 : items.Super) && items.CanUsePowerBombs() && (items.Varia || items.HasEnergyReserves(3)) ||
-                        (items.Missile || items.Super || items.Wave) /* Blue Gate */ && items.Varia && items.SpeedBooster &&
-                        /* Access to Croc's room to get spark */
-                        (config.Keysanity ? items.CardNorfairBoss : items.Super) && items.CardNorfairL1)
+                        (items.Missile || items.Super || items.Wave /* Blue Gate */) && items.Varia && items.SpeedBooster &&
+                            /* Access to Croc's room to get spark */
+                            (config.Keysanity ? items.CardNorfairBoss : items.Super) && items.CardNorfairL1)
                 }),
                 new Location(this, 53, 0x8F8BAC, LocationType.Chozo, "Hi-Jump Boots", Logic switch {
                     _ => new Requirement(items => items.CanOpenRedDoors() && items.CanPassBombPassages())

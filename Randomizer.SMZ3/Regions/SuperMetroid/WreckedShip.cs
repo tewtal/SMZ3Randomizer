@@ -16,7 +16,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
                     _ => new Requirement(items => items.CanPassBombPassages())
                 }),
                 new Location(this, 129, 0x8FC2E9, LocationType.Chozo, "Reserve Tank, Wrecked Ship", Logic switch {
-                    Normal => items => CanUnlockShip(items) && items.CardWreckedShipL1 && items.SpeedBooster && items.CanUsePowerBombs() &&
+                    Normal => items => CanUnlockShip(items) && items.CardWreckedShipL1 && items.CanUsePowerBombs() && items.SpeedBooster &&
                         (items.Grapple || items.SpaceJump || items.Varia && items.HasEnergyReserves(2) || items.HasEnergyReserves(3)),
                     _ => new Requirement(items => CanUnlockShip(items) && items.CardWreckedShipL1 && items.CanUsePowerBombs() && items.SpeedBooster &&
                         (items.Varia || items.HasEnergyReserves(2)))
@@ -31,8 +31,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
                 new Location(this, 132, 0x8FC337, LocationType.Visible, "Energy Tank, Wrecked Ship", Logic switch {
                     Normal => items => CanUnlockShip(items) &&
                         (items.HiJump || items.SpaceJump || items.SpeedBooster || items.Gravity),
-                    _ => new Requirement(items => CanUnlockShip(items) && (items.Bombs || items.PowerBomb || items.CanSpringBallJump() ||
-                        items.HiJump || items.SpaceJump || items.SpeedBooster || items.Gravity))
+                    _ => new Requirement(items => CanUnlockShip(items) && (
+                        items.Morph && (items.Bombs || items.PowerBomb) /* "OnceBJ" */ || items.CanSpringBallJump() ||
+                        items.HiJump || items.SpaceJump || items.SpeedBooster || items.Gravity
+                    )),
                 }),
                 new Location(this, 133, 0x8FC357, LocationType.Visible, "Super Missile (Wrecked Ship left)",
                     items => CanUnlockShip(items)),

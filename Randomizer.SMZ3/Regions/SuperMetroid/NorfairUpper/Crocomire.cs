@@ -16,8 +16,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                 }),
                 new Location(this, 54, 0x8F8BC0, LocationType.Visible, "Missile (above Crocomire)", Logic switch {
                     Normal => items => items.CanFly() || items.Grapple || items.HiJump && items.SpeedBooster,
-                    _ => new Requirement(items => (items.CanFly() || items.Grapple || items.HiJump &&
-                        (items.SpeedBooster || items.CanSpringBallJump() || items.Varia && items.Ice)) && items.CanHellRun())
+                    _ => new Requirement(items => (
+                            items.CanFly() || items.Grapple ||
+                            items.HiJump && (items.SpeedBooster || items.CanSpringBallJump() || items.Varia && items.Ice)
+                        ) && items.CanHellRun()),
                 }),
                 new Location(this, 57, 0x8F8C04, LocationType.Visible, "Power Bomb (Crocomire)", Logic switch {
                     Normal => items => CanAccessCrocomire(items) && (items.CanFly() || items.HiJump || items.Grapple),
@@ -32,8 +34,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                 }),
                 new Location(this, 60, 0x8F8C36, LocationType.Chozo, "Grappling Beam", Logic switch {
                     Normal => items => CanAccessCrocomire(items) && items.Morph && (items.CanFly() || items.SpeedBooster && items.CanUsePowerBombs()),
-                    _ => new Requirement(items => CanAccessCrocomire(items) && (items.SpaceJump || items.Morph || items.Grapple ||
-                        items.HiJump && items.SpeedBooster))
+                    _ => new Requirement(items => CanAccessCrocomire(items) && (
+                        items.SpaceJump || items.Morph || items.Grapple || items.HiJump && items.SpeedBooster
+                    )),
                 }),
             };
         }

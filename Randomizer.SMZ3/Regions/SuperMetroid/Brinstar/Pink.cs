@@ -50,7 +50,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
                 _ =>
                     items.CanOpenRedDoors() && (items.CanDestroyBombWalls() || items.SpeedBooster) ||
                     items.CanUsePowerBombs() ||
-                    items.CanAccessNorfairUpperPortal() && items.Morph && (items.CanOpenRedDoors() || items.Wave) &&
+                    items.CanAccessNorfairUpperPortal() && items.Morph && (items.Missile || items.Super || items.Wave /* Blue Gate */) &&
                         (items.Ice || items.HiJump || items.CanSpringBallJump() || items.CanFly())
             };
         }

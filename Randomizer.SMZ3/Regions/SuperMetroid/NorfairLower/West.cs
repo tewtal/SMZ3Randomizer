@@ -14,16 +14,17 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
                     Normal => items => items.CanUsePowerBombs() && items.SpaceJump && items.Super,
                     _ => new Requirement(items => items.CanUsePowerBombs() && items.SpaceJump && items.Varia && (
                         items.HiJump || items.Gravity ||
-                        items.CanAccessNorfairLowerPortal() && (items.CanFly() || items.CanSpringBallJump() || items.SpeedBooster) && items.Super))
+                        items.CanAccessNorfairLowerPortal() && (items.CanFly() || items.CanSpringBallJump() || items.SpeedBooster) && items.Super
+                    )),
                 }),
                 new Location(this, 71, 0x8F8E74, LocationType.Hidden, "Super Missile (Gold Torizo)", Logic switch {
                     Normal => items => items.CanDestroyBombWalls() && (items.Super || items.Charge) &&
-                        (items.CanAccessNorfairLowerPortal() || items.SpaceJump && items.CanUsePowerBombs()),
+                        (items.CanAccessNorfairLowerPortal() || items.CanUsePowerBombs() && items.SpaceJump),
                     _ => new Requirement(items => items.CanDestroyBombWalls() && items.Varia && (items.Super || items.Charge))
                 }),
                 new Location(this, 79, 0x8F9110, LocationType.Chozo, "Screw Attack", Logic switch {
-                    Normal => items => items.CanDestroyBombWalls() && (items.SpaceJump && items.CanUsePowerBombs() || items.CanAccessNorfairLowerPortal()),
-                    _ => new Requirement(items => items.CanDestroyBombWalls() && (items.Varia || items.CanAccessNorfairLowerPortal()))
+                    Normal => items => items.CanDestroyBombWalls() && (items.CanAccessNorfairLowerPortal() || items.CanUsePowerBombs() && items.SpaceJump),
+                    _ => new Requirement(items => items.CanDestroyBombWalls() && (items.CanAccessNorfairLowerPortal() || items.Varia))
                 }),
                 new Location(this, 73, 0x8F8F30, LocationType.Visible, "Missile (Mickey Mouse room)", Logic switch {
                     Normal => items => items.CanFly() && items.Morph && items.Super &&
@@ -63,7 +64,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
                         /* Trivial case, Bubble Mountain access */
                         items.CardNorfairL2 ||
                         /* Frog Speedway -> UN Farming Room gate */
-                        items.SpeedBooster && (items.Missile || items.Super || items.Wave) /* Blue Gate */
+                        items.SpeedBooster && (items.Missile || items.Super || items.Wave /* Blue Gate */)
                     ) ||
                     items.CanAccessNorfairLowerPortal() && items.CanDestroyBombWalls()
             };
