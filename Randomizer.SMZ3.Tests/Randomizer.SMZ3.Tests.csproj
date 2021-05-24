@@ -12,6 +12,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
+    <PackageReference Include="SharpYaml" Version="1.6.6" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Randomizer.SMZ3\Randomizer.SMZ3.csproj" />
