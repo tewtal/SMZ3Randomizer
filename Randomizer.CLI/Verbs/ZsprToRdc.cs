@@ -23,8 +23,10 @@ namespace Randomizer.CLI.Verbs {
     static class ZsprToRdc {
 
         public static void Run(ZsprToRdcOptions opts) {
-            if (!File.Exists(opts.File))
+            if (!File.Exists(opts.File)) {
                 Console.Error.WriteLine($"The file {opts.File} does not exist");
+                return;
+            }
 
             using var input = File.OpenRead(opts.File);
             using var output = File.Open(Path.ChangeExtension(opts.File, "z3.rdc"), FileMode.Create);
