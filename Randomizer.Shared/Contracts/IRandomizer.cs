@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
 
@@ -11,6 +10,7 @@ namespace Randomizer.Shared.Contracts {
         int ItemId { get; }
         int ItemWorldId { get; }
     }
+
     public interface IWorldData {
         int Id { get; }
         string Guid { get; }
