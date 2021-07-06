@@ -41,11 +41,16 @@ x Super Gravity ...
 ```
 
 If subsets are found those lines will be prefixed by a "<N" for the subset, and
-">N" for the superset, for some pair number N.
+">N" for the superset, or "=N" for equal subsets, for some pair number N.
 
 ```
 <1 Morph Bombs Super
 >1 SpeedBooster Super Morph Bombs
+```
+
+```
+=1 Morph Bombs Super SpeedBooster
+=1 SpeedBooster Super Morph Bombs
 ```
 
 These prefixes can safely remain in the file between edits since the tool

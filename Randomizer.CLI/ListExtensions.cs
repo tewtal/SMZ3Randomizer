@@ -17,6 +17,16 @@ namespace Randomizer.CLI {
             }
         }
 
+        public static IEnumerable<T> IntersectAll<T>(this IEnumerable<T> first, IEnumerable<T> second) {
+            var lookup = second.GroupBy(x => x).ToDictionary(x => x.Key, x => x.Count());
+            foreach (var item in first) {
+                if (lookup.TryGetValue(item, out var value) && value > 0){
+                    yield return item;
+                    lookup[item]--;
+                }
+            }
+        }
+
     }
 
 }

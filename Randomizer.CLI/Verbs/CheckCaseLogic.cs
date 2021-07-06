@@ -36,7 +36,7 @@ namespace Randomizer.CLI.Verbs {
             }
 
             cases = ExpandCaseItems(cases);
-            cases = CheckProperSubsets(cases);
+            cases = CheckSubsets(cases);
             if (cases.Any(x => x.SetNumber is not null)) {
                 Console.WriteLine("Found case lines that are properly contained by others, marked in the source file");
                 WriteWithSubsetPrefix(opts.File, cases);
@@ -53,7 +53,7 @@ namespace Randomizer.CLI.Verbs {
                    select line;
         }
 
-        static readonly Regex PrefixPattern = new(@"^(x|[<>]\d*)? *");
+        static readonly Regex PrefixPattern = new(@"^(x|[<=>]\d*)? *");
 
         static IList<Case> ParseLines(IEnumerable<string> lines) {
             var cases = from line in lines
@@ -88,7 +88,7 @@ namespace Randomizer.CLI.Verbs {
             }
         }
 
-        static IList<Case> CheckProperSubsets(IList<Case> cases) {
+        static IList<Case> CheckSubsets(IList<Case> cases) {
             var n = 0;
             foreach (var i in Range(0, cases.Count)) {
                 if (cases[i].SetNumber is not null)
@@ -98,21 +98,25 @@ namespace Randomizer.CLI.Verbs {
                 var k = from x in cases.Select((b, j) => (b, j)).Skip(i + 1)
                         where x.b.SetNumber is null
                         select (x.b, x.j,
-                                aIsSubset: IsProperSubset(a.List, x.b.List),
-                                bIsSubset: IsProperSubset(x.b.List, a.List));
-                var (b, j, aIsSubset, bIsSubset) = k.FirstOrDefault(x => x.aIsSubset || x.bIsSubset);
+                                aSubset: Subset(a.List, x.b.List),
+                                bSubset: Subset(x.b.List, a.List));
+                var (b, j, aSubset, bSubset) = k.FirstOrDefault(x => x.aSubset.value || x.bSubset.value);
                 
                 if (b is not null) {
                     n += 1;
-                    cases[i] = cases[i] with { SetNumber = n, IsSubset = aIsSubset };
-                    cases[j] = cases[j] with { SetNumber = n, IsSubset = bIsSubset };
+                    var equal = aSubset.proper == bSubset.proper;
+                    cases[i] = cases[i] with { SetNumber = n, IsSubset = aSubset.value, IsEqual = equal };
+                    cases[j] = cases[j] with { SetNumber = n, IsSubset = bSubset.value, IsEqual = equal };
                 }
             }
             return cases;
 
-            static bool IsProperSubset(IList<Item> a, IList<Item> b) {
-                var n = a.Intersect(b).Count();
-                return n == a.Count && n < b.Count;
+            static (bool value, bool proper) Subset(IList<Item> a, IList<Item> b) {
+                var n = a.IntersectAll(b).Count();
+                return (
+                    n == a.Count && n <= b.Count,
+                    n == a.Count && n < b.Count
+                );
             }
         }
 
@@ -128,9 +132,10 @@ namespace Randomizer.CLI.Verbs {
             var pad = cases.Max(x => x.SetNumber ?? 0).ToString().Length + 2;
             File.WriteAllLines(filename,
                 from @case in cases
+                let symbol = @case.IsEqual == true ? "="
+                    : @case.IsSubset == true ? "<" : ">"
                 let prefix = @case.SetNumber is not null
-                    ? $"{(@case.IsSubset == true ? "<" : ">")}{@case.SetNumber}"
-                    : ""
+                    ? $"{symbol}{@case.SetNumber}" : ""
                 select $"{prefix.PadRight(pad)}{@case.Line}"
             );
         }
@@ -143,6 +148,7 @@ namespace Randomizer.CLI.Verbs {
             public bool Duplicate { get; init; }
             public int? SetNumber { get; init; }
             public bool? IsSubset { get; init; }
+            public bool? IsEqual { get; init; }
         }
 
         class Item : IEquatable<Item> {
