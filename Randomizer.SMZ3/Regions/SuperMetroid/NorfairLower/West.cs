@@ -27,21 +27,26 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
                     _ => new Requirement(items => items.CanDestroyBombWalls() && (items.CanAccessNorfairLowerPortal() || items.Varia))
                 }),
                 new Location(this, 73, 0x8F8F30, LocationType.Visible, "Missile (Mickey Mouse room)", Logic switch {
-                    Normal => items => items.CanFly() && items.Morph && items.Super &&
-                        /*Exit to Upper Norfair*/
-                        ((items.CardLowerNorfairL1 || items.Gravity /*Vanilla or Reverse Lava Dive*/) && items.CardNorfairL2 /*Bubble Mountain*/ ||
-                        items.Gravity && items.Wave /* Volcano Room and Blue Gate */ && (items.Grapple || items.SpaceJump) /*Spikey Acid Snakes and Croc Escape*/ ||
-                        /*Exit via GT fight and Portal*/
-                        (items.CanUsePowerBombs() && items.SpaceJump && (items.Super || items.Charge))),
-                    _ => new Requirement(items => 
-                         items.Morph && items.Varia && items.Super && ((items.CanFly() || items.CanSpringBallJump() && items.CanPassBombPassages() ||
-                                         (items.CardNorfairL2 && items.CanUsePowerBombs() && (items.HiJump || items.Gravity) || items.SpeedBooster)
-                                           && (items.HiJump && items.CanUsePowerBombs() || items.Charge && items.Ice)) &&
-                         /*Exit to Upper Norfair*/
-                         (items.CardNorfairL2 || (items.SpeedBooster || items.CanFly() || items.Grapple || items.HiJump &&
-                        (items.CanSpringBallJump() || items.Ice))) ||
-                         /*Return to Portal*/
-                         items.CanUsePowerBombs()))
+                    Normal => items => items.Morph && items.Super &&
+                        /* Climb worst room (from LN East CanEnter) */
+                        items.CanFly() && items.CanUsePowerBombs() && (
+                            /* Exit to Upper Norfair */
+                            (items.CardLowerNorfairL1 || items.Gravity) /* Intended, or Reverse Lava Dive */ && items.CardNorfairL2 /* Bubble Mountain */ ||
+                            items.Gravity && items.Wave /* Volcano Room and Blue Gate */ &&
+                                (items.Grapple || items.SpaceJump) /* Spikey Acid Snakes -> Croc Escape (this shortcuts Frog Speedway) */ ||
+                            /* GT fight -> Portal */
+                            items.CanUsePowerBombs() && items.SpaceJump && (items.Super || items.Charge)
+                        ),
+                    _ => new Requirement(items => items.Varia && items.Morph && items.Super &&
+                        /* Climb worst room (from LN East CanEnter) */
+                        (items.CanFly() || items.HiJump || items.CanSpringBallJump() || items.Ice && items.Charge) &&
+                        (items.CanPassBombPassages() || items.ScrewAttack && items.SpaceJump) && (
+                            /* Exit to Upper Norfair */
+                            items.CardNorfairL2 || items.SpeedBooster || items.CanFly() || items.Grapple ||
+                            items.HiJump && (items.CanSpringBallJump() || items.Ice) ||
+                            /* Portal (with GGG) */
+                            items.CanUsePowerBombs()
+                        )),
                 }),
             };
         }

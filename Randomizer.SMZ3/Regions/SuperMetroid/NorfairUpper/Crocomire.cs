@@ -50,8 +50,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                 Normal => (
                         (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
                         items.CanAccessNorfairUpperPortal()
-                    ) &&
-                    items.Varia && (
+                    ) && items.Varia && (
                         /* Ice Beam -> Croc Speedway */
                         (Config.Keysanity ? items.CardNorfairL1 : items.Super) && items.CanUsePowerBombs() && items.SpeedBooster ||
                         /* Frog Speedway */
@@ -60,11 +59,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                         items.CanOpenRedDoors() && (Config.Keysanity ? items.CardNorfairL2 : items.Super) &&
                             (items.CanFly() || items.HiJump || items.SpeedBooster) &&
                             (items.CanPassBombPassages() || items.Gravity && items.Morph) && items.Wave
-                        ||
-                        /* Reverse Lava Dive */
-                        items.CanAccessNorfairLowerPortal() && items.ScrewAttack && items.SpaceJump && items.Super && 
-                        items.Gravity && items.Wave && (items.CardNorfairL2 || items.Morph)
-                      ),
+                    ) ||
+                    /* Reverse Lava Dive */
+                    items.Varia && items.CanAccessNorfairLowerPortal() && items.ScrewAttack && items.SpaceJump && items.Super &&
+                        items.Gravity && items.Wave && (items.CardNorfairL2 || items.Morph),
                 _ => (
                         (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
                         items.CanAccessNorfairUpperPortal()
@@ -74,15 +72,15 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                             items.SpeedBooster && (items.HasEnergyReserves(3) || items.Varia) ||
                         /* Frog Speedway */
                         items.SpeedBooster && (items.HasEnergyReserves(2) || items.Varia) &&
-                            (items.Missile || items.Super || items.Wave) /* Blue Gate */ ||
+                            (items.Missile || items.Super || items.Wave /* Blue Gate */) ||
                         /* Cathedral -> through the floor or Vulcano */
                         items.CanHellRun() && items.CanOpenRedDoors() && (Config.Keysanity ? items.CardNorfairL2 : items.Super) &&
                             (items.CanFly() || items.HiJump || items.SpeedBooster || items.CanSpringBallJump() || items.Varia && items.Ice) &&
                             (items.CanPassBombPassages() || items.Varia && items.Morph) &&
-                            (items.Missile || items.Super || items.Wave) /* Blue Gate */
-                        ) ||
-                        /* Reverse Lava Dive */
-                        items.CanAccessNorfairLowerPortal() && items.ScrewAttack && items.SpaceJump && items.Varia && items.Super && 
+                            (items.Missile || items.Super || items.Wave /* Blue Gate */)
+                    ) ||
+                    /* Reverse Lava Dive */
+                    items.Varia && items.CanAccessNorfairLowerPortal() && items.ScrewAttack && items.SpaceJump && items.Super && 
                         items.HasEnergyReserves(2) && (items.CardNorfairL2 || items.Morph)
             };
         }
