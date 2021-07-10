@@ -832,11 +832,12 @@ namespace Randomizer.SMZ3 {
         public static bool CanAccessMiseryMirePortal(this Progression items, Config config) {
             return config.SMLogic switch {
                 Normal =>
-                    (items.CardNorfairL2 || (items.SpeedBooster && items.Wave)) && items.Varia && items.Super && (items.Gravity && items.SpaceJump) && items.CanUsePowerBombs(),
+                    (items.CardNorfairL2 || items.SpeedBooster && items.Wave) && items.Varia && items.Super &&
+                        items.Gravity && items.SpaceJump && items.CanUsePowerBombs(),
                 _ =>
                     (items.CardNorfairL2 || items.SpeedBooster) && items.Varia && items.Super && (
                         items.CanFly() || items.HiJump || items.SpeedBooster || items.CanSpringBallJump() || items.Ice
-                   ) && (items.Gravity || items.HiJump) && items.CanUsePowerBombs()
+                    ) && (items.Gravity || items.HiJump) && items.CanUsePowerBombs()
              };
         }
 

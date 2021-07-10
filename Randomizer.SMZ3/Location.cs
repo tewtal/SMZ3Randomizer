@@ -82,6 +82,10 @@ namespace Randomizer.SMZ3 {
             Item = oldItem;
             return fillable;
         }
+
+        // For logic unit tests
+        internal bool CanAccess(Progression items) => canAccess(items);
+
     }
 
     static class LocationsExtensions {

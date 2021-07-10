@@ -122,8 +122,10 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         }
 
         private bool BigKeyRoom(Progression items) {
-            return items.KeyGT >= 3 && CanBeatArmos(items) 
-                && (items.Hammer && items.Hookshot || items.Firerod && items.Somaria);
+            return items.KeyGT >= 3 && (
+                items.Hammer && items.Hookshot ||
+                items.Firerod && items.Somaria
+            ) && CanBeatArmos(items);
         }
 
         private bool TowerAscend(Progression items) {
@@ -142,7 +144,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
 
         public override bool CanEnter(Progression items) {
             return items.MoonPearl && World.CanEnter("Dark World Death Mountain East", items) &&
-                World.CanAquireAll(items, new[] { CrystalBlue, CrystalRed, GoldenFourBoss });
+                World.CanAquireAll(items, CrystalBlue, CrystalRed, GoldenFourBoss);
         }
 
         public override bool CanFill(Item item, Progression items) {

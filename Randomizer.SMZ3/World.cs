@@ -92,7 +92,8 @@ namespace Randomizer.SMZ3 {
         }
 
         public bool CanAquire(Progression items, RewardType reward) {
-                return Regions.OfType<IReward>().First(x => reward == x.Reward).CanComplete(items);
+            // For the purpose of logic unit tests, if no region has the reward then CanAquire is satisfied
+            return Regions.OfType<IReward>().FirstOrDefault(x => reward == x.Reward)?.CanComplete(items) ?? true;
         }
 
         public bool CanAquireAll(Progression items, params RewardType[] rewards) {

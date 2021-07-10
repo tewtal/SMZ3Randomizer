@@ -37,14 +37,22 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
 
         bool CanExit(Progression items) {
             return Logic switch {
-                Normal => items.CardNorfairL2 /*Bubble Mountain*/ ||
-                    items.Gravity && items.Wave /* Volcano Room and Blue Gate */ && (items.Grapple || items.SpaceJump /*Spikey Acid Snakes and Croc Escape*/),
-                _ => /*Vanilla LN Escape*/
-                    (items.Morph && (items.CardNorfairL2 /*Bubble Mountain*/ || (items.Missile || items.Super || items.Wave /* Blue Gate */) && 
-                                     (items.SpeedBooster || items.CanFly() || items.Grapple || items.HiJump && 
-                                     (items.CanSpringBallJump() || items.Ice) /*Frog Speedway or Croc Escape*/)) ||
-                    /*Reverse Amphitheater*/
-                     items.HasEnergyReserves(5)),
+                Normal => /* Intended LN Escape */
+                    items.Morph && (
+                        items.CardNorfairL2 /* Bubble Mountain */ ||
+                        items.Gravity && items.Wave /* Volcano Room, Blue Gate */ &&
+                            (items.Grapple || items.SpaceJump) /* Spikey Acid Snakes -> Croc Escape (this shortcuts Frog Speedway) */
+                    ),
+                _ => /* Intended LN Escape */
+                    items.Morph && (
+                        items.CardNorfairL2 /* Bubble Mountain */ ||
+                        (items.Missile || items.Super || items.Wave /* Blue Gate */) && (
+                            items.SpeedBooster || items.CanFly() || items.Grapple ||
+                            items.HiJump && (items.CanSpringBallJump() || items.Ice) /* Frog Speedway / Croc Escape */
+                        )
+                    ) ||
+                    /* Reverse Amphitheater */
+                    items.HasEnergyReserves(5),
             };
         }
 
@@ -61,7 +69,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
                         items.CanAccessNorfairLowerPortal() && items.CanDestroyBombWalls() && items.Super && (items.CanFly() || items.CanSpringBallJump() || items.SpeedBooster)
                     ) &&
                     (items.CanFly() || items.HiJump || items.CanSpringBallJump() || items.Ice && items.Charge) &&
-                    (items.CanPassBombPassages() || items.ScrewAttack && items.SpaceJump)                     
+                    (items.CanPassBombPassages() || items.ScrewAttack && items.SpaceJump)
             };
         }
 

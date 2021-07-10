@@ -36,12 +36,12 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
                 new Location(this, 144, 0x8FC5DD, LocationType.Visible, "Missile (left Maridia sand pit room)", Logic switch {
                     Normal => items => CanReachAqueduct(items) && items.Super && items.CanPassBombPassages(),
                     _ => new Requirement(items => CanReachAqueduct(items) && items.Super &&
-                        (items.HiJump && (items.SpaceJump || items.CanSpringBallJump()) || items.Gravity))
+                        (items.Gravity || items.HiJump && (items.SpaceJump || items.CanSpringBallJump())))
                 }),
                 new Location(this, 145, 0x8FC5E3, LocationType.Chozo, "Reserve Tank, Maridia", Logic switch {
                     Normal => items => CanReachAqueduct(items) && items.Super && items.CanPassBombPassages(),
                     _ => new Requirement(items => CanReachAqueduct(items) && items.Super &&
-                        (items.HiJump && (items.SpaceJump || items.CanSpringBallJump()) || items.Gravity))
+                        (items.Gravity || items.HiJump && (items.SpaceJump || items.CanSpringBallJump())))
                 }),
                 new Location(this, 146, 0x8FC5EB, LocationType.Visible, "Missile (right Maridia sand pit room)", Logic switch {
                     Normal => new Requirement(items => CanReachAqueduct(items) && items.Super),
@@ -49,7 +49,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
                 }),
                 new Location(this, 147, 0x8FC5F1, LocationType.Visible, "Power Bomb (right Maridia sand pit room)", Logic switch {
                     Normal => new Requirement(items => CanReachAqueduct(items) && items.Super),
-                    _ => items => CanReachAqueduct(items) && items.Super && (items.HiJump && items.CanSpringBallJump() || items.Gravity)
+                    _ => items => CanReachAqueduct(items) && items.Super && (items.Gravity || items.HiJump && items.CanSpringBallJump())
                 }),
                 new Location(this, 148, 0x8FC603, LocationType.Visible, "Missile (pink Maridia)", Logic switch {
                     Normal => items => CanReachAqueduct(items) && items.SpeedBooster,
