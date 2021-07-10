@@ -36,11 +36,11 @@ namespace Randomizer.SuperMetroid.Regions.Maridia {
                         (items.Has(HiJump) || items.CanSpringBallJump() || items.CanFly() || items.Has(SpeedBooster)))
                 }),
                 new Location(this, 144, "Missile (left Maridia sand pit room)", Visible, Minor, 0x7C5DD, Logic switch {
-                    Casual => items => items.CanPassBombPassages(),
+                    Casual => items => items.CanUsePowerBombs() || items.CanSpringBallJump(),
                     _ => new Requirement(items => items.Has(HiJump) && (items.Has(SpaceJump) || items.CanSpringBallJump()) || items.Has(Gravity))
                 }),
                 new Location(this, 145, "Reserve Tank, Maridia", Chozo, Major, 0x7C5E3, Logic switch {
-                    Casual => items => items.CanPassBombPassages(),
+                    Casual => items => items.CanUsePowerBombs()|| items.CanSpringBallJump(),
                     _ => new Requirement(items => items.Has(HiJump) && (items.Has(SpaceJump) || items.CanSpringBallJump()) || items.Has(Gravity))
                 }),
                 new Location(this, 146, "Missile (right Maridia sand pit room)", Visible, Minor, 0x7C5EB, Logic switch {
