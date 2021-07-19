@@ -1,0 +1,3 @@
+﻿**Bombs**
+
+CanOpenRedDoors *and* Morph

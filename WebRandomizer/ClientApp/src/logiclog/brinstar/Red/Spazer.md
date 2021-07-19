@@ -1,0 +1,3 @@
+﻿**Spazer**
+
+CanPassBombPassages *and* Super

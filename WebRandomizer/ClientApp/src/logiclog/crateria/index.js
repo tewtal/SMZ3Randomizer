@@ -1,13 +1,9 @@
-﻿import raw from "raw.macro";
-const CrateriaWestNormal = raw('./CrateriaWestNormal.md');
-const CrateriaWestHard = raw('./CrateriaWestHard.md');
-const CrateriaCentralNormal = raw('./CrateriaCentralNormal.md');
-const CrateriaCentralHard = raw('./CrateriaCentralHard.md');
-const CrateriaEastNormal = raw('./CrateriaEastNormal.md');
-const CrateriaEastHard = raw('./CrateriaEastHard.md');
+﻿import CrateriaWest from './West/Content';
+import CrateriaCentral from './Central/Content';
+import CrateriaEast from './East/Content';
 
 export default [
-    { name: 'West', normal: CrateriaWestNormal, hard: CrateriaWestHard },
-    { name: 'Central', normal: CrateriaCentralNormal, hard: CrateriaCentralHard },
-    { name: 'East', normal: CrateriaEastNormal, hard: CrateriaEastHard }
+    { name: 'West', Content: CrateriaWest },
+    { name: 'Central', Content: CrateriaCentral },
+    { name: 'East', Content: CrateriaEast }
 ];

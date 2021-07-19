@@ -1,16 +1,15 @@
-﻿import raw from "raw.macro";
-const DarkWorldDeathMountainWest = raw('./DarkWorldDeathMountainWest.md');
-const DarkWorldDeathMountainEast = raw('./DarkWorldDeathMountainEast.md');
-const DarkWorldNorthWest = raw('./DarkWorldNorthWest.md');
-const DarkWorldNorthEast = raw('./DarkWorldNorthEast.md');
-const DarkWorldSouth = raw('./DarkWorldSouth.md');
-const DarkWorldMire = raw('./DarkWorldMire.md');
+﻿import DeathMountainWest from './DeathMountainWest/Content';
+import DeathMountainEast from './DeathMountainEast/Content';
+import NorthWest from './NorthWest/Content';
+import NorthEast from './NorthEast/Content';
+import South from './South/Content';
+import Mire from './Mire/Content';
 
 export default [
-    { name: 'Death Mountain West', normal: DarkWorldDeathMountainWest },
-    { name: 'Death Mountain East', normal: DarkWorldDeathMountainEast },
-    { name: 'North West', normal: DarkWorldNorthWest },
-    { name: 'North East', normal: DarkWorldNorthEast },
-    { name: 'South', normal: DarkWorldSouth },
-    { name: 'Mire', normal: DarkWorldMire }
+    { name: 'Death Mountain West', Content: DeathMountainWest },
+    { name: 'Death Mountain East', Content: DeathMountainEast },
+    { name: 'North West', Content: NorthWest },
+    { name: 'North East', Content: NorthEast },
+    { name: 'South', Content: South },
+    { name: 'Mire', Content: Mire }
 ];

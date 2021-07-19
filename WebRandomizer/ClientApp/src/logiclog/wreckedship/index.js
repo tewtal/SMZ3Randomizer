@@ -1,5 +1,3 @@
-﻿import raw from "raw.macro";
-const WreckedShipNormal = raw('./WreckedShipNormal.md');
-const WreckedShipHard = raw('./WreckedShipHard.md');
+﻿import WreckedShip from './Content';
 
-export default { normal: WreckedShipNormal, hard: WreckedShipHard };
+export default { Content: WreckedShip };

@@ -1,9 +1,7 @@
-﻿import raw from "raw.macro";
-const Aliases = raw('./aliases.md');
-const PortalsNormal = raw('./portalsNormal.md');
-const PortalsHard = raw('./portalsHard.md');
+﻿import Aliases from './Aliases/Content';
+import Portals from './Portals/Content';
 
 export default [
-    { name: 'Aliases', normal: Aliases },
-    { name: 'Portals', normal: PortalsNormal, hard: PortalsHard },
+    { name: 'Aliases', Content: Aliases },
+    { name: 'Portals', Content: Portals }
 ];

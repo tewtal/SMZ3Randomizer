@@ -1,0 +1,4 @@
+﻿**Blacksmith**  
+**Purple Chest**
+
+CanLiftHeavy

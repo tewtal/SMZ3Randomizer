@@ -1,0 +1,3 @@
+﻿**Charge Beam**
+
+CanPassBombPassages
