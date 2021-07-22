@@ -2,8 +2,9 @@
 import CrateriaCentral from './Central/Content';
 import CrateriaEast from './East/Content';
 
-export default [
-    { name: 'West', Content: CrateriaWest },
-    { name: 'Central', Content: CrateriaCentral },
-    { name: 'East', Content: CrateriaEast }
-];
+export default {
+    'West': CrateriaWest,
+    'Central': CrateriaCentral,
+    'East': CrateriaEast,
+    tabs: ['West', 'Central', 'East']
+};

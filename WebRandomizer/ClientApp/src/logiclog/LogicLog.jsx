@@ -9,9 +9,12 @@ import { PlusSquareFill, DashSquareFill } from '../components/util/BootstrapIcon
 
 import classNames from 'classnames';
 
-import find from 'lodash/find';
-import initial from 'lodash/initial';
+import map from 'lodash/map';
+import reduce from 'lodash/reduce';
+import get from 'lodash/get';
+import head from 'lodash/head';
 import tail from 'lodash/tail';
+import initial from 'lodash/initial';
 import last from 'lodash/last';
 
 import raw from 'raw.macro';
@@ -22,13 +25,14 @@ const introText = raw('./intro.md');
 
 export default function LogicLog() {
     const [showIntro, setShowIntro] = useState(false);
+
     const [SMLogic, setSMLogic] = useState('Normal');
     const [keyShuffle, setKeyShuffle] = useState('');
-    const [tabState, setTabState] = useState({});
 
-    const parts = active(tabState, content);
-    const bars = initial(parts);
-    const { Content } = last(parts);
+    const [tabHistory, setTabHistory] = useState({});
+    const [tabPath, setTabPath] = useState([]);
+
+    const [bars, Content] = activeTabs();
 
     return <>
         <Row>
@@ -55,25 +59,22 @@ export default function LogicLog() {
         <Row>
             <Col>
                 <Card>
-                    {bars
-                        .map((bar, i) => [bar, bars.slice(1, i + 1).map(x => x.name)])
-                        .map(([bar, path], i) => (
-                            <LevelCardHeader key={i} level={bars.length - i}>
-                                <Nav card tabs>
-                                    {bar.tabs.map(({ name }) => (
-                                        <NavItem key={name}>
-                                            <NavLink
-                                                className={classNames({ active: name === bar.active })}
-                                                onClick={() => setTabState(activate(tabState, [...path, name]))}
-                                            >
-                                                {name}
-                                            </NavLink>
-                                        </NavItem>
-                                    ))}
-                                </Nav>
-                            </LevelCardHeader>
-                        ))
-                    }
+                    {bars.map(({ path, active, tabs }, i) => (
+                        <LevelCardHeader key={i} level={bars.length - i}>
+                            <Nav card tabs>
+                                {tabs.map(name => (
+                                    <NavItem key={name}>
+                                        <NavLink
+                                            className={classNames({ active: name === active })}
+                                            onClick={() => onTabClick([...path, name])}
+                                        >
+                                            {name}
+                                        </NavLink>
+                                    </NavItem>
+                                ))}
+                            </Nav>
+                        </LevelCardHeader>
+                    ))}
                     <CardBody>
                         <Content Markdown={LogicMarkdown} mode={{ logic: SMLogic, keysanity: keyShuffle }} />
                     </CardBody>
@@ -81,6 +82,53 @@ export default function LogicLog() {
             </Col>
         </Row>
     </>;
+
+    function activeTabs() {
+        const path = complete([...tabPath]);
+        const paths = unfold(path);
+        const bars = convert(paths);
+        const Content = get(content, last(paths));
+        return [bars, Content];
+
+        function complete(path) {
+            const { prior } = get(tabHistory, path, {});
+            const next = prior || get(content, [...path, 'tabs', 0])
+            return next ? complete([...path, next]) : path;
+        }
+
+        function unfold(path) {
+            const [paths] = reduce(path,
+                ([acc, prev], next) => {
+                    next = [...prev, next];
+                    return [[...acc, next], next];
+                },
+                [[], []]
+            );
+            return paths;
+        }
+
+        function convert(paths) {
+            return map(paths, path => ({
+                active: last(path),
+                path: initial(path),
+                tabs: get(content, initial(path), content).tabs,
+            }));
+        }
+    }
+
+    function onTabClick(path) {
+        setTabPath(path);
+        setTabHistory(update(tabHistory, path));
+
+        /* Adding a `prior` to the root is not necessary, but makes for a simpler recursive function */
+        function update(history, path) {
+            const base = head(path);
+            const top = last(path);
+            return base !== top
+                ? { ...history, [base]: update(history[base] || {}, tail(path)) }
+                : { ...history, prior: top };
+        }
+    }
 }
 
 function Introduction({ show, setShow }) {
@@ -116,27 +164,4 @@ function Toggle({ value, setValue, prefix, options: [a, b] }) {
             </InputGroupAddon>
         );
     }
-}
-
-function active(state, content) {
-    state = state || {};
-    content = content || {};
-    const { tabs } = content;
-    if (tabs) {
-        const _active = state.active;
-        const tab = _active ? find(tabs, { name: _active }) : tabs[0];
-        return [
-            { ...content, active: tab.name },
-            ...active(state[tab.name], tab)
-        ];
-    }
-    return [{ ...content }];
-}
-
-function activate(state, tabs) {
-    const path = initial(tabs);
-    for (const first of path) {
-        return { ...state, [first]: activate(state[first], tail(tabs)) };
-    }
-    return { ...state, active: last(tabs) };
 }

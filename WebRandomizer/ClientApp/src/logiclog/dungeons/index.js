@@ -12,18 +12,33 @@ import MiseryMire from './MiseryMire/Content';
 import TurtleRock from './TurtleRock/Content';
 import GanonsTower from './GanonsTower/Content';
 
-export default [
-    { name: 'Hyrule Castle', Content: HyruleCastle },
-    { name: 'Eastern Palace', Content: EasternPalace },
-    { name: 'Desert Palace', Content: DesertPalace },
-    { name: 'Tower of Hera', Content: TowerOfHera },
-    { name: 'Castle Tower', Content: CastleTower },
-    { name: 'Palace of Darkness', Content: PalaceOfDarkness },
-    { name: 'Swamp Palace', Content: SwampPalace },
-    { name: 'Skull Woods', Content: SkullWoods },
-    { name: "Thieves' Town", Content: ThievesTown },
-    { name: 'Ice Palace', Content: IcePalace },
-    { name: 'Misery Mire', Content: MiseryMire },
-    { name: 'Turtle Rock', Content: TurtleRock },
-    { name: "Ganon's Tower", Content: GanonsTower }
-];
+export default {
+    'Hyrule Castle': HyruleCastle,
+    'Eastern Palace': EasternPalace,
+    'Desert Palace': DesertPalace,
+    'Tower of Hera': TowerOfHera,
+    'Castle Tower': CastleTower,
+    'Palace of Darkness': PalaceOfDarkness,
+    'Swamp Palace': SwampPalace,
+    'Skull Woods': SkullWoods,
+    "Thieves' Town": ThievesTown,
+    'Ice Palace': IcePalace,
+    'Misery Mire': MiseryMire,
+    'Turtle Rock': TurtleRock,
+    "Ganon's Tower": GanonsTower,
+    tabs: [
+        'Hyrule Castle',
+        'Eastern Palace',
+        'Desert Palace',
+        'Tower of Hera',
+        'Castle Tower',
+        'Palace of Darkness',
+        'Swamp Palace',
+        'Skull Woods',
+        "Thieves' Town",
+        'Ice Palace',
+        'Misery Mire',
+        'Turtle Rock',
+        "Ganon's Tower"
+    ]
+};

@@ -1,25 +1,35 @@
-﻿import crateria from './crateria';
-import wreckedship from './wreckedship';
-import brinstar from './brinstar';
-import maridia from './maridia';
-import norfairupper from './norfairupper';
-import norfairlower from './norfairlower';
-import lightworld from './lightworld';
-import darkworld from './darkworld';
-import dungeons from './dungeons';
-import common from './common';
+﻿import Crateria from './crateria';
+import WreckedShip from './wreckedship/Content';
+import Brinstar from './brinstar';
+import Maridia from './maridia';
+import NorfairUpper from './norfairupper';
+import NorfairLower from './norfairlower';
+import LightWorld from './lightworld';
+import DarkWorld from './darkworld';
+import Dungeons from './dungeons';
+import Common from './common';
 
 export default {
+    'Crateria': Crateria,
+    'Wrecked Ship': WreckedShip,
+    'Brinstar': Brinstar,
+    'Maridia': Maridia,
+    'Upper Norfair': NorfairUpper,
+    'Lower Norfair': NorfairLower,
+    'Light World': LightWorld,
+    'Dark World': DarkWorld,
+    'Dungeons': Dungeons,
+    'Common': Common,
     tabs: [
-        { name: 'Crateria', tabs: crateria },
-        { name: 'Wrecked Ship', ...wreckedship },
-        { name: 'Brinstar', tabs: brinstar },
-        { name: 'Maridia', tabs: maridia },
-        { name: 'Upper Norfair', tabs: norfairupper },
-        { name: 'Lower Norfair', tabs: norfairlower },
-        { name: 'Light World', tabs: lightworld },
-        { name: 'Dark World', tabs: darkworld },
-        { name: 'Dungeons', tabs: dungeons },
-        { name: 'Common', tabs: common }
+        'Crateria',
+        'Wrecked Ship',
+        'Brinstar',
+        'Maridia',
+        'Upper Norfair',
+        'Lower Norfair',
+        'Light World',
+        'Dark World',
+        'Dungeons',
+        'Common',
     ]
 };
