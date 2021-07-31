@@ -30,7 +30,6 @@ export default function LogicLog() {
     const [keyShuffle, setKeyShuffle] = useState('');
 
     const [tabHistory, setTabHistory] = useState({});
-    const [tabPath, setTabPath] = useState([]);
 
     const [bars, Content] = activeTabs();
 
@@ -84,16 +83,15 @@ export default function LogicLog() {
     </>;
 
     function activeTabs() {
-        const path = complete([...tabPath]);
+        const path = construct(tabHistory);
         const paths = unfold(path);
         const bars = convert(paths);
         const Content = get(content, last(paths));
         return [bars, Content];
 
-        function complete(path) {
-            const { prior } = get(tabHistory, path, {});
-            const next = prior || get(content, [...path, 'tabs', 0])
-            return next ? complete([...path, next]) : path;
+        function construct(history = {}, path = []) {
+            const next = history.recent || get(content, [...path, 'tabs', 0])
+            return next ? construct(history[next], [...path, next]) : path;
         }
 
         function unfold(path) {
@@ -117,16 +115,14 @@ export default function LogicLog() {
     }
 
     function onTabClick(path) {
-        setTabPath(path);
         setTabHistory(update(tabHistory, path));
 
-        /* Adding a `prior` to the root is not necessary, but makes for a simpler recursive function */
         function update(history, path) {
             const base = head(path);
             const top = last(path);
             return base !== top
                 ? { ...history, [base]: update(history[base] || {}, tail(path)) }
-                : { ...history, prior: top };
+                : { ...history, recent: top };
         }
     }
 }
