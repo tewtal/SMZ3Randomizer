@@ -1,0 +1,3 @@
+﻿**Energy Tank, Gauntlet**
+
+CanEnterAndLeaveGauntlet

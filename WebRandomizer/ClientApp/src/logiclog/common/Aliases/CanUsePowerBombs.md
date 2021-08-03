@@ -1,0 +1,3 @@
+﻿**CanUsePowerBombs**
+
+Morph *and* PowerBomb

@@ -1,18 +1,14 @@
-﻿import raw from "raw.macro";
-const BrinstarBlueNormal = raw('./BrinstarBlueNormal.md');
-const BrinstarBlueHard = raw('./BrinstarBlueHard.md');
-const BrinstarGreenNormal = raw('./BrinstarGreenNormal.md');
-const BrinstarGreenHard = raw('./BrinstarGreenHard.md');
-const BrinstarPinkNormal = raw('./BrinstarPinkNormal.md');
-const BrinstarPinkHard = raw('./BrinstarPinkHard.md');
-const BrinstarRedNormal = raw('./BrinstarRedNormal.md');
-const BrinstarRedHard = raw('./BrinstarRedHard.md');
-const BrinstarKraid = raw('./BrinstarKraid.md');
+﻿import BrinstarBlue from './Blue/Content';
+import BrinstarGreen from './Green/Content';
+import BrinstarPink from './Pink/Content';
+import BrinstarRed from './Red/Content';
+import BrinstarKraid from './Kraid/Content';
 
-export default [
-    { name: 'Blue', normal: BrinstarBlueNormal, hard: BrinstarBlueHard },
-    { name: 'Green', normal: BrinstarGreenNormal, hard: BrinstarGreenHard },
-    { name: 'Pink', normal: BrinstarPinkNormal, hard: BrinstarPinkHard },
-    { name: 'Red', normal: BrinstarRedNormal, hard: BrinstarRedHard },
-    { name: 'Kraid', normal: BrinstarKraid }
-];
+export default {
+    'Blue': BrinstarBlue,
+    'Green': BrinstarGreen,
+    'Pink': BrinstarPink,
+    'Red': BrinstarRed,
+    'Kraid': BrinstarKraid,
+    tabs: ['Blue', 'Green', 'Pink', 'Red', 'Kraid']
+};

@@ -1,10 +1,8 @@
-﻿import raw from "raw.macro";
-const NorfairLowerWestNormal = raw('./NorfairLowerWestNormal.md');
-const NorfairLowerWestHard = raw('./NorfairLowerWestHard.md');
-const NorfairLowerEastNormal = raw('./NorfairLowerEastNormal.md');
-const NorfairLowerEastHard = raw('./NorfairLowerEastHard.md');
+﻿import NorfairLowerWest from './West/Content';
+import NorfairLowerEast from './East/Content';
 
-export default [
-    { name: 'West', normal: NorfairLowerWestNormal, hard: NorfairLowerWestHard },
-    { name: 'East', normal: NorfairLowerEastNormal, hard: NorfairLowerEastHard }
-];
+export default {
+    'West': NorfairLowerWest,
+    'East': NorfairLowerEast,
+    tabs: ['West', 'East']
+};

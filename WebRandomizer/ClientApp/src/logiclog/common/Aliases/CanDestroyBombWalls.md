@@ -1,0 +1,3 @@
+﻿**CanDestroyBombWalls**
+
+CanPassBombPassages *or* ScrewAttack

@@ -1,0 +1,3 @@
+﻿**Desert Palace - Torch**
+
+Boots
