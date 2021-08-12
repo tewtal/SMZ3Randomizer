@@ -24,11 +24,11 @@ namespace Randomizer.SuperMetroid.Regions.Brinstar {
                     _ => new Requirement(items => items.CanUsePowerBombs() && items.Has(Super))
                 }),
                 new Location(this, 40, "Power Bomb (red Brinstar spike room)", Chozo, Minor, 0x7890E, Logic switch {
-                    _ => new Requirement(items => items.CanUsePowerBombs() && items.Has(Super))
-                }),
-                new Location(this, 41, "Missile (red Brinstar spike room)", Visible, Minor, 0x78914, Logic switch {
                     Casual => items => (items.CanUsePowerBombs() || items.Has(Ice)) && items.Has(Super),
                     _ => new Requirement(items => items.Has(Super))
+                }),
+                new Location(this, 41, "Missile (red Brinstar spike room)", Visible, Minor, 0x78914, Logic switch {
+                    _ => new Requirement(items => items.CanUsePowerBombs() && items.Has(Super))
                 }),
                 new Location(this, 42, "Spazer", Chozo, Major, 0x7896E, Logic switch {
                     _ => new Requirement(items => items.Has(Morph) && items.Has(Super))
