@@ -8,7 +8,7 @@ namespace Randomizer.SuperMetroid.Regions.Brinstar {
 
     class Blue : Region {
 
-        public override string Name => "Blue Brinstar";
+        public override string Name => "Brinstar Blue";
         public override string Area => "Brinstar";
 
         public Blue(World world, Logic logic) : base(world, logic) {
