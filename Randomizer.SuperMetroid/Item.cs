@@ -43,41 +43,48 @@ namespace Randomizer.SuperMetroid {
         public ItemClass Class { get; set; } = Major;
         public World World { get; set; }
 
+        public Item(string name, ItemType type, World world)
+            : this(type, world) {
+            Name = name;
+        }
+
+        public Item(ItemType type, World world) {
+            Type = type;
+            World = world;
+        }
 
         public static List<Item> CreateProgressionPool(World world, Random rnd) {
-            return new List<Item>
-            {
-                new Item() { Name = "Morphing Ball", Type = Morph, World = world},
-                new Item() { Name = "Bombs", Type = Bombs, World = world},
-                new Item() { Name = "Ice Beam", Type = Ice, World = world},
-                new Item() { Name = "Hi-Jump Boots", Type = HiJump, World = world},
-                new Item() { Name = "Speed Booster", Type = SpeedBooster, World = world},
-                new Item() { Name = "Screw Attack", Type = ScrewAttack, World = world},
-                new Item() { Name = "Varia Suit", Type = Varia, World = world},
-                new Item() { Name = "Gravity Suit", Type = Gravity, World = world},
-                new Item() { Name = "Grappling Beam", Type = Grapple, World = world},
-                new Item() { Name = "Space Jump", Type = SpaceJump, World = world},
-                new Item() { Name = "Spring Ball", Type = SpringBall, World = world},
-                new Item() { Name = "Wave Beam", Type = Wave, World = world},
-                new Item() { Name = "Plasma Beam", Type = Plasma, World = world},
-                new Item() { Name = "Charge Beam", Type = Charge, World = world},
+            return new List<Item> {
+                new Item("Morphing Ball", Morph, world),
+                new Item("Bombs", Bombs, world),
+                new Item("Ice Beam", Ice,world),
+                new Item("Hi-Jump Boots", HiJump, world),
+                new Item("Speed Booster", SpeedBooster, world),
+                new Item("Screw Attack", ScrewAttack, world),
+                new Item("Varia Suit", Varia, world),
+                new Item("Gravity Suit", Gravity, world),
+                new Item("Grappling Beam", Grapple, world),
+                new Item("Space Jump", SpaceJump, world),
+                new Item("Spring Ball", SpringBall, world),
+                new Item("Wave Beam", Wave, world),
+                new Item("Plasma Beam", Plasma, world),
+                new Item("Charge Beam", Charge, world),
 
-                new Item() { Name = "Progression Missile", Type = Missile, World = world, Class = Minor},
-                new Item() { Name = "Progression Super", Type = Super, World = world, Class = Minor},
-                new Item() { Name = "Progression Power Bomb", Type = PowerBomb, World = world, Class = Minor},
-                new Item() { Name = "Progression Power Bomb", Type = PowerBomb, World = world, Class = Minor},
-                new Item() { Name = "Progression Energy Tank", Type = ETank, World = world},
-                new Item() { Name = "Progression Energy Tank", Type = ETank, World = world},
-                new Item() { Name = "Progression Energy Tank", Type = ETank, World = world},
-                new Item() { Name = "Progression Energy Tank", Type = ETank, World = world},
+                new Item("Progression Missile", Missile, world) { Class = Minor },
+                new Item("Progression Super", Super, world) { Class = Minor },
+                new Item("Progression Power Bomb", PowerBomb, world) { Class = Minor },
+                new Item("Progression Power Bomb", PowerBomb, world) { Class = Minor },
+                new Item("Progression Energy Tank", ETank, world),
+                new Item("Progression Energy Tank", ETank, world),
+                new Item("Progression Energy Tank", ETank, world),
+                new Item("Progression Energy Tank", ETank, world),
             };
         }
 
         public static List<Item> CreateNicePool(World world, Random rnd) {
-            return new List<Item>
-            {
-                new Item() { Name = "Spazer", Type = Spazer, World = world},
-                new Item() { Name = "X-Ray Scope", Type = XRay, World = world},
+            return new List<Item> {
+                new Item("Spazer", Spazer, world),
+                new Item("X-Ray Scope", XRay, world),
             };
         }
 
@@ -85,19 +92,18 @@ namespace Randomizer.SuperMetroid {
             var itemPool = new List<Item>();
 
             for (int i = 0; i < 10; i++) {
-                itemPool.Add(new Item() { Type = ETank, Name = "Energy Tank", World = world });
+                itemPool.Add(new Item("Energy Tank", ETank, world));
             }
 
             for (int i = 0; i < 4; i++) {
-                itemPool.Add(new Item() { Type = ReserveTank, Name = "Reserve Tank", World = world });
+                itemPool.Add(new Item("Reserve Tank", ReserveTank, world));
             }
 
             for (int i = 0; i < 62; i++) {
-                itemPool.Add(rnd.Next(7) switch
-                {
-                    int r when r < 3 => new Item() { Type = Missile, Name = "Missile", World = world, Class = Minor },
-                    int r when r >= 3 && r < 6 => new Item() { Type = Super, Name = "Super Missile", World = world, Class = Minor },
-                    _ => new Item() { Type = PowerBomb, Name = "Power Bomb", World = world, Class = Minor }
+                itemPool.Add(rnd.Next(7) switch {
+                    int r when r < 3 => new Item("Missile", Missile, world) { Class = Minor },
+                    int r when r >= 3 && r < 6 => new Item("Super Missile", Super, world) { Class = Minor },
+                    _ => new Item("Power Bomb", PowerBomb, world) { Class = Minor },
                 });
             }
 

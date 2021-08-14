@@ -56,6 +56,10 @@ namespace Randomizer.SuperMetroid {
             Item = oldItem;
             return fillable;
         }
+
+        // For logic unit tests
+        internal bool CanAccess(List<Item> items) => canAccess(items);
+
     }
 
     public static class LocationListExtensions {
