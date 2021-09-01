@@ -281,11 +281,23 @@ namespace Randomizer.SMZ3.Tests.Logic {
 
         protected override List<Case> YellowMaridiaWateringHole => new() {
             CaseWith(x => x.CardMaridiaL1.Morph.Bombs),
-            CaseWith(x => x.CardMaridiaL1.Morph.PowerBomb),
+            CaseWith(x => x.CardMaridiaL1.Morph.PowerBomb.SpaceJump),
+            CaseWith(x => x.CardMaridiaL1.Morph.PowerBomb.SpeedBooster),
+            CaseWith(x => x.CardMaridiaL1.Morph.PowerBomb.Grapple),
+            CaseWith(x => x.CardMaridiaL1.Morph.PowerBomb.CardMaridiaL2.MoonPearl.Flippers.Gravity.Sword.Cape.Lamp.KeyCT(2)),
+            CaseWith(x => x.CardMaridiaL1.Morph.PowerBomb.CardMaridiaL2.MoonPearl.Flippers.Gravity.MasterSword.Lamp.KeyCT(2)),
+            CaseWith(x => x.CardMaridiaL1.Morph.PowerBomb.CardMaridiaL2.MoonPearl.Flippers.Gravity.Hammer.Glove),
+            CaseWith(x => x.CardMaridiaL1.Morph.PowerBomb.CardMaridiaL2.MoonPearl.Flippers.Gravity.Mitt),
         };
         protected override List<Case> MissileYellowMaridiaFalseWall => new() {
             CaseWith(x => x.CardMaridiaL1.Morph.Bombs),
-            CaseWith(x => x.CardMaridiaL1.Morph.PowerBomb),
+            CaseWith(x => x.CardMaridiaL1.Morph.PowerBomb.SpaceJump),
+            CaseWith(x => x.CardMaridiaL1.Morph.PowerBomb.SpeedBooster),
+            CaseWith(x => x.CardMaridiaL1.Morph.PowerBomb.Grapple),
+            CaseWith(x => x.CardMaridiaL1.Morph.PowerBomb.CardMaridiaL2.MoonPearl.Flippers.Gravity.Sword.Cape.Lamp.KeyCT(2)),
+            CaseWith(x => x.CardMaridiaL1.Morph.PowerBomb.CardMaridiaL2.MoonPearl.Flippers.Gravity.MasterSword.Lamp.KeyCT(2)),
+            CaseWith(x => x.CardMaridiaL1.Morph.PowerBomb.CardMaridiaL2.MoonPearl.Flippers.Gravity.Hammer.Glove),
+            CaseWith(x => x.CardMaridiaL1.Morph.PowerBomb.CardMaridiaL2.MoonPearl.Flippers.Gravity.Mitt),
         };
 
         protected override List<Case> PlasmaBeam => new() {
