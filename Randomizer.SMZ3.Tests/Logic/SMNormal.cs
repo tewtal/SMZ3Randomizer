@@ -463,11 +463,23 @@ namespace Randomizer.SMZ3.Tests.Logic {
 
         protected override List<Case> YellowMaridiaWateringHole => new() {
             CaseWith(x => x.Morph.Bombs),
-            CaseWith(x => x.Morph.PowerBomb),
+            CaseWith(x => x.Morph.PowerBomb.SpaceJump),
+            CaseWith(x => x.Morph.PowerBomb.SpeedBooster),
+            CaseWith(x => x.Morph.PowerBomb.Grapple),
+            CaseWith(x => x.Morph.PowerBomb.MoonPearl.Flippers.Gravity.Sword.Cape.Lamp.KeyCT(2)),
+            CaseWith(x => x.Morph.PowerBomb.MoonPearl.Flippers.Gravity.MasterSword.Lamp.KeyCT(2)),
+            CaseWith(x => x.Morph.PowerBomb.MoonPearl.Flippers.Gravity.Hammer.Glove),
+            CaseWith(x => x.Morph.PowerBomb.MoonPearl.Flippers.Gravity.Mitt),
         };
         protected override List<Case> MissileYellowMaridiaFalseWall => new() {
             CaseWith(x => x.Morph.Bombs),
-            CaseWith(x => x.Morph.PowerBomb),
+            CaseWith(x => x.Morph.PowerBomb.SpaceJump),
+            CaseWith(x => x.Morph.PowerBomb.SpeedBooster),
+            CaseWith(x => x.Morph.PowerBomb.Grapple),
+            CaseWith(x => x.Morph.PowerBomb.MoonPearl.Flippers.Gravity.Sword.Cape.Lamp.KeyCT(2)),
+            CaseWith(x => x.Morph.PowerBomb.MoonPearl.Flippers.Gravity.MasterSword.Lamp.KeyCT(2)),
+            CaseWith(x => x.Morph.PowerBomb.MoonPearl.Flippers.Gravity.Hammer.Glove),
+            CaseWith(x => x.Morph.PowerBomb.MoonPearl.Flippers.Gravity.Mitt),
         };
 
         protected override List<Case> PlasmaBeam => new() {
