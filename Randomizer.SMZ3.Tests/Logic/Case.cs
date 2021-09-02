@@ -139,7 +139,7 @@ namespace Randomizer.SMZ3.Tests.Logic {
 
         public string ItemName { get; set; }
 
-        internal abstract void Implement(World world, string location, List<Item> pool, bool skipOne = false);
+        internal abstract void Implement(World world, string location, List<Item> pool);
         internal abstract void Skip(World world, string location, List<Item> pool);
         public abstract string DescribeSkipped();
 
@@ -149,7 +149,7 @@ namespace Randomizer.SMZ3.Tests.Logic {
 
         public string At { get; set; }
 
-        internal override void Implement(World world, string location, List<Item> pool, bool skipOne = false) {
+        internal override void Implement(World world, string location, List<Item> pool) {
             var type = Enum.Parse<ItemType>(ItemName);
             world.Locations.Get(At ?? location).Item = new Item(type, world);
         }
@@ -176,7 +176,7 @@ namespace Randomizer.SMZ3.Tests.Logic {
 
         static readonly Regex showCountPattern = new(@"^(Key|ETank)");
 
-        internal override void Implement(World world, string location, List<Item> pool, bool skipOne = false) {
+        internal override void Implement(World world, string location, List<Item> pool) {
             var type = ItemType;
             pool.AddRange(
                 from itemType in Repeat(type, ItemCount.all)
