@@ -587,11 +587,15 @@ namespace Randomizer.SMZ3 {
                 (Randomizer.version.Major << 4) |
                 (Randomizer.version.Minor << 0);
 
+            var extraConfigField =
+                ((int)myWorld.Config.SwordLocation << 14) |
+                ((int)myWorld.Config.MorphLocation << 12) |
+                ((int)myWorld.Config.Goal << 8);
+
             patches.Add((Snes(0x80FF50), UshortBytes(myWorld.Id)));
             patches.Add((Snes(0x80FF52), UshortBytes(configField)));
             patches.Add((Snes(0x80FF54), UintBytes(seed)));
-            /* Reserve the rest of the space for future use */
-            patches.Add((Snes(0x80FF58), Repeat<byte>(0x00, 8).ToArray()));
+            patches.Add((Snes(0x80FF58), UshortBytes(extraConfigField)));
             patches.Add((Snes(0x80FF60), AsAscii(seedGuid)));
             patches.Add((Snes(0x80FF80), AsAscii(myWorld.Guid)));
         }
