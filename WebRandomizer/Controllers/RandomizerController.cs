@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
@@ -8,8 +9,6 @@ using Randomizer.Shared.Contracts;
 using Randomizer.Shared.Models;
 using Newtonsoft.Json;
 using static WebRandomizer.Controllers.Helpers;
-using System.Threading;
-using System.ComponentModel;
 
 namespace WebRandomizer.Controllers {
 
@@ -113,7 +112,8 @@ namespace WebRandomizer.Controllers {
                 return new StatusCodeResult(500);
             }
         }
-        private byte[] ConvertPatch(Dictionary<int, byte[]> patches) {
+
+        static byte[] ConvertPatch(Dictionary<int, byte[]> patches) {
             var bytes = new List<byte>();
             foreach (var patch in patches) {
                 bytes.AddRange(BitConverter.GetBytes(patch.Key));
@@ -123,5 +123,7 @@ namespace WebRandomizer.Controllers {
 
             return bytes.ToArray();
         }
+
     }
+
 }

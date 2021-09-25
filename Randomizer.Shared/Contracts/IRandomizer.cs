@@ -4,8 +4,7 @@ using System.Threading;
 
 namespace Randomizer.Shared.Contracts {
 
-    public interface ILocationData
-    {
+    public interface ILocationData {
         int LocationId { get; }
         int ItemId { get; }
         int ItemWorldId { get; }
@@ -29,14 +28,12 @@ namespace Randomizer.Shared.Contracts {
         List<Dictionary<string, string>> Playthrough { get; }
     }
 
-    public interface IItemTypeData
-    {
+    public interface IItemTypeData {
         int Id { get; }
         string Name { get; }
     }
 
-    public interface ILocationTypeData
-    {
+    public interface ILocationTypeData {
         int Id { get; }
         string Name { get; }
         string Type { get; }
@@ -54,8 +51,7 @@ namespace Randomizer.Shared.Contracts {
         Dictionary<int, ILocationTypeData> GetLocations();
     }
 
-    public enum RandomizerOptionType
-    {
+    public enum RandomizerOptionType {
         [EnumMember(Value = "seed")]
         Seed,
         [EnumMember(Value = "dropdown")]
@@ -64,10 +60,9 @@ namespace Randomizer.Shared.Contracts {
         Checkbox,
         [EnumMember(Value = "players")]
         Players
-    };
+    }
 
-    public interface IRandomizerOption
-    {
+    public interface IRandomizerOption {
         string Key { get; }
         string Description { get; }
         RandomizerOptionType Type { get; }

@@ -136,7 +136,6 @@ namespace Randomizer.SuperMetroid {
     }
 
     public class WorldData : IWorldData {
-
         public int Id { get; set; }
         public string Guid { get; set; }
         public string Player { get; set; }
