@@ -91,7 +91,7 @@ namespace WebRandomizer.Controllers {
                 }
 
                 context.Add(seed);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync(cancellationToken);
 
                 /* If this is a multiworld seed, we also create a new multiworld session with the same session guid as the seed guid */
                 if (seed.Players > 1) {
@@ -103,7 +103,7 @@ namespace WebRandomizer.Controllers {
                     };
 
                     context.Add(session);
-                    await context.SaveChangesAsync();
+                    await context.SaveChangesAsync(cancellationToken);
                 }
 
                 return new OkObjectResult(seed);
