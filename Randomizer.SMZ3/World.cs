@@ -13,6 +13,7 @@ namespace Randomizer.SMZ3 {
         public string Player { get; set; }
         public string Guid { get; set; }
         public int Id { get; set; }
+        public WorldState WorldState { get; private set; }
 
         public IEnumerable<Item> Items {
             get { return Locations.Select(l => l.Item).Where(i => i != null); }
@@ -55,14 +56,15 @@ namespace Randomizer.SMZ3 {
                 new Regions.Zelda.DarkWorld.NorthEast(this, Config),
                 new Regions.Zelda.DarkWorld.South(this, Config),
                 new Regions.Zelda.DarkWorld.Mire(this, Config),
-                new Regions.SuperMetroid.Crateria.Central(this, Config),
                 new Regions.SuperMetroid.Crateria.West(this, Config),
+                new Regions.SuperMetroid.Crateria.Central(this, Config),
                 new Regions.SuperMetroid.Crateria.East(this, Config),
                 new Regions.SuperMetroid.Brinstar.Blue(this, Config),
                 new Regions.SuperMetroid.Brinstar.Green(this, Config),
-                new Regions.SuperMetroid.Brinstar.Kraid(this, Config),
                 new Regions.SuperMetroid.Brinstar.Pink(this, Config),
                 new Regions.SuperMetroid.Brinstar.Red(this, Config),
+                new Regions.SuperMetroid.Brinstar.Kraid(this, Config),
+                new Regions.SuperMetroid.WreckedShip(this, Config),
                 new Regions.SuperMetroid.Maridia.Outer(this, Config),
                 new Regions.SuperMetroid.Maridia.Inner(this, Config),
                 new Regions.SuperMetroid.NorfairUpper.West(this, Config),
@@ -70,7 +72,6 @@ namespace Randomizer.SMZ3 {
                 new Regions.SuperMetroid.NorfairUpper.Crocomire(this, Config),
                 new Regions.SuperMetroid.NorfairLower.West(this, Config),
                 new Regions.SuperMetroid.NorfairLower.East(this, Config),
-                new Regions.SuperMetroid.WreckedShip(this, Config)
             };
 
             Locations = Regions.SelectMany(x => x.Locations).ToList();
@@ -82,6 +83,24 @@ namespace Randomizer.SMZ3 {
                 region.GenerateLocationLookup();
             }
         }
+
+        public void Setup(WorldState state) {
+            WorldState = state;
+
+            // Todo: Use the corresponding config setting, under whichever identifier we assign it,
+            // when ready to shuffle in SM defeat statues with the crystals and pendants.
+            var regions = /*Config.[RewardSetting]*/true ? Z3RewardRegions : SMZ3RewardRegions;
+            foreach (var (region, reward) in regions.Zip(state.Rewards)) {
+                region.Reward = reward;
+            }
+
+            var (mm, tr, _) = state.Medallions;
+            (GetRegion("Misery Mire") as IMedallionAccess).Medallion = mm;
+            (GetRegion("Turtle Rock") as IMedallionAccess).Medallion = tr;
+        }
+
+        IEnumerable<IReward> Z3RewardRegions => Regions.OfType<IReward>().Where(x => x.Reward == None);
+        IEnumerable<IReward> SMZ3RewardRegions => Regions.OfType<IReward>().Where(x => x.Reward == None || x.Reward == GoldenFourBoss);
 
         public bool CanEnter(string regionName, Progression items) {
             var region = regionLookup[regionName];
@@ -99,29 +118,32 @@ namespace Randomizer.SMZ3 {
             return Regions.OfType<IReward>().Where(x => rewards.Contains(x.Reward)).All(x => x.CanComplete(items));
         }
 
-        public void Setup(Random rnd) {
-            SetMedallions(rnd);
-            SetRewards(rnd);
+    }
+
+    class WorldState {
+
+        public enum Medallion {
+            Bombos,
+            Ether,
+            Quake,
         }
 
-        private void SetMedallions(Random rnd) {
-            foreach (var region in Regions.OfType<IMedallionAccess>()) {
-                region.Medallion = rnd.Next(3) switch {
-                    0 => ItemType.Bombos,
-                    1 => ItemType.Ether,
-                    _ => ItemType.Quake,
-                };
-            }
-        }
+        public IEnumerable<RewardType> Rewards { get; init; }
+        public IEnumerable<Medallion> Medallions { get; init; }
 
-        private void SetRewards(Random rnd) {
-            var rewards = new[] {
-                PendantGreen, PendantNonGreen, PendantNonGreen, CrystalRed, CrystalRed,
-                CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue }.Shuffle(rnd);
-            foreach (var region in Regions.OfType<IReward>().Where(x => x.Reward == None)) {
-                region.Reward = rewards.First();
-                rewards.Remove(region.Reward);
-            }
+        static readonly IEnumerable<RewardType> BaseRewards = new[] {
+            PendantGreen, PendantNonGreen, PendantNonGreen, CrystalRed, CrystalRed,
+            CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue,
+        };
+
+        public static WorldState Generate(Random rnd) {
+            var rewards = BaseRewards.Shuffle(rnd);
+            var mm = (Medallion)rnd.Next(3);
+            var tr = (Medallion)rnd.Next(3);
+            return new() {
+                Rewards = rewards,
+                Medallions = new[] { mm, tr }
+            };
         }
 
     }

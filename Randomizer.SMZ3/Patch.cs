@@ -8,6 +8,7 @@ using Randomizer.SMZ3.Text;
 using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.RewardType;
 using static Randomizer.SMZ3.DropPrize;
+using static Randomizer.SMZ3.WorldState;
 
 namespace Randomizer.SMZ3 {
 
@@ -125,16 +126,16 @@ namespace Randomizer.SMZ3 {
             var miseryMireAddresses = new int[] { 0x308022, 0xCFF2, 0xD0D1, 0xD1B0 };
 
             var turtleRockValues = turtleRock.Medallion switch {
-                Bombos => new byte[] { 0x00, 0x51, 0x10, 0x00 },
-                Ether => new byte[] { 0x01, 0x51, 0x18, 0x00 },
-                Quake => new byte[] { 0x02, 0x14, 0xEF, 0xC4 },
+                Medallion.Bombos => new byte[] { 0x00, 0x51, 0x10, 0x00 },
+                Medallion.Ether => new byte[] { 0x01, 0x51, 0x18, 0x00 },
+                Medallion.Quake => new byte[] { 0x02, 0x14, 0xEF, 0xC4 },
                 var x => throw new InvalidOperationException($"Tried using {x} in place of Turtle Rock medallion")
             };
 
             var miseryMireValues = miseryMire.Medallion switch {
-                Bombos => new byte[] { 0x00, 0x51, 0x00, 0x00 },
-                Ether => new byte[] { 0x01, 0x13, 0x9F, 0xF1 },
-                Quake => new byte[] { 0x02, 0x51, 0x08, 0x00 },
+                Medallion.Bombos => new byte[] { 0x00, 0x51, 0x00, 0x00 },
+                Medallion.Ether => new byte[] { 0x01, 0x13, 0x9F, 0xF1 },
+                Medallion.Quake => new byte[] { 0x02, 0x51, 0x08, 0x00 },
                 var x => throw new InvalidOperationException($"Tried using {x} in place of Misery Mire medallion")
             };
 

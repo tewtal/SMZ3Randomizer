@@ -85,9 +85,12 @@ namespace Randomizer.SMZ3 {
                     Guid = world.Guid,
                     Player = world.Player,
                     Patches = patch.Create(config),
-                    Locations = world.Locations
-                        .Select(l => new LocationData() { LocationId = l.Id, ItemId = (int)l.Item.Type, ItemWorldId = l.Item.World.Id })
-                        .ToList<ILocationData>(),
+                    Locations = world.Locations.Select(l => new LocationData() {
+                        LocationId = l.Id,
+                        ItemId = (int)l.Item.Type,
+                        ItemWorldId = l.Item.World.Id
+                    }).ToList<ILocationData>(),
+                    WorldState = world.WorldState,
                 };
 
                 seedData.Worlds.Add(worldData);
@@ -144,6 +147,7 @@ namespace Randomizer.SMZ3 {
         public string Player { get; set; }
         public Dictionary<int, byte[]> Patches { get; set; }
         public List<ILocationData> Locations { get; set; }
+        public object WorldState { get; set; }
     }
 
     public class LocationData : ILocationData {

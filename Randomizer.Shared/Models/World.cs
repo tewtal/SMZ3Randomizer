@@ -11,6 +11,7 @@ namespace Randomizer.Shared.Models {
         public string Settings { get; set; }
         public byte[] Patch { get; set; }
         public List<Location> Locations { get; set; }
+        public string WorldState { get; set; }
     }
 
 }

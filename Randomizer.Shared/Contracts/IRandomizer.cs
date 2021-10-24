@@ -16,6 +16,7 @@ namespace Randomizer.Shared.Contracts {
         string Player { get; }
         Dictionary<int, byte[]> Patches { get; }
         List<ILocationData> Locations { get; }
+        object WorldState { get; }
     }
 
     public interface ISeedData {

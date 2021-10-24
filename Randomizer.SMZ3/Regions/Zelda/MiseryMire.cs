@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using static Randomizer.SMZ3.ItemType;
+using static Randomizer.SMZ3.WorldState;
 
 namespace Randomizer.SMZ3.Regions.Zelda {
 
@@ -8,7 +9,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public override string Name => "Misery Mire";
 
         public RewardType Reward { get; set; } = RewardType.None;
-        public ItemType Medallion { get; set; }
+        public Medallion Medallion { get; set; }
 
         public MiseryMire(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeyMM, BigKeyMM, MapMM, CompassMM };
@@ -36,9 +37,9 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         // Need "CanKillManyEnemies" if implementing swordless
         public override bool CanEnter(Progression items) {
             return Medallion switch {
-                    Bombos => items.Bombos,
-                    Ether => items.Ether,
-                    _ => items.Quake
+                    Medallion.Bombos => items.Bombos,
+                    Medallion.Ether => items.Ether,
+                    _ => items.Quake,
                 } && items.Sword &&
                 items.MoonPearl && (items.Boots || items.Hookshot) &&
                 World.CanEnter("Dark World Mire", items);

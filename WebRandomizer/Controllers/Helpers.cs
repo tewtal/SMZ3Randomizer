@@ -6,15 +6,15 @@ using Newtonsoft.Json.Serialization;
 namespace WebRandomizer.Controllers {
 
     public class Helpers {
-        public static string SerializeEnumAsString(object ob) {
-            return JsonConvert.SerializeObject(
-                ob,
-                new JsonSerializerSettings {
-                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                    Formatting = Formatting.Indented,
-                    Converters = new List<JsonConverter> { new StringEnumConverter() }
-                }
-            );
+
+        static readonly JsonSerializerSettings IndentedCamelCasePropsStringEnums = new() {
+            ContractResolver = new CamelCasePropertyNamesContractResolver(),
+            Formatting = Formatting.Indented,
+            Converters = new List<JsonConverter> { new StringEnumConverter() }
+        };
+
+        public static string SerializeEnumAsString(object value) {
+            return JsonConvert.SerializeObject(value, IndentedCamelCasePropsStringEnums);
         }
 
         public static string GetSeedHashNames(Dictionary<int, byte[]> patch, string gameId) {

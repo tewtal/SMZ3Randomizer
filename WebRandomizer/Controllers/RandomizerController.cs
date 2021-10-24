@@ -85,7 +85,14 @@ namespace WebRandomizer.Controllers {
                         Settings = JsonConvert.SerializeObject(options),
                         Player = seedWorld.Player,
                         Patch = ConvertPatch(seedWorld.Patches),
-                        Locations = seedWorld.Locations.Select(l => new Location() { LocationId = l.LocationId, ItemId = l.ItemId, ItemWorldId = l.ItemWorldId}).ToList()
+                        Locations = seedWorld.Locations.Select(l => new Location() {
+                            LocationId = l.LocationId,
+                            ItemId = l.ItemId,
+                            ItemWorldId = l.ItemWorldId
+                        }).ToList(),
+                        WorldState = seedWorld.WorldState != null
+                            ? SerializeEnumAsString(seedWorld.WorldState)
+                            : null,
                     };
                     seed.Worlds.Add(world);
                 }
