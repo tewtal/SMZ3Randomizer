@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Randomizer.Shared.Models;
@@ -9,9 +10,10 @@ using Randomizer.Shared.Models;
 namespace WebRandomizer.Migrations
 {
     [DbContext(typeof(RandomizerContext))]
-    partial class RandomizerContextModelSnapshot : ModelSnapshot
+    [Migration("20211024223101_UpdateToEFv5")]
+    partial class UpdateToEFv5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
