@@ -75,11 +75,6 @@ namespace WebRandomizer.Migrations
                     b.Property<int>("ClientId")
                         .HasColumnType("integer");
 
-                    b.Property<byte[]>("ConcurrencyTimestamp")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("bytea");
-
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
