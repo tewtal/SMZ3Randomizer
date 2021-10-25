@@ -578,7 +578,7 @@ namespace Randomizer.SMZ3 {
         }
 
         void WriteSeedData() {
-            var configField =
+            var configField1 =
                 ((myWorld.Config.Race ? 1 : 0) << 15) |
                 ((myWorld.Config.Keysanity ? 1 : 0) << 13) |
                 ((myWorld.Config.MultiWorld ? 1 : 0) << 12) |
@@ -587,15 +587,17 @@ namespace Randomizer.SMZ3 {
                 (Randomizer.version.Major << 4) |
                 (Randomizer.version.Minor << 0);
 
-            var extraConfigField =
+            var configField2 =
                 ((int)myWorld.Config.SwordLocation << 14) |
                 ((int)myWorld.Config.MorphLocation << 12) |
                 ((int)myWorld.Config.Goal << 8);
 
             patches.Add((Snes(0x80FF50), UshortBytes(myWorld.Id)));
-            patches.Add((Snes(0x80FF52), UshortBytes(configField)));
+            patches.Add((Snes(0x80FF52), UshortBytes(configField1)));
             patches.Add((Snes(0x80FF54), UintBytes(seed)));
-            patches.Add((Snes(0x80FF58), UshortBytes(extraConfigField)));
+            patches.Add((Snes(0x80FF58), UshortBytes(configField2)));
+            /* Reserve the rest of the space for future use */
+            patches.Add((Snes(0x80FF5A), Repeat<byte>(0x00, 6).ToArray()));
             patches.Add((Snes(0x80FF60), AsAscii(seedGuid)));
             patches.Add((Snes(0x80FF80), AsAscii(myWorld.Guid)));
         }
