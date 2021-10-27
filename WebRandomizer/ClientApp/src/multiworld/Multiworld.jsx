@@ -13,7 +13,7 @@ import Spoiler from '../spoiler';
 import { GameTraitsCtx } from '../game/traits';
 import { gameServiceHost, adjustHostname } from '../site/domain';
 
-import Network from '../network';
+import Network from '../game/network';
 
 import { decode } from 'slugid';
 

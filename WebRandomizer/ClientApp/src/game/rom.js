@@ -1,8 +1,8 @@
 import { readAsArrayBuffer } from '../util';
 
-import { parseRdc } from './rdc';
-import { snesToPc } from './snes';
-import { bigText } from '../snes/big_text_table';
+import { parseRdc } from '../game/rdc';
+import { snesToPc } from '../game/snes';
+import { bigText } from '../game/big_text_table';
 
 import { inflate } from 'pako';
 import localForage from 'localforage';

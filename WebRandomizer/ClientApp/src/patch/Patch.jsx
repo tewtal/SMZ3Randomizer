@@ -12,7 +12,7 @@ import Upload from './Upload';
 
 import { GameTraitsCtx } from '../game/traits';
 
-import { prepareRom } from '../file/rom';
+import { prepareRom } from '../game/rom';
 
 import localForage from 'localforage';
 import { saveAs } from 'file-saver';

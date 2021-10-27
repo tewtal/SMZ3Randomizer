@@ -1,5 +1,6 @@
 import { HubConnectionBuilder } from '@microsoft/signalr';
-import { createMessage, connect, send, clearBusy, readData, writeData } from '../snes/usb2snes';
+import { createMessage, connect, send, clearBusy, readData, writeData } from './usb2snes';
+
 import cloneDeep from 'lodash/cloneDeep';
 
 export default class Network {
