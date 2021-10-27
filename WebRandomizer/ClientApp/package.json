@@ -1,5 +1,5 @@
 {
-  "name": "WebRandomizer",
+  "name": "web-randomizer",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -22,7 +22,7 @@
     "reactstrap": "^8.2.0",
     "rimraf": "^2.7.1",
     "slugid": "^2.0.0",
-    "styled-components": "^5.0.0-regexrehydrate",
+    "styled-components": "^5.2.1",
     "xxhashjs": "^0.2.2"
   },
   "devDependencies": {
