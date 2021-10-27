@@ -1,7 +1,7 @@
 ﻿import React, { useState } from 'react';
+import styled from 'styled-components';
 import { Row, Col, Card, CardHeader, CardBody, Nav, NavItem, NavLink } from 'reactstrap';
 import { InputGroup, InputGroupAddon, InputGroupText, Input, Button } from 'reactstrap';
-import styled from 'styled-components';
 
 import { saveAs } from 'file-saver';
 import { encode } from 'slugid';

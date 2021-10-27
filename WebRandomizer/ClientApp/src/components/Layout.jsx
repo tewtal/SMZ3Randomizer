@@ -1,6 +1,7 @@
 import React from 'react';
 import { createGlobalStyle } from 'styled-components';
 import { Container } from 'reactstrap';
+
 import NavMenu from './NavMenu';
 
 const GlobalStyle = createGlobalStyle`

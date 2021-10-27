@@ -15,7 +15,7 @@ import SmChangelogMd from './resources/markdown/smchangelog.md';
 import { GameTraitsCtx, resolveGameTraits } from './game/traits';
 import { resolveGameId } from './site';
 
-const Markdown = lazy(() => import('./components/Markdown'));
+const Markdown = lazy(() => import('./ui/Markdown'));
 const LogicLog = lazy(() => import('./logiclog/LogicLog'));
 const Configure = lazy(() => import('./components/Configure'));
 const Multiworld = lazy(() => import('./components/Multiworld'));

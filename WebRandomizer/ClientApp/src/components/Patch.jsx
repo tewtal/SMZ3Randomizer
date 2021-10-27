@@ -3,9 +3,11 @@ import styled from 'styled-components';
 import { Form, Row, Col, Card, CardBody } from 'reactstrap';
 import { Label, Button, Input, InputGroupAddon, InputGroupText } from 'reactstrap';
 import BootstrapSwitchButton from 'bootstrap-switch-button-react';
-import InputGroup from './util/PrefixInputGroup';
-import DropdownSelect from './util/DropdownSelect';
-import DownloadInfoTooltip from './util/DownloadInfoTooltip';
+
+import InputGroup from '../ui/PrefixInputGroup';
+import DropdownSelect from '../ui/DropdownSelect';
+
+import DownloadInfoTooltip from './DownloadInfoTooltip';
 import Upload from './Upload';
 
 import { GameTraitsCtx } from '../game/traits';

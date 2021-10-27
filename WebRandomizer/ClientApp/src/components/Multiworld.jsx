@@ -1,8 +1,9 @@
 ﻿import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-
 import { Row, Col } from 'reactstrap';
-import MessageCard from './util/MessageCard'
+
+import MessageCard from '../ui/MessageCard'
+
 import Seed from './Seed';
 import Patch from './Patch';
 import Connection from './Connection';

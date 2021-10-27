@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { CardHeader, Label, Button } from 'reactstrap';
-import Markdown from '../components/Markdown';
+import Markdown from '../ui/Markdown';
 
 /* Implement "layered" card headers by increase the amount of black "shade" */
 export const LevelCardHeader = styled(CardHeader)`

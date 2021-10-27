@@ -1,9 +1,9 @@
 ﻿import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import { UncontrolledTooltip } from 'reactstrap';
-import Markdown from '../Markdown';
 
-import { InfoCircleFill } from './BootstrapIcon';
+import Markdown from '../ui/Markdown';
+import { InfoCircleFill } from '../ui/BootstrapIcon';
 
 const smz3Tooltip = `
 Filename parts legend:

@@ -1,5 +1,6 @@
 ﻿import React from 'react';
 import { Card, CardHeader, CardBody } from 'reactstrap';
+
 import classNames from 'classnames';
 
 export default function MessageCard({ error, title, msg }) {

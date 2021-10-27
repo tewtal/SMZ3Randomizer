@@ -1,6 +1,8 @@
 ﻿import React from 'react';
 import { Row, Col, Card, CardHeader, CardBody, Button } from 'reactstrap';
-import PlainList from './util/PlainList';
+
+import PlainList from '../ui/PlainList';
+
 import classNames from 'classnames';
 
 export default function Seed(props) {

@@ -1,8 +1,9 @@
 ﻿import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-
 import { Container, Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
-import MessageCard from './util/MessageCard';
+
+import MessageCard from '../ui/MessageCard';
+
 import Patch from './Patch';
 import Spoiler from './Spoiler';
 

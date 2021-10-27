@@ -1,14 +1,13 @@
 ﻿import React, { useState, useEffect, useContext } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-
 import { Container, Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
 import { Form, FormGroup, Button, Input } from 'reactstrap';
 import { Modal, ModalHeader, ModalBody, Progress } from 'reactstrap';
 import BootstrapSwitchButton from 'bootstrap-switch-button-react';
 
-import InputGroup from './util/PrefixInputGroup';
-import MessageCard from './util/MessageCard';
+import InputGroup from '../ui/PrefixInputGroup';
+import MessageCard from '../ui/MessageCard';
 
 import { GameTraitsCtx } from '../game/traits';
 import { adjustHostname } from '../site';

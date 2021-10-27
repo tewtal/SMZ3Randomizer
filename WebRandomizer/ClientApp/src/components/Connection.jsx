@@ -1,6 +1,7 @@
 ﻿import React from 'react';
 import { Card, CardBody, CardHeader, Button, Input } from 'reactstrap';
-import PlainList from './util/PlainList';
+
+import PlainList from '../ui/PlainList';
 
 import classNames from 'classnames';
 
