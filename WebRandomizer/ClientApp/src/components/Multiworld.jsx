@@ -7,8 +7,8 @@ import MessageCard from '../ui/MessageCard'
 import Session from './Session';
 import Connection from './Connection';
 import Game from './Game';
-import Spoiler from './Spoiler';
 import Patch from '../patch';
+import Spoiler from '../spoiler';
 
 import { GameTraitsCtx } from '../game/traits';
 import { gameServiceHost, adjustHostname } from '../site/domain';
