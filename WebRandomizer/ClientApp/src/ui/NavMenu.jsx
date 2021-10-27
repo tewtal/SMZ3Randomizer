@@ -15,8 +15,8 @@ const StyledNavbarBrand = styled(NavbarBrand)`
   word-break: break-all;
 `;
 
-export function NavMenuDropdown({ to, children }) {}
-export function NavMenuItem({ title, children }) {}
+export function NavMenuDropdown({ title, children }) {}
+export function NavMenuItem({ to, children }) {}
 
 export function NavMenu({ brand, nav, dropdown }) {
     const [showMenu, setShowMenu] = useState(false);
