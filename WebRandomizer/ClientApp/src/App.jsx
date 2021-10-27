@@ -18,7 +18,7 @@ import { GameTraitsCtx, resolveGameTraits } from './game/traits';
 import { resolveGameId } from './site/domain';
 
 const Markdown = lazy(() => import('./ui/Markdown'));
-const LogicLog = lazy(() => import('./logiclog/LogicLog'));
+const LogicLog = lazy(() => import('./logiclog'));
 const Configure = lazy(() => import('./generate/Configure'));
 const Permalink = lazy(() => import('./generate/Permalink'));
 const Multiworld = lazy(() => import('./multiworld'));
