@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router';
 import { Container } from 'reactstrap';
 
 import GlobalStyle from './GlobalStyle';
-import { NavMenu, NavMenuItem, NavMenuDropdown } from './components/NavMenu';
+import { NavMenu, NavMenuItem, NavMenuDropdown } from './ui/NavMenu';
 import Smz3Home from './components/Smz3Home';
 import SmHome from './components/SmHome';
 
