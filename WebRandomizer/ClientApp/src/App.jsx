@@ -19,9 +19,9 @@ import { resolveGameId } from './site/domain';
 
 const Markdown = lazy(() => import('./ui/Markdown'));
 const LogicLog = lazy(() => import('./logiclog/LogicLog'));
-const Configure = lazy(() => import('./configure'));
-const Multiworld = lazy(() => import('./components/Multiworld'));
-const Permalink = lazy(() => import('./components/Permalink'));
+const Configure = lazy(() => import('./generate/Configure'));
+const Permalink = lazy(() => import('./generate/Permalink'));
+const Multiworld = lazy(() => import('./multiworld'));
 
 export default function App() {
     const gameId = resolveGameId(document.location.href);
