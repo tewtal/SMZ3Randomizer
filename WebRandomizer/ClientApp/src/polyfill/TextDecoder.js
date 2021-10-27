@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-expressions, no-sequences */
+/* eslint-disable no-unused-expressions, no-sequences */
 
 /*
 Copyright Mathias Bynens <https://mathiasbynens.be/>

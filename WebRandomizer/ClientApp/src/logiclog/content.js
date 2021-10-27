@@ -1,4 +1,4 @@
-﻿import Crateria from './crateria';
+import Crateria from './crateria';
 import WreckedShip from './wreckedship/Content';
 import Brinstar from './brinstar';
 import Maridia from './maridia';

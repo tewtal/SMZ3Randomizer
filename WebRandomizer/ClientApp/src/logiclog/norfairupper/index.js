@@ -1,4 +1,4 @@
-﻿import NorfairUpperWest from './West/Content';
+import NorfairUpperWest from './West/Content';
 import NorfairUpperEast from './East/Content';
 import NorfairUpperCrocomire from './Crocomire/Content';
 

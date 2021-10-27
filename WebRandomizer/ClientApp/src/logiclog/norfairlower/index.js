@@ -1,4 +1,4 @@
-﻿import NorfairLowerWest from './West/Content';
+import NorfairLowerWest from './West/Content';
 import NorfairLowerEast from './East/Content';
 
 export default {

@@ -1,4 +1,4 @@
-﻿export const bigText = {
+export const bigText = {
     ' ': [0x7F, 0x7F],
     'A': [0x20, 0x30],
     'B': [0x21, 0x31],

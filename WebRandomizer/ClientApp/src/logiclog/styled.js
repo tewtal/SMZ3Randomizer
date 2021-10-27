@@ -1,4 +1,4 @@
-﻿import styled from 'styled-components';
+import styled from 'styled-components';
 import { CardHeader, Label, Button } from 'reactstrap';
 import Markdown from '../components/Markdown';
 

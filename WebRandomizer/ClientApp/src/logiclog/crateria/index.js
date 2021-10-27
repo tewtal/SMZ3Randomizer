@@ -1,4 +1,4 @@
-﻿import CrateriaWest from './West/Content';
+import CrateriaWest from './West/Content';
 import CrateriaCentral from './Central/Content';
 import CrateriaEast from './East/Content';
 
