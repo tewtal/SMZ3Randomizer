@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { Row, Col, Card, CardHeader, CardBody, Nav, NavItem, NavLink } from 'reactstrap';
 import { InputGroup, InputGroupAddon, InputGroupText, Input, Button } from 'reactstrap';
 
+import { JournalArrowDown } from '../ui/BootstrapIcon';
+
 import { saveAs } from 'file-saver';
 import { encode } from 'slugid';
 
@@ -12,32 +14,31 @@ import uniq from 'lodash/uniq';
 import escapeRegExp from 'lodash/escapeRegExp';
 
 const SmallNavLink = styled(NavLink)`
-        font-size: .87em;
-        font-weight: bold;
-        padding-top: 6px;
-        padding-bottom: 6px;
-        padding-right: 9px;
-        padding-left: 9px;
-    `;
+  font-size: .87em;
+  font-weight: bold;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-right: 9px;
+  padding-left: 9px;
+`;
 
 const SearchInputGroup = styled(InputGroup)`
-        margin-bottom: 15px;
-    `;
+  margin-bottom: 15px;
+`;
 
 const LocationTable = styled.table.attrs(props => ({
     className: "table table-sm table-borderless"
 }))`
-    margin-bottom: 25px;
-    > tbody > tr { border-bottom: 1px solid #e0e0e0; };
+  margin-bottom: 25px;
+  > tbody > tr {
+    border-bottom: 1px solid #e0e0e0;
+  }
 `;
 
-const DownloadIcon = () => (
-    <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-journal-arrow-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-        <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z" />
-        <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z" />
-        <path fillRule="evenodd" d="M8 5a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 9.293V5.5A.5.5 0 0 1 8 5z" />
-    </svg>
-);
+const DownloadIcon = styled(JournalArrowDown)`
+  width: 1em;
+  height: 1em;
+`;
 
 export default function Spoiler(props) {
     const [show, setShow] = useState(false);
