@@ -19,7 +19,7 @@ import { resolveGameId } from './site/domain';
 
 const Markdown = lazy(() => import('./ui/Markdown'));
 const LogicLog = lazy(() => import('./logiclog/LogicLog'));
-const Configure = lazy(() => import('./components/Configure'));
+const Configure = lazy(() => import('./configure'));
 const Multiworld = lazy(() => import('./components/Multiworld'));
 const Permalink = lazy(() => import('./components/Permalink'));
 
