@@ -5,10 +5,10 @@ import { Row, Col } from 'reactstrap';
 import MessageCard from '../ui/MessageCard'
 
 import Session from './Session';
-import Patch from './Patch';
 import Connection from './Connection';
 import Game from './Game';
 import Spoiler from './Spoiler';
+import Patch from '../patch';
 
 import { GameTraitsCtx } from '../game/traits';
 import { gameServiceHost, adjustHostname } from '../site/domain';

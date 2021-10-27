@@ -4,8 +4,8 @@ import { Container, Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
 
 import MessageCard from '../ui/MessageCard';
 
-import Patch from './Patch';
 import Spoiler from './Spoiler';
+import Patch from '../patch';
 
 import { GameTraitsCtx } from '../game/traits';
 import { adjustHostname } from '../site/domain';
