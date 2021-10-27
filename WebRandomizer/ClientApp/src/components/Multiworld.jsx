@@ -4,7 +4,7 @@ import { Row, Col } from 'reactstrap';
 
 import MessageCard from '../ui/MessageCard'
 
-import Seed from './Seed';
+import Session from './Session';
 import Patch from './Patch';
 import Connection from './Connection';
 import Game from './Game';
@@ -64,7 +64,7 @@ export default function Multiworld() {
             {session.guid && (
                 <Row className="mb-3">
                     <Col>
-                        <Seed session={session} sessionStatus={sessionStatus}
+                        <Session session={session} sessionStatus={sessionStatus}
                             onRegisterPlayer={onRegisterPlayer}
                         />
                     </Col>

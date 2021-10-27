@@ -5,7 +5,7 @@ import PlainList from '../ui/PlainList';
 
 import classNames from 'classnames';
 
-export default function Seed(props) {
+export default function Session(props) {
     const { session, sessionStatus } = props;
     const { seed, clients } = session.data || {};
 
