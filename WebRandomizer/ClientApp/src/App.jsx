@@ -1,7 +1,9 @@
 import React, { Suspense, lazy } from 'react';
 import { Route, Switch } from 'react-router';
+import { Container } from 'reactstrap';
 
-import Layout from './components/Layout';
+import GlobalStyle from './GlobalStyle';
+import { NavMenu, NavMenuItem, NavMenuDropdown } from './components/NavMenu';
 import Smz3Home from './components/Smz3Home';
 import SmHome from './components/SmHome';
 
@@ -27,7 +29,21 @@ export default function App() {
 
     return (
         <GameTraitsCtx.Provider value={traits}>
-            <Layout>
+            <GlobalStyle />
+            <NavMenu
+                brand={<NavMenuItem to="/">Home</NavMenuItem>}
+                nav={<NavMenuItem to="/configure">Generate randomized game</NavMenuItem>}
+                dropdown={
+                    <NavMenuDropdown title="Help">
+                        <NavMenuItem to="/information">Information</NavMenuItem>
+                        <NavMenuItem to="/mwinstructions">Multiworld instructions</NavMenuItem>
+                        {gameId === 'smz3' && <NavMenuItem to="/logic">Logic Log</NavMenuItem>}
+                        <NavMenuItem to="/resources">Resources</NavMenuItem>
+                        <NavMenuItem to="/changelog">Changes</NavMenuItem>
+                    </NavMenuDropdown>
+                }
+            />
+            <Container className="mb-5">
                 <Suspense fallback={<div></div>}>
                     <Switch>
                         <Route exact path="/" component={gameId === 'sm' ? SmHome : Smz3Home} />
@@ -51,7 +67,7 @@ export default function App() {
                         <Route path="/seed/:seedSlug" component={Permalink} />
                     </Switch>
                 </Suspense>
-            </Layout>
+            </Container>
         </GameTraitsCtx.Provider>
     );
 }

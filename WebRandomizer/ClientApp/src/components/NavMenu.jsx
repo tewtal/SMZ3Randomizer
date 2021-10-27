@@ -1,12 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
+import { isElement, isFragment } from 'react-is';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Container, Navbar, NavbarBrand, NavbarToggler, Collapse, Nav, NavItem, NavLink } from 'reactstrap';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-
-import classNames from 'classnames';
-
-import { GameTraitsCtx } from '../game/traits';
 
 const StyledNavbar = styled(Navbar)`
   box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
@@ -18,39 +15,61 @@ const StyledNavbarBrand = styled(NavbarBrand)`
   word-break: break-all;
 `;
 
-function StyledNavLink({ className, children, ...props }) {
-    return <NavLink className={classNames("text-dark", className)} {...props}>{children}</NavLink>;
-}
+export function NavMenuDropdown({ to, children }) {}
+export function NavMenuItem({ title, children }) {}
 
-export default function NavMenu() {
+export function NavMenu({ brand, nav, dropdown }) {
     const [showMenu, setShowMenu] = useState(false);
-    const game = useContext(GameTraitsCtx);
 
     return (
         <header>
             <StyledNavbar className="border-bottom mb-3" expand="sm" color="white" light>
                 <Container>
-                    <StyledNavbarBrand tag={Link} to="/">Home</StyledNavbarBrand>
+                    {isElementOfType(brand, NavMenuItem) && createBrand(brand)}
                     <NavbarToggler className="mr-2" onClick={() => setShowMenu(!showMenu)} />
                     <Collapse className="d-sm-inline-flex flex-sm-row-reverse" navbar isOpen={showMenu}>
                         <Nav className="flex-grow" navbar>
-                            <NavItem><StyledNavLink tag={Link} to="/configure">Generate randomized game</StyledNavLink></NavItem>
-                            <UncontrolledDropdown nav inNavbar>
-                                <DropdownToggle className="text-dark" nav caret>Help</DropdownToggle>
-                                <DropdownMenu>
-                                    <DropdownItem><StyledNavLink tag={Link} to="/information">Information</StyledNavLink></DropdownItem>
-                                    <DropdownItem><StyledNavLink tag={Link} to="/mwinstructions">Multiworld instructions</StyledNavLink></DropdownItem>
-                                    {game.id === 'smz3' && (
-                                        <DropdownItem><StyledNavLink tag={Link} to="/logic">Logic Log</StyledNavLink></DropdownItem>
-                                    )}
-                                    <DropdownItem><StyledNavLink tag={Link} to="/resources">Resources</StyledNavLink></DropdownItem>
-                                    <DropdownItem><StyledNavLink tag={Link} to="/changelog">Changes</StyledNavLink></DropdownItem>
-                                </DropdownMenu>
-                            </UncontrolledDropdown>
+                            {castElementArray(nav).map((item, i) => isElementOfType(item, NavMenuItem) && (
+                                <NavItem key={i}>{createNavLink(item)}</NavItem>
+                            ))}
+                            {isElementOfType(dropdown, NavMenuDropdown) && (
+                                <UncontrolledDropdown nav inNavbar>
+                                    <DropdownToggle className="text-dark" nav caret>{dropdown.props.title}</DropdownToggle>
+                                    <DropdownMenu>
+                                        {dropdown.props.children.map((item, i) => isElementOfType(item, NavMenuItem) && (
+                                            <DropdownItem key={i}>{createNavLink(item)}</DropdownItem>
+                                        ))}
+                                    </DropdownMenu>
+                                </UncontrolledDropdown>
+                            )}
                         </Nav>
                     </Collapse>
                 </Container>
             </StyledNavbar>
         </header>
     );
+
+    function createBrand(item) {
+        return (
+            <StyledNavbarBrand tag={Link} to={item.props.to}>
+                {item.props.children}
+            </StyledNavbarBrand>
+        );
+    }
+
+    function createNavLink(item) {
+        return (
+            <NavLink className="text-dark" tag={Link} to={item.props.to}>
+                {item.props.children}
+            </NavLink>
+        );
+    }
+}
+
+function castElementArray(object) {
+    return isFragment(object) ? object.props.children : [object];
+}
+
+function isElementOfType(object, type) {
+    return isElement(object) && object.type === type;
 }
