@@ -2,10 +2,10 @@ import React, { Suspense, lazy } from 'react';
 import { Route, Switch } from 'react-router';
 import { Container } from 'reactstrap';
 
-import GlobalStyle from './GlobalStyle';
+import GlobalStyle from './site/GlobalStyle';
+import Smz3Home from './site/Smz3Home';
+import SmHome from './site/SmHome';
 import { NavMenu, NavMenuItem, NavMenuDropdown } from './ui/NavMenu';
-import Smz3Home from './components/Smz3Home';
-import SmHome from './components/SmHome';
 
 import MultiworldInstructionsMd from './resources/markdown/mwinstructions.md';
 import ResourcesMd from './resources/markdown/resources.md';
@@ -15,7 +15,7 @@ import Smz3ChangelogMd from './resources/markdown/smz3changelog.md';
 import SmChangelogMd from './resources/markdown/smchangelog.md';
 
 import { GameTraitsCtx, resolveGameTraits } from './game/traits';
-import { resolveGameId } from './site';
+import { resolveGameId } from './site/domain';
 
 const Markdown = lazy(() => import('./ui/Markdown'));
 const LogicLog = lazy(() => import('./logiclog/LogicLog'));

@@ -8,7 +8,7 @@ import Patch from './Patch';
 import Spoiler from './Spoiler';
 
 import { GameTraitsCtx } from '../game/traits';
-import { adjustHostname } from '../site';
+import { adjustHostname } from '../site/domain';
 
 import { decode } from 'slugid';
 

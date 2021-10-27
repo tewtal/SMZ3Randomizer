@@ -10,7 +10,7 @@ import InputGroup from '../ui/PrefixInputGroup';
 import MessageCard from '../ui/MessageCard';
 
 import { GameTraitsCtx } from '../game/traits';
-import { adjustHostname } from '../site';
+import { adjustHostname } from '../site/domain';
 
 import { encode } from 'slugid';
 

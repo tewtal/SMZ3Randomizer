@@ -11,7 +11,7 @@ import Game from './Game';
 import Spoiler from './Spoiler';
 
 import { GameTraitsCtx } from '../game/traits';
-import { gameServiceHost, adjustHostname } from '../site';
+import { gameServiceHost, adjustHostname } from '../site/domain';
 
 import Network from '../network';
 
