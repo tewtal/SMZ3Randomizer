@@ -168,7 +168,7 @@ export default function Spoiler(props) {
                                             </div>
                                         ))}
                                     </CardBody>
-                                  </Card>                                        
+                                  </Card>
                                 : spoilerArea === 'prizes'
                                     ? <Card>
                                         <CardBody>
@@ -186,7 +186,7 @@ export default function Spoiler(props) {
                                                 </LocationTable>
                                             </div>
                                         </CardBody>
-                                    </Card>  
+                                    </Card>
                                 : <Card>
                                     <CardBody>
                                         {uniq(sortBy(locations.filter(l => spoilerArea === 'all' || l.locationArea === spoilerArea), l => l.locationRegion).map(l => l.locationRegion)).map((r, i) => (
