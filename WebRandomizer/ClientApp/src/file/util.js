@@ -14,7 +14,7 @@ export async function readAsArrayBuffer(blob) {
     });
 }
 
-export function snes_to_pc(mapping, addr) {
+export function snesToPc(mapping, addr) {
     if (mapping === 'exhirom') {
         const ex = addr < 0x800000 ? 0x400000 : 0;
         const pc = addr & 0x3FFFFF;

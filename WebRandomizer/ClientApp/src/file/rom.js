@@ -1,5 +1,5 @@
-import { readAsArrayBuffer, snes_to_pc } from './util';
-import { parse_rdc } from './rdc';
+import { readAsArrayBuffer, snesToPc } from './util';
+import { parseRdc } from './rdc';
 import { bigText } from '../snes/big_text_table';
 
 import { inflate } from 'pako';
@@ -10,27 +10,27 @@ import range from 'lodash/range';
 import defaultTo from 'lodash/defaultTo';
 import isPlainObject from 'lodash/isPlainObject';
 
-const legal_characters = /[A-Z0-9]/;
-const illegal_characters = /[^A-Z0-9]/g;
-const continous_space = / +/g;
+const legalCharacters = /[A-Z0-9]/;
+const illegalCharacters = /[^A-Z0-9]/g;
+const continousSpace = / +/g;
 
-export async function prepareRom(world_patch, settings, baseIps, game) {
+export async function prepareRom(worldPatch, settings, baseIps, game) {
     let rom = null;
     if (game.smz3) {
         const smRom = await readAsArrayBuffer(await localForage.getItem("baseRomSM"));
         const lttpRom = await readAsArrayBuffer(await localForage.getItem("baseRomLTTP"));
         rom = mergeRoms(new Uint8Array(smRom), new Uint8Array(lttpRom));
     } else {
-        const base_rom = await readAsArrayBuffer(await localForage.getItem("baseRomSM"));
+        const baseRom = await readAsArrayBuffer(await localForage.getItem("baseRomSM"));
         /* extend to 4 mb to account for the base patch with custom sprites */
         rom = new Uint8Array(new ArrayBuffer(0x400000));
-        rom.set(new Uint8Array(base_rom));
+        rom.set(new Uint8Array(baseRom));
     }
-    const base_patch = maybeCompressed(new Uint8Array(await (await fetch(baseIps, { cache: 'no-store' })).arrayBuffer()));
-    world_patch = Uint8Array.from(atob(world_patch), c => c.charCodeAt(0));
+    const basePatch = maybeCompressed(new Uint8Array(await (await fetch(baseIps, { cache: 'no-store' })).arrayBuffer()));
+    worldPatch = Uint8Array.from(atob(worldPatch), c => c.charCodeAt(0));
 
     const { mapping } = game;
-    applyIps(rom, base_patch);
+    applyIps(rom, basePatch);
 
     if (game.z3) {
         await applySprite(rom, mapping, 'link_sprite', settings.z3Sprite);
@@ -48,7 +48,7 @@ export async function prepareRom(world_patch, settings, baseIps, game) {
         smEnergyBeepOff(rom, mapping);
     }
 
-    applySeed(rom, world_patch);
+    applySeed(rom, worldPatch);
 
     return rom;
 }
@@ -57,7 +57,7 @@ async function applySprite(rom, mapping, block, sprite) {
     if (sprite.path) {
         const url = `${process.env.PUBLIC_URL}/sprites/${sprite.path}`;
         const rdc = maybeCompressed(new Uint8Array(await (await fetch(url)).arrayBuffer()));
-        const [blocks, author] = parse_rdc(rdc);
+        const [blocks, author] = parseRdc(rdc);
         blocks[block] && blocks[block](rom, mapping);
         applySpriteAuthor(rom, mapping, block, author);
     }
@@ -66,7 +66,7 @@ async function applySprite(rom, mapping, block, sprite) {
 function applySpriteAuthor(rom, mapping, block, author) {
     author = author.toUpperCase();
     /* Author field that is empty or has no accepted characters */
-    if (!author.match(legal_characters))
+    if (!author.match(legalCharacters))
         return;
 
     author = formatAuthor(author);
@@ -79,17 +79,17 @@ function applySpriteAuthor(rom, mapping, block, author) {
     }[block];
     const [enable, tilemap] = isPlainObject(addrs) ? addrs[mapping] : addrs;
 
-    rom[snes_to_pc(mapping, enable)] = 0x01;
+    rom[snesToPc(mapping, enable)] = 0x01;
     each(author, (char, i) => {
         const bytes = bigText[char];
-        rom[snes_to_pc(mapping, tilemap + 2 * (pad + i))] = bytes[0];
-        rom[snes_to_pc(mapping, tilemap + 2 * (pad + i + 32))] = bytes[1];
+        rom[snesToPc(mapping, tilemap + 2 * (pad + i))] = bytes[0];
+        rom[snesToPc(mapping, tilemap + 2 * (pad + i + 32))] = bytes[1];
     });
 }
 
 function formatAuthor(author) {
-    author = author.replace(illegal_characters, ' ');
-    author = author.replace(continous_space, ' ');
+    author = author.replace(illegalCharacters, ' ');
+    author = author.replace(continousSpace, ' ');
     /* Keep at most 30 non-whitespace characters */
     /* A limit of 30 guarantee a margin at the edges */
     return author.trimStart().slice(0, 30).trimEnd();
@@ -97,7 +97,7 @@ function formatAuthor(author) {
 
 /* Enables separate spinjump behavior */
 function smSpinjumps(rom, mapping) {
-    rom[snes_to_pc(mapping, 0x9B93FE)] = 0x01;
+    rom[snesToPc(mapping, 0x9B93FE)] = 0x01;
 }
 
 function z3HeartColor(rom, mapping, setting) {
@@ -107,13 +107,13 @@ function z3HeartColor(rom, mapping, setting) {
         blue:   [0x2C, [0xC9, 0x69]],
         green:  [0x3C, [0x04, 0x17]]
     };
-    const [hud, file_select] = defaultTo(values[setting], values.red);
+    const [hud, fileSelect] = defaultTo(values[setting], values.red);
 
     each(range(0, 20, 2), i => {
-        rom[snes_to_pc(mapping, 0xDFA1E + i)] = hud;
+        rom[snesToPc(mapping, 0xDFA1E + i)] = hud;
     });
 
-    rom.set(file_select, snes_to_pc(mapping, 0x1BD6AA));
+    rom.set(fileSelect, snesToPc(mapping, 0x1BD6AA));
 }
 
 function z3HeartBeep(rom, setting) {
@@ -134,7 +134,7 @@ function smEnergyBeepOff(rom, mapping) {
         [0x90F337, 0x80],
         [0x91E6D5, 0x80]
     ],
-        ([addr, value]) => rom[snes_to_pc(mapping, addr)] = value
+        ([addr, value]) => rom[snesToPc(mapping, addr)] = value
     );
 }
 
@@ -144,23 +144,23 @@ function maybeCompressed(data) {
     return isGzip ? inflate(data) : data;
 }
 
-function mergeRoms(sm_rom, z3_rom) {
+function mergeRoms(smRom, z3Rom) {
     const rom = new Uint8Array(0x600000);
 
     let pos = 0;
     for (let i = 0; i < 0x40; i++) {
-        let hi_bank = sm_rom.slice((i * 0x8000), (i * 0x8000) + 0x8000);
-        let lo_bank = sm_rom.slice(((i + 0x40) * 0x8000), ((i + 0x40) * 0x8000) + 0x8000);
+        let hiBank = smRom.slice((i * 0x8000), (i * 0x8000) + 0x8000);
+        let loBank = smRom.slice(((i + 0x40) * 0x8000), ((i + 0x40) * 0x8000) + 0x8000);
 
-        rom.set(lo_bank, pos);
-        rom.set(hi_bank, pos + 0x8000);
+        rom.set(loBank, pos);
+        rom.set(hiBank, pos + 0x8000);
         pos += 0x10000;
     }
 
     pos = 0x400000;
     for (let i = 0; i < 0x20; i++) {
-        let hi_bank = z3_rom.slice((i * 0x8000), (i * 0x8000) + 0x8000);
-        rom.set(hi_bank, pos + 0x8000);
+        let hiBank = z3Rom.slice((i * 0x8000), (i * 0x8000) + 0x8000);
+        rom.set(hiBank, pos + 0x8000);
         pos += 0x10000;
     }
 
@@ -180,9 +180,9 @@ function applyIps(rom, patch) {
             rom.set(patch.slice(offset, offset + length), dest);
             offset += length;
         } else {
-            const rle_length = view.getUint16(offset, big);
-            const rle_byte = patch[offset + 2];
-            rom.set(Uint8Array.from(new Array(rle_length), () => rle_byte), dest);
+            const rleLength = view.getUint16(offset, big);
+            const rleByte = patch[offset + 2];
+            rom.set(Uint8Array.from(new Array(rleLength), () => rleByte), dest);
             offset += 3;
         }
     }

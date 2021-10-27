@@ -1,18 +1,18 @@
-import { snes_to_pc } from './util';
+import { snesToPc } from './util';
 
 import isPlainObject from 'lodash/isPlainObject';
 import isArray from 'lodash/isArray';
 
-/* [{ address_mode: [snes addresses], .. } | [snes addresses], length, entries = 1, entry offset = 0] */
+/* [{ address mode: [snes addresses], .. } | [snes addresses], length, entries = 1, entry offset = 0] */
 
-const link_manifest = [
+const linkManifest = [
     [[0x108000], 0x7000], // sprite
     [[0x1BD308], 4 * 30], // palette
     [[0x1BEDF5], 4]       // gloves
 ];
 
-const samus_loader_offsets = [0x0, 0x24, 0x4F, 0x73, 0x9E, 0xC2, 0xED, 0x111, 0x139];
-const samus_manifest = [
+const samusLoaderOffsets = [0x0, 0x24, 0x4F, 0x73, 0x9E, 0xC2, 0xED, 0x111, 0x139];
+const samusManifest = [
     [{ exhirom: [0x440000], lorom: [0x9C8000] }, 0x8000], // DMA bank 1
     [{ exhirom: [0x450000], lorom: [0x9D8000] }, 0x8000], // DMA bank 2
     [{ exhirom: [0x460000], lorom: [0x9E8000] }, 0x8000], // DMA bank 3
@@ -36,12 +36,12 @@ const samus_manifest = [
     [[0x9B9402], 30],           // Power Standard
     [[0x9B9522], 30],           // Varia Standard
     [[0x9B9802], 30],           // Gravity Standard
-    [[0x8DDB6D], 30, 9, samus_loader_offsets], // Power Loader
-    [[0x8DDCD3], 30, 9, samus_loader_offsets], // Varia Loader
-    [[0x8DDE39], 30, 9, samus_loader_offsets], // Gravity Loader
-    [[0x8DE468], 30, 16, 0x22],  // Power Heat
-    [[0x8DE694], 30, 16, 0x22],  // Varia Heat
-    [[0x8DE8C0], 30, 16, 0x22],  // Gravity Heat
+    [[0x8DDB6D], 30, 9, samusLoaderOffsets], // Power Loader
+    [[0x8DDCD3], 30, 9, samusLoaderOffsets], // Varia Loader
+    [[0x8DDE39], 30, 9, samusLoaderOffsets], // Gravity Loader
+    [[0x8DE468], 30, 16, 0x22], // Power Heat
+    [[0x8DE694], 30, 16, 0x22], // Varia Heat
+    [[0x8DE8C0], 30, 16, 0x22], // Gravity Heat
     [[0x9B9822], 30, 8, 0x20],  // Power Charge
     [[0x9B9922], 30, 8, 0x20],  // Varia Charge
     [[0x9B9A22], 30, 8, 0x20],  // Gravity Charge
@@ -71,12 +71,12 @@ const samus_manifest = [
     [[0x8DCA54], 2, 14, 0x6]    // Ship Glow
 ];
 
-const block_entries = {
-    1: ['link_sprite', link_manifest],
-    4: ['samus_sprite', samus_manifest]
+const blockEntries = {
+    1: ['link_sprite', linkManifest],
+    4: ['samus_sprite', samusManifest]
 };
 
-export function parse_rdc(rdc) {
+export function parseRdc(rdc) {
     const little = true;
     const utf8 = new TextDecoder();
     const version = 1;
@@ -87,13 +87,13 @@ export function parse_rdc(rdc) {
 
     let offset = 19;
     const view = new DataView(rdc.buffer);
-    const block_list = [];
+    const blockList = [];
     let blocks = view.getUint32(offset, little);
     while (blocks > 0) {
         blocks -= 1;
-        const block_type = view.getUint32(offset += 4, little);
-        const block_offset = view.getUint32(offset += 4, little);
-        block_list.push([block_type, block_offset]);
+        const blockType = view.getUint32(offset += 4, little);
+        const blockOffset = view.getUint32(offset += 4, little);
+        blockList.push([blockType, blockOffset]);
     }
 
     let field = new Uint8Array(rdc.buffer, offset += 4);
@@ -102,24 +102,24 @@ export function parse_rdc(rdc) {
         throw new Error("Missing null terminator for the Author data field");
     const author = utf8.decode(field.slice(0, end));
 
-    return [process_blocks(rdc, block_list), author];
+    return [processBlocks(rdc, blockList), author];
 }
 
-function process_blocks(rdc, block_list) {
+function processBlocks(rdc, blockList) {
     const list = {};
-    block_list.forEach(([type, offset]) => {
-        const entry = block_entries[type];
+    blockList.forEach(([type, offset]) => {
+        const entry = blockEntries[type];
         if (entry) {
             const [name, manifest] = entry;
             const block = new Uint8Array(rdc.buffer, offset);
-            const content = parse_block(block, manifest);
-            list[name] = (rom, mode) => apply_block(rom, mode, content, manifest);
+            const content = parseBlock(block, manifest);
+            list[name] = (rom, mode) => applyBlock(rom, mode, content, manifest);
         }
     });
     return list;
 }
 
-function parse_block(block, manifest) {
+function parseBlock(block, manifest) {
     let offset = 0;
     const content = [];
     for (const [, length, entries = 1] of manifest) {
@@ -129,14 +129,14 @@ function parse_block(block, manifest) {
     return content;
 }
 
-function apply_block(rom, mapping, content, manifest) {
+function applyBlock(rom, mapping, content, manifest) {
     let index = -1;
     for (const [addrs, length, entries = 1, offset = 0] of manifest) {
         const _addrs = isPlainObject(addrs) ? addrs[mapping] : addrs;
         const entry = content[index += 1];
         for (const addr of _addrs) {
             for (let i = 0; i < entries; i += 1) {
-                const dest = snes_to_pc(mapping, addr + (isArray(offset) ? offset[i] : offset * i));
+                const dest = snesToPc(mapping, addr + (isArray(offset) ? offset[i] : offset * i));
                 const src = length * i;
                 rom.set(entry.slice(src, src + length), dest);
             }

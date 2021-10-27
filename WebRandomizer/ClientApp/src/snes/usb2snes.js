@@ -1,17 +1,17 @@
 import { readAsArrayBuffer } from '../file/util';
 
-let ws = null;
+let socket = null;
 let busy = false;
 
-export function get_ws() {
-    return ws;
+export function webSocket() {
+    return socket;
 }
 
 export function clearBusy() {
     busy = false;
 }
 
-export function create_message(opcode, operands, space = "SNES") {
+export function createMessage(opcode, operands, space = "SNES") {
     return JSON.stringify({
         "Opcode": opcode,
         "Space": space,
@@ -27,14 +27,14 @@ export function connect(url) {
         }
 
         busy = true;
-        var socket = new WebSocket(url);
-        socket.onopen = function () {
-            ws = socket;
+        var client = new WebSocket(url);
+        client.onopen = function () {
+            socket = client;
             busy = false;
-            resolve(socket);
+            resolve(client);
         };
 
-        socket.onerror = function (err) {
+        client.onerror = function (err) {
             busy = false;
             reject(err);
         };
@@ -48,7 +48,7 @@ export function send(msg, noReply = false, timeOut = 1) {
         }
 
         busy = true;
-        ws.send(msg);
+        socket.send(msg);
 
         if (noReply) {
             busy = false;
@@ -61,12 +61,12 @@ export function send(msg, noReply = false, timeOut = 1) {
             }, 10000);
         }
 
-        ws.onmessage = function (event) {
+        socket.onmessage = function (event) {
             busy = false;
             resolve(event);
         };
 
-        ws.onerror = function (err) {
+        socket.onerror = function (err) {
             busy = false;
             reject(err);
         };
@@ -84,7 +84,7 @@ export async function sendBin(msg, size) {
         busy = true;
         let outputBuffer = null;
 
-        ws.onmessage = async (event) => {
+        socket.onmessage = async (event) => {
             try {
                 let buf = await readAsArrayBuffer(event.data);
                 let arrayBuffer = new Uint8Array(buf);
@@ -109,12 +109,12 @@ export async function sendBin(msg, size) {
             }
         };
 
-        ws.onerror = function (err) {
+        socket.onerror = function (err) {
             busy = false;
             reject(err);
         };
 
-        ws.send(msg);
+        socket.send(msg);
     });
 }
 
@@ -122,7 +122,7 @@ export async function runCmd(data) {
     return new Promise(async function (resolve, reject) {
         try {
             let size = data.byteLength.toString(16);
-            let message = create_message("PutAddress", ["2C01", size, "2C00", "1"], "CMD");
+            let message = createMessage("PutAddress", ["2C01", size, "2C00", "1"], "CMD");
             let ok = await send(message, true);
             if (ok) {
                 let newArray = Array.from(data);
@@ -145,7 +145,7 @@ export async function runCmd(data) {
 export async function readData(address, size) {
     return new Promise(async function (resolve, reject) {
         try {
-            let message = create_message("GetAddress", [address.toString(16), size.toString(16)]);
+            let message = createMessage("GetAddress", [address.toString(16), size.toString(16)]);
             let response = await sendBin(message, size);
             resolve(response);
         }
@@ -159,7 +159,7 @@ export async function writeData(address, data) {
     return new Promise(async function (resolve, reject) {
         try {
             let size = data.byteLength.toString(16);
-            let message = create_message("PutAddress", [address.toString(16), size]);
+            let message = createMessage("PutAddress", [address.toString(16), size]);
             let ok = await send(message, true);
             if (ok) {
                 try {

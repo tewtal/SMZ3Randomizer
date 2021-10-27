@@ -1,5 +1,5 @@
 import { HubConnectionBuilder } from '@microsoft/signalr';
-import { create_message, connect, send, clearBusy, readData, writeData } from '../snes/usb2snes';
+import { createMessage, connect, send, clearBusy, readData, writeData } from '../snes/usb2snes';
 import cloneDeep from 'lodash/cloneDeep';
 
 export default class Network {
@@ -236,7 +236,7 @@ export default class Network {
             this.socket.onclose = this.socket_onclose;
 
         try {
-            const response = await send(create_message('DeviceList', []));
+            const response = await send(createMessage('DeviceList', []));
             const deviceList = JSON.parse(response.data);
             const firstDevice = deviceList.Results[0];
 
@@ -271,11 +271,11 @@ export default class Network {
 
     async attachDevice(device) {
         try {
-            const attached = await send(create_message('Attach', [device]), true, 500);
+            const attached = await send(createMessage('Attach', [device]), true, 500);
             if (attached === true) {
-                const response = await send(create_message('Info', []));
+                const response = await send(createMessage('Info', []));
                 const deviceInfo = JSON.parse(response.data);
-                await send(create_message('Name', [`Randomizer.live [${device}]`]), true);
+                await send(createMessage('Name', [`Randomizer.live [${device}]`]), true);
 
                 this.clientData = { ...this.clientData, device, state: 5 };
                 this.device = { ...this.device, state: 1, version: deviceInfo.Results[0] };

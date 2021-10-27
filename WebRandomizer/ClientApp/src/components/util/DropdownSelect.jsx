@@ -72,7 +72,7 @@ const Caret = styled.div`
   border-${props => props.up ? 'top' : 'bottom'}: none;
 `;
 
-const menu_modifiers = {
+const menuModifiers = {
     adjustStyle: {
         enabled: true, order: 875,
         fn: (data) => ({
@@ -114,7 +114,7 @@ export default function DropdownSelect(props) {
                     }
                     <Caret up={open} />
                 </DropdownToggle>
-                <DropdownMenu modifiers={menu_modifiers}>
+                <DropdownMenu modifiers={menuModifiers}>
                     {children.map((option, i) =>
                         <DropdownItem key={i}
                             active={i === index}

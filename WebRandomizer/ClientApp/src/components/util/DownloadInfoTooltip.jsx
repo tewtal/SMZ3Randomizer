@@ -66,7 +66,7 @@ const InfoHover = styled(InfoCircleFill)`
 
 const tooltipWidth = '350px';
 
-const tooltip_modifiers = {
+const tooltipModifiers = {
     adjustStyle: {
         enabled: true, order: 875,
         fn: (data) => ({ ...data, styles: { ...data.styles, maxWidth: tooltipWidth } })
@@ -103,7 +103,7 @@ export default function DownloadInfoTooltip({ gameId, ...props }) {
         <div {...props}>
             <InfoHover id="download-tooltip" className="text-primary" />
             <TooltipStyling/>
-            <UncontrolledTooltip className="rom-info" modifiers={tooltip_modifiers} placement="right" target="download-tooltip">
+            <UncontrolledTooltip className="rom-info" modifiers={tooltipModifiers} placement="right" target="download-tooltip">
                 <StyledMarkdown text={{ smz3: smz3Tooltip, sm: smTooltip }[gameId]} />
             </UncontrolledTooltip>
         </div>
