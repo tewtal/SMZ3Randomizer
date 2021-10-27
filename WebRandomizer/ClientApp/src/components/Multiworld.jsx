@@ -1,4 +1,6 @@
 ﻿import React, { useState, useEffect, useRef, useContext } from 'react';
+import { useParams } from 'react-router-dom';
+
 import { Row, Col } from 'reactstrap';
 import MessageCard from './util/MessageCard'
 import Seed from './Seed';
@@ -14,7 +16,9 @@ import Network from '../network';
 
 import { decode } from 'slugid';
 
-export default function Multiworld(props) {
+export default function Multiworld() {
+    const { sessionSlug } = useParams();
+
     const network = useRef(null);
     const [state, setState] = useState(null);
     const [sessionStatus, setSessionStatus] = useState('');
@@ -23,7 +27,7 @@ export default function Multiworld(props) {
     const game = useContext(GameTraitsCtx);
 
     useEffect(() => {
-        const sessionGuid = decode(props.match.params.session_id).replace(/-/g, "");
+        const sessionGuid = decode(sessionSlug).replace(/-/g, "");
         network.current = new Network(sessionGuid, gameServiceHost(document.baseURI), {
             setState: setState,
             setSessionStatus: setSessionStatus,

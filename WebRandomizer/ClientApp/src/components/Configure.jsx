@@ -1,9 +1,12 @@
 ﻿import React, { useState, useEffect, useContext } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+
 import { Container, Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
 import { Form, FormGroup, Button, Input } from 'reactstrap';
 import { Modal, ModalHeader, ModalBody, Progress } from 'reactstrap';
 import BootstrapSwitchButton from 'bootstrap-switch-button-react';
+
 import InputGroup from './util/PrefixInputGroup';
 import MessageCard from './util/MessageCard';
 
@@ -29,11 +32,14 @@ const InputWithoutSpinner = styled(Input)`
   }
 `;
 
-export default function Configure(props) {
-    const game = useContext(GameTraitsCtx)
+export default function Configure() {
+    const game = useContext(GameTraitsCtx);
+
+    const history = useHistory();
+    const { randomizerId } = useParams();
 
     // Todo: Remove the game specific configure path in v12
-    const gameId = props.match.params.randomizer_id || game.id;
+    const gameId = randomizerId || game.id;
 
     const [options, setOptions] = useState(null);
     const [names, setNames] = useState({});
@@ -81,9 +87,9 @@ export default function Configure(props) {
             const data = await response.json();
             setModal(false);
             if (options.gamemode === 'multiworld') {
-                props.history.push(`/multiworld/${encode(data.guid)}`);
+                history.push(`/multiworld/${encode(data.guid)}`);
             } else {
-                props.history.push(`/seed/${encode(data.guid)}`);
+                history.push(`/seed/${encode(data.guid)}`);
             }
         } catch (error) {
             console.log(error);

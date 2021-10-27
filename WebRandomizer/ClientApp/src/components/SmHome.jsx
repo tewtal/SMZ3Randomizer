@@ -47,5 +47,6 @@ export default function SmHome() {
                     </Col>
                 </Row>
             </Container>
-        </>    );
+        </>
+    );
 }

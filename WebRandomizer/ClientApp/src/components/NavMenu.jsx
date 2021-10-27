@@ -1,6 +1,8 @@
 import React, { useState, useContext } from 'react';
-import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import classNames from 'classnames';
+
 import { Container, Navbar, NavbarBrand, NavbarToggler, Collapse, Nav, NavItem, NavLink } from 'reactstrap';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
@@ -16,11 +18,14 @@ const StyledNavbarBrand = styled(NavbarBrand)`
   word-break: break-all;
 `;
 
+function StyledNavLink({ className, children, ...props }) {
+    return <NavLink className={classNames("text-dark", className)} {...props}>{children}</NavLink>;
+}
+
 export default function NavMenu() {
     const [showMenu, setShowMenu] = useState(false);
     const game = useContext(GameTraitsCtx);
 
-    const linkProps = { tag: Link, className: 'text-dark' };
     return (
         <header>
             <StyledNavbar className="border-bottom mb-3" expand="sm" color="white" light>
@@ -29,19 +34,17 @@ export default function NavMenu() {
                     <NavbarToggler className="mr-2" onClick={() => setShowMenu(!showMenu)} />
                     <Collapse className="d-sm-inline-flex flex-sm-row-reverse" navbar isOpen={showMenu}>
                         <Nav className="flex-grow" navbar>
-                            <NavItem>
-                                <NavLink {...linkProps} to={"/configure"}>Generate randomized game</NavLink>
-                            </NavItem>
+                            <NavItem><StyledNavLink tag={Link} to="/configure">Generate randomized game</StyledNavLink></NavItem>
                             <UncontrolledDropdown nav inNavbar>
                                 <DropdownToggle className="text-dark" nav caret>Help</DropdownToggle>
                                 <DropdownMenu>
-                                    <DropdownItem><NavLink {...linkProps} to="/information">Information</NavLink></DropdownItem>
-                                    <DropdownItem><NavLink {...linkProps} to="/mwinstructions">Multiworld instructions</NavLink></DropdownItem>
+                                    <DropdownItem><StyledNavLink tag={Link} to="/information">Information</StyledNavLink></DropdownItem>
+                                    <DropdownItem><StyledNavLink tag={Link} to="/mwinstructions">Multiworld instructions</StyledNavLink></DropdownItem>
                                     {game.id === 'smz3' && (
-                                        <DropdownItem><NavLink {...linkProps} to="/logic">Logic Log</NavLink></DropdownItem>
+                                        <DropdownItem><StyledNavLink tag={Link} to="/logic">Logic Log</StyledNavLink></DropdownItem>
                                     )}
-                                    <DropdownItem><NavLink {...linkProps} to="/resources">Resources</NavLink></DropdownItem>
-                                    <DropdownItem><NavLink {...linkProps} to="/changelog">Changes</NavLink></DropdownItem>
+                                    <DropdownItem><StyledNavLink tag={Link} to="/resources">Resources</StyledNavLink></DropdownItem>
+                                    <DropdownItem><StyledNavLink tag={Link} to="/changelog">Changes</StyledNavLink></DropdownItem>
                                 </DropdownMenu>
                             </UncontrolledDropdown>
                         </Nav>

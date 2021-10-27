@@ -1,4 +1,6 @@
 ﻿import React, { useState, useEffect, useContext } from 'react';
+import { useParams } from 'react-router-dom';
+
 import { Container, Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
 import MessageCard from './util/MessageCard';
 import Patch from './Patch';
@@ -11,8 +13,8 @@ import { decode } from 'slugid';
 
 import attempt from 'lodash/attempt';
 
-export default function Permalink(props) {
-    const seedSlug = props.match.params.seed_id;
+export default function Permalink() {
+    const { seedSlug } = useParams();
     const seedGuid = decode(seedSlug).replace(/-/g, '');
 
     const [seed, setSeed] = useState(null);
