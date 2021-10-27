@@ -1,4 +1,4 @@
-import { snesToPc } from './util';
+import { snesToPc } from './snes';
 
 import isPlainObject from 'lodash/isPlainObject';
 import isArray from 'lodash/isArray';

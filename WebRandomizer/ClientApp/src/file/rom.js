@@ -1,5 +1,7 @@
-import { readAsArrayBuffer, snesToPc } from './util';
+import { readAsArrayBuffer } from '../util';
+
 import { parseRdc } from './rdc';
+import { snesToPc } from './snes';
 import { bigText } from '../snes/big_text_table';
 
 import { inflate } from 'pako';

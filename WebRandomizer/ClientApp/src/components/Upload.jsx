@@ -1,6 +1,6 @@
 ﻿import React, { useState, useRef, useContext } from 'react';
 import { Form, Row, Col, Button } from 'reactstrap';
-import { readAsArrayBuffer } from '../file/util';
+import { readAsArrayBuffer } from '../util';
 import { h32 } from 'xxhashjs';
 
 import { GameTraitsCtx } from '../game/traits';

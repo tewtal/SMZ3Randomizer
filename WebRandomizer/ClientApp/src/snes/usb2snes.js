@@ -1,4 +1,4 @@
-import { readAsArrayBuffer } from '../file/util';
+import { readAsArrayBuffer } from '../util';
 
 let socket = null;
 let busy = false;
