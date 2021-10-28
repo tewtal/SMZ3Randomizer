@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Row, Col, Card, CardHeader, CardBody, Nav, NavItem, NavLink } from 'reactstrap';
 import { InputGroup, InputGroupAddon, InputGroupText, Input, Button } from 'reactstrap';
 
-import { JournalArrowDown } from '../ui/BootstrapIcon';
+import { Search, JournalArrowDown } from '../ui/BootstrapIcon';
 
 import { saveAs } from 'file-saver';
 import { encode } from 'slugid';
@@ -33,6 +33,11 @@ const LocationTable = styled.table.attrs(props => ({
   > tbody > tr {
     border-bottom: 1px solid #e0e0e0;
   }
+`;
+
+const SearchIcon = styled(Search)`
+  width: 1em;
+  height: 1em;
 `;
 
 const DownloadIcon = styled(JournalArrowDown)`
@@ -128,7 +133,7 @@ export default function Spoiler(props) {
                             <Col md="9">
                             <SearchInputGroup>
                                 <InputGroupAddon addonType="prepend">
-                                    <InputGroupText><span role="img" aria-label="search">🔎</span></InputGroupText>
+                                    <InputGroupText><SearchIcon /></InputGroupText>
                                 </InputGroupAddon>
                                 <Input key="searchInput" placeholder="Find a location or item" onChange={updateSearchText} value={searchText} />
                                 </SearchInputGroup>
