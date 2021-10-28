@@ -1,9 +1,9 @@
 ﻿import React, { useState } from 'react';
-import styled from 'styled-components';
-import { Row, Col, Card, CardHeader, CardBody, Nav, NavItem, NavLink } from 'reactstrap';
-import { InputGroup, InputGroupAddon, InputGroupText, Input, Button } from 'reactstrap';
+import { Row, Col, Card, CardHeader, CardBody, Nav, NavItem, Input, Button } from 'reactstrap';
+import InputGroup from '../ui/PrefixInputGroup';
+import { SmallNavLink, LocationTable } from './styled';
 
-import { Search, JournalArrowDown } from '../ui/BootstrapIcon';
+import { SearchIcon, DownloadIcon } from './styled';
 
 import { saveAs } from 'file-saver';
 import { encode } from 'slugid';
@@ -12,38 +12,6 @@ import isEmpty from 'lodash/isEmpty';
 import sortBy from 'lodash/sortBy';
 import uniq from 'lodash/uniq';
 import escapeRegExp from 'lodash/escapeRegExp';
-
-const SmallNavLink = styled(NavLink)`
-  font-size: .87em;
-  font-weight: bold;
-  padding-top: 6px;
-  padding-bottom: 6px;
-  padding-right: 9px;
-  padding-left: 9px;
-`;
-
-const SearchInputGroup = styled(InputGroup)`
-  margin-bottom: 15px;
-`;
-
-const LocationTable = styled.table.attrs(props => ({
-    className: "table table-sm table-borderless"
-}))`
-  margin-bottom: 25px;
-  > tbody > tr {
-    border-bottom: 1px solid #e0e0e0;
-  }
-`;
-
-const SearchIcon = styled(Search)`
-  width: 1em;
-  height: 1em;
-`;
-
-const DownloadIcon = styled(JournalArrowDown)`
-  width: 1em;
-  height: 1em;
-`;
 
 export default function Spoiler(props) {
     const [show, setShow] = useState(false);
@@ -129,22 +97,19 @@ export default function Spoiler(props) {
             {show && (<CardBody>
                 {spoiler
                     ? <div>
-                        <Row>
-                            <Col md="9">
-                            <SearchInputGroup>
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText><SearchIcon /></InputGroupText>
-                                </InputGroupAddon>
+                    <Row>
+                        <Col md="9">
+                            <InputGroup className="mb-3" prefix={<SearchIcon />}>
                                 <Input key="searchInput" placeholder="Find a location or item" onChange={updateSearchText} value={searchText} />
-                                </SearchInputGroup>
-                            </Col>
-                            <Col>
-                                <Button outline color="primary" className="float-right" onClick={downloadSpoiler}><DownloadIcon /> Download</Button>
-                            </Col>
-                        </Row>
-                        <div>
-                            <Nav pills style={{ marginBottom: "10px" }}>
-                                <NavItem>
+                            </InputGroup>
+                        </Col>
+                        <Col>
+                            <Button outline color="primary" className="float-right" onClick={downloadSpoiler}><DownloadIcon /> Download</Button>
+                        </Col>
+                    </Row>
+                    <div>
+                        <Nav pills className="mb-2">
+                            <NavItem>
                                     <SmallNavLink href="#" active={spoilerArea === "playthrough"} onClick={() => setSpoilerArea("playthrough")}>Playthrough</SmallNavLink>
                                 </NavItem>
                                 {props.seedData.gameId === 'smz3' && <NavItem>
@@ -165,7 +130,7 @@ export default function Spoiler(props) {
                                         {playthrough.map((sphere, i) => (
                                             <div key={i}>
                                                 {i < (playthrough.length - 1) || props.seedData.gameId === 'sm' ? <h6>Sphere {i + 1}</h6> : <h6>Prizes and Requirements</h6>}
-                                                <LocationTable>
+                                                <LocationTable className="mb-4">
                                                     <tbody>
                                                         {Object.entries(sphere).map(([location, item], j) => (
                                                             <tr key={j}>
@@ -184,7 +149,7 @@ export default function Spoiler(props) {
                                         <CardBody>
                                             <div>
                                                 <h6>Prizes and Requirements</h6>
-                                                <LocationTable>
+                                                <LocationTable className="mb-4">
                                                     <tbody>
                                                         {Object.entries(playthrough[playthrough.length - 1]).map(([location, item], i) => (
                                                             <tr key={i}>
@@ -202,7 +167,7 @@ export default function Spoiler(props) {
                                         {uniq(sortBy(locations.filter(l => spoilerArea === 'all' || l.locationArea === spoilerArea), l => l.locationRegion).map(l => l.locationRegion)).map((r, i) => (
                                             <div key={i}>
                                                 <h6>{r}</h6>
-                                                <LocationTable>
+                                                <LocationTable className="mb-4">
                                                     <tbody>
                                                     {locations.filter(l => (spoilerArea === 'all' || l.locationArea === spoilerArea) && l.locationRegion === r).map((l, j) => (
                                                         <tr key={j}>
