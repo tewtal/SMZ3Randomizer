@@ -1,6 +1,5 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
-RUN apt-get update -yq && apt-get install nodejs npm cmake build-essential python3.7 -yq
-RUN ln -s /usr/bin/python3.7 /usr/bin/python3
+RUN apt-get update -yq && apt-get install nodejs npm cmake build-essential python3.9 -yq
 
 # Build asar
 WORKDIR /asar
