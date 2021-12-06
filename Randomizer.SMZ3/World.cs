@@ -19,6 +19,7 @@ namespace Randomizer.SMZ3 {
             get { return Locations.Select(l => l.Item).Where(i => i != null); }
         }
 
+        private Dictionary<int, IReward[]> rewardLookup { get; set; }
         private Dictionary<string, Location> locationLookup { get; set; }
         private Dictionary<string, Region> regionLookup { get; set; }
 
@@ -82,6 +83,9 @@ namespace Randomizer.SMZ3 {
             foreach(var region in Regions) {
                 region.GenerateLocationLookup();
             }
+
+            rewardLookup = new Dictionary<int, IReward[]>();
+            
         }
 
         public bool CanEnter(string regionName, Progression items) {
@@ -97,12 +101,21 @@ namespace Randomizer.SMZ3 {
         }
 
         public bool CanAquireAll(Progression items, params RewardType[] rewards) {
-            return Regions.OfType<IReward>().Where(x => rewards.Contains(x.Reward)).All(x => x.CanComplete(items));
+            return rewardLookup[rewards.Sum(x => (int)x)].All(x => x.CanComplete(items));
+        }
+
+        public bool CanAquireAllMask(Progression items, int bitMask) {
+            return rewardLookup[bitMask].All(x => x.CanComplete(items));
         }
 
         public void Setup(Random rnd) {
             SetMedallions(rnd);
             SetRewards(rnd);
+            
+            // Generate a lookup of all possible regions for any given reward combination for faster lookup later
+            for (int i = 0; i < 512; i++) {
+                rewardLookup.Add(i, Regions.OfType<IReward>().Where(x => (((int)x.Reward) & i) != 0).ToArray());
+            }
         }
 
         private void SetMedallions(Random rnd) {
@@ -118,7 +131,8 @@ namespace Randomizer.SMZ3 {
         private void SetRewards(Random rnd) {
             var rewards = new[] {
                 PendantGreen, PendantNonGreen, PendantNonGreen, CrystalRed, CrystalRed,
-                CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue }.Shuffle(rnd);
+                CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue,
+                BossTokenKraid, BossTokenPhantoon, BossTokenDraygon, BossTokenRidley}.Shuffle(rnd);
             foreach (var region in Regions.OfType<IReward>().Where(x => x.Reward == None)) {
                 region.Reward = rewards.First();
                 rewards.Remove(region.Reward);

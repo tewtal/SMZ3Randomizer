@@ -8,7 +8,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
         public override string Name => "Maridia Inner";
         public override string Area => "Maridia";
 
-        public RewardType Reward { get; set; } = RewardType.GoldenFourBoss;
+        public RewardType Reward { get; set; } = RewardType.None;
 
         public Inner(World world, Config config) : base(world, config) {
             Locations = new List<Location> {

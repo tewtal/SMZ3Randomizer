@@ -12,13 +12,19 @@ namespace Randomizer.SMZ3 {
         [Description("Green Pendant")]
         PendantGreen,
         [Description("Blue/Red Pendant")]
-        PendantNonGreen,
+        PendantNonGreen = 4,
         [Description("Blue Crystal")]
-        CrystalBlue,
+        CrystalBlue = 8,
         [Description("Red Crystal")]
-        CrystalRed,
-        [Description("Golden Four Boss")]
-        GoldenFourBoss
+        CrystalRed = 16,
+        [Description("Kraid Boss Token")]
+        BossTokenKraid = 32,
+        [Description("Phantoon Boss Token")]
+        BossTokenPhantoon = 64,
+        [Description("Draygon Boss Token")]
+        BossTokenDraygon = 128,
+        [Description("Ridley Boss Token")]
+        BossTokenRidley = 256
     }
 
     interface IReward {
