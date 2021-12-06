@@ -8,7 +8,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
         public override string Name => "Wrecked Ship";
         public override string Area => "Wrecked Ship";
 
-        public RewardType Reward { get; set; } = RewardType.GoldenFourBoss;
+        public RewardType Reward { get; set; } = RewardType.None;
 
         public WreckedShip(World world, Config config) : base(world, config) {
             Locations = new List<Location> {

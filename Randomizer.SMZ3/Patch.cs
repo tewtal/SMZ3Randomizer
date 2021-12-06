@@ -151,12 +151,20 @@ namespace Randomizer.SMZ3 {
             var pendantsBlueRed = new[] { 2, 3 }.Shuffle(rnd);
             var pendantRewards = pendantsGreen.Concat(pendantsBlueRed);
 
+            var bossTokens = new[] { 1, 2, 3, 4 };
+
             var regions = myWorld.Regions.OfType<IReward>();
             var crystalRegions = regions.Where(x => x.Reward == CrystalBlue).Concat(regions.Where(x => x.Reward == CrystalRed));
             var pendantRegions = regions.Where(x => x.Reward == PendantGreen).Concat(regions.Where(x => x.Reward == PendantNonGreen));
+            var bossRegions = regions
+                .Where(x => x.Reward == BossTokenKraid)
+                .Concat(regions.Where(x => x.Reward == BossTokenPhantoon))
+                .Concat(regions.Where(x => x.Reward == BossTokenDraygon))
+                .Concat(regions.Where(x => x.Reward == BossTokenRidley));
 
             patches.AddRange(RewardPatches(crystalRegions, crystalRewards, CrystalValues));
             patches.AddRange(RewardPatches(pendantRegions, pendantRewards, PendantValues));
+            patches.AddRange(RewardPatches(bossRegions, bossTokens, BossTokenValues));
         }
 
         IEnumerable<(int, byte[])> RewardPatches(IEnumerable<IReward> regions, IEnumerable<int> rewards, Func<int, byte[]> rewardValues) {
@@ -168,42 +176,57 @@ namespace Randomizer.SMZ3 {
 
         int[] RewardAddresses(IReward region) {
             return region switch {
-                EasternPalace _ => new[] { 0x2A09D, 0xABEF8, 0xABEF9, 0x308052, 0x30807C, 0x1C6FE },
-                DesertPalace _ => new[] { 0x2A09E, 0xABF1C, 0xABF1D, 0x308053, 0x308078, 0x1C6FF },
-                TowerOfHera _ => new[] { 0x2A0A5, 0xABF0A, 0xABF0B, 0x30805A, 0x30807A, 0x1C706 },
-                PalaceOfDarkness _ => new[] { 0x2A0A1, 0xABF00, 0xABF01, 0x308056, 0x30807D, 0x1C702 },
-                SwampPalace _ => new[] { 0x2A0A0, 0xABF6C, 0xABF6D, 0x308055, 0x308071, 0x1C701 },
-                SkullWoods _ => new[] { 0x2A0A3, 0xABF12, 0xABF13, 0x308058, 0x30807B, 0x1C704 },
-                ThievesTown _ => new[] { 0x2A0A6, 0xABF36, 0xABF37, 0x30805B, 0x308077, 0x1C707 },
-                IcePalace _ => new[] { 0x2A0A4, 0xABF5A, 0xABF5B, 0x308059, 0x308073, 0x1C705 },
-                MiseryMire _ => new[] { 0x2A0A2, 0xABF48, 0xABF49, 0x308057, 0x308075, 0x1C703 },
-                TurtleRock _ => new[] { 0x2A0A7, 0xABF24, 0xABF25, 0x30805C, 0x308079, 0x1C708 },
+                EasternPalace _ => new[] { 0x2A09D, 0xABEF8, 0xABEF9, 0x308052, 0x30807C, 0x1C6FE, 0x30D100 },
+                DesertPalace _ => new[] { 0x2A09E, 0xABF1C, 0xABF1D, 0x308053, 0x308078, 0x1C6FF, 0x30D101 },
+                TowerOfHera _ => new[] { 0x2A0A5, 0xABF0A, 0xABF0B, 0x30805A, 0x30807A, 0x1C706, 0x30D102 },
+                PalaceOfDarkness _ => new[] { 0x2A0A1, 0xABF00, 0xABF01, 0x308056, 0x30807D, 0x1C702, 0x30D103 },
+                SwampPalace _ => new[] { 0x2A0A0, 0xABF6C, 0xABF6D, 0x308055, 0x308071, 0x1C701, 0x30D104 },
+                SkullWoods _ => new[] { 0x2A0A3, 0xABF12, 0xABF13, 0x308058, 0x30807B, 0x1C704, 0x30D105 },
+                ThievesTown _ => new[] { 0x2A0A6, 0xABF36, 0xABF37, 0x30805B, 0x308077, 0x1C707, 0x30D106 },
+                IcePalace _ => new[] { 0x2A0A4, 0xABF5A, 0xABF5B, 0x308059, 0x308073, 0x1C705, 0x30D107 },
+                MiseryMire _ => new[] { 0x2A0A2, 0xABF48, 0xABF49, 0x308057, 0x308075, 0x1C703, 0x30D108 },
+                TurtleRock _ => new[] { 0x2A0A7, 0xABF24, 0xABF25, 0x30805C, 0x308079, 0x1C708, 0x30D109 },
+
+                Regions.SuperMetroid.Brinstar.Kraid _ => new[] { 0xF26002, 0xF26004, 0xF26005, 0xF26000, 0xF26006, 0xF26007, 0x82FD36 },
+                Regions.SuperMetroid.WreckedShip _ => new[] { 0xF2600A, 0xF2600C, 0xF2600D, 0xF26008, 0xF2600E, 0xF2600F, 0x82FE26 },
+                Regions.SuperMetroid.Maridia.Inner _ => new[] { 0xF26012, 0xF26014, 0xF26015, 0xF26010, 0xF26016, 0xF26017, 0x82FE76 },
+                Regions.SuperMetroid.NorfairLower.East _ => new[] { 0xF2601A, 0xF2601C, 0xF2601D, 0xF26018, 0xF2601E, 0xF2601F, 0x82FDD6 },
+
                 var x => throw new InvalidOperationException($"Region {x} should not be a dungeon reward region")
             };
         }
 
         byte[] CrystalValues(int crystal) {
             return crystal switch {
-                1 => new byte[] { 0x02, 0x34, 0x64, 0x40, 0x7F, 0x06 },
-                2 => new byte[] { 0x10, 0x34, 0x64, 0x40, 0x79, 0x06 },
-                3 => new byte[] { 0x40, 0x34, 0x64, 0x40, 0x6C, 0x06 },
-                4 => new byte[] { 0x20, 0x34, 0x64, 0x40, 0x6D, 0x06 },
-                5 => new byte[] { 0x04, 0x32, 0x64, 0x40, 0x6E, 0x06 },
-                6 => new byte[] { 0x01, 0x32, 0x64, 0x40, 0x6F, 0x06 },
-                7 => new byte[] { 0x08, 0x34, 0x64, 0x40, 0x7C, 0x06 },
+                1 => new byte[] { 0x02, 0x34, 0x64, 0x40, 0x7F, 0x06, 0x10 },
+                2 => new byte[] { 0x10, 0x34, 0x64, 0x40, 0x79, 0x06, 0x10 },
+                3 => new byte[] { 0x40, 0x34, 0x64, 0x40, 0x6C, 0x06, 0x10 },
+                4 => new byte[] { 0x20, 0x34, 0x64, 0x40, 0x6D, 0x06, 0x10 },
+                5 => new byte[] { 0x04, 0x32, 0x64, 0x40, 0x6E, 0x06, 0x11 },
+                6 => new byte[] { 0x01, 0x32, 0x64, 0x40, 0x6F, 0x06, 0x11 },
+                7 => new byte[] { 0x08, 0x34, 0x64, 0x40, 0x7C, 0x06, 0x10 },
                 var x => throw new InvalidOperationException($"Tried using {x} as a crystal number")
             };
         }
 
         byte[] PendantValues(int pendant) {
             return pendant switch {
-                1 => new byte[] { 0x04, 0x38, 0x62, 0x00, 0x69, 0x01 },
-                2 => new byte[] { 0x01, 0x32, 0x60, 0x00, 0x69, 0x03 },
-                3 => new byte[] { 0x02, 0x34, 0x60, 0x00, 0x69, 0x02 },
+                1 => new byte[] { 0x04, 0x38, 0x62, 0x00, 0x69, 0x01, 0x12 },
+                2 => new byte[] { 0x01, 0x32, 0x60, 0x00, 0x69, 0x03, 0x13 },
+                3 => new byte[] { 0x02, 0x34, 0x60, 0x00, 0x69, 0x02, 0x14 },
                 var x => throw new InvalidOperationException($"Tried using {x} as a pendant number")
             };
         }
 
+        byte[] BossTokenValues(int token) {
+            return token switch {
+                1 => new byte[] { 0x01, 0x38, 0x40, 0x80, 0x69, 0x80, 0x15 },
+                2 => new byte[] { 0x02, 0x34, 0x42, 0x80, 0x69, 0x81, 0x16 },
+                3 => new byte[] { 0x04, 0x34, 0x44, 0x80, 0x69, 0x82, 0x17 },
+                4 => new byte[] { 0x08, 0x32, 0x46, 0x80, 0x69, 0x83, 0x18 },
+                var x => throw new InvalidOperationException($"Tried using {x} as a boss token number")
+            };
+        }
         void WriteSMLocations(IEnumerable<Location> locations) {
             foreach (var location in locations) {
                 if (myWorld.Config.MultiWorld) {
@@ -314,15 +337,13 @@ namespace Randomizer.SMZ3 {
 
         void WriteDungeonMusic(bool keysanity) {
             if (!keysanity) {
-                var regions = myWorld.Regions.OfType<IReward>();
-                IEnumerable<byte> music;
-                var pendantRegions = regions.Where(x => new[] { PendantGreen, PendantNonGreen }.Contains(x.Reward));
-                var crystalRegions = regions.Where(x => new[] { CrystalBlue, CrystalRed }.Contains(x.Reward));
-                regions = pendantRegions.Concat(crystalRegions);
-                music = new byte[] {
-                    0x11, 0x11, 0x11, 0x16, 0x16,
-                    0x16, 0x16, 0x16, 0x16, 0x16,
-                };
+                var regions = myWorld.Regions.OfType<Z3Region>().OfType<IReward>().Where(x => x.Reward != None && x.Reward != Agahnim);
+                var music = regions.Select(x => (byte)(x.Reward switch {
+                    PendantGreen => 0x11,
+                    PendantNonGreen => 0x11,
+                    _ => 0x16
+                }));
+
                 patches.AddRange(MusicPatches(regions, music));
             }
         }

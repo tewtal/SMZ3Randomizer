@@ -8,7 +8,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
         public override string Name => "Norfair Lower East";
         public override string Area => "Norfair Lower";
 
-        public RewardType Reward { get; set; } = RewardType.GoldenFourBoss;
+        public RewardType Reward { get; set; } = RewardType.None;
 
         public East(World world, Config config) : base(world, config) {
             Locations = new List<Location> {

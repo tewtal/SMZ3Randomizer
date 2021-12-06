@@ -7,7 +7,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
         public override string Name => "Brinstar Kraid";
         public override string Area => "Brinstar";
 
-        public RewardType Reward { get; set; } = RewardType.GoldenFourBoss;
+        public RewardType Reward { get; set; } = RewardType.None;
 
         public Kraid(World world, Config config) : base(world, config) {
             Locations = new List<Location> {

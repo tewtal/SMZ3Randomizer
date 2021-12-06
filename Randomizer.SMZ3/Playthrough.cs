@@ -71,9 +71,9 @@ namespace Randomizer.SMZ3 {
                     throw new Exception("Too many spheres, seed likely impossible.");
             }
 
-            /* Add Crystal/Pendant Prizes to playthrough */
+            /* Add Crystal/Pendant/Boss Token Prizes to playthrough */
             var rewardSphere = new Dictionary<string, string>();
-            foreach (var region in worlds.SelectMany(w => w.Regions.OfType<IReward>().Where(r => r.Reward != RewardType.GoldenFourBoss && r.Reward != RewardType.Agahnim))) {
+            foreach (var region in worlds.SelectMany(w => w.Regions.OfType<IReward>().Where(r => r.Reward != RewardType.Agahnim))) {
                 var regionName = $"{((Region)region).Name}{(config.MultiWorld ? $" - {((Region)region).World.Player}" : "")}";
                 rewardSphere.Add($"Prize - {regionName}", region.Reward.GetDescription());
             }
