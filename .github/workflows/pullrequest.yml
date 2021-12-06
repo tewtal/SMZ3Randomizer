@@ -1,4 +1,4 @@
-name: PR Build with .NET Core 5.0
+name: PR Build with .NET Core 6.0
 
 on:
   pull_request:
@@ -15,6 +15,6 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '5.0.201'
+        dotnet-version: '6.0.100'
     - name: Build and publish with dotnet
       run: dotnet publish --configuration Release
