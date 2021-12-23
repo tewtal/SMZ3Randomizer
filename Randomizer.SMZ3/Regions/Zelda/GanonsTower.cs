@@ -113,32 +113,32 @@ namespace Randomizer.SMZ3.Regions.Zelda {
             };
         }
 
-        private bool LeftSide(Progression items, IList<Location> locations) {
+        bool LeftSide(Progression items, IList<Location> locations) {
             return items.Hammer && items.Hookshot && items.KeyGT >= (locations.Any(l => l.ItemIs(BigKeyGT, World)) ? 3 : 4);
         }
 
-        private bool RightSide(Progression items, IList<Location> locations) {
+        bool RightSide(Progression items, IList<Location> locations) {
             return items.Somaria && items.Firerod && items.KeyGT >= (locations.Any(l => l.ItemIs(BigKeyGT, World)) ? 3 : 4);
         }
 
-        private bool BigKeyRoom(Progression items) {
+        bool BigKeyRoom(Progression items) {
             return items.KeyGT >= 3 && (
                 items.Hammer && items.Hookshot ||
                 items.Firerod && items.Somaria
             ) && CanBeatArmos(items);
         }
 
-        private bool TowerAscend(Progression items) {
+        bool TowerAscend(Progression items) {
             return items.BigKeyGT && items.KeyGT >= 3 && items.Bow && items.CanLightTorches();
-        }   
-            
-        private bool CanBeatArmos(Progression items) {
+        }
+
+        bool CanBeatArmos(Progression items) {
             return items.Sword || items.Hammer || items.Bow ||
                 items.CanExtendMagic(2) && (items.Somaria || items.Byrna) ||
                 items.CanExtendMagic(4) && (items.Firerod || items.Icerod);
         }
 
-        private bool CanBeatMoldorm(Progression items) {
+        bool CanBeatMoldorm(Progression items) {
             return items.Sword || items.Hammer;
         }
 
