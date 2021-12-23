@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using static Randomizer.SMZ3.RewardType;
@@ -14,9 +13,9 @@ namespace Randomizer.SMZ3 {
         public string Player { get; set; }
         public string Guid { get; set; }
         public int Id { get; set; }
-        public int OpenTower { get; set; }
-        public int OpenTourian { get; set; }
-        public int GanonVulnerable { get; set; }
+        public int OpenTower { get; set; } = 0;
+        public int OpenTourian { get; set; } = 0;
+        public int GanonVulnerable { get; set; } = 0;
 
         public IEnumerable<Item> Items {
             get { return Locations.Select(l => l.Item).Where(i => i != null); }
@@ -86,9 +85,6 @@ namespace Randomizer.SMZ3 {
             foreach(var region in Regions) {
                 region.GenerateLocationLookup();
             }
-
-            rewardLookup = new Dictionary<int, IReward[]>();
-            
         }
 
         public bool CanEnter(string regionName, Progression items) {
@@ -122,15 +118,11 @@ namespace Randomizer.SMZ3 {
         public void Setup(Random rnd) {
             SetMedallions(rnd);
             SetRewards(rnd);
+            SetRewardLookup();
             SetRequirements(rnd);
-            
-            // Generate a lookup of all possible regions for any given reward combination for faster lookup later
-            for (int i = 0; i < 512; i++) {
-                rewardLookup.Add(i, Regions.OfType<IReward>().Where(x => (((int)x.Reward) & i) != 0).ToArray());
-            }
         }
 
-        private void SetMedallions(Random rnd) {
+        void SetMedallions(Random rnd) {
             foreach (var region in Regions.OfType<IMedallionAccess>()) {
                 region.Medallion = rnd.Next(3) switch {
                     0 => ItemType.Bombos,
@@ -140,7 +132,7 @@ namespace Randomizer.SMZ3 {
             }
         }
 
-        private void SetRewards(Random rnd) {
+        void SetRewards(Random rnd) {
             var rewards = new[] {
                 PendantGreen, PendantNonGreen, PendantNonGreen, CrystalRed, CrystalRed,
                 CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue,
@@ -151,11 +143,21 @@ namespace Randomizer.SMZ3 {
             }
         }
 
-        private void SetRequirements(Random rnd) {
+        // internal for logic unit tests
+        internal void SetRewardLookup() {
+            // Generate a lookup of all possible regions for any given reward combination for faster lookup later
+            rewardLookup = new Dictionary<int, IReward[]>();
+            for (var i = 0; i < 512; i += 1) {
+                rewardLookup.Add(i, Regions.OfType<IReward>().Where(x => (((int)x.Reward) & i) != 0).ToArray());
+            }
+        }
+
+        void SetRequirements(Random rnd) {
             OpenTower = Config.OpenTower == SMZ3.OpenTower.Random ? rnd.Next(8) : (int)Config.OpenTower;
             GanonVulnerable = Config.GanonVulnerable == SMZ3.GanonVulnerable.Random ? rnd.Next(8) : (int)Config.GanonVulnerable;
             OpenTourian = Config.OpenTourian == SMZ3.OpenTourian.Random ? rnd.Next(5) : (int)Config.OpenTourian;
         }
+
     }
 
 }

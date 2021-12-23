@@ -47,9 +47,8 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         bool CanNotWasteKeysBeforeAccessible(Progression items, IList<Location> locations) {
             //return !items.BigKeyIP || locations.Any(l => l.ItemIs(BigKeyIP, World));
 
-            //TODO: This logic breaks the Filler, needs fixing so it can deal with getting new items actually undoing progress. Until then this is disabled.
+            // Todo: This logic is disabled for now because the Playthrough does not handle progress backtracking
             return false;
-            
         }
 
         public override bool CanEnter(Progression items) {

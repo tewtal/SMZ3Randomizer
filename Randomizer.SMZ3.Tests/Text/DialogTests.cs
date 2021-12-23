@@ -169,7 +169,7 @@ namespace Randomizer.SMZ3.Tests.Text {
             [TestCase("a{INTRO}b", TestName = "DoesNotAllowLinesWithCommandAndText")]
             [TestCase("{INVALID}", TestName = "DoesNotAllowInvalidCommands")]
             public void DoesNotAllow(string text) {
-                Assert.That(Dialog.Compiled(text), Throws.ArgumentException);
+                Assert.That(() => Dialog.Compiled(text), Throws.ArgumentException);
             }
 
             [TestCase("{NOTEXT}", TestName =    "NoTextWithCommandOnly")]
