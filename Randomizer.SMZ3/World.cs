@@ -95,24 +95,16 @@ namespace Randomizer.SMZ3 {
         }
 
         public bool CanAcquire(Progression items, RewardType reward) {
-            // For the purpose of logic unit tests, if no region has the reward then CanAquire is satisfied
+            // For the purpose of logic unit tests, if no region has the reward then CanAcquire is satisfied
             return Regions.OfType<IReward>().FirstOrDefault(x => reward == x.Reward)?.CanComplete(items) ?? true;
         }
 
-        public bool CanAcquireAll(Progression items, params RewardType[] rewards) {
-            return rewardLookup[rewards.Sum(x => (int)x)].All(x => x.CanComplete(items));
+        public bool CanAcquireAll(Progression items, RewardType rewardsMask) {
+            return rewardLookup[(int)rewardsMask].All(x => x.CanComplete(items));
         }
 
-        public bool CanAcquireAllMask(Progression items, int bitMask) {
-            return rewardLookup[bitMask].All(x => x.CanComplete(items));
-        }
-
-        public bool CanAquireX(Progression items, int amount, params RewardType[] rewards) {
-            return rewardLookup[rewards.Sum(x => (int)x)].Where(x => x.CanComplete(items)).Count() >= amount;
-        }
-
-        public bool CanAcquireXMask(Progression items, int amount, int bitMask) {
-            return rewardLookup[bitMask].Where(x => x.CanComplete(items)).Count() >= amount;
+        public bool CanAcquireAtLeast(int amount, Progression items, RewardType rewardsMask) {
+            return rewardLookup[(int)rewardsMask].Where(x => x.CanComplete(items)).Count() >= amount;
         }
 
         public void Setup(Random rnd) {
