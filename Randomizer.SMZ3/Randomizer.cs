@@ -59,17 +59,21 @@ namespace Randomizer.SMZ3 {
                 randoRnd = new Random(randoRnd.Next());
             }
 
-            if (config.GameMode == GameMode.Normal) {
-                worlds.Add(new World(config, "Player", 0, new HexGuid()));
-            }
-            else {
-                int players = options.ContainsKey("players") ? int.Parse(options["players"]) : 1;
-                for (int p = 0; p < players; p++) {
+            int players = options.ContainsKey("players") ? int.Parse(options["players"]) : 1;
+            for (int p = 0; p < players; p++) {
+                // Get the playername
+                string playername = "Player";
+                if (config.GameMode != GameMode.Normal) {
                     var found = options.TryGetValue($"player-{p}", out var player);
                     if (!found || !alphaNumeric.IsMatch(player))
                         throw new ArgumentException($"Name for player {p + 1} not provided, or contains no alphanumeric characters");
-                    worlds.Add(new World(config, player, p, new HexGuid()));
+                    playername = player;
                 }
+
+                // Setup worlds while here
+                var new_world = new World(config, playername, p, new HexGuid());
+                new_world.Setup(randoRnd);
+                worlds.Add(new_world);
             }
 
             var filler = new Filler(worlds, config, randoRnd);

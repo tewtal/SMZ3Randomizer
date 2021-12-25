@@ -14,10 +14,6 @@ namespace Randomizer.SMZ3 {
             Worlds = worlds;
             Config = config;
             Rnd = rnd;
-
-            foreach (var world in worlds) {
-                world.Setup(Rnd);
-            }
         }
 
         public void Fill() {
