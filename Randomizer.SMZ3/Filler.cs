@@ -18,10 +18,6 @@ namespace Randomizer.SMZ3 {
             Config = config;
             Rnd = rnd;
             CancellationToken = cancellationToken;
-
-            foreach (var world in worlds) {
-                world.Setup(Rnd);
-            }
         }
 
         public void Fill() {

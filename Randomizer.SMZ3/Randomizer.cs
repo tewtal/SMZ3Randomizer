@@ -43,20 +43,22 @@ namespace Randomizer.SMZ3 {
             }
 
             var worlds = new List<World>();
-            if (config.SingleWorld) {
-                worlds.Add(new World(config, "Player", 0, new HexGuid()));
-            }
-            else {
-                var players = options.ContainsKey("players") ? int.Parse(options["players"]) : 1;
-                for (var p = 0; p < players; p++) {
+            var players = options.ContainsKey("players") ? int.Parse(options["players"]) : 1;
+            for (var p = 0; p < players; p++) {
+                string playername = "Player";
+                if (config.MultiWorld) {
                     var found = options.TryGetValue($"player-{p}", out var player);
                     if (!found)
                         throw new ArgumentException($"No name provided for player {p + 1}");
                     if (!legalCharacters.IsMatch(player))
                         throw new ArgumentException($"No alphanumeric characters found in name for player {p + 1}");
-                    player = CleanPlayerName(player);
-                    worlds.Add(new World(config, player, p, new HexGuid()));
+                    playername = CleanPlayerName(player);
                 }
+
+                // Setup the new world while here
+                var new_world = new World(config, playername, p, new HexGuid());
+                new_world.Setup(randoRnd);
+                worlds.Add(new_world);
             }
 
             var filler = new Filler(worlds, config, randoRnd, cancellationToken);
