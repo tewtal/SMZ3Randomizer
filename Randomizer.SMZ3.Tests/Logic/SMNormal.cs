@@ -1587,26 +1587,23 @@ namespace Randomizer.SMZ3.Tests.Logic {
 
         protected override List<Case> IcePalaceSpikeRoom => new() {
             CaseWith(x => x.Hookshot),
-            // Todo: These cases are ignored for now because the Playthrough does not handle progress backtracking
-            //CaseWith(x => x.KeyIP(1)),
-            //CaseWith(x => x.KeyIP(1).Assume.BigKeyIP.HasAt("Ice Palace - Map Chest").BigKeyIP),
-            //CaseWith(x => x.KeyIP(1).Assume.BigKeyIP.HasAt("Ice Palace - Big Key Chest").BigKeyIP),
+            CaseWith(x => x.KeyIP(1)),
+            CaseWith(x => x.KeyIP(1).Assume.BigKeyIP.HasAt("Ice Palace - Map Chest").BigKeyIP),
+            CaseWith(x => x.KeyIP(1).Assume.BigKeyIP.HasAt("Ice Palace - Big Key Chest").BigKeyIP),
         };
 
         protected override List<Case> IcePalaceMapChest => new() {
             CaseWith(x => x.Hammer.Glove.Hookshot),
-            // Todo: These cases are ignored for now because the Playthrough does not handle progress backtracking
-            //CaseWith(x => x.Hammer.Glove.KeyIP(1)),
-            //CaseWith(x => x.Hammer.Glove.KeyIP(1).Assume.BigKeyIP.HasAt("Ice Palace - Spike Room").BigKeyIP),
-            //CaseWith(x => x.Hammer.Glove.KeyIP(1).Assume.BigKeyIP.HasAt("Ice Palace - Big Key Chest").BigKeyIP),
+            CaseWith(x => x.Hammer.Glove.KeyIP(1)),
+            CaseWith(x => x.Hammer.Glove.KeyIP(1).Assume.BigKeyIP.HasAt("Ice Palace - Spike Room").BigKeyIP),
+            CaseWith(x => x.Hammer.Glove.KeyIP(1).Assume.BigKeyIP.HasAt("Ice Palace - Big Key Chest").BigKeyIP),
         };
 
         protected override List<Case> IcePalaceBigKeyChest => new() {
             CaseWith(x => x.Hammer.Glove.Hookshot),
-            // Todo: These cases are ignored for now because the Playthrough does not handle progress backtracking
-            //CaseWith(x => x.Hammer.Glove.KeyIP(1)),
-            //CaseWith(x => x.Hammer.Glove.KeyIP(1).Assume.BigKeyIP.HasAt("Ice Palace - Spike Room").BigKeyIP),
-            //CaseWith(x => x.Hammer.Glove.KeyIP(1).Assume.BigKeyIP.HasAt("Ice Palace - Map Chest").BigKeyIP),
+            CaseWith(x => x.Hammer.Glove.KeyIP(1)),
+            CaseWith(x => x.Hammer.Glove.KeyIP(1).Assume.BigKeyIP.HasAt("Ice Palace - Spike Room").BigKeyIP),
+            CaseWith(x => x.Hammer.Glove.KeyIP(1).Assume.BigKeyIP.HasAt("Ice Palace - Map Chest").BigKeyIP),
         };
 
         protected override List<Case> IcePalaceIcedTRoom => CaseWithNothing;

@@ -20,6 +20,7 @@ namespace Randomizer.SMZ3 {
             var items = new List<Item>();
 
             foreach (var world in worlds) {
+                world.ForwardSearch = true;
                 if (!world.Config.Keysanity) {
                     items.AddRange(Item.CreateKeycards(world));
                 }
@@ -69,6 +70,10 @@ namespace Randomizer.SMZ3 {
 
                 if (spheres.Count > 100)
                     throw new Exception("Too many spheres, seed likely impossible.");
+            }
+
+            foreach (var world in worlds) {
+                world.ForwardSearch = false;
             }
 
             /* Add Crystal/Pendant/Boss Token Prizes to playthrough */
