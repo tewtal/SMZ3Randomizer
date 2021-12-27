@@ -4,35 +4,27 @@ using System.Linq;
 
 namespace Randomizer.SuperMetroid {
 
-    class Playthrough {
+    static class Playthrough {
 
-        readonly List<World> worlds;
-        readonly Config config;
-        
-        public Playthrough(List<World> worlds, Config config) {
-            this.worlds = worlds;
-            this.config = config;
-        }
-
-        public List<Dictionary<string, string>> Generate() {
+        public static List<Dictionary<string, string>> Generate(List<World> worlds, Config config) {
             var spheres = new List<Dictionary<string, string>>();
-
             var items = new List<Item>();
-            var prevCount = 0;
-            while (items.Count < worlds.SelectMany(w => w.Items).Count()) {
+
+            var totalItemCount = worlds.SelectMany(w => w.Items).Count();
+            while (items.Count < totalItemCount) {
                 var sphere = new Dictionary<string, string>();
-                var newLocations = worlds.SelectMany(w => w.Locations.Available(items.Where(i => i.World == w).ToList())).ToList();
-                var newItems = newLocations.Select(l => l.Item).ToList();
-                var addedItems = newItems.Where(i => !items.Contains(i)).ToList();
-                if (prevCount == newItems.Count) {
+
+                var allLocations = worlds.SelectMany(w => w.Locations.Available(items.Where(i => i.World == w).ToList())).ToList();
+                var allItems = allLocations.Select(l => l.Item).ToList();
+                var addedItems = allItems.Except(items).ToList();
+                if (!addedItems.Any()) {
                     /* No new items added, we got a problem */
-                    var inaccessibleLocations = worlds.SelectMany(x => x.Locations).Where(l => !newLocations.Contains(l)).ToList();
+                    var inaccessibleLocations = worlds.SelectMany(x => x.Locations).Where(l => !allLocations.Contains(l)).ToList();
                     var unplacedItems = inaccessibleLocations.Select(x => x.Item).ToList();
                     throw new Exception("Could not generate playthrough, all items are not accessible");
                 }
 
-                prevCount = newItems.Count;
-                foreach (var addedItem in addedItems.Where(i =>
+                foreach (var item in addedItems.Where(i =>
                      i.Name.Contains("Progression") ||
                      (i.Type != ItemType.Missile &&
                       i.Type != ItemType.Super &&
@@ -40,21 +32,25 @@ namespace Randomizer.SuperMetroid {
                       i.Type != ItemType.ETank &&
                       i.Type != ItemType.ReserveTank)
                 )) {
-                    var itemLocation = newLocations.Where(l => l.Item == addedItem).First();
-                    if (config.MultiWorld) {
-                        sphere.Add($"{itemLocation.Name} ({itemLocation.Region.World.Player})", $"{addedItem.Name} ({addedItem.World.Player})");
-                    } else {
-                        sphere.Add($"{itemLocation.Name}", $"{addedItem.Name}");
-                    }
+                    var location = allLocations.First(l => l.Item == item);
+                    AddLocation(sphere, location, item, config.MultiWorld);
                 }
 
                 spheres.Add(sphere);
-                items = newItems;
+                items = allItems;
             }
 
             return spheres;
         }
 
+        static void AddLocation(Dictionary<string, string> sphere, Location location, Item item, bool multiWorld) {
+            sphere.Add(
+                multiWorld ? $"{location.Name} ({location.Region.World.Player})"
+                           : $"{location.Name}",
+                multiWorld ? $"{item.Name} ({item.World.Player})"
+                           : $"{item.Name}"
+            );
+        }
     }
 
 }

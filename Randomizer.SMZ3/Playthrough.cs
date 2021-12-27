@@ -4,17 +4,9 @@ using System.Linq;
 
 namespace Randomizer.SMZ3 {
 
-    class Playthrough {
+    static class Playthrough {
 
-        readonly List<World> worlds;
-        readonly Config config;
-
-        public Playthrough(List<World> worlds, Config config) {
-            this.worlds = worlds;
-            this.config = config;
-        }
-
-        public List<Dictionary<string, string>> Generate() {
+        public static List<Dictionary<string, string>> Generate(List<World> worlds, Config config) {
             var spheres = new List<Dictionary<string, string>>();
             var locations = new List<Location>();
             var items = new List<Item>();
@@ -31,39 +23,28 @@ namespace Randomizer.SMZ3 {
                 var sphere = new Dictionary<string, string>();
 
                 var allLocations = worlds.SelectMany(w => w.Locations.Available(items.Where(i => i.World == w)));
-                var newLocations = allLocations.Except(locations).ToList();
-                var newItems = newLocations.Select(l => l.Item).ToList();
-                locations.AddRange(newLocations);
-                items.AddRange(newItems);
+                var addedLocations = allLocations.Except(locations).ToList();
+                var addedItems = addedLocations.Select(l => l.Item).ToList();
+                locations.AddRange(addedLocations);
+                items.AddRange(addedItems);
 
-                if (!newItems.Any()) {
+                if (!addedItems.Any()) {
                     /* With no new items added we might have a problem, so list inaccessable items */
-                    var inaccessibleLocations = worlds.SelectMany(w => w.Locations).Where(l => !locations.Contains(l)).ToList();
-                    if (inaccessibleLocations.Select(l => l.Item).Count() >= (15 * worlds.Count))
+                    var inaccessibleLocations = worlds.SelectMany(w => w.Locations).Except(locations).ToList();
+                    if (inaccessibleLocations.Count >= (15 * worlds.Count))
                         throw new Exception("Too many inaccessible items, seed likely impossible.");
 
                     var n = 0;
                     foreach (var location in inaccessibleLocations) {
-                        if (config.MultiWorld) {
-                            sphere.Add($"Inaccessible Item #{n += 1}: {location.Name} ({location.Region.World.Player})", $"{location.Item.Name} ({location.Item.World.Player})");
-                        }
-                        else {
-                            sphere.Add($"Inaccessible Item #{n += 1}: {location.Name}", $"{location.Item.Name}");
-                        }
+                        AddInaccessible(sphere, location, n += 1, config.MultiWorld);
                     }
                     spheres.Add(sphere);
                     break;
                 }
 
-                foreach (var location in newLocations) {
-                    if ((config.Keysanity && !location.Item.Progression && !location.Item.IsDungeonItem && !location.Item.IsKeycard) || (!config.Keysanity && !location.Item.Progression))
-                        continue;
-
-                    if (config.MultiWorld) {
-                        sphere.Add($"{location.Name} ({location.Region.World.Player})", $"{location.Item.Name} ({location.Item.World.Player})");
-                    }
-                    else {
-                        sphere.Add($"{location.Name}", $"{location.Item.Name}");
+                foreach (var location in addedLocations) {
+                    if (location.Item.Progression && (!config.Keysanity || location.Item.IsDungeonItem || location.Item.IsKeycard)) {
+                        AddLocation(sphere, location, config.MultiWorld);
                     }
                 }
                 spheres.Add(sphere);
@@ -76,23 +57,54 @@ namespace Randomizer.SMZ3 {
                 world.ForwardSearch = false;
             }
 
-            /* Add Crystal/Pendant/Boss Token Prizes to playthrough */
             var rewardSphere = new Dictionary<string, string>();
+            /* Add Crystal/Pendant/Boss Token Prizes to playthrough */
             foreach (var region in worlds.SelectMany(w => w.Regions.OfType<IReward>().Where(r => r.Reward != RewardType.Agahnim))) {
-                var regionName = $"{((Region)region).Name}{(config.MultiWorld ? $" - {((Region)region).World.Player}" : "")}";
-                rewardSphere.Add($"Prize - {regionName}", region.Reward.GetDescription());
+                AddPrize(rewardSphere, region as Region, region.Reward, config.MultiWorld);
             }
 
             /* Add Medallion requirements to playthrough */
             foreach (var region in worlds.SelectMany(w => w.Regions.OfType<IMedallionAccess>())) {
-                var regionName = $"{((Region)region).Name}{(config.MultiWorld ? $" - {((Region)region).World.Player}" : "")}";
-                rewardSphere.Add($"Medallion Required - {regionName}", region.Medallion.GetDescription());
+                AddMedallion(rewardSphere, region as Region, region.Medallion, config.MultiWorld);
             }
 
             spheres.Add(rewardSphere);
             return spheres;
         }
 
+        static void AddLocation(Dictionary<string, string> sphere, Location location, bool multiWorld) {
+            sphere.Add(
+                multiWorld ? $"{location.Name} ({location.Region.World.Player})"
+                           : $"{location.Name}",
+                multiWorld ? $"{location.Item.Name} ({location.Item.World.Player})"
+                           : $"{location.Item.Name}"
+            );
+        }
+
+        static void AddPrize(Dictionary<string, string> sphere, Region region, RewardType reward, bool multiWorld) {
+            sphere.Add(
+                multiWorld ? $"Prize - {region.Area} - {region.World.Player}"
+                           : $"Prize - {region.Area}",
+                reward.GetDescription()
+            );
+        }
+
+        static void AddMedallion(Dictionary<string, string> sphere, Region region, ItemType medallion, bool multiWorld) {
+            sphere.Add(
+                multiWorld ? $"Medallion Required - {region.Area} - {region.World.Player}"
+                           : $"Medallion Required - {region.Area}",
+                medallion.GetDescription()
+            );
+        }
+
+        static void AddInaccessible(Dictionary<string, string> sphere, Location location, int n, bool multiWorld) {
+            sphere.Add(
+                multiWorld ? $"Inaccessible Item #{n}: {location.Name} ({location.Region.World.Player})"
+                           : $"Inaccessible Item #{n}: {location.Name}",
+                multiWorld ? $"{location.Item.Name} ({location.Item.World.Player})"
+                           : $"{location.Item.Name}"
+            );
+        }
     }
 
 }

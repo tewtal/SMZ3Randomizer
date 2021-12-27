@@ -61,16 +61,15 @@ namespace Randomizer.SuperMetroid {
             var filler = new Filler(worlds, config, rnd, cancellationToken);
             filler.Fill();
 
-            var playthrough = new Playthrough(worlds, config);
-            var spheres = playthrough.Generate();
-
             var seedData = new SeedData {
                 Guid = new HexGuid(),
                 Seed = seed,
                 Game = Name,
                 Mode = config.GameMode.ToLowerString(),
                 Logic = config.Logic.ToLowerString(),
-                Playthrough = config.Race ? new List<Dictionary<string, string>>() : spheres,
+                Playthrough = config.Race
+                    ? new List<Dictionary<string, string>>()
+                    : Playthrough.Generate(worlds, config),
                 Worlds = new List<IWorldData>(),
             };
 
