@@ -14,6 +14,9 @@ namespace Randomizer.SMZ3 {
         public string Player { get; set; }
         public string Guid { get; set; }
         public int Id { get; set; }
+        public int OpenTower { get; set; }
+        public int OpenTourian { get; set; }
+        public int GanonVulnerable { get; set; }
 
         public IEnumerable<Item> Items {
             get { return Locations.Select(l => l.Item).Where(i => i != null); }
@@ -95,22 +98,31 @@ namespace Randomizer.SMZ3 {
             return region.CanEnter(items);
         }
 
-        public bool CanAquire(Progression items, RewardType reward) {
+        public bool CanAcquire(Progression items, RewardType reward) {
             // For the purpose of logic unit tests, if no region has the reward then CanAquire is satisfied
             return Regions.OfType<IReward>().FirstOrDefault(x => reward == x.Reward)?.CanComplete(items) ?? true;
         }
 
-        public bool CanAquireAll(Progression items, params RewardType[] rewards) {
+        public bool CanAcquireAll(Progression items, params RewardType[] rewards) {
             return rewardLookup[rewards.Sum(x => (int)x)].All(x => x.CanComplete(items));
         }
 
-        public bool CanAquireAllMask(Progression items, int bitMask) {
+        public bool CanAcquireAllMask(Progression items, int bitMask) {
             return rewardLookup[bitMask].All(x => x.CanComplete(items));
+        }
+
+        public bool CanAquireX(Progression items, int amount, params RewardType[] rewards) {
+            return rewardLookup[rewards.Sum(x => (int)x)].Where(x => x.CanComplete(items)).Count() >= amount;
+        }
+
+        public bool CanAcquireXMask(Progression items, int amount, int bitMask) {
+            return rewardLookup[bitMask].Where(x => x.CanComplete(items)).Count() >= amount;
         }
 
         public void Setup(Random rnd) {
             SetMedallions(rnd);
             SetRewards(rnd);
+            SetRequirements(rnd);
             
             // Generate a lookup of all possible regions for any given reward combination for faster lookup later
             for (int i = 0; i < 512; i++) {
@@ -139,6 +151,11 @@ namespace Randomizer.SMZ3 {
             }
         }
 
+        private void SetRequirements(Random rnd) {
+            OpenTower = Config.OpenTower == SMZ3.OpenTower.Random ? rnd.Next(8) : (int)Config.OpenTower;
+            GanonVulnerable = Config.GanonVulnerable == SMZ3.GanonVulnerable.Random ? rnd.Next(8) : (int)Config.GanonVulnerable;
+            OpenTourian = Config.OpenTourian == SMZ3.OpenTourian.Random ? rnd.Next(5) : (int)Config.OpenTourian;
+        }
     }
 
 }

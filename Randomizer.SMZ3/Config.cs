@@ -52,6 +52,10 @@ namespace Randomizer.SMZ3 {
     enum Goal {
         [Description("Defeat Ganon and Mother Brain")]
         DefeatBoth,
+        [Description("Fast Ganon and Defeat Mother Brain")]
+        FastGanonDefeatMotherBrain,
+        [Description("All Dungeons and Defeat Mother Brain")]
+        AllDungeonsDefeatMotherBrain,
     }
 
     [DefaultValue(None)]
@@ -62,15 +66,64 @@ namespace Randomizer.SMZ3 {
         Keysanity
     }
 
-    enum GanonInvincible {
-        [Description("Never")]
-        Never,
-        [Description("Before Crystals")]
-        BeforeCrystals,
-        [Description("Before All Dungeons")]
-        BeforeAllDungeons,
-        [Description("Always")]
-        Always,
+    [DefaultValue(SevenCrystals)]
+    enum OpenTower {
+        [Description("Random")]
+        Random = -1,
+        [Description("No Crystals")]
+        NoCrystals = 0,
+        [Description("One Crystal")]
+        OneCrystal = 1,
+        [Description("Two Crystals")]
+        TwoCrystals = 2,
+        [Description("Three Crystals")]
+        ThreeCrystals = 3,
+        [Description("Four Crystals")]
+        FourCrystals = 4,
+        [Description("Five Crystals")]
+        FiveCrystals = 5,
+        [Description("Six Crystals")]
+        SixCrystals = 6,
+        [Description("Seven Crystals")]
+        SevenCrystals = 7,
+    }
+
+    [DefaultValue(SevenCrystals)]
+    enum GanonVulnerable {
+        [Description("Random")]
+        Random = -1,
+        [Description("No Crystals")]
+        NoCrystals = 0,
+        [Description("One Crystal")]
+        OneCrystal = 1,
+        [Description("Two Crystals")]
+        TwoCrystals = 2,
+        [Description("Three Crystals")]
+        ThreeCrystals = 3,
+        [Description("Four Crystals")]
+        FourCrystals = 4,
+        [Description("Five Crystals")]
+        FiveCrystals = 5,
+        [Description("Six Crystals")]
+        SixCrystals = 6,
+        [Description("Seven Crystals")]
+        SevenCrystals = 7,
+    }
+
+    [DefaultValue(FourBosses)]
+    enum OpenTourian {
+        [Description("Random")]
+        Random = -1,
+        [Description("No Bosses")]
+        NoBosses = 0,
+        [Description("One Boss")]
+        OneBoss = 1,
+        [Description("Two Bosses")]
+        TwoBosses = 2,
+        [Description("Three Bosses")]
+        ThreeBosses = 3,
+        [Description("Four Bosses")]
+        FourBosses = 4,
     }
 
     class Config {
@@ -83,7 +136,9 @@ namespace Randomizer.SMZ3 {
         public Goal Goal { get; set; } = Goal.DefeatBoth;
         public KeyShuffle KeyShuffle { get; set; } = KeyShuffle.None;
         public bool Race { get; set; } = false;
-        public GanonInvincible GanonInvincible { get; set; } = GanonInvincible.BeforeCrystals;
+        public OpenTower OpenTower { get; set; } = OpenTower.SevenCrystals;
+        public GanonVulnerable GanonVulnerable { get; set; } = GanonVulnerable.SevenCrystals;
+        public OpenTourian OpenTourian { get; set; } = OpenTourian.FourBosses;
 
         public bool SingleWorld => GameMode == GameMode.Normal;
         public bool MultiWorld => GameMode == GameMode.Multiworld;

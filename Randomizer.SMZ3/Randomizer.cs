@@ -54,7 +54,7 @@ namespace Randomizer.SMZ3 {
                         throw new ArgumentException($"No name provided for player {p + 1}");
                     if (!legalCharacters.IsMatch(player))
                         throw new ArgumentException($"No alphanumeric characters found in name for player {p + 1}");
-                    player = CleanPlayerName(player);
+                    player = CleanPlayerName(player);                    
                     worlds.Add(new World(config, player, p, new HexGuid()));
                 }
             }

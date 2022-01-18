@@ -24,6 +24,22 @@ Filename parts legend:
 * \`K\`: Key shuffle
   * None if missing
   * Keysanity if \`k\`
+* \`G\`: Goal
+  * Defeat Both if missing
+  * Fast Ganon if \`f\`
+  * All dungeons if \`a\`
+* \`To\`: Open Tower
+  * 7 Crystals if missing
+  * Random if \`r\`
+  * 0-6 Crystals if \`[0-6]\`
+* \`Vu\`: Ganon Vulnerable
+  * 7 Crystals if missing
+  * Random if \`r\`
+  * 0-6 Crystals if \`[0-6]\`
+* \`Tr\`: Open Tourian
+  * 4 Bosses if missing
+  * Random if \`r\`
+  * 0-3 Bosses if \`[0-3]\`
 * Seed number, or seed guid for race roms
 * Player name for Multiworld roms
 `;

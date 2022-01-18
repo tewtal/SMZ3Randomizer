@@ -14,16 +14,16 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld {
                     items => items.MoonPearl && items.CanLiftLight()),
                 new Location(this, 256+79, 0x308147, LocationType.Regular, "Pyramid"),
                 new Location(this, 256+80, 0x1E980, LocationType.Regular, "Pyramid Fairy - Left",
-                    items => World.CanAquireAll(items, CrystalRed) && items.MoonPearl && World.CanEnter("Dark World South", items) &&
-                        (items.Hammer || items.Mirror && World.CanAquire(items, Agahnim))),
+                    items => World.CanAcquireAll(items, CrystalRed) && items.MoonPearl && World.CanEnter("Dark World South", items) &&
+                        (items.Hammer || items.Mirror && World.CanAcquire(items, Agahnim))),
                 new Location(this, 256+81, 0x1E983, LocationType.Regular, "Pyramid Fairy - Right",
-                    items => World.CanAquireAll(items, CrystalRed) && items.MoonPearl && World.CanEnter("Dark World South", items) &&
-                        (items.Hammer || items.Mirror && World.CanAquire(items, Agahnim)))
+                    items => World.CanAcquireAll(items, CrystalRed) && items.MoonPearl && World.CanEnter("Dark World South", items) &&
+                        (items.Hammer || items.Mirror && World.CanAcquire(items, Agahnim)))
             };
         }
 
         public override bool CanEnter(Progression items) {
-            return World.CanAquire(items, Agahnim) || items.MoonPearl && (
+            return World.CanAcquire(items, Agahnim) || items.MoonPearl && (
                 items.Hammer && items.CanLiftLight() ||
                 items.CanLiftHeavy() && items.Flippers ||
                 items.CanAccessDarkWorldPortal(Config) && items.Flippers
