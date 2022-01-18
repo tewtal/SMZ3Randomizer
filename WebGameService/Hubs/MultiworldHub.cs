@@ -170,7 +170,7 @@ namespace WebGameService.Hubs {
                         await context.SaveChangesAsync();
 
                         /* Send client list update to all registered session */
-                        var newClients = context.Clients.Where(x => x.SessionId == session.Id);
+                        var newClients = context.Clients.Where(x => x.SessionId == session.Id).ToList();
                         await Clients.Group(session.Guid).SendAsync("UpdateClients", newClients);
 
                         return true;
@@ -213,7 +213,7 @@ namespace WebGameService.Hubs {
                 }
 
                 /* Push an update of the client list to everyone registered to the hub */
-                var newClients = context.Clients.Where(x => x.SessionId == session.Id);
+                var newClients = context.Clients.Where(x => x.SessionId == session.Id).ToList();
                 await Clients.Group(session.Guid).SendAsync("UpdateClients", newClients);
 
                 return client;
