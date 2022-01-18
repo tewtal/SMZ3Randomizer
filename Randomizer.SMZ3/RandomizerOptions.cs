@@ -12,6 +12,9 @@ namespace Randomizer.SMZ3 {
         public static List<IRandomizerOption> List { get; } = new List<IRandomizerOption> {
             CreateEnumOption<SMLogic>("Super Metroid Logic"),
             CreateEnumOption<Goal>("Goal"),
+            CreateEnumOption<OpenTower>("Open Ganon's Tower"),
+            CreateEnumOption<GanonVulnerable>("Ganon Vulnerable"),
+            CreateEnumOption<OpenTourian>("Open Tourian"),
             //GetRandomizerOption<Z3Logic>("A Link to the Past Logic"),
             CreateEnumOption<SwordLocation>("First Sword"),
             CreateEnumOption<MorphLocation>("Morph Ball"),
@@ -64,7 +67,9 @@ namespace Randomizer.SMZ3 {
                 MorphLocation = ParseOption(options, MorphLocation.Randomized),
                 KeyShuffle = ParseOption(options, KeyShuffle.None),
                 Goal = ParseOption(options, Goal.DefeatBoth),
-                GanonInvincible = ParseOption(options, GanonInvincible.BeforeCrystals),
+                OpenTower = ParseOption(options, OpenTower.SevenCrystals),
+                GanonVulnerable = ParseOption(options, GanonVulnerable.SevenCrystals),
+                OpenTourian = ParseOption(options, OpenTourian.FourBosses),
                 Race = ParseOption(options, "Race", false),
             };
         }

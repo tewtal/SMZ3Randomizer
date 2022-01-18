@@ -131,12 +131,37 @@ export default function Patch(props) {
             mode === 'multiworld' ? world.player : null
         ]);
 
-        function smz3Parts({ smlogic, swordlocation, morphlocation, keyshuffle }) {
+        function smz3Parts({ smlogic, swordlocation, morphlocation, keyshuffle, goal, opentower, ganonvulnerable, opentourian }) {
+            const crystalIds = {
+                'nocrystals': '0',
+                'onecrystal': '1',
+                'twocrystals': '2',
+                'threecrystals': '3',
+                'fourcrystals': '4',
+                'fivecrystals': '5',
+                'sixcrystals': '6',
+                'sevencrystals': '7',
+                'random': 'r',
+            };
+
+            const bossIds = {
+                'nobosses': '0',
+                'oneboss': '1',
+                'twobosses': '2',
+                'threebosses': '3',
+                'fourbosses': '4',
+                'random': 'r',
+            }
+
             return [
                 `ZLn+SL${smlogic[0]}`,
                 swordlocation && swordlocation !== 'randomized' ? `S${swordlocation[0]}` : null,
                 morphlocation && morphlocation !== 'randomized' ? `M${morphlocation[0]}` : null,
-                keyshuffle && keyshuffle !== 'none' ? `K${keyshuffle[0]}` : null
+                keyshuffle && keyshuffle !== 'none' ? `K${keyshuffle[0]}` : null,
+                goal && goal !== 'defeatboth' ? `G${goal[0]}` : null,
+                opentower && opentower !== 'sevencrystals' ? `To${crystalIds[opentower]}` : null,
+                ganonvulnerable && ganonvulnerable !== 'sevencrystals' ? `Vu${crystalIds[ganonvulnerable]}` : null,
+                opentourian && opentourian !== 'fourbosses' ? `Tr${bossIds[opentourian]}` : null,
             ];
         }
 
@@ -146,6 +171,7 @@ export default function Patch(props) {
                 `I${placement[0]}`
             ];
         }
+
 
         return `${join(parts, '-')}.sfc`;
     }

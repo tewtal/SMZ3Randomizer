@@ -890,11 +890,11 @@ namespace Randomizer.SMZ3 {
                 Normal =>
                     items.MoonPearl && items.Flippers &&
                     items.Gravity && items.Morph &&
-                    (world.CanAquire(items, Agahnim) || items.Hammer && items.CanLiftLight() || items.CanLiftHeavy()),
+                    (world.CanAcquire(items, Agahnim) || items.Hammer && items.CanLiftLight() || items.CanLiftHeavy()),
                 _ =>
                     items.MoonPearl && items.Flippers &&
                     (items.CanSpringBallJump() || items.HiJump || items.Gravity) && items.Morph &&
-                    (world.CanAquire(items, Agahnim) || items.Hammer && items.CanLiftLight() || items.CanLiftHeavy())
+                    (world.CanAcquire(items, Agahnim) || items.Hammer && items.CanLiftLight() || items.CanLiftHeavy())
             };
         }
 

@@ -47,23 +47,70 @@ export default function Permalink(props) {
                 </CardHeader>
                 <CardBody>
                     <Row>
-                        <Col>Seed: {seedSlug}</Col>
+                        <Col md="3">Seed:</Col><Col> {seedSlug}</Col>
                     </Row>
                     {seed.seedNumber && (
                         <Row>
-                            <Col>Seed number: {seed.seedNumber}</Col>
+                            <Col md="3">Seed number:</Col><Col> {seed.seedNumber}</Col>
                         </Row>
                     )}
                     {settings && game.id === 'smz3' && (<>
                         <Row>
-                            <Col>Super Metroid Logic: {{
+                            <Col md="3">Super Metroid Logic:</Col><Col> {{
                                 normal: 'Normal',
                                 hard: 'Hard'
                             }[settings.smlogic]
                             }</Col>
                         </Row>
                         <Row>
-                            <Col>First Sword: {{
+                            <Col md="3">Goal:</Col><Col> {{
+                                defeatboth: 'Defeat Ganon and Mother Brain',
+                                fastganondefeatmotherbrain: 'Fast Ganon and Defeat Mother Brain',
+                                alldungeonsdefeatmotherbrain: 'All dungeons and Defeat Mother Brain'
+                            }[settings.goal]
+                            }</Col>
+                        </Row>
+                        <Row>
+                            <Col md="3">Open Ganon's Tower:</Col><Col> {{
+                                random: 'Randomized',
+                                nocrystals: 'No Crystals',
+                                onecrystal: 'One Crystal',
+                                twocrystals: 'Two Crystals',
+                                threecrystals: 'Three Crystals',
+                                fourcrystals: 'Four Crystals',
+                                fivecrystals: 'Five Crystals',
+                                sixcrystals: 'Six Crystals',
+                                sevencrystals: 'Seven Crystals',
+                            }[settings.opentower]
+                            }</Col>
+                        </Row>
+                        <Row>
+                            <Col md="3">Ganon Vulnerable:</Col><Col> {{
+                                random: 'Randomized',
+                                nocrystals: 'No Crystals',
+                                onecrystal: 'One Crystal',
+                                twocrystals: 'Two Crystals',
+                                threecrystals: 'Three Crystals',
+                                fourcrystals: 'Four Crystals',
+                                fivecrystals: 'Five Crystals',
+                                sixcrystals: 'Six Crystals',
+                                sevencrystals: 'Seven Crystals',
+                            }[settings.ganonvulnerable]
+                            }</Col>
+                        </Row>
+                        <Row>
+                            <Col md="3">Open Tourian:</Col><Col> {{
+                                random: 'Randomized',
+                                nobosses: 'No Bosses',
+                                oneboss: 'One Boss',
+                                twobosses: 'Two Bosses',
+                                threebosses: 'Three Bosses',
+                                fourbosses: 'Four Bosses',
+                            }[settings.opentourian]
+                            }</Col>
+                        </Row>
+                        <Row>
+                            <Col md="3">First Sword:</Col><Col> {{
                                 randomized: 'Randomized',
                                 early: 'Early',
                                 uncle: 'Uncle assured'
@@ -71,7 +118,7 @@ export default function Permalink(props) {
                             }</Col>
                         </Row>
                         <Row>
-                            <Col>Morph Ball: {{
+                            <Col md="3">Morph Ball:</Col><Col> {{
                                 randomized: 'Randomized',
                                 early: 'Early',
                                 original: 'Original location'
@@ -79,7 +126,7 @@ export default function Permalink(props) {
                             }</Col>
                         </Row>
                         <Row>
-                            <Col>Key Shuffle: {{
+                            <Col md="3">Key Shuffle:</Col><Col> {{
                                 none: 'None',
                                 keysanity: 'Keysanity',
                             }[settings.keyshuffle]
@@ -88,14 +135,14 @@ export default function Permalink(props) {
                     </>)}
                     {settings && game.id === 'sm' && (<>
                         <Row>
-                            <Col>Logic: {{
+                            <Col md="3">Logic:</Col><Col> {{
                                 casual: 'Casual',
                                 tournament: 'Tournament'
                             }[settings.logic]
                             }</Col>
                         </Row>
                         <Row>
-                            <Col>Item Placement: {{
+                            <Col md="3">Item Placement:</Col><Col> {{
                                 full: 'Full randomization',
                                 split: 'Major/Minor split'
                             }[settings.placement]
