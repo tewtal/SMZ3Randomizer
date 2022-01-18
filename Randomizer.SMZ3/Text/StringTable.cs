@@ -61,6 +61,14 @@ namespace Randomizer.SMZ3.Text {
             SetText("tablet_bombos_book", text);
         }
 
+        public void SetTowerRequirementText(string text) {
+            SetText("sign_ganons_tower", text);
+        }
+
+        public void SetGanonRequirementText(string text) {
+            SetText("sign_ganon", text);
+        }
+
         void SetText(string name, string text) {
             var index = entries.IndexOf(entries.First(x => x.name == name));
             entries[index] = (name, Dialog.Compiled(text));

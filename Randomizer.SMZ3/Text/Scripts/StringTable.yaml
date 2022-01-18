@@ -427,4 +427,10 @@
 # $190
 - sign_east_death_mountain_bridge: "How did you get up here?"
 - fish_money: "It's a secret to everyone."
+- sign_ganons_tower: "You need all 7 crystals to enter."
+- sign_ganon: "You need all 7 crystals to beat Ganon."
+- ganon_phase_3_no_bow: "You have no bow. Dingus!"
+- ganon_phase_3_no_silvers_alt: "You can't best me without silver arrows!"
+- ganon_phase_3_no_silvers: "You can't best me without silver arrows!"
+- ganon_phase_3_silvers: "Oh no! Silver! My one true weakness!"
 - end_pad_data: ""

@@ -99,6 +99,7 @@ namespace Randomizer.SMZ3 {
             WriteRemoveEquipmentFromUncle(myWorld.GetLocation("Link's Uncle").Item);
 
             WriteGanonInvicible(config.Goal);
+            WritePreOpenPyramid(config.Goal);
             WriteCrystalsNeeded(myWorld.OpenTower, myWorld.GanonVulnerable);
             WriteBossesNeeded(myWorld.OpenTourian);
             WriteRngBlock();
@@ -800,6 +801,12 @@ namespace Randomizer.SMZ3 {
             }
         }
 
+        void WritePreOpenPyramid(Goal goal) {
+            if (goal == Goal.FastGanonDefeatMotherBrain) {
+                patches.Add((Snes(0x30808B), new byte[] { (byte)1 }));
+            }
+        }
+
         void WriteGanonInvicible(Goal goal) {
             /* Defaults to $00 (never) at [asm]/z3/randomizer/tables.asm */
             var value = goal switch {
@@ -818,6 +825,9 @@ namespace Randomizer.SMZ3 {
         void WriteCrystalsNeeded(int openTower, int ganonVulnerable) {
             patches.Add((Snes(0x30805E), UintBytes(openTower)));
             patches.Add((Snes(0x30805F), UintBytes(ganonVulnerable)));
+
+            stringTable.SetTowerRequirementText($"You need {myWorld.OpenTower} crystals to enter Ganon's Tower.");
+            stringTable.SetGanonRequirementText($"You need {myWorld.GanonVulnerable} crystals to defeat Ganon.");
         }
 
         void WriteRngBlock() {
