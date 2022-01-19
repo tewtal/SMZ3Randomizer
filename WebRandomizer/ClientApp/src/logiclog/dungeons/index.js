@@ -1,4 +1,4 @@
-﻿import HyruleCastle from './HyruleCastle/Content';
+import HyruleCastle from './HyruleCastle/Content';
 import EasternPalace from './EasternPalace/Content';
 import DesertPalace from './DesertPalace/Content';
 import TowerOfHera from './TowerOfHera/Content';

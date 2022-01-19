@@ -2,10 +2,10 @@
 import { Row, Col, Card, CardBody, Collapse } from 'reactstrap';
 import { InputGroupAddon, Nav, NavItem, NavLink } from 'reactstrap';
 import { LevelCardHeader, LogicMarkdown, ToggleButton, IntroLabel } from './styled';
-import InputGroup from '../components/util/PrefixInputGroup';
-import Markdown from '../components/Markdown';
 
-import { PlusSquareFill, DashSquareFill } from '../components/util/BootstrapIcon';
+import InputGroup from '../ui/PrefixInputGroup';
+import Markdown from '../ui/Markdown';
+import { PlusSquareFill, DashSquareFill } from '../ui/BootstrapIcon';
 
 import classNames from 'classnames';
 

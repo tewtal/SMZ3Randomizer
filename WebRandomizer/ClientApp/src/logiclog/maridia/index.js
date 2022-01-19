@@ -1,4 +1,4 @@
-﻿import MaridiaOuter from './Outer/Content';
+import MaridiaOuter from './Outer/Content';
 import MaridiaInner from './Inner/Content';
 
 export default {

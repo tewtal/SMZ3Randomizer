@@ -1,4 +1,4 @@
-﻿import DeathMountainWest from './DeathMountainWest/Content';
+import DeathMountainWest from './DeathMountainWest/Content';
 import DeathMountainEast from './DeathMountainEast/Content';
 import NorthWest from './NorthWest/Content';
 import NorthEast from './NorthEast/Content';

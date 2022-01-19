@@ -1,4 +1,4 @@
-﻿import BrinstarBlue from './Blue/Content';
+import BrinstarBlue from './Blue/Content';
 import BrinstarGreen from './Green/Content';
 import BrinstarPink from './Pink/Content';
 import BrinstarRed from './Red/Content';

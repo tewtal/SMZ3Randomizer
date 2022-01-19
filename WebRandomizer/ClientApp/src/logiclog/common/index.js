@@ -1,4 +1,4 @@
-﻿import Aliases from './Aliases/Content';
+import Aliases from './Aliases/Content';
 import Portals from './Portals/Content';
 
 export default {
