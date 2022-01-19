@@ -23,9 +23,12 @@ namespace Randomizer.SMZ3.Tests.Logic {
             (world.Regions.Single(x => x.Name == "Misery Mire") as MiseryMire).Medallion = Ether;
             (world.Regions.Single(x => x.Name == "Turtle Rock") as TurtleRock).Medallion = Quake;
             /* Here we use the assumptions that single/multiple reward checks yield true if the rewards are missing */
+            /* Crystal and Boss requirements defaults to zero */
             foreach (var region in world.Regions.OfType<IReward>()) {
                 region.Reward = region.Reward == Agahnim ? Agahnim : None;
             }
+            /* After changing the rewards the lookup needs an update */
+            world.SetRewardLookup();
         }
 
         [TestFixture]

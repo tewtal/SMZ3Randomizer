@@ -12,7 +12,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
             var sphereOne = -14;
             Locations = new List<Location> {
                 new Location(this, 256+14, 0x589B0, LocationType.Pedestal, "Master Sword Pedestal",
-                    items => World.CanAcquireAll(items, PendantGreen, PendantNonGreen)),
+                    items => World.CanAcquireAll(items, AnyPendant)),
                 new Location(this, 256+15, 0x308013, LocationType.Regular, "Mushroom").Weighted(sphereOne),
                 new Location(this, 256+16, 0x308000, LocationType.Regular, "Lost Woods Hideout").Weighted(sphereOne),
                 new Location(this, 256+17, 0x308001, LocationType.Regular, "Lumberjack Tree",

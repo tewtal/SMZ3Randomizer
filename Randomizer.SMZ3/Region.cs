@@ -1,30 +1,37 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
 namespace Randomizer.SMZ3 {
 
+    [Flags]
     enum RewardType {
         [Description("None")]
         None,
         [Description("Agahnim")]
-        Agahnim,
+        Agahnim = 1 << 0,
         [Description("Green Pendant")]
-        PendantGreen,
+        PendantGreen = 1 << 1,
         [Description("Blue/Red Pendant")]
-        PendantNonGreen = 4,
+        PendantNonGreen = 1 << 2,
         [Description("Blue Crystal")]
-        CrystalBlue = 8,
+        CrystalBlue = 1 << 3,
         [Description("Red Crystal")]
-        CrystalRed = 16,
+        CrystalRed = 1 << 4,
         [Description("Kraid Boss Token")]
-        BossTokenKraid = 32,
+        BossTokenKraid = 1 << 5,
         [Description("Phantoon Boss Token")]
-        BossTokenPhantoon = 64,
+        BossTokenPhantoon = 1 << 6,
         [Description("Draygon Boss Token")]
-        BossTokenDraygon = 128,
+        BossTokenDraygon = 1 << 7,
         [Description("Ridley Boss Token")]
-        BossTokenRidley = 256
+        BossTokenRidley = 1 << 8,
+
+        AnyPendant = PendantGreen | PendantNonGreen,
+        AnyCrystal = CrystalBlue | CrystalRed,
+        AnyBossToken = BossTokenKraid | BossTokenPhantoon
+            | BossTokenDraygon | BossTokenRidley,
     }
 
     interface IReward {
