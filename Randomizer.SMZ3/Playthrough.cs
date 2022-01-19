@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using static Randomizer.SMZ3.WorldState;
 
 namespace Randomizer.SMZ3 {
 
@@ -89,7 +90,7 @@ namespace Randomizer.SMZ3 {
             );
         }
 
-        static void AddMedallion(Dictionary<string, string> sphere, Region region, ItemType medallion, bool multiWorld) {
+        static void AddMedallion(Dictionary<string, string> sphere, Region region, Medallion medallion, bool multiWorld) {
             sphere.Add(
                 multiWorld ? $"Medallion Required - {region.Area} - {region.World.Player}"
                            : $"Medallion Required - {region.Area}",

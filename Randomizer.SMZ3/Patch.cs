@@ -8,6 +8,7 @@ using Randomizer.SMZ3.Text;
 using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.RewardType;
 using static Randomizer.SMZ3.DropPrize;
+using static Randomizer.SMZ3.WorldState;
 
 namespace Randomizer.SMZ3 {
 
@@ -100,8 +101,8 @@ namespace Randomizer.SMZ3 {
 
             WriteGanonInvicible(config.Goal);
             WritePreOpenPyramid(config.Goal);
-            WriteCrystalsNeeded(myWorld.OpenTower, myWorld.GanonVulnerable);
-            WriteBossesNeeded(myWorld.OpenTourian);
+            WriteCrystalsNeeded(myWorld.TowerCrystals, myWorld.GanonCrystals);
+            WriteBossesNeeded(myWorld.TourianBossTokens);
             WriteRngBlock();
 
             WriteSaveAndQuitFromBossRoom();
@@ -133,16 +134,16 @@ namespace Randomizer.SMZ3 {
             var miseryMireAddresses = new int[] { 0x308022, 0xCFF2, 0xD0D1, 0xD1B0 };
 
             var turtleRockValues = turtleRock.Medallion switch {
-                Bombos => new byte[] { 0x00, 0x51, 0x10, 0x00 },
-                Ether => new byte[] { 0x01, 0x51, 0x18, 0x00 },
-                Quake => new byte[] { 0x02, 0x14, 0xEF, 0xC4 },
+                Medallion.Bombos => new byte[] { 0x00, 0x51, 0x10, 0x00 },
+                Medallion.Ether => new byte[] { 0x01, 0x51, 0x18, 0x00 },
+                Medallion.Quake => new byte[] { 0x02, 0x14, 0xEF, 0xC4 },
                 var x => throw new InvalidOperationException($"Tried using {x} in place of Turtle Rock medallion")
             };
 
             var miseryMireValues = miseryMire.Medallion switch {
-                Bombos => new byte[] { 0x00, 0x51, 0x00, 0x00 },
-                Ether => new byte[] { 0x01, 0x13, 0x9F, 0xF1 },
-                Quake => new byte[] { 0x02, 0x51, 0x08, 0x00 },
+                Medallion.Bombos => new byte[] { 0x00, 0x51, 0x00, 0x00 },
+                Medallion.Ether => new byte[] { 0x01, 0x13, 0x9F, 0xF1 },
+                Medallion.Quake => new byte[] { 0x02, 0x51, 0x08, 0x00 },
                 var x => throw new InvalidOperationException($"Tried using {x} in place of Misery Mire medallion")
             };
 
@@ -740,7 +741,8 @@ namespace Randomizer.SMZ3 {
 
             /* Write plaque showing SM bosses that needs to be killed */
             if (myWorld.Config.OpenTourian != OpenTourian.FourBosses) {
-                var plaqueData = UshortBytes(0xA5ED).Concat(UshortBytes(plaquePlm)).Concat(UshortBytes(0x044F)).Concat(UshortBytes(KeycardPlaque.Zero + myWorld.OpenTourian)).ToArray();
+                var plaqueData = UshortBytes(0xA5ED).Concat(UshortBytes(plaquePlm)).Concat(UshortBytes(0x044F))
+                    .Concat(UshortBytes(KeycardPlaque.Zero + myWorld.TourianBossTokens)).ToArray();
                 patches.Add((Snes(0x8f0000 + plmTablePos), plaqueData));
                 plmTablePos += 0x08;
             }
@@ -795,22 +797,22 @@ namespace Randomizer.SMZ3 {
             var value = goal switch {
                 Goal.DefeatBoth => 0x03,
                 Goal.FastGanonDefeatMotherBrain => 0x00,
-                Goal.AllDungeonsDefeatMotherBrain => 0x02,                
+                Goal.AllDungeonsDefeatMotherBrain => 0x02,
                 var x => throw new ArgumentException($"Unknown Ganon invincible value {x}", nameof(goal))
             };
             patches.Add((Snes(0x30803E), new byte[] { (byte)value }));
         }
 
-        void WriteBossesNeeded(int numBosses) {
-            patches.Add((Snes(0xF47200), UshortBytes(numBosses)));
+        void WriteBossesNeeded(int tourianBossTokens) {
+            patches.Add((Snes(0xF47200), UshortBytes(tourianBossTokens)));
         }
 
-        void WriteCrystalsNeeded(int openTower, int ganonVulnerable) {
-            patches.Add((Snes(0x30805E), new byte[] { (byte)openTower }));
-            patches.Add((Snes(0x30805F), new byte[] { (byte)ganonVulnerable }));
+        void WriteCrystalsNeeded(int towerCrystals, int ganonCrystals) {
+            patches.Add((Snes(0x30805E), new byte[] { (byte)towerCrystals }));
+            patches.Add((Snes(0x30805F), new byte[] { (byte)ganonCrystals }));
 
-            stringTable.SetTowerRequirementText($"You need {myWorld.OpenTower} crystals to enter Ganon's Tower.");
-            stringTable.SetGanonRequirementText($"You need {myWorld.GanonVulnerable} crystals to defeat Ganon.");
+            stringTable.SetTowerRequirementText($"You need {towerCrystals} crystals to enter Ganon's Tower.");
+            stringTable.SetGanonRequirementText($"You need {ganonCrystals} crystals to defeat Ganon.");
         }
 
         void WriteRngBlock() {
