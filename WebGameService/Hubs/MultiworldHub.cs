@@ -110,7 +110,7 @@ namespace WebGameService.Hubs {
                                 ItemId = itemId,
                                 ItemIndex = itemIndex,
                                 PlayerId = worldId,
-                                TimeStamp = DateTime.Now,
+                                TimeStamp = DateTime.UtcNow,
                                 Type = EventType.ItemSent,
                                 SequenceNum = sequenceId
                             };
@@ -122,7 +122,7 @@ namespace WebGameService.Hubs {
                                 ItemId = itemId,
                                 ItemIndex = itemIndex,
                                 PlayerId = fromClient.WorldId,
-                                TimeStamp = DateTime.Now,
+                                TimeStamp = DateTime.UtcNow,
                                 Type = EventType.ItemReceived,
                                 SequenceNum = toClient.RecievedSeq
                             };
