@@ -54,7 +54,7 @@ namespace Randomizer.SMZ3 {
                         throw new ArgumentException($"No name provided for player {p + 1}");
                     if (!legalCharacters.IsMatch(player))
                         throw new ArgumentException($"No alphanumeric characters found in name for player {p + 1}");
-                    player = CleanPlayerName(player);                    
+                    player = CleanPlayerName(player);
                     worlds.Add(new World(config, player, p, new HexGuid()));
                 }
             }
@@ -84,9 +84,12 @@ namespace Randomizer.SMZ3 {
                     Guid = world.Guid,
                     Player = world.Player,
                     Patches = patch.Create(config),
-                    Locations = world.Locations
-                        .Select(l => new LocationData() { LocationId = l.Id, ItemId = (int)l.Item.Type, ItemWorldId = l.Item.World.Id })
-                        .ToList<ILocationData>(),
+                    Locations = world.Locations.Select(l => new LocationData() {
+                        LocationId = l.Id,
+                        ItemId = (int)l.Item.Type,
+                        ItemWorldId = l.Item.World.Id
+                    }).ToList<ILocationData>(),
+                    WorldState = config.Race ? null : world.WorldState,
                 };
 
                 seedData.Worlds.Add(worldData);
@@ -143,6 +146,7 @@ namespace Randomizer.SMZ3 {
         public string Player { get; set; }
         public Dictionary<int, byte[]> Patches { get; set; }
         public List<ILocationData> Locations { get; set; }
+        public object WorldState { get; set; }
     }
 
     public class LocationData : ILocationData {

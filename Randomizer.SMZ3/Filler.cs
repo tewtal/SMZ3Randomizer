@@ -20,7 +20,7 @@ namespace Randomizer.SMZ3 {
             CancellationToken = cancellationToken;
 
             foreach (var world in worlds) {
-                world.Setup(Rnd);
+                world.Setup(WorldState.Generate(Config, Rnd));
             }
         }
 
@@ -174,7 +174,7 @@ namespace Randomizer.SMZ3 {
         void GanonTowerFill(List<Item> itemPool, double factor) {
             foreach (var world in Worlds) {
                 var locations = world.Locations.Where(x => x.Region is Regions.Zelda.GanonsTower).Empty().Shuffle(Rnd);
-                FastFill(itemPool, locations.Take((int)(locations.Count * factor * (world.OpenTower / 7))));
+                FastFill(itemPool, locations.Take((int)(locations.Count * factor * (world.TowerCrystals / 7))));
             }
         }
 
