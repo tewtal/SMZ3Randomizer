@@ -545,44 +545,27 @@ namespace Randomizer.SMZ3 {
             var redCrystalDungeons = regions.Where(x => x.Reward == CrystalRed).Cast<Region>();
 
             var sahasrahla = Texts.SahasrahlaReveal(greenPendantDungeon);
-            patches.Add((Snes(0x308A00), Dialog.Simple(sahasrahla)));
             stringTable.SetSahasrahlaRevealText(sahasrahla);
 
             var bombShop = Texts.BombShopReveal(redCrystalDungeons);
-            patches.Add((Snes(0x308E00), Dialog.Simple(bombShop)));
             stringTable.SetBombShopRevealText(bombShop);
 
             var blind = Texts.Blind(rnd);
-            patches.Add((Snes(0x308800), Dialog.Simple(blind)));
             stringTable.SetBlindText(blind);
 
             var tavernMan = Texts.TavernMan(rnd);
-            patches.Add((Snes(0x308C00), Dialog.Simple(tavernMan)));
             stringTable.SetTavernManText(tavernMan);
 
             var ganon = Texts.GanonFirstPhase(rnd);
-            patches.Add((Snes(0x308600), Dialog.Simple(ganon)));
             stringTable.SetGanonFirstPhaseText(ganon);
-
-            // Todo: Verify these two are correct if ganon invincible patch is ever added
-            // ganon_fall_in_alt in v30
-            var ganonFirstPhaseInvincible = "You think you\nare ready to\nface me?\n\nI will not die\n\nunless you\ncomplete your\ngoals. Dingus!";
-            patches.Add((Snes(0x309100), Dialog.Simple(ganonFirstPhaseInvincible)));
-
-            // ganon_phase_3_alt in v30
-            var ganonThirdPhaseInvincible = "Got wax in\nyour ears?\nI cannot die!";
-            patches.Add((Snes(0x309200), Dialog.Simple(ganonThirdPhaseInvincible)));
-            // ---
 
             var silversLocation = allWorlds.SelectMany(world => world.Locations).Where(l => l.ItemIs(SilverArrows, myWorld)).First();
             var silvers = config.MultiWorld ?
                 Texts.GanonThirdPhaseMulti(silversLocation.Region, myWorld) :
-                Texts.GanonThirdPhaseSingle(silversLocation.Region);
-            patches.Add((Snes(0x308700), Dialog.Simple(silvers)));
+                Texts.GanonThirdPhaseSingle(silversLocation.Region);           
             stringTable.SetGanonThirdPhaseText(silvers);
 
-            var triforceRoom = Texts.TriforceRoom(rnd);
-            patches.Add((Snes(0x308400), Dialog.Simple(triforceRoom)));
+            var triforceRoom = Texts.TriforceRoom(rnd);            
             stringTable.SetTriforceRoomText(triforceRoom);
         }
 
@@ -819,12 +802,12 @@ namespace Randomizer.SMZ3 {
         }
 
         void WriteBossesNeeded(int numBosses) {
-            patches.Add((Snes(0xF47200), UintBytes(numBosses)));
+            patches.Add((Snes(0xF47200), UshortBytes(numBosses)));
         }
 
         void WriteCrystalsNeeded(int openTower, int ganonVulnerable) {
-            patches.Add((Snes(0x30805E), UintBytes(openTower)));
-            patches.Add((Snes(0x30805F), UintBytes(ganonVulnerable)));
+            patches.Add((Snes(0x30805E), new byte[] { (byte)openTower }));
+            patches.Add((Snes(0x30805F), new byte[] { (byte)ganonVulnerable }));
 
             stringTable.SetTowerRequirementText($"You need {myWorld.OpenTower} crystals to enter Ganon's Tower.");
             stringTable.SetGanonRequirementText($"You need {myWorld.GanonVulnerable} crystals to defeat Ganon.");
