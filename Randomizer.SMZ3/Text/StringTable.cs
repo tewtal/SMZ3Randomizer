@@ -43,6 +43,8 @@ namespace Randomizer.SMZ3.Text {
 
         public void SetGanonThirdPhaseText(string text) {
             SetText("ganon_phase_3", text);
+            SetText("ganon_phase_3_no_silvers", text);
+            SetText("ganon_phase_3_no_silvers_alt", text);
         }
 
         public void SetTriforceRoomText(string text) {
