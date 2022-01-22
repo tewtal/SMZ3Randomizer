@@ -35,33 +35,33 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                             GetLocation("Ganon's Tower - Randomizer Room - Bottom Right")
                         }.Any(l => l.ItemIs(BigKeyGT, World)) ||
                         GetLocation("Ganon's Tower - Firesnake Room").ItemIs(KeyGT, World) ? 2 : 3)),
-                new Location(this, 256+196, 0x1EAC4, LocationType.Regular, "Ganon's Tower - Randomizer Room - Top Left",
+                new Location(this, 256+230, 0x1EAC4, LocationType.Regular, "Ganon's Tower - Randomizer Room - Top Left",
                     items => LeftSide(items, new[] {
                         GetLocation("Ganon's Tower - Randomizer Room - Top Right"),
                         GetLocation("Ganon's Tower - Randomizer Room - Bottom Left"),
                         GetLocation("Ganon's Tower - Randomizer Room - Bottom Right")
                     })),
-                new Location(this, 256+197, 0x1EAC7, LocationType.Regular, "Ganon's Tower - Randomizer Room - Top Right",
+                new Location(this, 256+231, 0x1EAC7, LocationType.Regular, "Ganon's Tower - Randomizer Room - Top Right",
                     items => LeftSide(items, new[] {
                         GetLocation("Ganon's Tower - Randomizer Room - Top Left"),
                         GetLocation("Ganon's Tower - Randomizer Room - Bottom Left"),
                         GetLocation("Ganon's Tower - Randomizer Room - Bottom Right")
                     })),
-                new Location(this, 256+198, 0x1EACA, LocationType.Regular, "Ganon's Tower - Randomizer Room - Bottom Left",
+                new Location(this, 256+232, 0x1EACA, LocationType.Regular, "Ganon's Tower - Randomizer Room - Bottom Left",
                     items => LeftSide(items, new[] {
                         GetLocation("Ganon's Tower - Randomizer Room - Top Right"),
                         GetLocation("Ganon's Tower - Randomizer Room - Top Left"),
                         GetLocation("Ganon's Tower - Randomizer Room - Bottom Right")
                     })),
-                new Location(this, 256+199, 0x1EACD, LocationType.Regular, "Ganon's Tower - Randomizer Room - Bottom Right",
+                new Location(this, 256+233, 0x1EACD, LocationType.Regular, "Ganon's Tower - Randomizer Room - Bottom Right",
                     items => LeftSide(items, new[] {
                         GetLocation("Ganon's Tower - Randomizer Room - Top Right"),
                         GetLocation("Ganon's Tower - Randomizer Room - Top Left"),
                         GetLocation("Ganon's Tower - Randomizer Room - Bottom Left")
                     })),
-                new Location(this, 256+200, 0x1EAD9, LocationType.Regular, "Ganon's Tower - Hope Room - Left"),
-                new Location(this, 256+201, 0x1EADC, LocationType.Regular, "Ganon's Tower - Hope Room - Right"),
-                new Location(this, 256+202, 0x1EAE2, LocationType.Regular, "Ganon's Tower - Tile Room",
+                new Location(this, 256+234, 0x1EAD9, LocationType.Regular, "Ganon's Tower - Hope Room - Left"),
+                new Location(this, 256+235, 0x1EADC, LocationType.Regular, "Ganon's Tower - Hope Room - Right"),
+                new Location(this, 256+236, 0x1EAE2, LocationType.Regular, "Ganon's Tower - Tile Room",
                     items => items.Somaria),
                 new Location(this, 256+203, 0x1EAE5, LocationType.Regular, "Ganon's Tower - Compass Room - Top Left",
                     items => RightSide(items, new[] {
