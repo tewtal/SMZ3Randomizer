@@ -8,21 +8,28 @@ import { SearchIcon, DownloadIcon } from './styled';
 import { saveAs } from 'file-saver';
 import { encode } from 'slugid';
 
-import isEmpty from 'lodash/isEmpty';
+import { tryParseJson } from '../util';
+import filter from 'lodash/filter';
 import sortBy from 'lodash/sortBy';
 import uniq from 'lodash/uniq';
+import initial from 'lodash/initial';
+import last from 'lodash/last';
+import isEmpty from 'lodash/isEmpty';
 import escapeRegExp from 'lodash/escapeRegExp';
 
-export default function Spoiler(props) {
+export default function Spoiler({ seedGuid }) {
     const [show, setShow] = useState(false);
     const [spoiler, setSpoiler] = useState(null);
-    const [spoilerArea, setSpoilerArea] = useState("playthrough");
-    const [searchText, setSearchText] = useState("");
+    const [spoilerArea, setSpoilerArea] = useState('playthrough');
+    const [searchText, setSearchText] = useState('');
+
+    const seed = spoiler ? spoiler.seed : {};
+    const playthrough = filter(tryParseJson(seed.spoiler), sphere => !isEmpty(sphere));
 
     const toggleSpoiler = async () => {
         if (!show && !spoiler) {
             try {
-                let response = await fetch(`/api/spoiler/${props.seedData.guid}`);
+                let response = await fetch(`/api/spoiler/${seedGuid}`);
                 let result = await response.json();
                 setSpoiler(result);
             } catch { }
@@ -42,9 +49,11 @@ export default function Spoiler(props) {
 
         /* Prepare a human-readable JSON dump of the spoiler data */
         let s = {
-            seed: { ...spoiler.seed, spoiler: null },
-            playthrough: spoiler.seed.gameId === 'smz3' ? JSON.parse(spoiler.seed.spoiler).filter(sphere => !isEmpty(sphere)).slice(0, -1) : JSON.parse(spoiler.seed.spoiler).filter(sphere => !isEmpty(sphere)),
-            prizes: spoiler.seed.gameId === 'smz3' ? JSON.parse(spoiler.seed.spoiler).slice(-1) : [],
+            seed: { ...seed, spoiler: null },
+            ...(seed.gameId === 'smz3'
+                ? { playthrough: initial(playthrough), prizes: last(playthrough) }
+                : { playthrough }
+            ),
             regions: uniq(sortBy(spoiler.locations.map(l => l.locationRegion))).map(r => {
                 return {
                     region: r,
@@ -64,15 +73,8 @@ export default function Spoiler(props) {
             type: "text/plain;charset=utf-8"
         });
 
-        saveAs(blob, `${props.seedData.gameName} v${props.seedData.gameVersion} - ${encode(props.seedData.guid)} - Spoiler.txt`);
+        saveAs(blob, `${seed.gameName} v${seed.gameVersion} - ${encode(seed.guid)} - Spoiler.txt`);
     }
-
-    if (props.seedData === null)
-        return null;
-
-    const worldSettings = JSON.parse(props.seedData.worlds[0].settings);
-    if (worldSettings.race === "true")
-        return null;
 
     let locations = spoiler ? spoiler.locations : [];
     if (spoiler && searchText) {
@@ -83,8 +85,6 @@ export default function Spoiler(props) {
             setSpoilerArea("all");
         }
     }
-
-    let playthrough = (spoiler && spoiler.seed) ? JSON.parse(spoiler.seed.spoiler).filter(sphere => !isEmpty(sphere)) : [];
 
     return (
         <Card>
@@ -112,7 +112,7 @@ export default function Spoiler(props) {
                             <NavItem>
                                     <SmallNavLink href="#" active={spoilerArea === "playthrough"} onClick={() => setSpoilerArea("playthrough")}>Playthrough</SmallNavLink>
                                 </NavItem>
-                                {props.seedData.gameId === 'smz3' && <NavItem>
+                                {seed.gameId === 'smz3' && <NavItem>
                                     <SmallNavLink href="#" active={spoilerArea === "prizes"} onClick={() => setSpoilerArea("prizes")}>Prizes</SmallNavLink>
                                 </NavItem>}
                                 <NavItem>
@@ -129,7 +129,10 @@ export default function Spoiler(props) {
                                     <CardBody>
                                         {playthrough.map((sphere, i) => (
                                             <div key={i}>
-                                                {i < (playthrough.length - 1) || props.seedData.gameId === 'sm' ? <h6>Sphere {i + 1}</h6> : <h6>Prizes and Requirements</h6>}
+                                                {i < (playthrough.length - 1) || seed.gameId === 'sm'
+                                                    ? <h6>Sphere {i + 1}</h6>
+                                                    : <h6>Prizes and Requirements</h6>
+                                                }
                                                 <LocationTable className="mb-4">
                                                     <tbody>
                                                         {Object.entries(sphere).map(([location, item], j) => (
@@ -171,8 +174,8 @@ export default function Spoiler(props) {
                                                     <tbody>
                                                     {locations.filter(l => (spoilerArea === 'all' || l.locationArea === spoilerArea) && l.locationRegion === r).map((l, j) => (
                                                         <tr key={j}>
-                                                            <td style={{ width: '60%' }}>{l.locationName}{spoiler.seed.players > 1 ? ` - ${spoiler.seed.worlds[l.worldId].player}` : ''}</td>
-                                                            <td>{l.itemName}{spoiler.seed.players > 1 ? ` - ${spoiler.seed.worlds[l.itemWorldId].player}` : ''}</td>
+                                                            <td style={{ width: '60%' }}>{l.locationName}{seed.players > 1 ? ` - ${seed.worlds[l.worldId].player}` : ''}</td>
+                                                            <td>{l.itemName}{seed.players > 1 ? ` - ${seed.worlds[l.itemWorldId].player}` : ''}</td>
                                                         </tr>
                                                     ))}
                                                     </tbody>

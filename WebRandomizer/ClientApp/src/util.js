@@ -13,3 +13,11 @@ export async function readAsArrayBuffer(blob) {
         fileReader.readAsArrayBuffer(blob);
     });
 }
+
+export function tryParseJson(text) {
+    try {
+        return JSON.parse(text);
+    } catch (syntaxerror) {
+        return null;
+    }
+}

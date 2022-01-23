@@ -21,6 +21,8 @@ import isEmpty from 'lodash/isEmpty';
 import minBy from 'lodash/minBy';
 import maxBy from 'lodash/maxBy';
 
+import { tryParseJson } from '../util';
+
 // Message types to handle from WASM
 const MessageType = {
     ConsoleDisconnected: 0,
@@ -277,6 +279,7 @@ export default function Multiworld() {
     if (state === null) return null;
 
     const { session, clientData, device, status, patch } = state;
+    const { race } = session ? tryParseJson(session.seed.worlds[0].settings) : {};
     const gameMismatch = session && session.seed.game_id !== game.id;
 
     return !gameMismatch ? (
@@ -323,10 +326,10 @@ export default function Multiworld() {
                     </Col>
                 </Row>
             )}
-            {session && session.seed !== null && (
+            {session && race === 'false' && (
                 <Row className="mb-3">
                     <Col>
-                        <Spoiler seedData={{ ...session.seed, spoiler: '[]' }} />
+                        <Spoiler seedGuid={session.seed.guid} />
                     </Col>
                 </Row>
             )}
