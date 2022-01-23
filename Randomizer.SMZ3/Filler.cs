@@ -66,7 +66,7 @@ namespace Randomizer.SMZ3 {
                 });
             }
 
-            GanonTowerFill(junkItems, 2);
+            GanonTowerFill(junkItems, .5);
             AssumedFill(progressionItems, baseItems, locations, Worlds);
             FastFill(niceItems, locations);
             FastFill(junkItems, locations);
@@ -172,11 +172,10 @@ namespace Randomizer.SMZ3 {
         }
 
         void GanonTowerFill(List<Item> itemPool, double factor) {
-            var locations = Worlds
-                .SelectMany(x => x.Locations)
-                .Where(x => x.Region is Regions.Zelda.GanonsTower)
-                .Empty().Shuffle(Rnd);
-            FastFill(itemPool, locations.Take((int)(locations.Count / factor)));
+            foreach (var world in Worlds) {
+                var locations = world.Locations.Where(x => x.Region is Regions.Zelda.GanonsTower).Empty().Shuffle(Rnd);
+                FastFill(itemPool, locations.Take((int)(locations.Count * factor * (world.OpenTower / 7))));
+            }
         }
 
         void FastFill(List<Item> itemPool, IEnumerable<Location> locations) {
