@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +8,7 @@ using Randomizer.Shared.Contracts;
 using Randomizer.Shared.Models;
 
 namespace WebRandomizer.Controllers {
+
     [Route("api/[controller]")]
     public class SpoilerController : Controller {
 
@@ -70,12 +69,13 @@ namespace WebRandomizer.Controllers {
                     var spoilerLocationData = new List<SpoilerLocationData>();
                     foreach(var world in seedData.Worlds) {
                         foreach(var location in world.Locations) {
+                            var id = LegacyLocationId(location.LocationId);
                             spoilerLocationData.Add(new SpoilerLocationData {
-                                LocationId = location.LocationId,
-                                LocationName = locationData[location.LocationId].Name,
-                                LocationType = locationData[location.LocationId].Type,
-                                LocationRegion = locationData[location.LocationId].Region,
-                                LocationArea = locationData[location.LocationId].Area,
+                                LocationId = id,
+                                LocationName = locationData[id].Name,
+                                LocationType = locationData[id].Type,
+                                LocationRegion = locationData[id].Region,
+                                LocationArea = locationData[id].Area,
 
                                 ItemId = location.ItemId,
                                 ItemName = itemData[location.ItemId].Name,
@@ -98,5 +98,13 @@ namespace WebRandomizer.Controllers {
                 return new StatusCodeResult(500);
             }
         }
+
+        static int LegacyLocationId(int id) => id switch {
+            /* Z3 ids [196, 202] were moved to [230, 236] */
+            _ when id is >= (256 + 196) and <= (256 + 202) => id + (230 - 196),
+            _ => id,
+        };
+
     }
+
 }
