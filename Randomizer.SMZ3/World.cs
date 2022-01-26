@@ -16,9 +16,9 @@ namespace Randomizer.SMZ3 {
         public int Id { get; set; }
         public WorldState WorldState { get; set; }
 
-        public int TowerCrystals => WorldState?.TowerCrystals ?? 0;
-        public int GanonCrystals => WorldState?.GanonCrystals ?? 0;
-        public int TourianBossTokens => WorldState?.TourianBossTokens ?? 0;
+        public int TowerCrystals => WorldState?.TowerCrystals ?? 7;
+        public int GanonCrystals => WorldState?.GanonCrystals ?? 7;
+        public int TourianBossTokens => WorldState?.TourianBossTokens ?? 4;
 
         public IEnumerable<Item> Items {
             get { return Locations.Select(l => l.Item).Where(i => i != null); }
@@ -132,9 +132,8 @@ namespace Randomizer.SMZ3 {
             (GetRegion("Turtle Rock") as IMedallionAccess).Medallion = tr;
         }
 
-        // internal for logic unit tests
-        internal void SetRewardLookup() {
-            // Generate a lookup of all possible regions for any given reward combination for faster lookup later
+        void SetRewardLookup() {
+            /* Generate a lookup of all possible regions for any given reward combination for faster lookup later */
             rewardLookup = new Dictionary<int, IReward[]>();
             for (var i = 0; i < 512; i += 1) {
                 rewardLookup.Add(i, Regions.OfType<IReward>().Where(x => (((int)x.Reward) & i) != 0).ToArray());
