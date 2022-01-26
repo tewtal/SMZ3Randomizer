@@ -711,6 +711,12 @@ namespace Randomizer.SMZ3 {
                 ushort doorId = 0x0000;
 
                 foreach (var door in doorList) {
+                    
+                    /* When "Fast Ganon" is set, don't place the G4 Boss key door to enable faster games */
+                    if (door[0] == 0x99BD && myWorld.Config.Goal == Goal.FastGanonDefeatMotherBrain) {
+                        continue;
+                    }
+
                     var doorArgs = door[4] != KeycardPlaque.None ? doorId | door[3] : door[3];
                     if (door[6] == 0) {
                         // Write dynamic door
