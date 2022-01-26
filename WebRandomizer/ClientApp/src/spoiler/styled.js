@@ -12,11 +12,12 @@ export const SmallNavLink = styled(NavLink)`
   padding-left: 9px;
 `;
 
-export const LocationTable = styled.table.attrs({
+export const StyledTable = styled.table.attrs({
     className: "table table-sm table-borderless"
 })`
   > tbody > tr {
     border-bottom: 1px solid #E0E0E0;
+    > td:first-child { width: 60% }
   }
 `;
 
