@@ -12,6 +12,7 @@ import { adjustHostname } from '../site/domain';
 
 import { decode } from 'slugid';
 
+import defaults from 'lodash/defaults';
 import attempt from 'lodash/attempt';
 
 export default function Permalink() {
@@ -42,6 +43,14 @@ export default function Permalink() {
     const gameMismatch = seed && seed.gameId !== game.id;
     const world = seed && seed.worlds[0];
     const settings = world && tryParseJson(world.settings);
+    if (settings) {
+        defaults(settings, {
+            opentower: 'sevencrystals',
+            ganonvulnerable: 'sevencrystals',
+            opentourian: 'fourbosses',
+        });
+    }
+
     const content = seed && !gameMismatch ? (
         <>
             <Card className="mb-3">
