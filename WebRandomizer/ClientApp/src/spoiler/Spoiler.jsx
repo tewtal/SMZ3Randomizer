@@ -8,7 +8,8 @@ import { SearchIcon, DownloadIcon } from './styled';
 import { saveAs } from 'file-saver';
 import { encode } from 'slugid';
 
-import { tryParseJson } from '../util';
+import { tryParseJson, sortGroupBy } from '../util';
+import map from 'lodash/map';
 import filter from 'lodash/filter';
 import some from 'lodash/some';
 import includes from 'lodash/includes';
@@ -16,6 +17,7 @@ import sortBy from 'lodash/sortBy';
 import uniq from 'lodash/uniq';
 import initial from 'lodash/initial';
 import last from 'lodash/last';
+import toPairs from 'lodash/toPairs';
 import isEmpty from 'lodash/isEmpty';
 import escapeRegExp from 'lodash/escapeRegExp';
 
@@ -25,14 +27,17 @@ export default function Spoiler({ seedGuid }) {
     const [spoilerArea, setSpoilerArea] = useState('playthrough');
     const [searchText, setSearchText] = useState('');
 
-    const seed = spoiler ? spoiler.seed : {};
-    const playthrough = filter(tryParseJson(seed.spoiler), sphere => !isEmpty(sphere));
+    const { seed = {} } = spoiler || {};
+    const { worlds, players, spoiler: playthrough = [] } = seed;
+    const multiworld = players > 1;
 
     async function toggleSpoiler() {
         if (!show && !spoiler) {
             try {
                 const response = await fetch(`/api/spoiler/${seedGuid}`);
                 const result = await response.json();
+                result.seed.spoiler = filter(tryParseJson(result.seed.spoiler), sphere => !isEmpty(sphere));
+                result.locations = sortBy(result.locations, 'locationId');
                 setSpoiler(result);
             } catch { }
         }
@@ -76,14 +81,49 @@ export default function Spoiler({ seedGuid }) {
     }
 
     let locations = spoiler ? spoiler.locations : [];
-    if (spoiler && searchText) {
-        const pattern = new RegExp(escapeRegExp(searchText), 'i');
-        locations = filter(spoiler.locations, l => pattern.test(l.locationName) || pattern.test(l.itemName));
+    let content;
+    if (spoiler) {
+        if (searchText) {
+            const pattern = new RegExp(escapeRegExp(searchText), 'i');
+            locations = filter(spoiler.locations, l => pattern.test(l.locationName) || pattern.test(l.itemName));
 
-        if (!includes(['all', 'playthrough', 'prizes'], spoilerArea) && !some(locations, { locationArea: spoilerArea })) {
-            setSpoilerArea('all');
+            if (!includes(['all', 'playthrough', 'prizes'], spoilerArea) && !some(locations, { locationArea: spoilerArea })) {
+                setSpoilerArea('all');
+            }
         }
+
+        if (spoilerArea === 'playthrough') {
+            content = seed.gameId === 'smz3' ? [
+                ...sphereContent(initial(playthrough)),
+                ...prizeReqContent(last(playthrough))
+            ] : sphereContent(playthrough);
+        }
+        else if (spoilerArea === 'prizes')
+            content = prizeReqContent(last(playthrough));
+        else
+            content = areaContent(locations);
     }
+
+    function sphereContent(spheres) {
+        return map(spheres, (sphere, i) => [`Sphere ${i + 1}`, toPairs(sphere)]);
+    }
+
+    function prizeReqContent(section) {
+        return [['Prizes and Requirements', toPairs(section)]];
+    }
+
+    function areaContent(locations) {
+        const locationsInArea = filter(locations, spoilerArea !== 'all' ? { locationArea: spoilerArea } : {});
+        const locationsByRegion = sortGroupBy(locationsInArea, 'locationRegion');
+        return map(locationsByRegion, ([region, locations]) =>
+            [region, map(locations, ({ locationName, worldId, itemName, itemWorldId }) => [
+                multiworld ? `${locationName} - ${worlds[worldId].player}` : locationName,
+                multiworld ? `${itemName} - ${worlds[itemWorldId].player}` : itemName,
+            ])]
+        );
+    }
+
+    const areas = uniq(map(locations, 'locationArea'));
 
     return (
         <Card>
@@ -116,64 +156,29 @@ export default function Spoiler({ seedGuid }) {
                             <NavItem>
                                 <SmallNavLink href="#" active={spoilerArea === 'all'} onClick={() => setSpoilerArea('all')}>All</SmallNavLink>
                             </NavItem>
-                            {uniq(sortBy(locations, l => l.locationId).map(l => l.locationArea)).map((area, i) => (
-                                <NavItem key={i}>
+                            {map(areas, area => (
+                                <NavItem key={area}>
                                     <SmallNavLink href="#" active={spoilerArea === area} onClick={() => setSpoilerArea(area)}>{area}</SmallNavLink>
                                 </NavItem>
                             ))}
                         </Nav>
                         <Card>
                             <CardBody>
-                                {spoilerArea === 'playthrough' ? <>
-                                    {playthrough.map((sphere, i) => (
-                                        <div key={i}>
-                                            {i < (playthrough.length - 1) || seed.gameId === 'sm'
-                                                ? <h6>Sphere {i + 1}</h6>
-                                                : <h6>Prizes and Requirements</h6>
-                                            }
-                                            <StyledTable className="mb-4">
-                                                <tbody>
-                                                    {Object.entries(sphere).map(([location, item], j) => (
-                                                        <tr key={j}>
-                                                            <td>{location}</td>
-                                                            <td>{item}</td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </StyledTable>
-                                        </div>
-                                    ))}
-                                </>
-                                : spoilerArea === 'prizes' ? <div>
-                                    <h6>Prizes and Requirements</h6>
-                                    <StyledTable className="mb-4">
-                                        <tbody>
-                                            {Object.entries(playthrough[playthrough.length - 1]).map(([location, item], i) => (
-                                                <tr key={i}>
-                                                    <td>{location}</td>
-                                                    <td>{item}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </StyledTable>
-                                </div>
-                                : <>
-                                    {uniq(sortBy(locations.filter(l => spoilerArea === 'all' || l.locationArea === spoilerArea), l => l.locationRegion).map(l => l.locationRegion)).map((r, i) => (
-                                        <div key={i}>
-                                            <h6>{r}</h6>
-                                            <StyledTable className="mb-4">
-                                                <tbody>
-                                                    {locations.filter(l => (spoilerArea === 'all' || l.locationArea === spoilerArea) && l.locationRegion === r).map((l, j) => (
-                                                        <tr key={j}>
-                                                            <td>{l.locationName}{seed.players > 1 ? ` - ${seed.worlds[l.worldId].player}` : ''}</td>
-                                                            <td>{l.itemName}{seed.players > 1 ? ` - ${seed.worlds[l.itemWorldId].player}` : ''}</td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </StyledTable>
-                                        </div>
-                                    ))}
-                                </>}
+                                {map(content, ([title, entries]) => (
+                                    <div key={title}>
+                                        <h6>{title}</h6>
+                                        <StyledTable className="mb-4">
+                                            <tbody>
+                                                {map(entries, ([key, value]) => (
+                                                    <tr key={key}>
+                                                        <td>{key}</td>
+                                                        <td>{value}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </StyledTable>
+                                    </div>
+                                ))}
                             </CardBody>
                         </Card>
                     </div>
