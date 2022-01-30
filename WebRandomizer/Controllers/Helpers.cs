@@ -10,12 +10,20 @@ namespace WebRandomizer.Controllers {
         static readonly JsonSerializerSettings IndentedCamelCasePropsStringEnums = new() {
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
             Formatting = Formatting.Indented,
-            Converters = new List<JsonConverter> { new StringEnumConverter() }
+            Converters = new[] { new StringEnumConverter() },
         };
 
-        public static string SerializeEnumAsString(object value) {
-            return JsonConvert.SerializeObject(value, IndentedCamelCasePropsStringEnums);
-        }
+        static readonly JsonSerializerSettings CamelCasePropsStringEnums = new() {
+            ContractResolver = new CamelCasePropertyNamesContractResolver(),
+            Converters = new[] { new StringEnumConverter() },
+        };
+
+        public static string ToJsonWithIndentEnums(object value)
+            => JsonConvert.SerializeObject(value, IndentedCamelCasePropsStringEnums);
+        public static string ToJsonWithoutIndentWithEnums(object value)
+            => JsonConvert.SerializeObject(value, CamelCasePropsStringEnums);
+        public static string ToJsonWithoutIndent(object value)
+            => JsonConvert.SerializeObject(value);
 
         public static string GetSeedHashNames(Dictionary<int, byte[]> patch, string gameId) {
             string[] names = {
