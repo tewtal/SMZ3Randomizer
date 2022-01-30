@@ -30,13 +30,13 @@ namespace WebRandomizer.Controllers {
         [HttpGet]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         public IActionResult Index() {
-            return new OkObjectResult(SerializeEnumAsString(randomizers));
+            return new OkObjectResult(ToJsonWithIndentEnums(randomizers));
         }
 
         [HttpGet("{randomizerId}")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         public IActionResult GetRandomizer(string randomizerId) {
-            return new OkObjectResult(SerializeEnumAsString(randomizers.FirstOrDefault(x => x.Id == randomizerId)));
+            return new OkObjectResult(ToJsonWithIndentEnums(randomizers.FirstOrDefault(x => x.Id == randomizerId)));
         }
 
         [HttpPost("{randomizerId}/[action]")]
@@ -66,7 +66,7 @@ namespace WebRandomizer.Controllers {
                     Guid = seedData.Guid,
                     Players = seedData.Worlds.Count,
                     SeedNumber = seedData.Seed,
-                    Spoiler = JsonConvert.SerializeObject(seedData.Playthrough),
+                    Spoiler = ToJsonWithoutIndent(seedData.Playthrough),
                     Hash = GetSeedHashNames(seedData.Worlds[0].Patches, randomizer.Id),
                     Mode = seedData.Mode,
                     Worlds = new List<World>()
@@ -82,7 +82,7 @@ namespace WebRandomizer.Controllers {
                     var world = new World {
                         WorldId = seedWorld.Id,
                         Guid = seedWorld.Guid,
-                        Settings = JsonConvert.SerializeObject(options),
+                        Settings = ToJsonWithoutIndent(options),
                         Player = seedWorld.Player,
                         Patch = ConvertPatch(seedWorld.Patches),
                         Locations = seedWorld.Locations.Select(l => new Location() {
@@ -91,7 +91,7 @@ namespace WebRandomizer.Controllers {
                             ItemWorldId = l.ItemWorldId
                         }).ToList(),
                         WorldState = seedWorld.WorldState != null
-                            ? SerializeEnumAsString(seedWorld.WorldState)
+                            ? ToJsonWithoutIndentWithEnums(seedWorld.WorldState)
                             : null,
                     };
                     seed.Worlds.Add(world);
