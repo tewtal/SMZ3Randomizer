@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, CardHeader, CardBody, Nav, NavItem, Input, Button } from 'reactstrap';
 import InputGroup from '../ui/PrefixInputGroup';
 import { SmallNavLink, StyledTable } from './styled';
@@ -24,47 +24,46 @@ import escapeRegExp from 'lodash/escapeRegExp';
 export default function Spoiler({ seedGuid }) {
     const [show, setShow] = useState(false);
     const [spoiler, setSpoiler] = useState(null);
-    const [spoilerArea, setSpoilerArea] = useState('playthrough');
     const [searchText, setSearchText] = useState('');
-
-    const { seed = {} } = spoiler || {};
-    const { worlds, players, spoiler: playthrough = [] } = seed;
-    const multiworld = players > 1;
+    const [activeArea, setActiveArea] = useState('playthrough');
+    const [areas, setAreas] = useState([]);
+    const [content, setContent] = useState([]);
 
     async function toggleSpoiler() {
         if (!show && !spoiler) {
             try {
                 const response = await fetch(`/api/spoiler/${seedGuid}`);
-                const result = await response.json();
-                result.seed.spoiler = filter(tryParseJson(result.seed.spoiler), sphere => !isEmpty(sphere));
-                result.locations = sortBy(result.locations, 'locationId');
-                setSpoiler(result);
+                const data = await response.json();
+                data.seed.spoiler = filter(tryParseJson(data.seed.spoiler), sphere => !isEmpty(sphere));
+                data.locations = sortBy(data.locations, 'locationId');
+                setSpoiler(data);
             } catch { }
         }
 
         setShow(show => !show);
     }
 
-    function updateSearchText(e) {
-        const { value } = e.target;
+    function updateSearchText(value) {
         setSearchText(value);
-        if (value && spoilerArea === 'playthrough') {
-            setSpoilerArea('all');
+        if (value && activeArea === 'playthrough') {
+            setActiveArea('all');
         }
     }
 
     async function downloadSpoiler() {
+        const { seed, locations } = spoiler;
+        const { gameId, spoiler: playthrough } = seed;
         /* Prepare a human-readable JSON dump of the spoiler data */
         const s = {
             seed: { ...seed, spoiler: null },
-            ...(seed.gameId === 'smz3'
+            ...(gameId === 'smz3'
                 ? { playthrough: initial(playthrough), prizes: last(playthrough) }
                 : { playthrough }
             ),
-            regions: uniq(sortBy(spoiler.locations.map(l => l.locationRegion))).map(r => {
+            regions: sortBy(uniq(map(locations, 'locationRegion'))).map(r => {
                 return {
                     region: r,
-                    locations: spoiler.locations.filter(l => l.locationRegion === r).map(l => {
+                    locations: locations.filter(l => l.locationRegion === r).map(l => {
                         return {
                             name: l.locationName,
                             item: l.itemName
@@ -80,29 +79,36 @@ export default function Spoiler({ seedGuid }) {
         saveAs(blob, `${seed.gameName} v${seed.gameVersion} - ${encode(seed.guid)} - Spoiler.txt`);
     }
 
-    let locations = spoiler ? spoiler.locations : [];
-    let content;
-    if (spoiler) {
-        if (searchText) {
-            const pattern = new RegExp(escapeRegExp(searchText), 'i');
-            locations = filter(spoiler.locations, l => pattern.test(l.locationName) || pattern.test(l.itemName));
+    useEffect(() => {
+        if (spoiler) {
+            const { gameId, worlds, players, spoiler: playthrough } = spoiler.seed;
+            let { locations } = spoiler;
 
-            if (!includes(['all', 'playthrough', 'prizes'], spoilerArea) && !some(locations, { locationArea: spoilerArea })) {
-                setSpoilerArea('all');
+            if (searchText) {
+                const pattern = new RegExp(escapeRegExp(searchText), 'i');
+                locations = filter(locations, l => pattern.test(l.locationName) || pattern.test(l.itemName));
+
+                if (!includes(['playthrough', 'prizes', 'all'], activeArea) && !some(locations, { locationArea: activeArea })) {
+                    /* Return early since this state change will reuse the effect */
+                    setActiveArea('all');
+                    return;
+                }
             }
-        }
 
-        if (spoilerArea === 'playthrough') {
-            content = seed.gameId === 'smz3' ? [
-                ...sphereContent(initial(playthrough)),
-                ...prizeReqContent(last(playthrough))
-            ] : sphereContent(playthrough);
+            if (activeArea === 'playthrough') {
+                setContent(gameId === 'smz3' ? [
+                    ...sphereContent(initial(playthrough)),
+                    ...prizeReqContent(last(playthrough))
+                ] : sphereContent(playthrough));
+            }
+            else if (activeArea === 'prizes')
+                setContent(prizeReqContent(last(playthrough)));
+            else
+                setContent(areaContent(locations, worlds, players > 1));
+
+            setAreas(uniq(map(locations, 'locationArea')));
         }
-        else if (spoilerArea === 'prizes')
-            content = prizeReqContent(last(playthrough));
-        else
-            content = areaContent(locations);
-    }
+    }, [spoiler, searchText, activeArea]);
 
     function sphereContent(spheres) {
         return map(spheres, (sphere, i) => [`Sphere ${i + 1}`, toPairs(sphere)]);
@@ -112,8 +118,8 @@ export default function Spoiler({ seedGuid }) {
         return [['Prizes and Requirements', toPairs(section)]];
     }
 
-    function areaContent(locations) {
-        const locationsInArea = filter(locations, spoilerArea !== 'all' ? { locationArea: spoilerArea } : {});
+    function areaContent(locations, worlds, multiworld) {
+        const locationsInArea = filter(locations, activeArea !== 'all' ? { locationArea: activeArea } : {});
         const locationsByRegion = sortGroupBy(locationsInArea, 'locationRegion');
         return map(locationsByRegion, ([region, locations]) =>
             [region, map(locations, ({ locationName, worldId, itemName, itemWorldId }) => [
@@ -122,8 +128,6 @@ export default function Spoiler({ seedGuid }) {
             ])]
         );
     }
-
-    const areas = uniq(map(locations, 'locationArea'));
 
     return (
         <Card>
@@ -138,7 +142,9 @@ export default function Spoiler({ seedGuid }) {
                     <Row>
                         <Col md="9">
                             <InputGroup className="mb-3" prefix={<SearchIcon />}>
-                                <Input key="searchInput" placeholder="Find a location or item" onChange={updateSearchText} value={searchText} />
+                                <Input key="searchInput" placeholder="Find a location or item" value={searchText}
+                                    onChange={e => updateSearchText(e.target.value)}
+                                />
                             </InputGroup>
                         </Col>
                         <Col>
@@ -148,17 +154,17 @@ export default function Spoiler({ seedGuid }) {
                     <div>
                         <Nav pills className="mb-2">
                             <NavItem>
-                                <SmallNavLink href="#" active={spoilerArea === 'playthrough'} onClick={() => setSpoilerArea('playthrough')}>Playthrough</SmallNavLink>
+                                <SmallNavLink href="#" active={activeArea === 'playthrough'} onClick={() => setActiveArea('playthrough')}>Playthrough</SmallNavLink>
                             </NavItem>
-                            {seed.gameId === 'smz3' && <NavItem>
-                                <SmallNavLink href="#" active={spoilerArea === 'prizes'} onClick={() => setSpoilerArea('prizes')}>Prizes</SmallNavLink>
+                            {spoiler.seed.gameId === 'smz3' && <NavItem>
+                                <SmallNavLink href="#" active={activeArea === 'prizes'} onClick={() => setActiveArea('prizes')}>Prizes</SmallNavLink>
                             </NavItem>}
                             <NavItem>
-                                <SmallNavLink href="#" active={spoilerArea === 'all'} onClick={() => setSpoilerArea('all')}>All</SmallNavLink>
+                                <SmallNavLink href="#" active={activeArea === 'all'} onClick={() => setActiveArea('all')}>All</SmallNavLink>
                             </NavItem>
                             {map(areas, area => (
                                 <NavItem key={area}>
-                                    <SmallNavLink href="#" active={spoilerArea === area} onClick={() => setSpoilerArea(area)}>{area}</SmallNavLink>
+                                    <SmallNavLink href="#" active={activeArea === area} onClick={() => setActiveArea(area)}>{area}</SmallNavLink>
                                 </NavItem>
                             ))}
                         </Nav>
