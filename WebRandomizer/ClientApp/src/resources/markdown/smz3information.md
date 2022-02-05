@@ -94,7 +94,7 @@ This option decides where the first sword will be placed.
 
 * Randomized - The sword can be placed anywhere.
 * Early - The sword will be placed in a location accessible from the start of the game.
-* Unce assured - The sword will always be placed on Link's Uncle.
+* Uncle assured - The sword will always be placed on Link's Uncle.
 
 ### Morph Ball
 
