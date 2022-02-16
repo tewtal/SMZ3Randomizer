@@ -1,0 +1,162 @@
+syntax = "proto3";
+
+option csharp_namespace = "Randomizer.Service";
+package randomizer;
+
+/* Define the service and messages */
+service Session {
+	rpc GetSession (GetSessionRequest) returns (GetSessionResponse);
+	rpc RegisterPlayer (RegisterPlayerRequest) returns (RegisterPlayerResponse);
+	rpc LoginPlayer (LoginPlayerRequest) returns (RegisterPlayerResponse);
+}
+
+service Metadata {
+	rpc GetPatch (GetPatchRequest) returns (GetPatchResponse);
+	rpc GetSpoiler (GetSpoilerRequest) returns (GetSpoilerResponse);
+}
+
+service Event {
+	rpc GetEvents (GetEventsRequest) returns (GetEventsResponse);
+	rpc SendEvent (SendEventRequest) returns (SendEventResponse);
+	rpc ConfirmEvents (ConfirmEventsRequest) returns (ConfirmEventsResponse);
+}
+
+message GetSessionRequest {
+	string session_guid = 1;
+}
+
+message GetSessionResponse {
+	int32 id = 1;
+	string guid = 2;
+	SessionState state = 3;
+	Seed seed = 4;
+}
+
+message RegisterPlayerRequest {
+	string session_guid = 1;
+	int32 world_id = 2;
+}
+
+message RegisterPlayerResponse {
+	int32 client_id = 1;
+	string client_guid = 2;
+	string client_token = 3;
+	int32 world_id = 4;
+}
+
+message LoginPlayerRequest {
+	string session_guid = 1;
+	string client_guid = 2;
+}
+
+message GetPatchRequest {
+	string client_token = 1;
+}
+
+message GetPatchResponse {
+	bytes patch_data = 1;
+}
+
+message GetSpoilerRequest {
+	string client_token = 1;
+}
+
+message GetSpoilerResponse {
+	string spoiler = 1;
+}
+
+message GetEventsRequest {
+	string client_token = 1;
+	optional int32 from_event_id = 2;
+	optional int32 to_event_id = 3;
+	optional int32 from_world_id = 4;
+	optional int32 to_world_id = 5;
+	repeated EventType event_types = 6;		// A list of event types to filter on
+}
+
+message GetEventsResponse {
+	repeated SessionEvent events = 1;
+}
+
+message	SendEventRequest {
+	string client_token = 1;
+	SessionEvent event = 2;
+}
+
+message SendEventResponse {
+	SessionEvent event = 1;
+}
+
+message ConfirmEventsRequest {
+	string client_token = 1;
+	repeated int32 event_ids = 2;
+}
+
+message ConfirmEventsResponse {
+	repeated int32 event_ids = 1;
+}
+
+enum EventType
+{
+    ItemFound = 0;          // Item found, can be used for both single and multiworld
+    ItemRequest = 1;        // Request what an item at given location is
+    ChatMessage = 2;        // Chat Message
+    SystemMessage = 3;      // Chat Message (from system)
+    Forfeit = 4;            // A player wants to forfeit for themselves
+    ForfeitVote = 5;        // Initializes a forfeit vote (at least 2 players need to do this unless the seed is 2 player only)
+    Status = 6;             // Generic status update (can be used for tracking purposes)
+    Other = 7;              // Undefined other message
+}
+
+/* Define enums and structs */
+enum SessionState {
+	Created = 0;
+	Running = 1;
+	Done = 2;
+}
+
+enum ClientState {
+    Disconnected = 0;
+    Registering = 1;
+    Registered = 2;
+    Identifying = 3;
+    Patching = 4;
+    Ready = 5;
+    Playing = 6;
+    Completed = 7;
+}
+
+message SessionEvent {
+	int32 id = 1;
+	int32 sequence_num = 2;
+	int32 from_world_id = 3;
+	int32 to_world_id = 4;
+	int32 item_id = 5;
+	int32 item_location = 6;
+	EventType event_type = 7;
+	string time_stamp = 8;
+	string message = 9;
+	bool confirmed = 10;
+}
+
+message Seed {
+	int32 id = 1;
+	string guid = 2;
+	string number = 3;
+	string hash = 4;
+	int32 players = 5;
+	string game_mode = 6;
+	string game_name = 7;
+	string game_version = 8;
+	string game_id = 9;
+	repeated World worlds = 10;
+}
+
+message World {
+	int32 id = 1;
+	string guid = 2;
+	int32 world_id = 3;
+	string player_name = 4;
+	string settings = 5;
+	ClientState client_state = 6;
+}

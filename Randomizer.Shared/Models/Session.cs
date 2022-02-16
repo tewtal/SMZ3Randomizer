@@ -14,6 +14,7 @@ namespace Randomizer.Shared.Models {
         public SessionState State { get; set; }
         public List<Client> Clients { get; set; }
         public Seed Seed { get; set; }
+        public List<SessionEvent> Events { get; set; }
     }
 
 }

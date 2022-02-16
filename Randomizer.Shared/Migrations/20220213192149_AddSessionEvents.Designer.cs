@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Randomizer.Shared.Models;
@@ -11,9 +12,10 @@ using Randomizer.Shared.Models;
 namespace WebRandomizer.Migrations
 {
     [DbContext(typeof(RandomizerContext))]
-    partial class RandomizerContextModelSnapshot : ModelSnapshot
+    [Migration("20220213192149_AddSessionEvents")]
+    partial class AddSessionEvents
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -139,8 +141,7 @@ namespace WebRandomizer.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
@@ -208,9 +209,6 @@ namespace WebRandomizer.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("Confirmed")
-                        .HasColumnType("boolean");
-
                     b.Property<int>("EventType")
                         .HasColumnType("integer");
 
@@ -233,6 +231,8 @@ namespace WebRandomizer.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("TimeStamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("ToWorldId")
@@ -240,7 +240,8 @@ namespace WebRandomizer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SessionId");
+                    b.HasIndex("SessionId")
+                        .IsUnique();
 
                     b.ToTable("SessionEvents");
                 });
@@ -270,9 +271,6 @@ namespace WebRandomizer.Migrations
 
                     b.Property<int>("WorldId")
                         .HasColumnType("integer");
-
-                    b.Property<string>("WorldState")
-                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -320,8 +318,8 @@ namespace WebRandomizer.Migrations
             modelBuilder.Entity("Randomizer.Shared.Models.SessionEvent", b =>
                 {
                     b.HasOne("Randomizer.Shared.Models.Session", null)
-                        .WithMany("Events")
-                        .HasForeignKey("SessionId")
+                        .WithOne("Events")
+                        .HasForeignKey("Randomizer.Shared.Models.SessionEvent", "SessionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
