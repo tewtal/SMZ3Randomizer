@@ -5,6 +5,8 @@ import { SmallNavLink, StyledTable } from './styled';
 
 import { SearchIcon, DownloadIcon } from './styled';
 
+import { regionOrdering } from './region_ordering';
+
 import YAML from 'yaml';
 import { saveAs } from 'file-saver';
 import { encode } from 'slugid';
@@ -38,7 +40,7 @@ export default function Spoiler({ seedGuid }) {
                 const response = await fetch(`/api/spoiler/${seedGuid}`);
                 const data = await response.json();
                 data.seed.spoiler = filter(tryParseJson(data.seed.spoiler), sphere => !isEmpty(sphere));
-                data.locations = sortBy(data.locations, 'locationId');
+                data.locations = sortBy(data.locations, ({ locationRegion }) => regionOrdering(locationRegion));
                 setSpoiler(data);
             } catch { }
         }
@@ -126,7 +128,7 @@ export default function Spoiler({ seedGuid }) {
     }
 
     function region(compose, locations, worlds, multiworld) {
-        return map(sortGroupBy(locations, 'locationRegion'), ([region, locations]) =>
+        return map(sortGroupBy(locations, 'locationRegion', regionOrdering), ([region, locations]) =>
             compose(region, map(locations, ({ locationName, worldId, itemName, itemWorldId }) => [
                 multiworld ? `${locationName} - ${worlds[worldId].player}` : locationName,
                 multiworld ? `${itemName} - ${worlds[itemWorldId].player}` : itemName,
