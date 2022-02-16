@@ -5,6 +5,7 @@ import { SmallNavLink, StyledTable } from './styled';
 
 import { SearchIcon, DownloadIcon } from './styled';
 
+import YAML from 'yaml';
 import { saveAs } from 'file-saver';
 import { encode } from 'slugid';
 
@@ -17,7 +18,9 @@ import sortBy from 'lodash/sortBy';
 import uniq from 'lodash/uniq';
 import initial from 'lodash/initial';
 import last from 'lodash/last';
+import pick from 'lodash/pick';
 import toPairs from 'lodash/toPairs';
+import fromPairs from 'lodash/fromPairs';
 import isEmpty from 'lodash/isEmpty';
 import escapeRegExp from 'lodash/escapeRegExp';
 
@@ -50,35 +53,6 @@ export default function Spoiler({ seedGuid }) {
         }
     }
 
-    async function downloadSpoiler() {
-        const { seed, locations } = spoiler;
-        const { gameId, spoiler: playthrough } = seed;
-        /* Prepare a human-readable JSON dump of the spoiler data */
-        const s = {
-            seed: { ...seed, spoiler: null },
-            ...(gameId === 'smz3'
-                ? { playthrough: initial(playthrough), prizes: last(playthrough) }
-                : { playthrough }
-            ),
-            regions: sortBy(uniq(map(locations, 'locationRegion'))).map(r => {
-                return {
-                    region: r,
-                    locations: locations.filter(l => l.locationRegion === r).map(l => {
-                        return {
-                            name: l.locationName,
-                            item: l.itemName
-                        };
-                    })
-                }
-            })
-        };
-
-        const text = unescape(JSON.stringify(s, null, 4));
-
-        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-        saveAs(blob, `${seed.gameName} v${seed.gameVersion} - ${encode(seed.guid)} - Spoiler.txt`);
-    }
-
     useEffect(() => {
         if (spoiler) {
             const { gameId, worlds, players, spoiler: playthrough } = spoiler.seed;
@@ -97,35 +71,66 @@ export default function Spoiler({ seedGuid }) {
 
             if (activeArea === 'playthrough') {
                 setContent(gameId === 'smz3' ? [
-                    ...sphereContent(initial(playthrough)),
-                    ...prizeReqContent(last(playthrough))
-                ] : sphereContent(playthrough));
+                    ...sphere(contentFromObjects, initial(playthrough)),
+                    ...prizeReq(contentFromObjects, last(playthrough)),
+                ] : sphere(contentFromObjects, playthrough));
             }
-            else if (activeArea === 'prizes')
-                setContent(prizeReqContent(last(playthrough)));
-            else
-                setContent(areaContent(locations, worlds, players > 1));
+            else if (activeArea === 'prizes') {
+                setContent(prizeReq(contentFromObjects, last(playthrough), ));
+            }
+            else {
+                const locationsInArea = filter(locations, activeArea !== 'all' ? { locationArea: activeArea } : {})
+                setContent(region(contentFromArrays, locationsInArea, worlds, players > 1));
+            }
 
             setAreas(uniq(map(locations, 'locationArea')));
         }
     }, [spoiler, searchText, activeArea]);
 
-    function sphereContent(spheres) {
-        return map(spheres, (sphere, i) => [`Sphere ${i + 1}`, toPairs(sphere)]);
+    async function downloadSpoiler() {
+        const { seed, locations } = spoiler;
+        const { gameId, worlds, players, spoiler: playthrough } = seed;
+        const { settings, worldState } = worlds[0];
+        const metaFields = {
+            smz3: {
+                settings: ['goal', 'smlogic', 'keyshuffle'],
+                worldState: ['towerCrystals', 'ganonCrystals', 'tourianBossTokens'],
+            },
+            sm: { settings: ['goal', 'logic'] },
+        };
+
+        const content = [
+            `${gameId.toUpperCase()} ${seed.gameVersion} ${seed.hash}`,
+            { Playthrough: sphere(logFromObjects, gameId === 'smz3' ? initial(playthrough) : playthrough) },
+            ...(gameId === 'smz3' ? prizeReq(logFromObjects, last(playthrough)) : []),
+            ...region(logFromArrays, locations, worlds, players > 1),
+            { Meta: {
+                guid: seed.guid,
+                ...pick(tryParseJson(settings), metaFields[gameId].settings),
+                ...pick(tryParseJson(worldState), metaFields[gameId].worldState || []),
+            } },
+        ];
+
+        const text = YAML.stringify(content, { indentSeq: false });
+
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        saveAs(blob, `${seed.gameName} v${seed.gameVersion} - ${encode(seed.guid)} - Spoiler.txt`);
     }
 
-    function prizeReqContent(section) {
-        return [['Prizes and Requirements', toPairs(section)]];
+    function sphere(compose, spheres) {
+        return map(spheres, (sphere, i) => compose(`Sphere ${i + 1}`, sphere));
     }
 
-    function areaContent(locations, worlds, multiworld) {
-        const locationsInArea = filter(locations, activeArea !== 'all' ? { locationArea: activeArea } : {});
-        const locationsByRegion = sortGroupBy(locationsInArea, 'locationRegion');
-        return map(locationsByRegion, ([region, locations]) =>
-            [region, map(locations, ({ locationName, worldId, itemName, itemWorldId }) => [
+    function prizeReq(compose, section) {
+        return [compose('Prizes and Requirements', section)];
+    }
+
+    function region(compose, locations, worlds, multiworld) {
+        return map(sortGroupBy(locations, 'locationRegion'), ([region, locations]) =>
+            compose(region, map(locations, ({ locationName, worldId, itemName, itemWorldId }) => [
                 multiworld ? `${locationName} - ${worlds[worldId].player}` : locationName,
                 multiworld ? `${itemName} - ${worlds[itemWorldId].player}` : itemName,
-            ])]
+            ]))
         );
     }
 
@@ -193,4 +198,20 @@ export default function Spoiler({ seedGuid }) {
             </CardBody>}
         </Card>
     );
+}
+
+function contentFromArrays(title, arrays) {
+    return [title, arrays];
+}
+
+function contentFromObjects(title, objects) {
+    return [title, toPairs(objects)];
+}
+
+function logFromArrays(title, arrays) {
+    return { [title]: fromPairs(arrays) };
+}
+
+function logFromObjects(title, objects) {
+    return { [title]: objects };
 }

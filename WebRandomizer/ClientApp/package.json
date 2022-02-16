@@ -27,7 +27,8 @@
     "slugid": "^2.0.0",
     "styled-components": "^5.2.1",
     "wasm-loader": "^1.3.0",
-    "xxhashjs": "^0.2.2"
+    "xxhashjs": "^0.2.2",
+    "yaml": "^1.10.2"
   },
   "devDependencies": {
     "ajv": "^6.10.2",
