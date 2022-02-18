@@ -24,9 +24,6 @@ namespace Randomizer.Shared.Models {
         public string ConnectionId { get; set; }
         public int SessionId { get; set; }
         public int WorldId { get; set; }
-        public int RecievedSeq { get; set; }
-        public int SentSeq { get; set; }
-        public List<Event> Events { get; set; }
     }
 
 }

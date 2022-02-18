@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef, useContext } from 'react';
+﻿import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { Row, Col } from 'reactstrap';
 
@@ -42,16 +42,16 @@ export default function Multiworld() {
     const [deviceStatus, setDeviceStatus] = useState('');
     const game = useContext(GameTraitsCtx);
 
-    const formatEvent = (event) => {
+    const formatEvent = useCallback((event) => {
         const worlds = state.session.seed.worlds;
         return {
             ...event,
-            from_player: event.from_world_id == -1 ? "SERVER" : worlds.find(w => w.world_id === event.from_world_id).player_name,
-            to_player: event.to_world_id == -1 ? "SERVER": worlds.find(w => w.world_id === event.to_world_id).player_name,
+            from_player: event.from_world_id === -1 ? "SERVER" : worlds.find(w => w.world_id === event.from_world_id).player_name,
+            to_player: event.to_world_id === -1 ? "SERVER" : worlds.find(w => w.world_id === event.to_world_id).player_name,
             item_name: itemLookup[event.item_id],
             message: event.message.replace("<itemId>", itemLookup[event.item_id]),
         }
-    }
+    }, [state]);
 
     const handleMessage = (message, args) => {
         switch (message) {
@@ -131,9 +131,38 @@ export default function Multiworld() {
     }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
 
     useEffect(() => {
+
+        async function statusLoop() {
+            const minUnConfirmed = minBy(events.filter(e => !e.confirmed), 'id');
+            const maxReceived = maxBy(events, 'id');
+            const minId = minUnConfirmed != null
+                ? minUnConfirmed.id
+                : (maxReceived != null ? maxReceived.id + 1 : 0);
+
+            try {
+                const report = await randomizerClient.current.get_report(minId, [0, 1, 2, 3]);
+                setState(prevState => {
+                    return {
+                        ...prevState, session: {
+                            ...prevState.session, seed: {
+                                ...prevState.session.seed, worlds: report.worlds
+                            }
+                        }
+                    }
+                }
+                );
+
+                const formattedEvents = report.events.map(e => formatEvent(e));
+                setEvents(prevEvents => [...prevEvents.filter(p => !formattedEvents.find(f => f.id === p.id)), ...formattedEvents]);
+            } catch (e) {
+                console.log(e);
+                setEvents(prevEvents => [...prevEvents]);
+            }
+        }
+
         clearTimeout(statusLoopHandle.current);
         statusLoopHandle.current = setTimeout(async () => await statusLoop(), 5000);
-    }, [events]);
+    }, [events, formatEvent]);
 
     async function onRegisterPlayer(sessionGuid, worldId) {
         if (!state.clientData) {
@@ -150,7 +179,7 @@ export default function Multiworld() {
 
     async function onUnregisterPlayer() {
         const ok = window.confirm("This will unregister you from the session, are you sure?");
-        if (state && state.clientData) {
+        if (ok && state && state.clientData) {
             try {
                 await randomizerClient.current.unregister_player();
                 localStorage.removeItem(state.session.guid);
@@ -197,7 +226,7 @@ export default function Multiworld() {
         try {
             setDeviceStatus("Requesting device list");
             const devices = await randomizerClient.current.list_devices();
-            if (devices.length == 0) {
+            if (devices.length === 0) {
                 setDeviceStatus("Got an empty device list, make sure the emulator or sd2snes/fxpak is connected");
             } else if (devices.length > 1) {
                 setDeviceStatus("Select a device");
@@ -220,34 +249,6 @@ export default function Multiworld() {
             await eventLoop();
         } catch {
             setDeviceStatus("Could not start device session, try again");
-        }
-    }
-
-    async function statusLoop() {
-        const minUnConfirmed = minBy(events.filter(e => !e.confirmed), 'id');
-        const maxReceived = maxBy(events, 'id');
-        const minId = minUnConfirmed != null
-            ? minUnConfirmed.id
-            : (maxReceived != null ? maxReceived.id + 1 : 0);
-
-        try {
-            const report = await randomizerClient.current.get_report(minId, [0, 1, 2, 3]);
-            setState(prevState => {
-                return {
-                        ...prevState, session: {
-                            ...prevState.session, seed: {
-                                ...prevState.session.seed, worlds: report.worlds
-                            }
-                        }
-                    }
-                }
-            );
-
-            const formattedEvents = report.events.map(e => formatEvent(e));
-            setEvents(prevEvents => [...prevEvents.filter(p => !formattedEvents.find(f => f.id === p.id)), ...formattedEvents]);
-        } catch (e) {
-            console.log(e);
-            setEvents(prevEvents => [...prevEvents]);
         }
     }
 

@@ -32,7 +32,7 @@ export default function Session(props) {
                         return (
                             <Col key={`player-${i}`} md="3">
                                 <h5>{world.player_name}</h5>
-                                {world.client_state == 0 ? (
+                                {world.client_state === 0 ? (
                                     (clientData === null && <Button size="md" color="primary" onClick={() => onRegisterPlayer(session.guid, world.world_id)}>Register</Button>) ||
                                     (clientData !== null && <Button size="md" disabled color="secondary">Unregistered</Button>)
                                 ) : 

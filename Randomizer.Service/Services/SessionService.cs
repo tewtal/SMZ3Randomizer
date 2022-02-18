@@ -134,10 +134,7 @@ namespace Randomizer.Service.Services
                     Guid = Guid.NewGuid().ToString().Replace("-", ""),
                     ConnectionId = Guid.NewGuid().ToString().Replace("-", ""),
                     Device = "",
-                    Events = new List<Shared.Models.Event>(),                    
                     Name = session.Seed.Worlds.FirstOrDefault(w => w.WorldId == request.WorldId)?.Player ?? "Unknown",
-                    RecievedSeq = 0,
-                    SentSeq = 0,
                     SessionId = session.Id,
                     State = Shared.Models.ClientState.Registered,
                     WorldId = request.WorldId

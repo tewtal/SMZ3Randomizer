@@ -46,7 +46,9 @@
       "react-hooks"
     ],
     "rules": {
-      "no-mixed-operators": "off"
+      "no-mixed-operators": "off",
+      "unicode-bom": "off",
+      "import/no-anonymous-default-export": "off"
     }
   },
   "browserslist": {

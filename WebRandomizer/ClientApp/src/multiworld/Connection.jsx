@@ -6,7 +6,7 @@ import PlainList from '../ui/PlainList';
 import classNames from 'classnames';
 
 export default function Connection(props) {
-    const { clientData, device, deviceStatus } = props;
+    const { device, deviceStatus } = props;
     const { onDeviceSelect, onConnect } = props;
     const [selectedDevice, setSelectedDevice] = useState(null);
     const deviceState = device ? device.state : 0;

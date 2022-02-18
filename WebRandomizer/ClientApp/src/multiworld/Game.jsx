@@ -1,6 +1,6 @@
-﻿/* eslint-disable no-mixed-operators */
+﻿/* eslint-disable no-mixed-operators, jsx-a11y/anchor-is-valid */
 import React, { useRef, useState, useEffect } from 'react';
-import { Button, Container, Row, Col, Card, CardBody, CardTitle, CardText, CardHeader } from 'reactstrap';
+import { Row, Col, Card, CardBody, CardTitle, CardHeader } from 'reactstrap';
 import styled from 'styled-components';
 import sortBy from 'lodash/sortBy';
 
@@ -28,19 +28,19 @@ export default function Game(props) {
     const { onChatMessage, onResendEvent } = props;
     
     useEffect(() => {
-        if (events.length != eventCount) {
+        if (events.length !== eventCount) {
             logEnd.current?.scrollIntoView();
         }
         setEventCount(events.length);
-    }, [events])
+    }, [events, eventCount])
 
     const LogMessage = ({ event }) => {
         const icon = (event.event_type <= 1)
             ? (event.confirmed ? "✅" : "⌛")
-            : (event.event_type == 2 ? "💬" : "⚠");
+            : (event.event_type === 2 ? "💬" : "⚠");
 
         const message = event.event_type === 0
-            ? (event.from_world_id == clientData.world_id
+            ? (event.from_world_id === clientData.world_id
                 ? <>{event.item_location === -1 ? <b>Re-sent</b> : <span>Sent</span>} <span className="text-primary">{event.item_name}</span> to <span className="text-danger">{event.to_player}</span></>
                 : <>{event.item_location === -1 ? <b>Re-received</b> : <span>Received</span>} <span className="text-primary">{event.item_name}</span> from <span className="text-danger">{event.from_player}</span></>)
             : (event.event_type === 2
