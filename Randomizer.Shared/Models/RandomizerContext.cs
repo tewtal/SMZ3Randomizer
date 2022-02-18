@@ -13,10 +13,10 @@ namespace Randomizer.Shared.Models {
         }
 
         public DbSet<Session> Sessions { get; set; }
+        public DbSet<SessionEvent> SessionEvents { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Seed> Seeds { get; set; }
         public DbSet<World> Worlds { get; set; }
-        public DbSet<Event> Events { get; set; }
         public DbSet<Location> Locations { get; set; }
 
     }

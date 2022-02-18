@@ -24,5 +24,5 @@ function removeGameDomain(match, id) {
 export function gameServiceHost(href) {
     const url = new URL(href);
     const hostname = url.hostname;
-    return hostname.includes('localhost') ? 'localhost:5101' : `svc.${hostname}`;
+    return hostname.includes('localhost') ? 'localhost:7108' : `svc.${hostname}`;
 }

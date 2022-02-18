@@ -9,8 +9,11 @@ namespace Randomizer.Shared.Models {
         public string Guid { get; set; }
         public string Player { get; set; }
         public string Settings { get; set; }
+        public ClientState State { get; set; }
         public byte[] Patch { get; set; }
+        public byte[] SramBackup { get; set; }
         public List<Location> Locations { get; set; }
+        public string WorldState { get; set; }
     }
 
 }

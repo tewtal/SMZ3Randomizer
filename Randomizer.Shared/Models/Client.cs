@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace Randomizer.Shared.Models {
 
@@ -13,6 +14,7 @@ namespace Randomizer.Shared.Models {
         Completed,
     }
 
+    [Index(nameof(ConnectionId))]
     public class Client {
         public int Id { get; set; }
         public string Guid { get; set; }
@@ -22,9 +24,6 @@ namespace Randomizer.Shared.Models {
         public string ConnectionId { get; set; }
         public int SessionId { get; set; }
         public int WorldId { get; set; }
-        public int RecievedSeq { get; set; }
-        public int SentSeq { get; set; }
-        public List<Event> Events { get; set; }
     }
 
 }

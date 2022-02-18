@@ -6,37 +6,39 @@ import PlainList from '../ui/PlainList';
 import classNames from 'classnames';
 
 export default function Session(props) {
-    const { session, sessionStatus } = props;
-    const { seed, clients } = session.data || {};
+    const { status, session, sessionStatus, clientData } = props;
+    const { seed } = session || {};
 
-    const { onRegisterPlayer } = props;
+    const { onRegisterPlayer, onUnregisterPlayer, onRemove, onForfeit } = props;
 
     return (
         <Card>
             <CardHeader
                 className={classNames({
-                        'bg-success': session.state > 0,
-                        'bg-danger': session.state === 0
+                    'bg-success': status > 0,
+                    'bg-danger': status === 0
                     }, 'text-white'
                 )}>
                 <PlainList>
-                    <li>Session: {session.guid}</li>
-                    <li>Game: {session.state > 0 ? seed.gameName : 'Loading...'}</li>
+                    <li>Session: {status > 0 ? session.guid: 'Loading...'}</li>
+                    <li>Game: {status > 0 ? `${seed.game_name} v${seed.game_version}` : 'Loading...'}</li>
+                    <li>Hash: {status > 0 ? seed.hash : 'Loading...'}</li>
                     <li>Status: {sessionStatus}</li>
                 </PlainList>
             </CardHeader>
             <CardBody>
                 <Row>
-                    {session.state > 0 && seed.worlds.map((world, i) => {
-                        const client = clients.find(client => client.guid === world.guid);
+                    {status > 0 && seed.worlds.map((world, i) => {
                         return (
                             <Col key={`player-${i}`} md="3">
-                                <h5>{world.player}</h5>
-                                {client == null ?
-                                    <Button color="primary" onClick={() => onRegisterPlayer(session.guid, world.guid)}>Register as this player</Button> :
-                                    <Button disabled color={client.state < 5 ? 'secondary' : client.state === 5 ? 'warning' : 'success'}>
-                                        {client.state < 5 ? 'Registered' : client.state === 5 ? 'Connected' : 'Ready'}
-                                    </Button>
+                                <h5>{world.player_name}</h5>
+                                {world.client_state === 0 ? (
+                                    (clientData === null && <Button size="md" color="primary" onClick={() => onRegisterPlayer(session.guid, world.world_id)}>Register</Button>) ||
+                                    (clientData !== null && <Button size="md" disabled color="secondary">Unregistered</Button>)
+                                ) : 
+                                    (clientData === null && <Button size="md" disabled color="secondary">{world.client_state <= 2 ? "Registered" : "Forfeit"}</Button>) ||
+                                    (clientData !== null && world.world_id !== clientData.world_id && <div><Button className="mr-2" size="md" disabled color="secondary">{world.client_state <= 2 ? "Registered" : "Forfeit"}</Button>{world.client_state <= 2 && <Button color="danger" onClick={() => onRemove(world.world_id)}>Remove</Button>}</div>) ||
+                                    (clientData !== null && world.world_id === clientData.world_id && <div><Button className="mr-2" color="warning" onClick={onUnregisterPlayer}>Unregister</Button><Button color="danger" onClick={onForfeit}>Forfeit</Button></div>)
                                 }
                             </Col>
                         );

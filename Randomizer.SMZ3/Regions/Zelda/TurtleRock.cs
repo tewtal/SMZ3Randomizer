@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using static Randomizer.SMZ3.ItemType;
+using static Randomizer.SMZ3.WorldState;
 
 namespace Randomizer.SMZ3.Regions.Zelda {
 
@@ -8,7 +9,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public override string Name => "Turtle Rock";
 
         public RewardType Reward { get; set; } = RewardType.None;
-        public ItemType Medallion { get; set; }
+        public Medallion Medallion { get; set; }
 
         public TurtleRock(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeyTR, BigKeyTR, MapTR, CompassTR };
@@ -50,9 +51,9 @@ namespace Randomizer.SMZ3.Regions.Zelda {
 
         public override bool CanEnter(Progression items) {
             return Medallion switch {
-                    Bombos => items.Bombos,
-                    Ether => items.Ether,
-                    _ => items.Quake
+                    Medallion.Bombos => items.Bombos,
+                    Medallion.Ether => items.Ether,
+                    _ => items.Quake,
                 } && items.Sword &&
                 items.MoonPearl && items.CanLiftHeavy() && items.Hammer && items.Somaria &&
                 World.CanEnter("Light World Death Mountain East", items);

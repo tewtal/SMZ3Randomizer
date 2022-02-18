@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using static Randomizer.SMZ3.RewardType;
+using static Randomizer.SMZ3.WorldState;
 
 namespace Randomizer.SMZ3 {
 
@@ -13,9 +14,11 @@ namespace Randomizer.SMZ3 {
         public string Player { get; set; }
         public string Guid { get; set; }
         public int Id { get; set; }
-        public int OpenTower { get; set; } = 0;
-        public int OpenTourian { get; set; } = 0;
-        public int GanonVulnerable { get; set; } = 0;
+        public WorldState WorldState { get; set; }
+
+        public int TowerCrystals => WorldState?.TowerCrystals ?? 7;
+        public int GanonCrystals => WorldState?.GanonCrystals ?? 7;
+        public int TourianBossTokens => WorldState?.TourianBossTokens ?? 4;
 
         public IEnumerable<Item> Items {
             get { return Locations.Select(l => l.Item).Where(i => i != null); }
@@ -61,14 +64,15 @@ namespace Randomizer.SMZ3 {
                 new Regions.Zelda.DarkWorld.NorthEast(this, Config),
                 new Regions.Zelda.DarkWorld.South(this, Config),
                 new Regions.Zelda.DarkWorld.Mire(this, Config),
-                new Regions.SuperMetroid.Crateria.Central(this, Config),
                 new Regions.SuperMetroid.Crateria.West(this, Config),
+                new Regions.SuperMetroid.Crateria.Central(this, Config),
                 new Regions.SuperMetroid.Crateria.East(this, Config),
                 new Regions.SuperMetroid.Brinstar.Blue(this, Config),
                 new Regions.SuperMetroid.Brinstar.Green(this, Config),
-                new Regions.SuperMetroid.Brinstar.Kraid(this, Config),
                 new Regions.SuperMetroid.Brinstar.Pink(this, Config),
                 new Regions.SuperMetroid.Brinstar.Red(this, Config),
+                new Regions.SuperMetroid.Brinstar.Kraid(this, Config),
+                new Regions.SuperMetroid.WreckedShip(this, Config),
                 new Regions.SuperMetroid.Maridia.Outer(this, Config),
                 new Regions.SuperMetroid.Maridia.Inner(this, Config),
                 new Regions.SuperMetroid.NorfairUpper.West(this, Config),
@@ -76,7 +80,6 @@ namespace Randomizer.SMZ3 {
                 new Regions.SuperMetroid.NorfairUpper.Crocomire(this, Config),
                 new Regions.SuperMetroid.NorfairLower.West(this, Config),
                 new Regions.SuperMetroid.NorfairLower.East(this, Config),
-                new Regions.SuperMetroid.WreckedShip(this, Config)
             };
 
             Locations = Regions.SelectMany(x => x.Locations).ToList();
@@ -109,47 +112,69 @@ namespace Randomizer.SMZ3 {
             return rewardLookup[(int)rewardsMask].Where(x => x.CanComplete(items)).Count() >= amount;
         }
 
-        public void Setup(Random rnd) {
-            SetMedallions(rnd);
-            SetRewards(rnd);
+        public void Setup(WorldState state) {
+            WorldState = state;
+            SetRewards(state.Rewards);
+            SetMedallions(state.Medallions);
             SetRewardLookup();
-            SetRequirements(rnd);
         }
 
-        void SetMedallions(Random rnd) {
-            foreach (var region in Regions.OfType<IMedallionAccess>()) {
-                region.Medallion = rnd.Next(3) switch {
-                    0 => ItemType.Bombos,
-                    1 => ItemType.Ether,
-                    _ => ItemType.Quake,
-                };
+        void SetRewards(IEnumerable<RewardType> rewards) {
+            var regions = Regions.OfType<IReward>().Where(x => x.Reward == None);
+            foreach (var (region, reward) in regions.Zip(rewards)) {
+                region.Reward = reward;
             }
         }
 
-        void SetRewards(Random rnd) {
-            var rewards = new[] {
-                PendantGreen, PendantNonGreen, PendantNonGreen, CrystalRed, CrystalRed,
-                CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue,
-                BossTokenKraid, BossTokenPhantoon, BossTokenDraygon, BossTokenRidley}.Shuffle(rnd);
-            foreach (var region in Regions.OfType<IReward>().Where(x => x.Reward == None)) {
-                region.Reward = rewards.First();
-                rewards.Remove(region.Reward);
-            }
+        void SetMedallions(IEnumerable<Medallion> medallions) {
+            var (mm, tr, _) = medallions;
+            (GetRegion("Misery Mire") as IMedallionAccess).Medallion = mm;
+            (GetRegion("Turtle Rock") as IMedallionAccess).Medallion = tr;
         }
 
-        // internal for logic unit tests
-        internal void SetRewardLookup() {
-            // Generate a lookup of all possible regions for any given reward combination for faster lookup later
+        void SetRewardLookup() {
+            /* Generate a lookup of all possible regions for any given reward combination for faster lookup later */
             rewardLookup = new Dictionary<int, IReward[]>();
             for (var i = 0; i < 512; i += 1) {
                 rewardLookup.Add(i, Regions.OfType<IReward>().Where(x => (((int)x.Reward) & i) != 0).ToArray());
             }
         }
 
-        void SetRequirements(Random rnd) {
-            OpenTower = Config.OpenTower == SMZ3.OpenTower.Random ? rnd.Next(8) : (int)Config.OpenTower;
-            GanonVulnerable = Config.GanonVulnerable == SMZ3.GanonVulnerable.Random ? rnd.Next(8) : (int)Config.GanonVulnerable;
-            OpenTourian = Config.OpenTourian == SMZ3.OpenTourian.Random ? rnd.Next(5) : (int)Config.OpenTourian;
+    }
+
+    class WorldState {
+
+        public enum Medallion {
+            Bombos,
+            Ether,
+            Quake,
+        }
+
+        public IEnumerable<RewardType> Rewards { get; init; }
+        public IEnumerable<Medallion> Medallions { get; init; }
+        public int TowerCrystals { get; init; }
+        public int GanonCrystals { get; init; }
+        public int TourianBossTokens { get; init; }
+
+        static readonly IEnumerable<RewardType> BaseRewards = new[] {
+            PendantGreen, PendantNonGreen, PendantNonGreen, CrystalRed, CrystalRed,
+            CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue,
+            BossTokenKraid, BossTokenPhantoon, BossTokenDraygon, BossTokenRidley,
+        };
+
+        public static WorldState Generate(Config config, Random rnd) {
+            return new() {
+                Rewards = BaseRewards.Shuffle(rnd),
+                Medallions = GenerateMedallions(),
+                TowerCrystals = config.OpenTower == OpenTower.Random ? rnd.Next(8) : (int)config.OpenTower,
+                GanonCrystals = config.GanonVulnerable == GanonVulnerable.Random ? rnd.Next(8) : (int)config.GanonVulnerable,
+                TourianBossTokens = config.OpenTourian == OpenTourian.Random ? rnd.Next(5) : (int)config.OpenTourian,
+            };
+
+            Medallion[] GenerateMedallions() => new[] {
+                (Medallion)rnd.Next(3),
+                (Medallion)rnd.Next(3),
+            };
         }
 
     }

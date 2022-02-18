@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using static Randomizer.SMZ3.WorldState;
 
 namespace Randomizer.SMZ3 {
 
@@ -40,7 +41,7 @@ namespace Randomizer.SMZ3 {
     }
 
     interface IMedallionAccess {
-        ItemType Medallion { get; set; }
+        Medallion Medallion { get; set; }
     }
 
     abstract class SMRegion : Region {

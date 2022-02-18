@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
@@ -8,8 +9,6 @@ using Randomizer.Shared.Contracts;
 using Randomizer.Shared.Models;
 using Newtonsoft.Json;
 using static WebRandomizer.Controllers.Helpers;
-using System.Threading;
-using System.ComponentModel;
 
 namespace WebRandomizer.Controllers {
 
@@ -31,13 +30,13 @@ namespace WebRandomizer.Controllers {
         [HttpGet]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         public IActionResult Index() {
-            return new OkObjectResult(SerializeEnumAsString(randomizers));
+            return new OkObjectResult(ToJsonWithIndentEnums(randomizers));
         }
 
         [HttpGet("{randomizerId}")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         public IActionResult GetRandomizer(string randomizerId) {
-            return new OkObjectResult(SerializeEnumAsString(randomizers.FirstOrDefault(x => x.Id == randomizerId)));
+            return new OkObjectResult(ToJsonWithIndentEnums(randomizers.FirstOrDefault(x => x.Id == randomizerId)));
         }
 
         [HttpPost("{randomizerId}/[action]")]
@@ -67,7 +66,7 @@ namespace WebRandomizer.Controllers {
                     Guid = seedData.Guid,
                     Players = seedData.Worlds.Count,
                     SeedNumber = seedData.Seed,
-                    Spoiler = JsonConvert.SerializeObject(seedData.Playthrough),
+                    Spoiler = ToJsonWithoutIndent(seedData.Playthrough),
                     Hash = GetSeedHashNames(seedData.Worlds[0].Patches, randomizer.Id),
                     Mode = seedData.Mode,
                     Worlds = new List<World>()
@@ -83,16 +82,23 @@ namespace WebRandomizer.Controllers {
                     var world = new World {
                         WorldId = seedWorld.Id,
                         Guid = seedWorld.Guid,
-                        Settings = JsonConvert.SerializeObject(options),
+                        Settings = ToJsonWithoutIndent(options),
                         Player = seedWorld.Player,
                         Patch = ConvertPatch(seedWorld.Patches),
-                        Locations = seedWorld.Locations.Select(l => new Location() { LocationId = l.LocationId, ItemId = l.ItemId, ItemWorldId = l.ItemWorldId}).ToList()
+                        Locations = seedWorld.Locations.Select(l => new Location() {
+                            LocationId = l.LocationId,
+                            ItemId = l.ItemId,
+                            ItemWorldId = l.ItemWorldId
+                        }).ToList(),
+                        WorldState = seedWorld.WorldState != null
+                            ? ToJsonWithoutIndentWithEnums(seedWorld.WorldState)
+                            : null,
                     };
                     seed.Worlds.Add(world);
                 }
 
                 context.Add(seed);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync(cancellationToken);
 
                 /* If this is a multiworld seed, we also create a new multiworld session with the same session guid as the seed guid */
                 if (seed.Players > 1) {
@@ -104,7 +110,7 @@ namespace WebRandomizer.Controllers {
                     };
 
                     context.Add(session);
-                    await context.SaveChangesAsync();
+                    await context.SaveChangesAsync(cancellationToken);
                 }
 
                 return new OkObjectResult(seed);
@@ -113,7 +119,8 @@ namespace WebRandomizer.Controllers {
                 return new StatusCodeResult(500);
             }
         }
-        private byte[] ConvertPatch(Dictionary<int, byte[]> patches) {
+
+        static byte[] ConvertPatch(Dictionary<int, byte[]> patches) {
             var bytes = new List<byte>();
             foreach (var patch in patches) {
                 bytes.AddRange(BitConverter.GetBytes(patch.Key));
@@ -123,5 +130,7 @@ namespace WebRandomizer.Controllers {
 
             return bytes.ToArray();
         }
+
     }
+
 }
