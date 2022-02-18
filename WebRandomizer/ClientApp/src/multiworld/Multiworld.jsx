@@ -294,7 +294,7 @@ export default function Multiworld() {
                 <Row className="mb-3">
                     <Col>
                         <Patch
-                            seed={{mode: session.seed.game_mode, gameId: session.seed.game_id, gameName: session.seed.game_name, gameVersion: session.seed.game_version, seedNumber: session.seed.number}}
+                            seed={{guid: session.seed.guid, mode: session.seed.game_mode, gameId: session.seed.game_id, gameName: session.seed.game_name, gameVersion: session.seed.game_version, seedNumber: session.seed.number}}
                             world={{ ...session.seed.worlds.find(world => world.world_id === clientData.world_id), player: clientData.player_name, patch: btoa(String.fromCharCode.apply(null, new Uint8Array(patch))) }}
                         />
                     </Col>
