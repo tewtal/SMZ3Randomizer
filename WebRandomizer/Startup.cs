@@ -42,6 +42,9 @@ namespace WebRandomizer {
 
             services.Configure<KestrelServerOptions>(options => {
                 options.AllowSynchronousIO = true;
+                options.ConfigureEndpointDefaults(ep => {
+                    ep.Protocols = HttpProtocols.Http1;
+                });
             });
 
             services.Configure<IISServerOptions>(options => {
