@@ -13,7 +13,7 @@ namespace WebRandomizer.Migrations
 {
     [DbContext(typeof(RandomizerContext))]
     [Migration("20220218001141_AddWorldState")]
-    partial class AddWorldState
+    partial class AddWorldClientState
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

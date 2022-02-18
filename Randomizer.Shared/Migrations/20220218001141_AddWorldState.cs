@@ -4,7 +4,7 @@
 
 namespace WebRandomizer.Migrations
 {
-    public partial class AddWorldState : Migration
+    public partial class AddWorldClientState : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
