@@ -12,7 +12,7 @@
     "localforage": "^1.7.3",
     "lodash": "^4.17.15",
     "pako": "^1.0.10",
-    "randomizer-client": "file:../../../wasm/randomizer-client/pkg",
+    "randomizer-client": "file:../../randomizer-client-wasm",
     "raw.macro": "^0.3.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",

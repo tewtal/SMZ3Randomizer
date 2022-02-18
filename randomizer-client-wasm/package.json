@@ -1,0 +1,16 @@
+{
+  "name": "randomizer-client",
+  "collaborators": [
+    "Thomas Backmark <total@viskos.org>"
+  ],
+  "version": "0.1.0",
+  "files": [
+    "randomizer_client_bg.wasm",
+    "randomizer_client.js",
+    "randomizer_client_bg.js",
+    "randomizer_client.d.ts"
+  ],
+  "module": "randomizer_client.js",
+  "types": "randomizer_client.d.ts",
+  "sideEffects": false
+}
