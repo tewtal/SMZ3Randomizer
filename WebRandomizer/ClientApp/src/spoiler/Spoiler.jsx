@@ -94,7 +94,7 @@ export default function Spoiler(props) {
         saveAs(blob, `${props.seedData.gameName} v${props.seedData.gameVersion} - ${encode(props.seedData.guid)} - Spoiler.txt`);
     }
 
-    if (props.seedData === null || props.seedData.spoiler === "[]")
+    if (props.seedData === null)
         return null;
 
     let locations = spoiler ? spoiler.locations : [];
@@ -107,7 +107,7 @@ export default function Spoiler(props) {
         }
     }
 
-    let playthrough = JSON.parse(props.seedData.spoiler).filter(sphere => !isEmpty(sphere));
+    let playthrough = (spoiler && spoiler.seed) ? JSON.parse(spoiler.seed.spoiler).filter(sphere => !isEmpty(sphere)) : [];
 
     return (
         <Card>

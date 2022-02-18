@@ -320,17 +320,17 @@ export default function Multiworld() {
                     </Col>
                 </Row>
             )}
-            {false && session.data.seed.spoiler !== null && (
+            {session && session.seed !== null && (
                 <Row className="mb-3">
                     <Col>
-                        <Spoiler seedData={session.data.seed} />
+                        <Spoiler seedData={{ ...session.seed, spoiler: '[]' }} />
                     </Col>
                 </Row>
             )}
         </>) :
         (
             <MessageCard error={true} title="This is not quite right :O"
-                msg={<a href={adjustHostname(document.location.href, session.data.seed.gameId)}>Go to the correct domain here</a>}
+                msg={<a href={adjustHostname(document.location.href, session.seed.gameId)}>Go to the correct domain here</a>}
             />
         );
 }
