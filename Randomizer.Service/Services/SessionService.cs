@@ -19,9 +19,10 @@ namespace Randomizer.Service.Services
         public override async Task<GetSessionResponse> GetSession(GetSessionRequest request, ServerCallContext context)
         {
             var session = await _context.Sessions
+                .Where(s => s.Guid == request.SessionGuid)
                 .Include(s => s.Clients)
-                .Include(s => s.Seed).ThenInclude(s => s.Worlds)
-                .FirstOrDefaultAsync(s => s.Guid == request.SessionGuid);
+                .Include(s => s.Seed).ThenInclude(s => s.Worlds.OrderBy(w => w.WorldId))
+                .FirstOrDefaultAsync();
 
             if (session != null)
             {
@@ -47,7 +48,7 @@ namespace Randomizer.Service.Services
                 {
                     Id = w.Id,
                     WorldId = w.WorldId,
-                    ClientState = (ClientState)(session.Clients.FirstOrDefault(c => c.WorldId == w.WorldId)?.State ?? Shared.Models.ClientState.Disconnected),
+                    ClientState = (ClientState)w.State,
                     Guid = w.Guid,
                     PlayerName = w.Player,
                     Settings = w.Settings
@@ -58,6 +59,46 @@ namespace Randomizer.Service.Services
             {
                 throw new RpcException(new Status(StatusCode.InvalidArgument, "Session not found"));
             }
+        }
+        public override async Task<UnregisterPlayerResponse> UnregisterPlayer(UnregisterPlayerRequest request, ServerCallContext context)
+        {
+            var session = await _context.Clients
+                .Join(_context.Sessions, c => c.SessionId, s => s.Id, (c, s) => new { Client = c, Session = s })
+                .Join(_context.Seeds, x => x.Session.Seed.Id, s => s.Id, (x, s) => new { Client = x.Client, Session = x.Session, Seed = s })
+                .Where(x => x.Client.ConnectionId == request.ClientToken)
+                .FirstOrDefaultAsync();
+
+            if (session == null)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "The specified client is not registered any session"));
+            }
+
+            var client = session.Client;
+
+            var world = await _context.Worlds.Where(w => w.SeedId == session.Seed.Id && w.WorldId == client.WorldId).FirstOrDefaultAsync();
+
+            if (world == null)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "There is no world for this client"));
+            }
+
+            world.State = Shared.Models.ClientState.Disconnected;            
+
+            _context.Remove(client);
+            _context.Update(world);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            } catch
+            {
+                throw new RpcException(new Status(StatusCode.Aborted, "An error occured during player unregistration, please try again"));
+            }
+
+            return new UnregisterPlayerResponse
+            {
+                Success = true
+            };
         }
 
         public override async Task<RegisterPlayerResponse> RegisterPlayer(RegisterPlayerRequest request, ServerCallContext context)
@@ -103,6 +144,14 @@ namespace Randomizer.Service.Services
                 };
                 
                 _context.Add(client);
+
+                var clientWorld = session.Seed.Worlds.Find(w => w.WorldId == client.WorldId);
+                if (clientWorld != null)
+                {
+                    clientWorld.State = client.State;
+                    _context.Update(clientWorld);
+                }                
+                
                 await _context.SaveChangesAsync();
 
                 return new RegisterPlayerResponse
@@ -110,7 +159,8 @@ namespace Randomizer.Service.Services
                     ClientId = client.Id,
                     ClientGuid = client.Guid,
                     ClientToken = client.ConnectionId,
-                    WorldId = client.WorldId
+                    WorldId = client.WorldId,
+                    PlayerName = client.Name
                 };
 
             } catch {
@@ -146,6 +196,7 @@ namespace Randomizer.Service.Services
                         ClientGuid = client.Guid,
                         ClientId = client.Id,
                         ClientToken = client.ConnectionId,
+                        PlayerName = client.Name,
                         WorldId = client.WorldId
                     };
                 } catch

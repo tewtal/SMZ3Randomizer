@@ -16,6 +16,62 @@ namespace Randomizer.Service.Services
             _context = context;
         }
 
+        public override async Task<GetReportResponse> GetReport(GetReportRequest request, ServerCallContext context)
+        {
+            /* Get all events relevant to specified world */
+            var events = await _context.Clients
+                .Where(c => c.ConnectionId == request.ClientToken)
+                .Join(_context.SessionEvents, c => c.SessionId, e => e.SessionId, (c, e) => e)
+                .Where(x =>
+                    (x.Id >= request.FromEventId) && (
+                        x.FromWorldId == request.WorldId || 
+                        (x.ToWorldId == request.WorldId || x.ToWorldId == -1)
+                    ) && request.EventTypes.Contains((EventType)x.EventType))
+                .ToListAsync();
+
+            if (request.ClientToken != "" && events == null)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "The specified client is not registered any session"));
+            }
+
+            var worlds = await _context.Worlds
+                .Where(w => w.SeedId == request.SeedId)
+                .OrderBy(w => w.WorldId)
+                .ToListAsync();
+
+            var response = new GetReportResponse();
+            
+            if (events != null)
+            {
+                response.Events.AddRange(events.Select(e => new SessionEvent
+                {
+                    Id = e.Id,
+                    SequenceNum = e.SequenceNum,
+                    FromWorldId = e.FromWorldId,
+                    ToWorldId = e.ToWorldId,
+                    ItemId = e.ItemId,
+                    ItemLocation = e.ItemLocation,
+                    EventType = (EventType)e.EventType,
+                    TimeStamp = e.TimeStamp.ToUniversalTime().ToString(),
+                    Message = e.Message,
+                    Confirmed = e.Confirmed
+                }));
+            }
+
+            response.Worlds.AddRange(worlds.Select(w => new World
+            {
+                Id = w.Id,
+                Guid = w.Guid,
+                WorldId = w.WorldId,
+                ClientState = (ClientState)w.State,
+                PlayerName = w.Player,
+                Settings = w.Settings
+            }));
+
+            return response;
+
+        }
+
         public override async Task<GetEventsResponse> GetEvents(GetEventsRequest request, ServerCallContext context)
         {
             var events = await _context.Clients
@@ -24,8 +80,8 @@ namespace Randomizer.Service.Services
                 .Where(x =>
                     (!request.HasFromEventId || (x.Id >= request.FromEventId)) &&
                     (!request.HasToEventId || (x.Id <= request.ToEventId)) &&
-                    (!request.HasFromWorldId || (x.FromWorldId == request.FromWorldId)) &&
-                    (!request.HasToWorldId || (x.ToWorldId == request.ToWorldId)) &&
+                    (!request.HasFromWorldId || (x.FromWorldId == request.FromWorldId || x.FromWorldId == -1)) &&
+                    (!request.HasToWorldId || (x.ToWorldId == request.ToWorldId || x.ToWorldId == -1)) &&
                     request.EventTypes.Contains((EventType)x.EventType))
                 .ToListAsync();
 
@@ -151,7 +207,7 @@ namespace Randomizer.Service.Services
         {
             bool ok = true;
             
-            if (sessionEvent.EventType == SessionEventType.ItemFound)
+            if (sessionEvent.EventType == SessionEventType.ItemFound && sessionEvent.ItemLocation >= 0)
             {
                 /* Reject any duplicate item event */
                 ok = !await _context.SessionEvents.AnyAsync(e => 
@@ -163,8 +219,7 @@ namespace Randomizer.Service.Services
                     e.EventType == sessionEvent.EventType
                 );
             }
-
-            if (sessionEvent.EventType == SessionEventType.Forfeit)
+            else if (sessionEvent.EventType == SessionEventType.Forfeit)
             {
                 /* Only let the actual owner of a world Id forfeit for themselves */
                 if (client.WorldId == sessionEvent.FromWorldId)
@@ -173,12 +228,93 @@ namespace Randomizer.Service.Services
                 }
             }
 
-            return await Task.FromResult((sessionEvent, ok));
+            return (sessionEvent, ok);
         }
 
         private async Task<Shared.Models.SessionEvent> PostProcessEvent(Client client, Shared.Models.SessionEvent sessionEvent)
         {
-            return await Task.FromResult(sessionEvent);
+            /* An item event with itemLocation -1 is a re-sent item, broadcast a system message to let all players know this */
+            if (sessionEvent.EventType == SessionEventType.ItemFound && sessionEvent.ItemLocation == -1)
+            {
+                try
+                {
+                    var worlds = await _context.Sessions
+                    .Where(s => s.Id == client.SessionId)
+                    .Include(s => s.Seed).ThenInclude(s => s.Worlds)
+                    .SelectMany(s => s.Seed.Worlds)
+                    .ToListAsync();
+
+                    var ev = new Shared.Models.SessionEvent
+                    {
+                        EventType = SessionEventType.SystemMessage,
+                        FromWorldId = -1,
+                        ToWorldId = -1,
+                        ItemId = sessionEvent.ItemId,
+                        ItemLocation = 0,
+                        SequenceNum = -1,
+                        SessionId = client.SessionId,
+                        TimeStamp = DateTime.UtcNow,
+                        Confirmed = true,
+                        Message = $"{worlds.Find(w => w.WorldId == sessionEvent.FromWorldId)?.Player ?? "Unknown"} re-sent <itemId> to {worlds.Find(w => w.WorldId == sessionEvent.ToWorldId)?.Player ?? "Unknown"}"
+                    };
+
+                    _context.SessionEvents.Add(ev);
+                    await _context.SaveChangesAsync();
+                }
+                catch { }                
+            } 
+            else if (sessionEvent.EventType == SessionEventType.ForfeitVote)
+            {
+                /* If there's players - 1 unique votes, have that player forfeit */
+                var votes = await _context.SessionEvents.Where(e =>
+                    e.SessionId == client.SessionId &&
+                    e.ToWorldId == sessionEvent.ToWorldId &&
+                    e.EventType == SessionEventType.ForfeitVote)
+                    .GroupBy(e => e.FromWorldId)
+                    .CountAsync();
+               
+                var worlds = await _context.Sessions
+                        .Where(s => s.Id == client.SessionId)
+                        .Include(s => s.Seed).ThenInclude(s => s.Worlds)
+                        .SelectMany(s => s.Seed.Worlds)
+                        .ToListAsync();
+
+                var players = worlds.Where(w => w.State < Shared.Models.ClientState.Completed).Count();
+
+                if(votes == (players - 1))
+                {
+                    var forfeitClient = await _context.Clients.FirstOrDefaultAsync(c => c.SessionId == client.SessionId && c.WorldId == sessionEvent.ToWorldId);
+                    if (forfeitClient != null)
+                    {
+                        sessionEvent.Confirmed = await Forfeit(forfeitClient);
+                    }
+                } 
+                else
+                {
+                    try
+                    {
+                        var ev = new Shared.Models.SessionEvent
+                        {
+                            EventType = SessionEventType.SystemMessage,
+                            FromWorldId = -1,
+                            ToWorldId = -1,
+                            ItemId = 0,
+                            ItemLocation = 0,
+                            SequenceNum = -1,
+                            SessionId = client.SessionId,
+                            TimeStamp = DateTime.UtcNow,
+                            Confirmed = true,
+                            Message = $"{worlds.Find(w => w.WorldId == sessionEvent.FromWorldId)?.Player ?? "Unknown"} voted to remove {worlds.Find(w => w.WorldId == sessionEvent.ToWorldId)?.Player ?? "Unknown"}. ({(players - votes - 1)} more votes needed)"
+                        };
+
+                        _context.SessionEvents.Add(ev);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch { }
+                }
+            }
+            
+            return sessionEvent;
         }
 
         private async Task<bool> Forfeit(Client client)
@@ -190,15 +326,19 @@ namespace Randomizer.Service.Services
 
             if (world != null)
             {
+
+                // All locations available for this player that doesn't belong to themselves
                 var locations = await _context.Locations
-                    .Where(l => l.WorldId == world.Id && 
-                    !_context.SessionEvents.Where(e => 
-                        e.EventType == SessionEventType.ItemFound &&
-                        e.FromWorldId == client.WorldId &&
-                        e.ToWorldId != client.WorldId &&
-                        e.SessionId == client.SessionId
-                     )
-                    .Select(e => e.ItemId).Contains(l.ItemId)).ToListAsync();
+                    .Where(l =>
+                        l.WorldId == world.Id &&
+                        l.ItemWorldId != world.WorldId &&
+                        !_context.SessionEvents.Any(e =>
+                            e.FromWorldId == world.WorldId &&
+                            e.SessionId == client.SessionId &&
+                            e.ItemId == l.ItemId &&
+                            (e.ItemLocation == l.LocationId || (e.ItemLocation == (l.LocationId + 32768 - 256))))                            
+                        )
+                    .ToListAsync();
 
                 foreach (var location in locations)
                 {
@@ -218,6 +358,11 @@ namespace Randomizer.Service.Services
 
                     _context.Add(sessionEvent);
                 }
+
+                client.State = Shared.Models.ClientState.Completed;
+                world.State = client.State;
+                _context.Update(client);
+                _context.Update(world);
 
                 try
                 {

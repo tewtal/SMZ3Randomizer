@@ -18,9 +18,12 @@ namespace Randomizer.Service.Services
 
         public override async Task<GetPatchResponse> GetPatch(GetPatchRequest request, ServerCallContext context)
         {
-            var patch = await _context.Clients
-                .Where(c => c.ConnectionId == request.ClientToken)
-                .Join(_context.Worlds, c => c.WorldId, w => w.WorldId, (c, w) => new { w.Patch })
+
+            var patch = await _context.Sessions
+                .Join(_context.Clients, s => s.Id, c => c.SessionId, (s, c) => new { Client = c, Session = s })
+                .Join(_context.Worlds, x => x.Session.Seed.Id, w => w.SeedId, (x, w) => new { ClientSession = x, World = w })
+                .Where(x => x.ClientSession.Client.ConnectionId == request.ClientToken && x.World.WorldId == x.ClientSession.Client.WorldId)
+                .Select(x => x.World.Patch)
                 .FirstOrDefaultAsync();
 
             if (patch == null)
@@ -30,7 +33,7 @@ namespace Randomizer.Service.Services
 
             return new GetPatchResponse
             {
-                PatchData = Google.Protobuf.ByteString.CopyFrom(patch.Patch)
+                PatchData = Google.Protobuf.ByteString.CopyFrom(patch)
             };
         }
 

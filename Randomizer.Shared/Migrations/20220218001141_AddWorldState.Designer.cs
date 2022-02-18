@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Randomizer.Shared.Models;
@@ -11,9 +12,10 @@ using Randomizer.Shared.Models;
 namespace WebRandomizer.Migrations
 {
     [DbContext(typeof(RandomizerContext))]
-    partial class RandomizerContextModelSnapshot : ModelSnapshot
+    [Migration("20220218001141_AddWorldState")]
+    partial class AddWorldState
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,8 +143,7 @@ namespace WebRandomizer.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
@@ -274,17 +275,11 @@ namespace WebRandomizer.Migrations
                     b.Property<string>("Settings")
                         .HasColumnType("text");
 
-                    b.Property<byte[]>("SramBackup")
-                        .HasColumnType("bytea");
-
                     b.Property<int>("State")
                         .HasColumnType("integer");
 
                     b.Property<int>("WorldId")
                         .HasColumnType("integer");
-
-                    b.Property<string>("WorldState")
-                        .HasColumnType("text");
 
                     b.HasKey("Id");
 

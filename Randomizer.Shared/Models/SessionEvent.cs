@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Randomizer.Shared.Models
 {
@@ -19,6 +20,7 @@ namespace Randomizer.Shared.Models
         Other               // Undefined other message
     }
 
+    [Index(nameof(ToWorldId), nameof(EventType))]
     public class SessionEvent
     {
         public int Id { get; set; }

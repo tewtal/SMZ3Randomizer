@@ -7,6 +7,7 @@ package randomizer;
 service Session {
 	rpc GetSession (GetSessionRequest) returns (GetSessionResponse);
 	rpc RegisterPlayer (RegisterPlayerRequest) returns (RegisterPlayerResponse);
+	rpc UnregisterPlayer (UnregisterPlayerRequest) returns (UnregisterPlayerResponse);
 	rpc LoginPlayer (LoginPlayerRequest) returns (RegisterPlayerResponse);
 }
 
@@ -17,6 +18,7 @@ service Metadata {
 
 service Event {
 	rpc GetEvents (GetEventsRequest) returns (GetEventsResponse);
+	rpc GetReport (GetReportRequest) returns (GetReportResponse);
 	rpc SendEvent (SendEventRequest) returns (SendEventResponse);
 	rpc ConfirmEvents (ConfirmEventsRequest) returns (ConfirmEventsResponse);
 }
@@ -41,7 +43,18 @@ message RegisterPlayerResponse {
 	int32 client_id = 1;
 	string client_guid = 2;
 	string client_token = 3;
-	int32 world_id = 4;
+	string player_name = 4;
+	int32 world_id = 5;
+	optional bytes sram_backup = 6;
+}
+
+message UnregisterPlayerRequest {
+	string client_token = 1;
+	optional bytes sram_backup = 2;
+}
+
+message UnregisterPlayerResponse {
+	bool success = 1; 
 }
 
 message LoginPlayerRequest {
@@ -65,13 +78,26 @@ message GetSpoilerResponse {
 	string spoiler = 1;
 }
 
+message GetReportRequest {
+	string client_token = 1;
+	int32 seed_id = 2;
+	int32 from_event_id = 3;
+	int32 world_id = 4;
+	repeated EventType event_types = 5;
+}
+
+message GetReportResponse {
+	repeated World worlds = 1;
+	repeated SessionEvent events = 2;
+}
+
 message GetEventsRequest {
 	string client_token = 1;
 	optional int32 from_event_id = 2;
 	optional int32 to_event_id = 3;
 	optional int32 from_world_id = 4;
 	optional int32 to_world_id = 5;
-	repeated EventType event_types = 6;		// A list of event types to filter on
+	repeated EventType event_types = 7;		// A list of event types to filter on
 }
 
 message GetEventsResponse {
