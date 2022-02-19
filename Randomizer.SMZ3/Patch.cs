@@ -301,17 +301,13 @@ namespace Randomizer.SMZ3 {
                     patches.Add((Snes(0x9E3BB), location.Item.Type == KeyTH ? new byte[] { 0xE4 } : new byte[] { 0xEB }));
                 } else if (new[] { LocationType.Pedestal, LocationType.Ether, LocationType.Bombos }.Contains(location.Type)) {
                     var text = Texts.ItemTextbox(location.Item);
-                    var dialog = Dialog.Simple(text);
                     if (location.Type == LocationType.Pedestal) {
-                        patches.Add((Snes(0x308300), dialog));
                         stringTable.SetPedestalText(text);
                     }
                     else if (location.Type == LocationType.Ether) {
-                        patches.Add((Snes(0x308F00), dialog));
                         stringTable.SetEtherText(text);
                     }
                     else if (location.Type == LocationType.Bombos) {
-                        patches.Add((Snes(0x309000), dialog));
                         stringTable.SetBombosText(text);
                     }
                 }

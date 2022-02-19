@@ -336,7 +336,7 @@ namespace Randomizer.Service.Services
                             e.FromWorldId == world.WorldId &&
                             e.SessionId == client.SessionId &&
                             e.ItemId == l.ItemId &&
-                            (e.ItemLocation == l.LocationId || (e.ItemLocation == (l.LocationId + 32768 - 256))))                            
+                            (e.ItemLocation == l.LocationId || (e.ItemLocation == (l.LocationId | 0x8000))))
                         )
                     .ToListAsync();
 

@@ -39,10 +39,12 @@ namespace Randomizer.Service.Services
 
         public override Task<GetSpoilerResponse> GetSpoiler(GetSpoilerRequest request, ServerCallContext context)
         {
+            //TODO: Implement this properly, although it's not needed right now since the web-ui can call into the
+            //      regular spoiler API to retrieve the spoiler.
             return Task.FromResult(
                 new GetSpoilerResponse
                 {
-                    Spoiler = "{}"
+                    Spoiler = "\"[]\""
                 }
             );
         }
