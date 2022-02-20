@@ -9,7 +9,7 @@ import Connection from './Connection';
 import Game from './Game';
 import Patch from '../patch';
 import Spoiler from '../spoiler';
-import itemLookup from '../game/item_lookup'
+import { smz3ItemNames, smItemNames } from '../game/item_lookup'
 
 import { GameTraitsCtx } from '../game/traits';
 import { gameServiceHost, adjustHostname } from '../site/domain';
@@ -41,6 +41,7 @@ export default function Multiworld() {
     const [gameStatus, setGameStatus] = useState('');
     const [deviceStatus, setDeviceStatus] = useState('');
     const game = useContext(GameTraitsCtx);
+    const itemLookup = game.id === "smz3" ? smz3ItemNames : smItemNames;
 
     const formatEvent = useCallback((event) => {
         const worlds = state.session.seed.worlds;

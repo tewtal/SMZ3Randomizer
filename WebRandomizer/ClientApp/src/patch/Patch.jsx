@@ -265,7 +265,7 @@ export default function Patch(props) {
                 </Row>
             )}
             <Row className="mb-3">
-                {worldSettings.race === "false" && <Col md="5">
+                {game.z3 && worldSettings.race === "false" && <Col md="5">
                     <InputGroup prefixClassName="mr-1" prefix="Quick Swap">
                         <BootstrapSwitchButton width="80" onlabel="On" offlabel="Off" checked={z3QuickSwap}
                             onChange={onZ3QuickSwapToggle}
