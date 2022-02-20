@@ -74,6 +74,7 @@ export default function Patch(props) {
     const [z3Sprite, setZ3Sprite] = useState({});
     const [smSprite, setSMSprite] = useState({});
     const [smSpinjumps, setSMSpinjumps] = useState(false);
+    const [z3QuickSwap, setZ3QuickSwap] = useState(false);
     const [z3HeartColor, setZ3HeartColor] = useState('red');
     const [z3HeartBeep, setZ3HeartBeep] = useState('half');
     const [smEnergyBeep, setSMEnergyBeep] = useState(true);
@@ -86,6 +87,7 @@ export default function Patch(props) {
     };
 
     const { seed, world } = props;
+    const worldSettings = JSON.parse(world.settings);
 
     useEffect(() => {
         attempt(async () => {
@@ -101,10 +103,11 @@ export default function Patch(props) {
         let settings;
         if ((settings = restore())) {
             const { z3: z3Sprite, sm: smSprite, spinjumps } = settings.sprites || {};
-            const { z3_heart_color, z3_heart_beep, sm_energy_beep } = settings;
+            const { z3_quick_swap, z3_heart_color, z3_heart_beep, sm_energy_beep } = settings;
             setZ3Sprite(sprites.z3.find(x => x.title === z3Sprite) || {});
             setSMSprite(sprites.sm.find(x => x.title === smSprite) || {});
             setSMSpinjumps(defaultTo(spinjumps, false));
+            setZ3QuickSwap(defaultTo(z3_quick_swap, false));
             setZ3HeartColor(defaultTo(z3_heart_color, 'red'));
             setZ3HeartBeep(defaultTo(z3_heart_beep, 'half'));
             setSMEnergyBeep(defaultTo(sm_energy_beep, true));
@@ -114,7 +117,7 @@ export default function Patch(props) {
     async function onDownloadRom() {
         try {
             if (world !== null) {
-                const settings = { z3Sprite, smSprite, smSpinjumps, z3HeartColor, z3HeartBeep, smEnergyBeep };
+                const settings = { worldSettings, z3Sprite, smSprite, smSpinjumps, z3QuickSwap, z3HeartColor, z3HeartBeep, smEnergyBeep };
                 const patchedData = await prepareRom(world.patch, settings, baseIps(game.id, seed.gameVersion), game);
                 saveAs(new Blob([patchedData]), constructFileName());
             }
@@ -199,6 +202,10 @@ export default function Patch(props) {
         setSMSpinjumps(!smSpinjumps);
         persist(set(restore() || {}, 'sprites.spinjumps', !smSpinjumps));
     };
+    const onZ3QuickSwapToggle = () => {
+        setZ3QuickSwap(!z3QuickSwap);
+        persist(set(restore() || {}, 'z3_quick_swap', !z3QuickSwap));
+    };
     const onZ3HeartColorChange = (value) => {
         setZ3HeartColor(value);
         persist(set(restore() || {}, 'z3_heart_color', value));
@@ -258,6 +265,13 @@ export default function Patch(props) {
                 </Row>
             )}
             <Row className="mb-3">
+                {worldSettings.race === "false" && <Col md="5">
+                    <InputGroup prefixClassName="mr-1" prefix="Quick Swap">
+                        <BootstrapSwitchButton width="80" onlabel="On" offlabel="Off" checked={z3QuickSwap}
+                            onChange={onZ3QuickSwapToggle}
+                        />
+                    </InputGroup>
+                </Col>}
                 <Col md="4">
                     <InputGroup prefixClassName="mr-1" prefix="Energy Beep">
                         <BootstrapSwitchButton width="80" onlabel="On" offlabel="Off" checked={smEnergyBeep}

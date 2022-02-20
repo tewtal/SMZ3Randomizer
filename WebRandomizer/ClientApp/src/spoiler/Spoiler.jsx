@@ -97,6 +97,10 @@ export default function Spoiler(props) {
     if (props.seedData === null)
         return null;
 
+    const worldSettings = JSON.parse(props.seedData.worlds[0].settings);
+    if (worldSettings.race === "true")
+        return null;
+
     let locations = spoiler ? spoiler.locations : [];
     if (spoiler && searchText) {
         const re = new RegExp(escapeRegExp(searchText), 'i');

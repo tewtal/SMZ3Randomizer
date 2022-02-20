@@ -45,6 +45,9 @@ export async function prepareRom(worldPatch, settings, baseIps, game) {
     if (game.z3) {
         z3HeartColor(rom, mapping, settings.z3HeartColor);
         z3HeartBeep(rom, settings.z3HeartBeep);
+        if (settings.worldSettings.race === "false") {
+            z3QuickSwap(rom, settings.z3QuickSwap);
+        }
     }
     if (!settings.smEnergyBeep) {
         smEnergyBeepOff(rom, mapping);
@@ -128,6 +131,10 @@ function z3HeartBeep(rom, setting) {
     };
     /* Redirected to low bank $40 in combo */
     rom[0x400033] = defaultTo(values[setting], values.half);
+}
+
+function z3QuickSwap(rom, setting) {
+    rom[0x40004B] = setting ? 0x01 : 0x00;
 }
 
 function smEnergyBeepOff(rom, mapping) {
