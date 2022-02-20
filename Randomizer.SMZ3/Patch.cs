@@ -798,7 +798,7 @@ namespace Randomizer.SMZ3 {
             /* Defaults to $00 (never) at [asm]/z3/randomizer/tables.asm */
             var value = goal switch {
                 Goal.DefeatBoth => 0x03,
-                Goal.FastGanonDefeatMotherBrain => 0x00,
+                Goal.FastGanonDefeatMotherBrain => 0x04,
                 Goal.AllDungeonsDefeatMotherBrain => 0x02,
                 var x => throw new ArgumentException($"Unknown Ganon invincible value {x}", nameof(goal))
             };
