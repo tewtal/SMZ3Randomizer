@@ -2,6 +2,7 @@ using Grpc.Core;
 using Randomizer.Service;
 using Randomizer.Shared.Models;
 using Microsoft.EntityFrameworkCore;
+using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.Service.Services
 {
@@ -327,16 +328,19 @@ namespace Randomizer.Service.Services
             if (world != null)
             {
 
+                int[] excludeItems = new[] { (int)Arrow, (int)ThreeBombs, (int)OneRupee, (int)FiveRupees, (int)TwentyRupees, (int)TenArrows };
+
                 // All locations available for this player that doesn't belong to themselves
                 var locations = await _context.Locations
                     .Where(l =>
                         l.WorldId == world.Id &&
                         l.ItemWorldId != world.WorldId &&
+                        !excludeItems.Contains(l.ItemId) &&
                         !_context.SessionEvents.Any(e =>
                             e.FromWorldId == world.WorldId &&
                             e.SessionId == client.SessionId &&
                             e.ItemId == l.ItemId &&
-                            (e.ItemLocation == l.LocationId || (e.ItemLocation == (l.LocationId | 0x8000))))
+                            (e.ItemLocation == (l.LocationId * 8) || (e.ItemLocation == (((l.LocationId - 256) * 8) + 0x8000))))
                         )
                     .ToListAsync();
 
