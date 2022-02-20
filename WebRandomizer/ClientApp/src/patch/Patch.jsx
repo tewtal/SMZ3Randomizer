@@ -24,13 +24,20 @@ import set from 'lodash/set';
 import attempt from 'lodash/attempt';
 import defaultTo from 'lodash/defaultTo';
 
+import semver from 'semver';
+
 import inventory from '../resources/sprite/inventory';
+
+// FIXME: This needs to have a better implementation on how to handle older incompatible base ROMS,
+//        but since V11.3 will have breaking changes we'll have to do something for now to let old seeds work.
+import baseIpsSMZ3v11_2 from '../resources/zsm.v11.2.ips.gz';
 import baseIpsSMZ3 from '../resources/zsm.ips.gz';
 import baseIpsSM from '../resources/sm.ips.gz';
 
-const baseIps = {
-    sm: baseIpsSM,
-    smz3: baseIpsSMZ3
+const baseIps = (gameId, gameVersion) => {
+    return gameId === "sm"
+        ? baseIpsSM
+        : semver.gt(semver.coerce(gameVersion), '11.2.0') ? baseIpsSMZ3 : baseIpsSMZ3v11_2;
 };
 
 const SpriteOption = styled.div`
@@ -108,7 +115,7 @@ export default function Patch(props) {
         try {
             if (world !== null) {
                 const settings = { z3Sprite, smSprite, smSpinjumps, z3HeartColor, z3HeartBeep, smEnergyBeep };
-                const patchedData = await prepareRom(world.patch, settings, baseIps[game.id], game);
+                const patchedData = await prepareRom(world.patch, settings, baseIps(game.id, seed.gameVersion), game);
                 saveAs(new Blob([patchedData]), constructFileName());
             }
         } catch (error) {
