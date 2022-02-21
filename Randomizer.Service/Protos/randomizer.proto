@@ -9,6 +9,7 @@ service Session {
 	rpc RegisterPlayer (RegisterPlayerRequest) returns (RegisterPlayerResponse);
 	rpc UnregisterPlayer (UnregisterPlayerRequest) returns (UnregisterPlayerResponse);
 	rpc LoginPlayer (LoginPlayerRequest) returns (RegisterPlayerResponse);
+	rpc UpdatePlayer (UpdatePlayerRequest) returns (UpdatePlayerResponse);
 }
 
 service Metadata {
@@ -60,6 +61,16 @@ message UnregisterPlayerResponse {
 message LoginPlayerRequest {
 	string session_guid = 1;
 	string client_guid = 2;
+}
+
+message UpdatePlayerRequest {
+	string client_token = 1;
+	ClientState client_state = 2;
+	optional string device_name = 3;
+}
+
+message UpdatePlayerResponse {
+	bool success = 1;
 }
 
 message GetPatchRequest {

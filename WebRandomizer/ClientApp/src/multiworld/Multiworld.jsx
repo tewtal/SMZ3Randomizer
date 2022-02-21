@@ -150,8 +150,7 @@ export default function Multiworld() {
                             }
                         }
                     }
-                }
-                );
+                });
 
                 const formattedEvents = report.events.map(e => formatEvent(e));
                 setEvents(prevEvents => [...prevEvents.filter(p => !formattedEvents.find(f => f.id === p.id)), ...formattedEvents]);

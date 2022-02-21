@@ -60,6 +60,55 @@ namespace Randomizer.Service.Services
                 throw new RpcException(new Status(StatusCode.InvalidArgument, "Session not found"));
             }
         }
+
+        public override async Task<UpdatePlayerResponse> UpdatePlayer(UpdatePlayerRequest request, ServerCallContext context)
+        {
+            var session = await _context.Clients
+                .Join(_context.Sessions, c => c.SessionId, s => s.Id, (c, s) => new { Client = c, Session = s })
+                .Join(_context.Seeds, x => x.Session.Seed.Id, s => s.Id, (x, s) => new { Client = x.Client, Session = x.Session, Seed = s })
+                .Where(x => x.Client.ConnectionId == request.ClientToken)
+                .FirstOrDefaultAsync();
+            
+            if (session == null)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "The specified client is not registered any session"));
+            }
+
+            var client = session.Client;
+            var world = await _context.Worlds.Where(w => w.SeedId == session.Seed.Id && w.WorldId == client.WorldId).FirstOrDefaultAsync();
+
+            if (world == null)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "There is no world for this client"));
+            }
+
+            if (request.HasDeviceName)
+            {
+                client.Device = request.DeviceName;
+            }
+
+            client.State = (Shared.Models.ClientState)request.ClientState;
+            world.State = client.State;
+
+            _context.Update(client);
+            _context.Update(world);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                throw new RpcException(new Status(StatusCode.Aborted, "An error occured during player update, please try again"));
+            }
+
+            return new UpdatePlayerResponse
+            {
+                Success = true
+            };
+
+        }
+
         public override async Task<UnregisterPlayerResponse> UnregisterPlayer(UnregisterPlayerRequest request, ServerCallContext context)
         {
             var session = await _context.Clients
