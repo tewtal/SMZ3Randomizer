@@ -52,7 +52,7 @@ export default function Multiworld() {
             item_name: itemLookup[event.item_id],
             message: event.message.replace("<itemId>", itemLookup[event.item_id]),
         }
-    }, [state]);
+    }, [state, itemLookup]);
 
     const handleMessage = (message, args) => {
         switch (message) {
