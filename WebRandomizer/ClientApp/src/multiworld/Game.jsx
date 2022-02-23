@@ -1,7 +1,10 @@
 ﻿/* eslint-disable no-mixed-operators, jsx-a11y/anchor-is-valid */
 import React, { useRef, useState, useEffect } from 'react';
-import { Row, Col, Card, CardBody, CardTitle, CardHeader } from 'reactstrap';
 import styled from 'styled-components';
+import { Row, Col, Card, CardBody, CardTitle, CardHeader } from 'reactstrap';
+
+import { Ok, Delay, Msg, Issue, Reload } from './styled';
+
 import sortBy from 'lodash/sortBy';
 
 const LogMessageRow = styled.div.attrs(props => ({
@@ -35,9 +38,9 @@ export default function Game(props) {
     }, [events, eventCount])
 
     const LogMessage = ({ event }) => {
-        const icon = (event.event_type <= 1)
-            ? (event.confirmed ? "✅" : "⌛")
-            : (event.event_type === 2 ? "💬" : "⚠");
+        const Icon = event.event_type <= 1
+            ? event.confirmed ? Ok : Delay
+            : event.event_type === 2 ? Msg : Issue;
 
         const message = event.event_type === 0
             ? (event.from_world_id === clientData.world_id
@@ -49,14 +52,12 @@ export default function Game(props) {
 
         return (
             <LogMessageRow>
-                <div className="text-center mr-1" style={{ width: "1.5em" }}>{icon}</div>
+                <Icon className="mr-1" />
                 <div className="text-right mr-1"><i>[{event.time_stamp.substring(11)}]</i></div>
                 <div className="mr-auto">{message}</div>
-                {event.event_type === 0 && event.from_world_id === clientData.world_id &&
-                    <div>
-                    <a onClick={() => onResendEvent(event)} role="button" className="text-danger log-button">⭮</a>
-                    </div>
-                }
+                {event.event_type === 0 && event.from_world_id === clientData.world_id && (
+                    <div><a onClick={() => onResendEvent(event)} role="button"><Reload /></a></div>
+                )}
             </LogMessageRow>)
     }
 
