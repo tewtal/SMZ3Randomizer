@@ -1,35 +1,18 @@
 ﻿/* eslint-disable no-mixed-operators, jsx-a11y/anchor-is-valid */
 import React, { useRef, useState, useEffect } from 'react';
-import styled from 'styled-components';
 import { Row, Col, Card, CardBody, CardTitle, CardHeader } from 'reactstrap';
+import { LogMessageRow } from './styled';
 
 import { Ok, Delay, Msg, Issue, Reload } from './styled';
 
 import sortBy from 'lodash/sortBy';
-
-const LogMessageRow = styled.div.attrs(props => ({
-    className: "d-flex"
-}))`
-    pointer-events: none;
-    &:hover {
-        background: #ffeeee;
-    }
-
-    div > a {
-        pointer-events: auto;
-    }
-
-    &:hover div > a {
-        text-decoration: none;
-    }    
-`;
 
 export default function Game(props) {
     const logEnd = useRef(null);
     const [eventCount, setEventCount] = useState(0);
     const { events, clientData } = props;
     const { onChatMessage, onResendEvent } = props;
-    
+
     useEffect(() => {
         if (events.length !== eventCount) {
             logEnd.current?.scrollIntoView();
@@ -58,7 +41,8 @@ export default function Game(props) {
                 {event.event_type === 0 && event.from_world_id === clientData.world_id && (
                     <div><a onClick={() => onResendEvent(event)} role="button"><Reload /></a></div>
                 )}
-            </LogMessageRow>)
+            </LogMessageRow>
+        );
     }
 
     const onChatKeyUp = (e) => {
@@ -69,32 +53,32 @@ export default function Game(props) {
         }
     }
 
-    return (<div>
-        <Card>
-            <CardHeader className="bg-success text-white">
-                Game information
-            </CardHeader>
-            <CardBody>
-                <CardTitle tag="h5">{props.gameStatus}</CardTitle>
-                <Row>
-                    <Col>
-                        <h6>Game log</h6>
-                    </Col>
-                </Row>
-                <Col>
-                    <div className="overflow-auto" style={{ "height": "25vh" }}>
-                        {sortBy(events, ['id']).map((e, i) => (
-                            <LogMessage event={e} key={i} />
-                        ))}                        
-                        <div ref={logEnd} />
-                    </div>
-                    <input type="text" className="w-100" onKeyUp={onChatKeyUp} />
-                </Col>
-                <Row>
-
-                </Row>
-            </CardBody>
-        </Card>
+    return (
+        <div>
+            <Card>
+                <CardHeader className="bg-success text-white">
+                    Game information
+                </CardHeader>
+                <CardBody>
+                    <CardTitle tag="h5">{props.gameStatus}</CardTitle>
+                    <Row>
+                        <Col>
+                            <h6>Game log</h6>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <div className="overflow-auto" style={{ "height": "25vh" }}>
+                                {sortBy(events, ['id']).map((e, i) => (
+                                    <LogMessage event={e} key={i} />
+                                ))}
+                                <div ref={logEnd} />
+                            </div>
+                            <input type="text" className="w-100" onKeyUp={onChatKeyUp} />
+                        </Col>
+                    </Row>
+                </CardBody>
+            </Card>
         </div>
     );
 }

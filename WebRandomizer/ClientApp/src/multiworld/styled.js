@@ -3,6 +3,16 @@
 import { CheckSquareFill, ChatLeftDots, ArrowClockwise } from '../ui/BootstrapIcon';
 import { Hourglass, WarningTriangle } from '../ui/ColoredIcon';
 
+export const LogMessageRow = styled.div.attrs({
+    className: "d-flex align-items-center"
+})`
+    pointer-events: none;
+    &:hover { background: #ffeeee; }
+
+    div > a { pointer-events: auto; }
+    &:hover div > a { text-decoration: none; }
+`;
+
 const LogIcon = styled.div`
   width: 1.5em;
   height: 1.5em;
