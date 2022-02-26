@@ -174,17 +174,23 @@ namespace Randomizer.SMZ3 {
             var pendantRegions = world.Regions
                 .Where(r => r is SMRegion && r is IReward)
                 .Concat(Enumerable.Repeat(world.Regions.Where(r => r is Z3Region && r is IReward), 3).SelectMany(r => r))
-                .OfType<IReward>().Where(x => x.Reward == None)
-                .Shuffle(rnd);
+                .OfType<IReward>().Where(x => x.Reward == None);
 
-            foreach (var (region, reward) in pendantRegions.Zip(rewards.Where(r => (r & AnyPendant) != 0))) {
-                region.Reward = reward;
+            var pendantRewards = rewards.Where(r => (r == PendantGreen || r == PendantNonGreen)).ToList();
+            foreach (var pendant in pendantRewards) {
+                var region = pendantRegions.Where(r => r.Reward == None).Shuffle(rnd).First();
+                region.Reward = pendant;
             }
 
             // Assign the non-pendant rewards
             var regions = world.Regions.OfType<IReward>().Where(x => x.Reward == None).Shuffle(rnd);
             foreach (var (region, reward) in regions.Zip(rewards.Where(r => (r & AnyPendant) == 0))) {
                 region.Reward = reward;
+            }
+
+            var allRewards = world.Regions.OfType<IReward>().ToList();
+            if (allRewards.Any(r => r.Reward == None)) {
+                throw new Exception("All rewards are not assigned");
             }
 
             return new() {
