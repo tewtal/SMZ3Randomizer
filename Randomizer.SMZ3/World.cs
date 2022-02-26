@@ -119,17 +119,16 @@ namespace Randomizer.SMZ3 {
             SetRewardLookup();
         }
 
-        void SetRewards(IEnumerable<RewardType> rewards) {
-            var regions = Regions.OfType<IReward>().Where(x => x.Reward == None);
-            foreach (var (region, reward) in regions.Zip(rewards)) {
-                region.Reward = reward;
+        void SetRewards(Dictionary<string, RewardType> rewards) {
+            foreach(var reward in rewards) {
+                ((IReward)regionLookup[reward.Key]).Reward = reward.Value;
             }
         }
 
-        void SetMedallions(IEnumerable<Medallion> medallions) {
-            var (mm, tr, _) = medallions;
-            (GetRegion("Misery Mire") as IMedallionAccess).Medallion = mm;
-            (GetRegion("Turtle Rock") as IMedallionAccess).Medallion = tr;
+        void SetMedallions(Dictionary<string, Medallion> medallions) {
+            foreach (var medallion in medallions) {
+                ((IMedallionAccess)regionLookup[medallion.Key]).Medallion = medallion.Value;
+            }
         }
 
         void SetRewardLookup() {
@@ -150,8 +149,8 @@ namespace Randomizer.SMZ3 {
             Quake,
         }
 
-        public IEnumerable<RewardType> Rewards { get; init; }
-        public IEnumerable<Medallion> Medallions { get; init; }
+        public Dictionary<string, RewardType> Rewards { get; init; }
+        public Dictionary<string, Medallion> Medallions { get; init; }
         public int TowerCrystals { get; init; }
         public int GanonCrystals { get; init; }
         public int TourianBossTokens { get; init; }
@@ -162,18 +161,38 @@ namespace Randomizer.SMZ3 {
             BossTokenKraid, BossTokenPhantoon, BossTokenDraygon, BossTokenRidley,
         };
 
-        public static WorldState Generate(Config config, Random rnd) {
+        public static WorldState Generate(World world, Random rnd) {
+            var config = world.Config;
+            var rewards = BaseRewards.Shuffle(rnd);
+
+            // Assign medallions to areas
+            foreach (var medallionRegion in world.Regions.OfType<IMedallionAccess>()) {
+                medallionRegion.Medallion = (Medallion)rnd.Next(3);
+            }
+
+            // Assign pendants weighted towards ALTTP since pendants in SM have a higher gameplay impact
+            var pendantRegions = world.Regions
+                .Where(r => r is SMRegion && r is IReward)
+                .Concat(Enumerable.Repeat(world.Regions.Where(r => r is Z3Region && r is IReward), 3).SelectMany(r => r))
+                .OfType<IReward>().Where(x => x.Reward == None)
+                .Shuffle(rnd);
+
+            foreach (var (region, reward) in pendantRegions.Zip(rewards.Where(r => (r & AnyPendant) != 0))) {
+                region.Reward = reward;
+            }
+
+            // Assign the non-pendant rewards
+            var regions = world.Regions.OfType<IReward>().Where(x => x.Reward == None).Shuffle(rnd);
+            foreach (var (region, reward) in regions.Zip(rewards.Where(r => (r & AnyPendant) == 0))) {
+                region.Reward = reward;
+            }
+
             return new() {
-                Rewards = BaseRewards.Shuffle(rnd),
-                Medallions = GenerateMedallions(),
+                Rewards = world.Regions.OfType<IReward>().ToDictionary(r => ((Region)r).Name, r => r.Reward),
+                Medallions = world.Regions.OfType<IMedallionAccess>().ToDictionary(r => ((Region)r).Name, r => r.Medallion),
                 TowerCrystals = config.OpenTower == OpenTower.Random ? rnd.Next(8) : (int)config.OpenTower,
                 GanonCrystals = config.GanonVulnerable == GanonVulnerable.Random ? rnd.Next(8) : (int)config.GanonVulnerable,
                 TourianBossTokens = config.OpenTourian == OpenTourian.Random ? rnd.Next(5) : (int)config.OpenTourian,
-            };
-
-            Medallion[] GenerateMedallions() => new[] {
-                (Medallion)rnd.Next(3),
-                (Medallion)rnd.Next(3),
             };
         }
 

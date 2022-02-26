@@ -22,8 +22,28 @@ namespace Randomizer.SMZ3.Tests.Logic {
             world = new World(config, "", 0, "");
             /* Here we use the assumptions that single/multiple reward checks yield true if the rewards are missing */
             world.Setup(new WorldState {
-                Rewards = Repeat(None, 7 + 4),
-                Medallions = new[] { Medallion.Ether, Medallion.Quake },
+                Rewards = new Dictionary<string, RewardType>
+                {
+                    ["Eastern Palace"] = PendantGreen,
+                    ["Desert Palace"] = PendantNonGreen,
+                    ["Tower of Hera"] = PendantNonGreen,
+                    ["Palace of Darkness"] = CrystalBlue,
+                    ["Swamp Palace"] = CrystalBlue,
+                    ["Skull Woods"] = CrystalBlue,
+                    ["Thieves' Town"] = CrystalBlue,
+                    ["Ice Palace"] = CrystalRed,
+                    ["Misery Mire"] = CrystalRed,
+                    ["Turtle Rock"] = CrystalBlue,
+                    ["Brinstar Kraid"] = BossTokenKraid,
+                    ["Wrecked Ship"] = BossTokenPhantoon,
+                    ["Maridia Inner"] = BossTokenDraygon,
+                    ["Norfair Lower East"] = BossTokenRidley
+                },
+                Medallions = new Dictionary<string, Medallion>
+                {
+                    ["Misery Mire"] = Medallion.Ether,
+                    ["Turtle Rock"] = Medallion.Quake
+                },
                 GanonCrystals = 0,
                 TowerCrystals = 0,
                 TourianBossTokens = 0,

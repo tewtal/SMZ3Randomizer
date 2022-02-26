@@ -20,7 +20,7 @@ namespace Randomizer.SMZ3 {
             CancellationToken = cancellationToken;
 
             foreach (var world in worlds) {
-                world.Setup(WorldState.Generate(Config, Rnd));
+                world.Setup(WorldState.Generate(world, Rnd));
             }
         }
 
