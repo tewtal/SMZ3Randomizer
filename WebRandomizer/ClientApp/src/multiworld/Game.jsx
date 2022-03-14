@@ -20,7 +20,7 @@ export default function Game(props) {
         setEventCount(events.length);
     }, [events, eventCount])
 
-    const LogMessage = ({ event }) => {
+    function renderMessage(event) {
         const Icon = event.event_type <= 1
             ? event.confirmed ? Ok : Delay
             : event.event_type === 2 ? Msg : Issue;
@@ -33,19 +33,17 @@ export default function Game(props) {
                 ? <>[<b>{event.from_player}</b>] {event.message}</>
                 : <span className="text-danger">{event.message}</span>);
 
-        return (
-            <LogMessageRow>
-                <Icon className="mr-1" />
-                <div className="text-right mr-1"><i>[{event.time_stamp.substring(11)}]</i></div>
-                <div className="mr-auto">{message}</div>
-                {event.event_type === 0 && event.from_world_id === clientData.world_id && (
-                    <div><a onClick={() => onResendEvent(event)} role="button"><Reload /></a></div>
-                )}
-            </LogMessageRow>
-        );
+        return <>
+            <Icon className="mr-1" />
+            <div className="text-right mr-1"><i>[{event.time_stamp.substring(11)}]</i></div>
+            <div className="mr-auto">{message}</div>
+            {event.event_type === 0 && event.from_world_id === clientData.world_id && (
+                <div><a onClick={() => onResendEvent(event)} role="button"><Reload /></a></div>
+            )}
+        </>;
     }
 
-    const onChatKeyUp = (e) => {
+    function onChatKeyUp(e) {
         if (e.key === "Enter") {
             const message = e.target.value;
             e.target.value = "";
@@ -69,8 +67,10 @@ export default function Game(props) {
                     <Row>
                         <Col>
                             <div className="overflow-auto" style={{ "height": "25vh" }}>
-                                {sortBy(events, ['id']).map((e, i) => (
-                                    <LogMessage event={e} key={i} />
+                                {sortBy(events, 'id').map(event => (
+                                    <LogMessageRow key={event.id}>
+                                        {renderMessage(event)}
+                                    </LogMessageRow>
                                 ))}
                                 <div ref={logEnd} />
                             </div>
