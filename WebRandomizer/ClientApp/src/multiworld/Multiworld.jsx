@@ -15,7 +15,11 @@ import { GameTraitsCtx } from '../game/traits';
 import { gameServiceHost, adjustHostname } from '../site/domain';
 
 import { decode } from 'slugid';
-import { minBy, maxBy } from 'lodash';
+
+import differenceBy from 'lodash/differenceBy';
+import isEmpty from 'lodash/isEmpty';
+import minBy from 'lodash/minBy';
+import maxBy from 'lodash/maxBy';
 
 // Message types to handle from WASM
 const MessageType = {
@@ -43,7 +47,7 @@ export default function Multiworld() {
     const game = useContext(GameTraitsCtx);
     const itemLookup = game.id === "smz3" ? smz3ItemNames : smItemNames;
 
-    const formatEvent = useCallback((event) => {
+    const formatEvent = useCallback(event => {
         const worlds = state.session.seed.worlds;
         return {
             ...event,
@@ -51,7 +55,7 @@ export default function Multiworld() {
             to_player: event.to_world_id === -1 ? "SERVER" : worlds.find(w => w.world_id === event.to_world_id).player_name,
             item_name: itemLookup[event.item_id],
             message: event.message.replace("<itemId>", itemLookup[event.item_id]),
-        }
+        };
     }, [state, itemLookup]);
 
     const handleMessage = (message, args) => {
@@ -70,7 +74,7 @@ export default function Multiworld() {
                 setState(prevState => ({ ...prevState, device: { ...prevState.device, uri: args[0] } }));
                 break;
             case MessageType.ConsoleError:
-                setDeviceStatus("Disconnected - ", args[0]);
+                setDeviceStatus(`Disconnected - ${args[0]}`);
                 clearTimeout(eventLoopHandle.current);
                 setState(prevState => ({ ...prevState, device: null, status: 1 }));
                 break;
@@ -152,11 +156,10 @@ export default function Multiworld() {
                     }
                 });
 
-                const formattedEvents = report.events.map(e => formatEvent(e));
-                setEvents(prevEvents => [...prevEvents.filter(p => !formattedEvents.find(f => f.id === p.id)), ...formattedEvents]);
+                const newEvents = report.events.map(formatEvent);
+                setEvents(prevEvents => isEmpty(newEvents) ? prevEvents : [...differenceBy(prevEvents, newEvents, 'id'), ...newEvents]);
             } catch (e) {
                 console.log(e);
-                setEvents(prevEvents => [...prevEvents]);
             }
         }
 
