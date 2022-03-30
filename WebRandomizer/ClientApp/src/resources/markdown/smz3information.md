@@ -108,18 +108,26 @@ This option decides where the morph ball will be placed.
 
 This option decides how dungeon items such as keys are shuffled.
 
-* None - A Link to the Past dungeon items can only be placed inside the dungeon they belong to, and there are no changes to Super Metroid.
+* None - A Link to the Past dungeon items can only be placed inside the dungeon
+  they belong to, and there are no changes to Super Metroid.
 * Keysanity
     * Maps, Small Keys and Big Keys can now be found anywhere in either game.
     * There are now new Keycard items for Super Metroid that unlocks new types of doors.
     * Three different levels of keycards exists:
-      * Level 1 - Lets you open all the doors with a matching Level 1 marker above it for the specified area.
-      * Level 2 - Lets you open all the doors with a matching Level 2 marker above it for the specified area.
-      * Boss - Opens the door to the boss for the specified area (The crateria Boss Keycard opens both Bomb Torizo and the Golden 4 Statue room)
-    * Each area in Super Metroid has either 2 (Wrecked Ship and Lower Norfair) or 3 keycards that can be found.
-    * Markers showing the locked doors and their keycard type in Super Metroid have been added to the in-game map.
-    * There is also a tracker showing what Keycards you have found overlaid in the bottom right of the in-game map screen in Super Metroid.
-    * A Link to the Past Compasses have been removed from the item pool to make space for the Super Metroid Keycards.
+      * Level 1 - Lets you open all the doors with a matching Level 1 marker
+        above it for the specified area.
+      * Level 2 - Lets you open all the doors with a matching Level 2 marker
+        above it for the specified area.
+      * Boss - Opens the door to the boss for the specified area (The crateria
+        Boss Keycard opens both Bomb Torizo and the Golden 4 Statue room).
+    * Each area in Super Metroid has either 2 (Wrecked Ship and Lower Norfair)
+      or 3 keycards that can be found.
+    * Markers showing the locked doors and their keycard type in Super Metroid
+      have been added to the in-game map.
+    * There is also a tracker showing what Keycards you have found overlaid in
+      the bottom right of the in-game map screen in Super Metroid.
+    * A Link to the Past Compasses have been removed from the item pool to make
+      space for the Super Metroid Keycards.
 
 ### Seed
 

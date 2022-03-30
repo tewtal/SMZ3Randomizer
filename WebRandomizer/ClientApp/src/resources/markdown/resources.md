@@ -14,29 +14,29 @@ and need help getting started.
 
 ### Useful links
 
-* [Super Metroid x ALttP Resources](https://docs.google.com/document/d/1fP-DRbuROuQ-zifwKftuV-Paoh0_GGYErLGv3VVAg7Y/edit)  
+* [Super Metroid x ALttP Resources](https://docs.google.com/document/d/1fP-DRbuROuQ-zifwKftuV-Paoh0_GGYErLGv3VVAg7Y/edit)\
   A google document containing a lot of great information and links regarding
   the randomizer.
 
-* [Combo Rando v10 Tutorial and Logic Explanation](https://www.twitch.tv/videos/286489494)  
+* [Combo Rando v10 Tutorial and Logic Explanation](https://www.twitch.tv/videos/286489494)\
   A walkthrough of the logic in version 10 of the randomizer. Even though it's
   slightly outdated this is still a good resource when it comes to the logic of
   the randomizer.
 
-* [Portal locations](https://www.youtube.com/watch?v=5aS4v5J2LkY)  
+* [Portal locations](https://www.youtube.com/watch?v=5aS4v5J2LkY)\
   A video guide to the cross-game portal locations.
 
-* [Basics tutorial](https://www.youtube.com/watch?v=moEy-Pfndcw)  
+* [Basics tutorial](https://www.youtube.com/watch?v=moEy-Pfndcw)\
   A walkthrough of the basic techniques that's recommended or required to
   complete the randomizer.
 
-* [Permastucks](https://www.youtube.com/watch?v=7iVFotNxsIo)  
+* [Permastucks](https://www.youtube.com/watch?v=7iVFotNxsIo)\
   A guide to where you can possibly get yourself permanently stuck, and how to
   avoid it.
 
 ### Contribute
 
-* [SMZ3Randomizer on GitHub](https://github.com/tewtal/SMZ3Randomizer)  
+* [SMZ3Randomizer on GitHub](https://github.com/tewtal/SMZ3Randomizer)\
   Here you can find the source code for the main randomizer, as well as report
   issues you find with it.
 
