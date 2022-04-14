@@ -133,6 +133,11 @@
     0x32: "Big Key",
     0x33: "Map",
 
+    0xCA: "Brinstar Map",
+    0xCB: "Wrecked Ship Map",
+    0xCC: "Maridia Map",
+    0xCD: "Lower Norfair Map",
+
     0xD0: "Crateria Level 1 Key",
     0xD1: "Crateria Level 2 Key",
     0xD2: "Crateria Boss Key",

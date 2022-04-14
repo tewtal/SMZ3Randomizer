@@ -44,7 +44,7 @@ namespace Randomizer.SMZ3 {
                 }
 
                 foreach (var location in addedLocations) {
-                    if (location.Item.Progression || config.Keysanity && (location.Item.IsDungeonItem || location.Item.IsKeycard)) {
+                    if (location.Item.Progression || config.Keysanity && (location.Item.IsDungeonItem || location.Item.IsKeycard || location.Item.IsSmMap)) {
                         AddLocation(sphere, location, config.MultiWorld);
                     }
                 }

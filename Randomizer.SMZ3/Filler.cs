@@ -42,6 +42,7 @@ namespace Randomizer.SMZ3 {
                     baseItems = baseItems.Concat(keyCards).ToList();
                 } else {
                     progressionItems.AddRange(Item.CreateKeycards(world));
+                    progressionItems.AddRange(Item.CreateSmMaps(world));
                 }
 
                 progressionItems.AddRange(dungeon);
