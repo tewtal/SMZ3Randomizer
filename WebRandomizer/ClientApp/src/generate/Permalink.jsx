@@ -12,6 +12,7 @@ import { adjustHostname } from '../site/domain';
 
 import { decode } from 'slugid';
 
+import { tryParseJson } from '../util';
 import defaults from 'lodash/defaults';
 import attempt from 'lodash/attempt';
 
@@ -174,7 +175,9 @@ export default function Permalink() {
                     </Row>
                 </CardBody>
             </Card>
-            <Spoiler seedData={seed} />
+            {settings && settings.race === 'false' && (
+                <Spoiler seedGuid={seed.guid} />
+            )}
         </>) :
         errorMessage ? <MessageCard error={true} title="Something went wrong :(" msg={errorMessage} /> :
         gameMismatch ? (
@@ -193,12 +196,4 @@ export default function Permalink() {
             </Row>
         </Container>
     );
-}
-
-function tryParseJson(text) {
-    try {
-        return JSON.parse(text);
-    } catch (syntaxerror) {
-        return null;
-    }
 }

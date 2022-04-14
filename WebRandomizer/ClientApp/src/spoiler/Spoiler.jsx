@@ -1,221 +1,219 @@
-﻿import React, { useState } from 'react';
-import styled from 'styled-components';
-import { Row, Col, Card, CardHeader, CardBody, Nav, NavItem, NavLink } from 'reactstrap';
-import { InputGroup, InputGroupAddon, InputGroupText, Input, Button } from 'reactstrap';
+﻿import React, { useEffect, useState } from 'react';
+import { Row, Col, Card, CardHeader, CardBody, Nav, NavItem, Input, Button } from 'reactstrap';
+import InputGroup from '../ui/PrefixInputGroup';
+import { SmallNavLink, StyledTable } from './styled';
 
-import { JournalArrowDown } from '../ui/BootstrapIcon';
+import { SearchIcon, DownloadIcon } from './styled';
 
+import { regionOrdering } from './region_ordering';
+
+import YAML from 'yaml';
 import { saveAs } from 'file-saver';
 import { encode } from 'slugid';
 
-import isEmpty from 'lodash/isEmpty';
+import { tryParseJson, sortGroupBy } from '../util';
+import map from 'lodash/map';
+import filter from 'lodash/filter';
+import some from 'lodash/some';
+import includes from 'lodash/includes';
 import sortBy from 'lodash/sortBy';
 import uniq from 'lodash/uniq';
+import initial from 'lodash/initial';
+import last from 'lodash/last';
+import pick from 'lodash/pick';
+import toPairs from 'lodash/toPairs';
+import fromPairs from 'lodash/fromPairs';
+import isEmpty from 'lodash/isEmpty';
 import escapeRegExp from 'lodash/escapeRegExp';
 
-const SmallNavLink = styled(NavLink)`
-  font-size: .87em;
-  font-weight: bold;
-  padding-top: 6px;
-  padding-bottom: 6px;
-  padding-right: 9px;
-  padding-left: 9px;
-`;
-
-const SearchInputGroup = styled(InputGroup)`
-  margin-bottom: 15px;
-`;
-
-const LocationTable = styled.table.attrs(props => ({
-    className: "table table-sm table-borderless"
-}))`
-  margin-bottom: 25px;
-  > tbody > tr {
-    border-bottom: 1px solid #e0e0e0;
-  }
-`;
-
-const DownloadIcon = styled(JournalArrowDown)`
-  width: 1em;
-  height: 1em;
-`;
-
-export default function Spoiler(props) {
+export default function Spoiler({ seedGuid }) {
     const [show, setShow] = useState(false);
     const [spoiler, setSpoiler] = useState(null);
-    const [spoilerArea, setSpoilerArea] = useState("playthrough");
-    const [searchText, setSearchText] = useState("");
+    const [searchText, setSearchText] = useState('');
+    const [activeArea, setActiveArea] = useState('playthrough');
+    const [areas, setAreas] = useState([]);
+    const [content, setContent] = useState([]);
 
-    const toggleSpoiler = async () => {
+    async function toggleSpoiler() {
         if (!show && !spoiler) {
             try {
-                let response = await fetch(`/api/spoiler/${props.seedData.guid}`);
-                let result = await response.json();
-                setSpoiler(result);
+                const response = await fetch(`/api/spoiler/${seedGuid}`);
+                const data = await response.json();
+                data.seed.spoiler = filter(tryParseJson(data.seed.spoiler), sphere => !isEmpty(sphere));
+                data.locations = sortBy(data.locations, ({ locationRegion }) => regionOrdering(locationRegion));
+                setSpoiler(data);
             } catch { }
         }
 
-        setShow(s => !s);
+        setShow(show => !show);
     }
 
-    const updateSearchText = (e) => {
-        setSearchText(e.target.value);
-        if (e.target.value !== "" && spoilerArea === "playthrough") {
-            setSpoilerArea("all");
+    function updateSearchText(value) {
+        setSearchText(value);
+        if (value && activeArea === 'playthrough') {
+            setActiveArea('all');
         }
     }
 
-    const downloadSpoiler = async () => {
+    useEffect(() => {
+        if (spoiler) {
+            const { gameId, worlds, players, spoiler: playthrough } = spoiler.seed;
+            let { locations } = spoiler;
 
-        /* Prepare a human-readable JSON dump of the spoiler data */
-        let s = {
-            seed: { ...spoiler.seed, spoiler: null },
-            playthrough: spoiler.seed.gameId === 'smz3' ? JSON.parse(spoiler.seed.spoiler).filter(sphere => !isEmpty(sphere)).slice(0, -1) : JSON.parse(spoiler.seed.spoiler).filter(sphere => !isEmpty(sphere)),
-            prizes: spoiler.seed.gameId === 'smz3' ? JSON.parse(spoiler.seed.spoiler).slice(-1) : [],
-            regions: uniq(sortBy(spoiler.locations.map(l => l.locationRegion))).map(r => {
-                return {
-                    region: r,
-                    locations: spoiler.locations.filter(l => l.locationRegion === r).map(l => {
-                        return {
-                            name: l.locationName,
-                            item: l.itemName
-                        };
-                    })
+            if (searchText) {
+                const pattern = new RegExp(escapeRegExp(searchText), 'i');
+                locations = filter(locations, l => pattern.test(l.locationName) || pattern.test(l.itemName));
+
+                if (!includes(['playthrough', 'prizes', 'all'], activeArea) && !some(locations, { locationArea: activeArea })) {
+                    /* Return early since this state change will reuse the effect */
+                    setActiveArea('all');
+                    return;
                 }
-            })
+            }
+
+            if (activeArea === 'playthrough') {
+                setContent(gameId === 'smz3' ? [
+                    ...sphere(contentFromObjects, initial(playthrough)),
+                    ...prizeReq(contentFromObjects, last(playthrough)),
+                ] : sphere(contentFromObjects, playthrough));
+            }
+            else if (activeArea === 'prizes') {
+                setContent(prizeReq(contentFromObjects, last(playthrough), ));
+            }
+            else {
+                const locationsInArea = filter(locations, activeArea !== 'all' ? { locationArea: activeArea } : {})
+                setContent(region(contentFromArrays, locationsInArea, worlds, players > 1));
+            }
+
+            setAreas(uniq(map(locations, 'locationArea')));
+        }
+    }, [spoiler, searchText, activeArea]);
+
+    async function downloadSpoiler() {
+        const { seed, locations } = spoiler;
+        const { gameId, worlds, players, spoiler: playthrough } = seed;
+        const { settings, worldState } = worlds[0];
+        const metaFields = {
+            smz3: {
+                settings: ['goal', 'smlogic', 'keyshuffle'],
+                worldState: ['towerCrystals', 'ganonCrystals', 'tourianBossTokens'],
+            },
+            sm: { settings: ['goal', 'logic'] },
         };
 
-        let spoilerText = unescape(JSON.stringify(s, null, 4));
+        const content = [
+            `${gameId.toUpperCase()} ${seed.gameVersion} ${seed.hash}`,
+            { Playthrough: sphere(logFromObjects, gameId === 'smz3' ? initial(playthrough) : playthrough) },
+            ...(gameId === 'smz3' ? prizeReq(logFromObjects, last(playthrough)) : []),
+            ...region(logFromArrays, locations, worlds, players > 1),
+            { Meta: {
+                guid: seed.guid,
+                ...pick(tryParseJson(settings), metaFields[gameId].settings),
+                ...pick(tryParseJson(worldState), metaFields[gameId].worldState || []),
+            } },
+        ];
 
-        var blob = new Blob([spoilerText], {
-            type: "text/plain;charset=utf-8"
-        });
+        const text = YAML.stringify(content, { indentSeq: false });
 
-        saveAs(blob, `${props.seedData.gameName} v${props.seedData.gameVersion} - ${encode(props.seedData.guid)} - Spoiler.txt`);
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        saveAs(blob, `${seed.gameName} v${seed.gameVersion} - ${encode(seed.guid)} - Spoiler.txt`);
     }
 
-    if (props.seedData === null)
-        return null;
-
-    const worldSettings = JSON.parse(props.seedData.worlds[0].settings);
-    if (worldSettings.race === "true")
-        return null;
-
-    let locations = spoiler ? spoiler.locations : [];
-    if (spoiler && searchText) {
-        const re = new RegExp(escapeRegExp(searchText), 'i');
-        locations = spoiler.locations.filter(l => l.locationName.match(re) || l.itemName.match(re));
-
-        if (spoilerArea !== "all" && spoilerArea !== "playthrough" && spoilerArea !== "prizes" && !locations.find(l => l.locationArea === spoilerArea)) {
-            setSpoilerArea("all");
-        }
+    function sphere(compose, spheres) {
+        return map(spheres, (sphere, i) => compose(`Sphere ${i + 1}`, sphere));
     }
 
-    let playthrough = (spoiler && spoiler.seed) ? JSON.parse(spoiler.seed.spoiler).filter(sphere => !isEmpty(sphere)) : [];
+    function prizeReq(compose, section) {
+        return [compose('Prizes and Requirements', section)];
+    }
+
+    function region(compose, locations, worlds, multiworld) {
+        return map(sortGroupBy(locations, 'locationRegion', regionOrdering), ([region, locations]) =>
+            compose(region, map(locations, ({ locationName, worldId, itemName, itemWorldId }) => [
+                multiworld ? `${locationName} - ${worlds[worldId].player}` : locationName,
+                multiworld ? `${itemName} - ${worlds[itemWorldId].player}` : itemName,
+            ]))
+        );
+    }
 
     return (
         <Card>
-            <CardHeader >
+            <CardHeader>
                 <Row className="align-items-center justify-content-between">
                     <Col>Spoiler log</Col>
-                    <Col><Button outline className="float-right" color="secondary" onClick={toggleSpoiler}>{show ? "Hide" : "Show"}</Button></Col>
+                    <Col><Button outline className="float-right" color="secondary" onClick={toggleSpoiler}>{show ? 'Hide' : 'Show'}</Button></Col>
                 </Row>
             </CardHeader>
-            {show && (<CardBody>
-                {spoiler
-                    ? <div>
-                        <Row>
-                            <Col md="9">
-                            <SearchInputGroup>
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText><span role="img" aria-label="search">🔎</span></InputGroupText>
-                                </InputGroupAddon>
-                                <Input key="searchInput" placeholder="Find a location or item" onChange={updateSearchText} value={searchText} />
-                                </SearchInputGroup>
-                            </Col>
-                            <Col>
-                                <Button outline color="primary" className="float-right" onClick={downloadSpoiler}><DownloadIcon /> Download</Button>
-                            </Col>
-                        </Row>
-                        <div>
-                            <Nav pills style={{ marginBottom: "10px" }}>
-                                <NavItem>
-                                    <SmallNavLink href="#" active={spoilerArea === "playthrough"} onClick={() => setSpoilerArea("playthrough")}>Playthrough</SmallNavLink>
+            {show && <CardBody>
+                {spoiler ? <div>
+                    <Row>
+                        <Col md="9">
+                            <InputGroup className="mb-3" prefix={<SearchIcon />}>
+                                <Input key="searchInput" placeholder="Find a location or item" value={searchText}
+                                    onChange={e => updateSearchText(e.target.value)}
+                                />
+                            </InputGroup>
+                        </Col>
+                        <Col>
+                            <Button outline color="primary" className="float-right" onClick={downloadSpoiler}><DownloadIcon /> Download</Button>
+                        </Col>
+                    </Row>
+                    <div>
+                        <Nav pills className="mb-2">
+                            <NavItem>
+                                <SmallNavLink href="#" active={activeArea === 'playthrough'} onClick={() => setActiveArea('playthrough')}>Playthrough</SmallNavLink>
+                            </NavItem>
+                            {spoiler.seed.gameId === 'smz3' && <NavItem>
+                                <SmallNavLink href="#" active={activeArea === 'prizes'} onClick={() => setActiveArea('prizes')}>Prizes</SmallNavLink>
+                            </NavItem>}
+                            <NavItem>
+                                <SmallNavLink href="#" active={activeArea === 'all'} onClick={() => setActiveArea('all')}>All</SmallNavLink>
+                            </NavItem>
+                            {map(areas, area => (
+                                <NavItem key={area}>
+                                    <SmallNavLink href="#" active={activeArea === area} onClick={() => setActiveArea(area)}>{area}</SmallNavLink>
                                 </NavItem>
-                                {props.seedData.gameId === 'smz3' && <NavItem>
-                                    <SmallNavLink href="#" active={spoilerArea === "prizes"} onClick={() => setSpoilerArea("prizes")}>Prizes</SmallNavLink>
-                                </NavItem>}
-                                <NavItem>
-                                    <SmallNavLink href="#" active={spoilerArea === "all"} onClick={() => setSpoilerArea("all")}>All</SmallNavLink>
-                                </NavItem>
-                                {uniq(sortBy(locations, l => l.locationId).map(l => l.locationArea)).map((area, i) => (
-                                    <NavItem key={i}>
-                                        <SmallNavLink href="#" active={spoilerArea === area} onClick={() => setSpoilerArea(area)}>{area}</SmallNavLink>
-                                    </NavItem>
+                            ))}
+                        </Nav>
+                        <Card>
+                            <CardBody>
+                                {map(content, ([title, entries]) => (
+                                    <div key={title}>
+                                        <h6>{title}</h6>
+                                        <StyledTable className="mb-4">
+                                            <tbody>
+                                                {map(entries, ([key, value]) => (
+                                                    <tr key={key}>
+                                                        <td>{key}</td>
+                                                        <td>{value}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </StyledTable>
+                                    </div>
                                 ))}
-                            </Nav>
-                            {spoilerArea === 'playthrough'
-                                ? <Card>
-                                    <CardBody>
-                                        {playthrough.map((sphere, i) => (
-                                            <div key={i}>
-                                                {i < (playthrough.length - 1) || props.seedData.gameId === 'sm' ? <h6>Sphere {i + 1}</h6> : <h6>Prizes and Requirements</h6>}
-                                                <LocationTable>
-                                                    <tbody>
-                                                        {Object.entries(sphere).map(([location, item], j) => (
-                                                            <tr key={j}>
-                                                                <td style={{ width: '60%' }}>{location}</td>
-                                                                <td>{item}</td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </LocationTable>
-                                            </div>
-                                        ))}
-                                    </CardBody>
-                                  </Card>
-                                : spoilerArea === 'prizes'
-                                    ? <Card>
-                                        <CardBody>
-                                            <div>
-                                                <h6>Prizes and Requirements</h6>
-                                                <LocationTable>
-                                                    <tbody>
-                                                        {Object.entries(playthrough[playthrough.length - 1]).map(([location, item], i) => (
-                                                            <tr key={i}>
-                                                                <td style={{ width: '60%' }}>{location}</td>
-                                                                <td>{item}</td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </LocationTable>
-                                            </div>
-                                        </CardBody>
-                                    </Card>
-                                : <Card>
-                                    <CardBody>
-                                        {uniq(sortBy(locations.filter(l => spoilerArea === 'all' || l.locationArea === spoilerArea), l => l.locationRegion).map(l => l.locationRegion)).map((r, i) => (
-                                            <div key={i}>
-                                                <h6>{r}</h6>
-                                                <LocationTable>
-                                                    <tbody>
-                                                    {locations.filter(l => (spoilerArea === 'all' || l.locationArea === spoilerArea) && l.locationRegion === r).map((l, j) => (
-                                                        <tr key={j}>
-                                                            <td style={{ width: '60%' }}>{l.locationName}{spoiler.seed.players > 1 ? ` - ${spoiler.seed.worlds[l.worldId].player}` : ''}</td>
-                                                            <td>{l.itemName}{spoiler.seed.players > 1 ? ` - ${spoiler.seed.worlds[l.itemWorldId].player}` : ''}</td>
-                                                        </tr>
-                                                    ))}
-                                                    </tbody>
-                                                </LocationTable>
-                                            </div>
-                                        ))}
-                                    </CardBody>
-                                </Card>
-                                }
-                            </div>
-                      </div>
-                    : "Loading..."}
-            </CardBody>)}
+                            </CardBody>
+                        </Card>
+                    </div>
+                </div>
+                : 'Loading...'}
+            </CardBody>}
         </Card>
     );
+}
+
+function contentFromArrays(title, arrays) {
+    return [title, arrays];
+}
+
+function contentFromObjects(title, objects) {
+    return [title, toPairs(objects)];
+}
+
+function logFromArrays(title, arrays) {
+    return { [title]: fromPairs(arrays) };
+}
+
+function logFromObjects(title, objects) {
+    return { [title]: objects };
 }

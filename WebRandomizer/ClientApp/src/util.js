@@ -1,3 +1,8 @@
+import sortBy from 'lodash/sortBy';
+import groupBy from 'lodash/groupBy';
+import toPairs from 'lodash/toPairs';
+import { iteratee } from 'lodash';
+
 export async function readAsArrayBuffer(blob) {
     const fileReader = new FileReader();
     return new Promise((resolve, reject) => {
@@ -12,4 +17,18 @@ export async function readAsArrayBuffer(blob) {
 
         fileReader.readAsArrayBuffer(blob);
     });
+}
+
+export function tryParseJson(text) {
+    try {
+        return JSON.parse(text);
+    } catch (syntaxerror) {
+        return null;
+    }
+}
+
+export function sortGroupBy(collection, grouping, sorting) {
+    sorting = iteratee(sorting);
+    const groups = groupBy(collection, grouping);
+    return sortBy(toPairs(groups), ([key]) => sorting(key));
 }
