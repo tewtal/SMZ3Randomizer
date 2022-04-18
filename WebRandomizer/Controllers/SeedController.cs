@@ -27,7 +27,15 @@ namespace WebRandomizer.Controllers {
             try {
                 var seedData = await context.Seeds.Include(x => x.Worlds).SingleOrDefaultAsync(x => x.Guid == seedGuid);
 
-                if(seedData != null) {
+                /* Remove WorldState from the response for any world that's configured as a race world since it contains spoiler information */
+                foreach (var world in seedData.Worlds) {
+                    var settings = JsonSerializer.Deserialize<Dictionary<string, string>>(world.Settings);
+                    if (settings.ContainsKey("race") && settings["race"] == "true") {
+                        world.WorldState = null;
+                    }
+                }
+
+                if (seedData != null) {
                     return new OkObjectResult(seedData);
                 } else {
                     return new StatusCodeResult(404);
