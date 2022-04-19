@@ -14,6 +14,15 @@ namespace Randomizer.SMZ3 {
             Quake,
         }
 
+        public record DropPrizeRecord(
+            IList<DropPrize> Packs,
+            IList<DropPrize> TreePulls,
+            DropPrize CrabContinous,
+            DropPrize CrabFinal,
+            DropPrize Stun,
+            DropPrize Fish
+        );
+
         public IEnumerable<RewardType> Rewards { get; init; }
         public IEnumerable<Medallion> Medallions { get; init; }
 
@@ -22,30 +31,6 @@ namespace Randomizer.SMZ3 {
         public int TourianBossTokens { get; init; }
 
         public DropPrizeRecord DropPrizes { get; init; }
-
-        static readonly IEnumerable<RewardType> BaseRewards = new[] {
-            PendantGreen, PendantNonGreen, PendantNonGreen, CrystalRed, CrystalRed,
-            CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue,
-            AnyBossToken, AnyBossToken, AnyBossToken, AnyBossToken,
-        };
-
-        static readonly IEnumerable<RewardType> BossTokens = new[] {
-            BossTokenKraid, BossTokenPhantoon, BossTokenDraygon, BossTokenRidley,
-        };
-
-        static readonly IEnumerable<DropPrize> BaseDropPrizes = new[] {
-            Heart, Heart, Heart, Heart, Green, Heart, Heart, Green,         // pack 1
-            Blue, Green, Blue, Red, Blue, Green, Blue, Blue,                // pack 2
-            FullMagic, Magic, Magic, Blue, FullMagic, Magic, Heart, Magic,  // pack 3
-            Bomb1, Bomb1, Bomb1, Bomb4, Bomb1, Bomb1, Bomb8, Bomb1,         // pack 4
-            Arrow5, Heart, Arrow5, Arrow10, Arrow5, Heart, Arrow5, Arrow10, // pack 5
-            Magic, Green, Heart, Arrow5, Magic, Bomb1, Green, Heart,        // pack 6
-            Heart, Fairy, FullMagic, Red, Bomb8, Heart, Red, Arrow10,       // pack 7
-            Green, Blue, Red, // from pull trees
-            Green, Red, // from prize crab
-            Green, // stunned prize
-            Red, // saved fish prize
-        };
 
         public static WorldState Generate(Config config, Random rnd) {
             return new() {
@@ -57,6 +42,18 @@ namespace Randomizer.SMZ3 {
                 DropPrizes = ShuffleDropPrizes(rnd),
             };
         }
+
+        #region Rewards
+
+        static readonly IEnumerable<RewardType> BaseRewards = new[] {
+            PendantGreen, PendantNonGreen, PendantNonGreen, CrystalRed, CrystalRed,
+            CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue,
+            AnyBossToken, AnyBossToken, AnyBossToken, AnyBossToken,
+        };
+
+        static readonly IEnumerable<RewardType> BossTokens = new[] {
+            BossTokenKraid, BossTokenPhantoon, BossTokenDraygon, BossTokenRidley,
+        };
 
         static IEnumerable<RewardType> DistributeRewards(Random rnd) {
             // Assign four rewards for SM using a "loot table", randomized result
@@ -92,9 +89,31 @@ namespace Randomizer.SMZ3 {
             };
         }
 
+        #endregion
+
+        #region Medallions
+
         static Medallion[] GenerateMedallions(Random rnd) => new[] {
             (Medallion)rnd.Next(3),
             (Medallion)rnd.Next(3),
+        };
+
+        #endregion
+
+        #region Drop prizes
+
+        static readonly IEnumerable<DropPrize> BaseDropPrizes = new[] {
+            Heart, Heart, Heart, Heart, Green, Heart, Heart, Green,         // pack 1
+            Blue, Green, Blue, Red, Blue, Green, Blue, Blue,                // pack 2
+            FullMagic, Magic, Magic, Blue, FullMagic, Magic, Heart, Magic,  // pack 3
+            Bomb1, Bomb1, Bomb1, Bomb4, Bomb1, Bomb1, Bomb8, Bomb1,         // pack 4
+            Arrow5, Heart, Arrow5, Arrow10, Arrow5, Heart, Arrow5, Arrow10, // pack 5
+            Magic, Green, Heart, Arrow5, Magic, Bomb1, Green, Heart,        // pack 6
+            Heart, Fairy, FullMagic, Red, Bomb8, Heart, Red, Arrow10,       // pack 7
+            Green, Blue, Red, // from pull trees
+            Green, Red, // from prize crab
+            Green, // stunned prize
+            Red, // saved fish prize
         };
 
         static DropPrizeRecord ShuffleDropPrizes(Random rnd) {
@@ -113,14 +132,7 @@ namespace Randomizer.SMZ3 {
             );
         }
 
-        public record DropPrizeRecord(
-            IList<DropPrize> Packs,
-            IList<DropPrize> TreePulls,
-            DropPrize CrabContinous,
-            DropPrize CrabFinal,
-            DropPrize Stun,
-            DropPrize Fish
-        );
+        #endregion
 
     }
 
