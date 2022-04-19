@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using static Randomizer.SMZ3.DropPrize;
 using static Randomizer.SMZ3.RewardType;
 
 namespace Randomizer.SMZ3 {
@@ -15,9 +16,12 @@ namespace Randomizer.SMZ3 {
 
         public IEnumerable<RewardType> Rewards { get; init; }
         public IEnumerable<Medallion> Medallions { get; init; }
+
         public int TowerCrystals { get; init; }
         public int GanonCrystals { get; init; }
         public int TourianBossTokens { get; init; }
+
+        public DropPrizeRecord DropPrizes { get; init; }
 
         static readonly IEnumerable<RewardType> BaseRewards = new[] {
             PendantGreen, PendantNonGreen, PendantNonGreen, CrystalRed, CrystalRed,
@@ -29,6 +33,20 @@ namespace Randomizer.SMZ3 {
             BossTokenKraid, BossTokenPhantoon, BossTokenDraygon, BossTokenRidley,
         };
 
+        static readonly IEnumerable<DropPrize> BaseDropPrizes = new[] {
+            Heart, Heart, Heart, Heart, Green, Heart, Heart, Green,         // pack 1
+            Blue, Green, Blue, Red, Blue, Green, Blue, Blue,                // pack 2
+            FullMagic, Magic, Magic, Blue, FullMagic, Magic, Heart, Magic,  // pack 3
+            Bomb1, Bomb1, Bomb1, Bomb4, Bomb1, Bomb1, Bomb8, Bomb1,         // pack 4
+            Arrow5, Heart, Arrow5, Arrow10, Arrow5, Heart, Arrow5, Arrow10, // pack 5
+            Magic, Green, Heart, Arrow5, Magic, Bomb1, Green, Heart,        // pack 6
+            Heart, Fairy, FullMagic, Red, Bomb8, Heart, Red, Arrow10,       // pack 7
+            Green, Blue, Red, // from pull trees
+            Green, Red, // from prize crab
+            Green, // stunned prize
+            Red, // saved fish prize
+        };
+
         public static WorldState Generate(Config config, Random rnd) {
             return new() {
                 Rewards = DistributeRewards(rnd),
@@ -36,6 +54,7 @@ namespace Randomizer.SMZ3 {
                 TowerCrystals = config.OpenTower == OpenTower.Random ? rnd.Next(8) : (int)config.OpenTower,
                 GanonCrystals = config.GanonVulnerable == GanonVulnerable.Random ? rnd.Next(8) : (int)config.GanonVulnerable,
                 TourianBossTokens = config.OpenTourian == OpenTourian.Random ? rnd.Next(5) : (int)config.OpenTourian,
+                DropPrizes = ShuffleDropPrizes(rnd),
             };
         }
 
@@ -77,6 +96,31 @@ namespace Randomizer.SMZ3 {
             (Medallion)rnd.Next(3),
             (Medallion)rnd.Next(3),
         };
+
+        static DropPrizeRecord ShuffleDropPrizes(Random rnd) {
+            const int nrPackDrops = 8 * 7;
+            const int nrTreePullDrops = 3;
+
+            IEnumerable<DropPrize> prizes = BaseDropPrizes.Shuffle(rnd);
+
+            (var packs, prizes) = prizes.SplitOff(nrPackDrops);
+            (var treePulls, prizes) = prizes.SplitOff(nrTreePullDrops);
+            (var crabContinous, var crabFinalDrop, prizes) = prizes;
+            (var stun, prizes) = prizes;
+            (var fish, _) = prizes;
+            return new(packs.ToList(), treePulls.ToList(),
+                crabContinous, crabFinalDrop, stun, fish
+            );
+        }
+
+        public record DropPrizeRecord(
+            IList<DropPrize> Packs,
+            IList<DropPrize> TreePulls,
+            DropPrize CrabContinous,
+            DropPrize CrabFinal,
+            DropPrize Stun,
+            DropPrize Fish
+        );
 
     }
 
