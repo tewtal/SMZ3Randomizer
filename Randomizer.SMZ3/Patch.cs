@@ -7,7 +7,6 @@ using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Text;
 using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.RewardType;
-using static Randomizer.SMZ3.DropPrize;
 using static Randomizer.SMZ3.WorldState;
 
 namespace Randomizer.SMZ3 {
@@ -95,7 +94,7 @@ namespace Randomizer.SMZ3 {
 
             WriteDiggingGameRng();
 
-            WritePrizeShuffle();
+            WritePrizeShuffle(myWorld.WorldState.DropPrizes);
 
             WriteRemoveEquipmentFromUncle(myWorld.GetLocation("Link's Uncle").Item);
 
@@ -379,49 +378,13 @@ namespace Randomizer.SMZ3 {
             };
         }
 
-        void WritePrizeShuffle() {
-            const int prizePackItems = 56;
-            const int treePullItems = 3;
-
-            IEnumerable<byte> bytes;
-            byte drop, final;
-
-            var pool = new DropPrize[] {
-                Heart, Heart, Heart, Heart, Green, Heart, Heart, Green,         // pack 1
-                Blue, Green, Blue, Red, Blue, Green, Blue, Blue,                // pack 2
-                FullMagic, Magic, Magic, Blue, FullMagic, Magic, Heart, Magic,  // pack 3
-                Bomb1, Bomb1, Bomb1, Bomb4, Bomb1, Bomb1, Bomb8, Bomb1,         // pack 4
-                Arrow5, Heart, Arrow5, Arrow10, Arrow5, Heart, Arrow5, Arrow10, // pack 5
-                Magic, Green, Heart, Arrow5, Magic, Bomb1, Green, Heart,        // pack 6
-                Heart, Fairy, FullMagic, Red, Bomb8, Heart, Red, Arrow10,       // pack 7
-                Green, Blue, Red, // from pull trees
-                Green, Red, // from prize crab
-                Green, // stunned prize
-                Red, // saved fish prize
-            }.AsEnumerable();
-
-            var prizes = pool.Shuffle(rnd).Cast<byte>();
-
-            /* prize pack drop order */
-            (bytes, prizes) = prizes.SplitOff(prizePackItems);
-            patches.Add((Snes(0x6FA78), bytes.ToArray()));
-
-            /* tree pull prizes */
-            (bytes, prizes) = prizes.SplitOff(treePullItems);
-            patches.Add((Snes(0x1DFBD4), bytes.ToArray()));
-
-            /* crab prizes */
-            (drop, final, prizes) = prizes;
-            patches.Add((Snes(0x6A9C8), new[] { drop }));
-            patches.Add((Snes(0x6A9C4), new[] { final }));
-
-            /* stun prize */
-            (drop, prizes) = prizes;
-            patches.Add((Snes(0x6F993), new[] { drop }));
-
-            /* fish prize */
-            (drop, _) = prizes;
-            patches.Add((Snes(0x1D82CC), new[] { drop }));
+        void WritePrizeShuffle(DropPrizeRecord dropPrizes) {
+            patches.Add((Snes(0x6FA78), dropPrizes.Packs.Cast<byte>().ToArray()));
+            patches.Add((Snes(0x1DFBD4), dropPrizes.TreePulls.Cast<byte>().ToArray()));
+            patches.Add((Snes(0x6A9C8), new[] { (byte)dropPrizes.CrabContinous }));
+            patches.Add((Snes(0x6A9C4), new[] { (byte)dropPrizes.CrabFinal }));
+            patches.Add((Snes(0x6F993), new[] { (byte)dropPrizes.Stun }));
+            patches.Add((Snes(0x1D82CC), new[] { (byte)dropPrizes.Fish }));
 
             patches.AddRange(EnemyPrizePackDistribution());
 

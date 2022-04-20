@@ -93,12 +93,14 @@ export default function Spoiler({ seedGuid }) {
         const { seed, locations } = spoiler;
         const { gameId, worlds, players, spoiler: playthrough } = seed;
         const { settings, worldState } = worlds[0];
-        const metaFields = {
-            smz3: {
-                settings: ['goal', 'smlogic', 'keyshuffle'],
-                worldState: ['towerCrystals', 'ganonCrystals', 'tourianBossTokens'],
-            },
-            sm: { settings: ['goal', 'logic'] },
+
+        const metaField = {
+            smz3: (settings, worldState) => ({
+                ...pick(settings, 'goal', 'smlogic', 'keyshuffle'),
+                ...pick(worldState, 'towerCrystals', 'ganonCrystals', 'tourianBossTokens'),
+                dropPrizes: pick((worldState || {}).dropPrizes, 'treePulls', 'crabContinous', 'crabFinal', 'stun'),
+            }),
+            sm: (settings) => pick(settings, 'goal', 'logic'),
         };
 
         const content = [
@@ -108,8 +110,7 @@ export default function Spoiler({ seedGuid }) {
             ...region(logFromArrays, locations, worlds, players > 1),
             { Meta: {
                 guid: seed.guid,
-                ...pick(tryParseJson(settings), metaFields[gameId].settings),
-                ...pick(tryParseJson(worldState), metaFields[gameId].worldState || []),
+                ...metaField[gameId](tryParseJson(settings), tryParseJson(worldState)),
             } },
         ];
 
