@@ -377,6 +377,7 @@ Items:
     THE GREEN
     BOOMERANG IS
     THE FASTEST!
+
   CardCrateriaL1: |-
     An Alien Key!
     It says On top
@@ -441,6 +442,12 @@ Items:
     An Alien Key!
     It says
     This guy again?
+
+  SmMap: |-
+    You can now
+    find your way
+    to the stars!
+
   default: |-
     Don't waste
     your time!

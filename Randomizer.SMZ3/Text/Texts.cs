@@ -70,6 +70,7 @@ namespace Randomizer.SMZ3.Text {
             var name = item.Type switch {
                 _ when item.IsMap => "Map",
                 _ when item.IsCompass => "Compass",
+                _ when item.IsSmMap => "SmMap",
                 BottleWithGoldBee => BottleWithBee.ToString(),
                 HeartContainerRefill => HeartContainer.ToString(),
                 OneRupee => "PocketRupees",
