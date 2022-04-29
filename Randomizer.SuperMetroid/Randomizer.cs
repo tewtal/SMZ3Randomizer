@@ -9,7 +9,7 @@ namespace Randomizer.SuperMetroid {
 
     public class Randomizer : IRandomizer {
 
-        public static readonly Version version = new Version(3, 0);
+        public static readonly Version version = new Version(3, 1);
 
         public string Id => "sm";
         public string Name => "Super Metroid Item Randomizer";
