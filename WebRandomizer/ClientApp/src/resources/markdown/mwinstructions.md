@@ -97,7 +97,7 @@ If you want to play using Retroarch, you will need version 1.8.0 or newer.
 ## Playing in a multiworld session
 
 When you've just joined a new session you will first to have to register as a
-player by clicking one of the *Register as this player* buttons.
+player by clicking one of the *Register* buttons.
 
 After doing so, you will get a popup that prompts you to select the original
 ROM(s) needed. Make sure these ROM's are unaltered and are the original
@@ -116,9 +116,26 @@ running, that you have reached the File Select screen, and then finally press
 it'll say below "Game detected, have fun" which means everything is ok and
 ready to go.
 
+When the game session is started a chat window will appear that lets you chat
+with the other players, as well as see a log of all items transferred to or
+from you. It is also possible here to force a re-send of an item in case there
+was an unrecoverable error. Be aware that re-sending can cause duplicates of items
+and is meant as a last resort if for example re-connecting does not work.
+
+There is also the option to forfeit a session, this is done by pressing the
+*Forfeit* button next to your name. This will permanently remove you from the
+session and distribute all your remaining items in your game to the other
+players.
+
+If a player left without forfeiting, there is also an option for the other
+players to force a forfeit. This is done by pressing the *Remove* button next
+to that players name. This requires everyone else but that player to also do
+the same before the forfeit is forced.
+
 Hard reset, either through your console or emulator, severs the connection to
 the server. Instead the ROM's provide an in-game soft reset feature which is
 activated by pressing L+select+start+R.
+
 
 ## Softlock edge cases
 

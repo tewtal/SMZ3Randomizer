@@ -29,6 +29,15 @@ game and reach the credits. After defeating the first final boss you will still
 retain access to the game where you killed the boss, in case there are some
 items left to be found to complete the other game.
 
+A new concept of "Boss Tokens" has been introduced to count as a kill credit for
+entering Tourian in Super Metroid.
+
+Crystals, Pendants and Boss Tokens are shuffled fully between both games.
+This means that killing a Super Metroid boss can for example reward a Crystal
+or a Pendant, and a Link to the Past boss can reward a SM Boss Token.
+You can check what boss prize you will get by checking the in-game map in both
+games. In Super Metroid the prize icon is shown below the boss location.
+
 Being familiar with the regular [A Link to the Past Randomizer](https://alttpr.com/)
 and [Super Metroid Randomizer](https://sm.samus.link/) is a great benefit for
 playing this randomizer.
@@ -85,8 +94,33 @@ This option selects what kind of logic to use for item placement inside Super Me
 
 ### Goal
 
-This option currently only has the *Defeat Ganon and Mother Brain* option, but
-will be expanded in the future to include other goals.
+This option decides what goal is required to finish the randomizer.
+
+* Defeat Ganon and Mother Brain - Find the required crystals and boss tokens kill both bosses.
+
+* Fast Ganon and Defeat Mother Brain - The hole to ganon is open without having to defeat
+  Agahnim in Ganon's Tower and Ganon can be defeat as soon you have the required crystals to
+  make Ganon vulnerable. For keysanity, this mode also removes the Crateria Boss Key requirement
+  from Tourian to allow faster access.
+
+* All Dungeons and Defeat Mother Brain - Similar to "Defeat Ganon and Mother Brain", but also
+  requires all dungeons to be beaten including Castle Tower and Agahnim.
+
+### Open Ganon's Tower
+
+The amount of crystals required to be able to enter Ganon's Tower.
+If this is set to Random, the amount can be found in-game on a sign next to Ganon's Tower.
+
+### Ganon Vulnerable
+
+The amount of crystals required to be able to harm Ganon.
+If this is set to Random, the amount can be found in-game on a sign near the top of the Pyramid.
+
+### Open Tourian
+
+The amount of boss tokens required to enter Tourian.
+If this is set to Random, the amount can be found in-game on a sign above the door leading to
+the Tourian entrance.
 
 ### First Sword
 

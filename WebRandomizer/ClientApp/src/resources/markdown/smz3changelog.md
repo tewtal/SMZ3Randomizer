@@ -1,6 +1,6 @@
 # Randomizer Changes
 
-## 2022-03/04-?? - Version 11.3
+## 2022-05-01 - Version 11.3
 
 * Systems Changes
   * The web site has a new favicon!
@@ -9,18 +9,26 @@
     to unregister, forfeit, and resend items. Currently forfeiting distributes
     others items in that player's world. However, this is planned to change in
     a later version.
+  * The downloadable spoiler log has been improved and is now in a more human-readable
+    YAML format and has areas sorted by "logical" progression. It also includes
+    more metadata such as tree pull, crab and stun prizes.
+  * A new set of Super Metroid custom sprites have been added.
+  * The A Link to the Past lowercase font has been slightly re-designed for 
+    better readability.
 
 * Gameplay Changes
   * Quickswap can be enabled for non-race seeds.
+  * Added a patch that allows the aim buttons to be assigned to any button in SM.
   * Game rewards, Z3 crystals and pendants, and SM boss tokens, are now
     randomized across both games.
-    * Boss tokens only count toward access to Tourian, only defeating the boss
-      will unlock Wrecked Ship or the grey doors, correspondingly.
+    * Boss tokens only count toward access to Tourian. Grey doors unlocked by
+      killing bosses in Super Metroid still require their respective boss to be killed.
     * Pendants have been biased against SM bosses as to avoid diminishing SM
       gameplay. The chance of no pendants among SM bosses is 66%, one pendant
       30%, two pendants 3%, and three pendants basically never (6 in every 10k).
     * The SM map now shows every acquired prize at the top of the start menu,
-      as well as the assigned boss prize on the map.
+      as well as the assigned boss prize on the map. For keysanity, the boss prizes
+      are only revealed after finding one of the new SM "map station" items for an area.
     * The Z3 item menu now also shows the acquired boss tokens right under the crystals.
   * Two new goals have been added, Fast Ganon and All Dungeons.
     * With the Fast Ganon option you will find the G4 door to be unlocked in keysanity.
@@ -31,32 +39,31 @@
   * Each keycard now have their own specific hint on the pedestal and medallion tablets.
 
 * Logic Changes
-  * Combo
-    * Ganon's Tower:
-      * The amount of pre-filled trash items now scales with the number of
-        crystals required for access.
-      * The required number of boss tokens scales down with the fraction of total
-        crystals required for access.
-    * The key logic for the "east wing" of Ice Palace were previously disabled as
-      it broke generating a playthrough. This has been solved and with that IP is
-      once again logically secured.
-    * Maridia Keycard L2 was added to the three Yellow Maridia locations.
-    * Upper Norfair Crocomire previously required access to Business Center
-      even if entering from the Misery Mire portal, on Normal logic. This is
-      now properly disassociated.
-    * Lower Norfair West - Mickey Mouse did not have a guarantee going through
-      Pillar and Worst Room. Now it uses the same logic as entering Lower
-      Norfair East: CanUsePowerBombs on Normal, and CanFly, HiJump, SpringBall,
-      Ice with Bombs or ScrewAttack on Hard logic.
-  * SM only
-    * The logic for the two "Alpha PB" item locations were swapped.
-    * The "Hi-Jump Boots" location were missing a CanPassBombPassages.
+  * Ganon's Tower:
+    * The amount of pre-filled trash items now scales with the number of
+      crystals required for access.
+    * The required number of boss tokens scales down with the fraction of total
+      crystals required for access.
+  * The key logic for the "east wing" of Ice Palace were previously disabled as
+    it broke generating a playthrough. This has been solved and with that IP is
+    once again logically secured.
+  * Maridia Keycard L2 was added to the three Yellow Maridia locations.
+  * Upper Norfair Crocomire previously required access to Business Center
+    even if entering from the Misery Mire portal, on Normal logic. This is
+    now properly disassociated.
+  * Lower Norfair West - Mickey Mouse did not have a guarantee going through
+    Pillar and Worst Room. Now it uses the same logic as entering Lower
+    Norfair East: CanUsePowerBombs on Normal, and CanFly, HiJump, SpringBall,
+    Ice with Bombs or ScrewAttack on Hard logic.
+
 
 * Technical Changes
   * The sword and morph locations, and goal is added to combo ROM headers
     (See `Patch.cs` for details).
   * Both randomizers now respect the multiworld setting over the player count.
     Previously SM only would force a player count of 1 to be a single world seed.
+  * Added basic support for permalinks to previous randomizer versions.
+
 
 ## 2021-03-17 - Version 11.2
 
