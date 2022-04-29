@@ -10,6 +10,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public RewardType Reward { get; set; } = RewardType.None;
 
         public SwampPalace(World world, Config config) : base(world, config) {
+            Weight = 3;
             RegionItems = new[] { KeySP, BigKeySP, MapSP, CompassSP };
 
             Locations = new List<Location> {

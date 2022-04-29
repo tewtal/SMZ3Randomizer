@@ -11,6 +11,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public RewardType Reward { get; set; } = RewardType.None;
 
         public IcePalace(World world, Config config) : base(world, config) {
+            Weight = 4;
             RegionItems = new[] { KeyIP, BigKeyIP, MapIP, CompassIP };
 
             Locations = new List<Location> {

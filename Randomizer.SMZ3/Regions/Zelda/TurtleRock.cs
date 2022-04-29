@@ -12,6 +12,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public Medallion Medallion { get; set; }
 
         public TurtleRock(World world, Config config) : base(world, config) {
+            Weight = 6;
             RegionItems = new[] { KeyTR, BigKeyTR, MapTR, CompassTR };
 
             Locations = new List<Location> {

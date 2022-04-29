@@ -12,6 +12,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public Medallion Medallion { get; set; }
 
         public MiseryMire(World world, Config config) : base(world, config) {
+            Weight = 2;
             RegionItems = new[] { KeyMM, BigKeyMM, MapMM, CompassMM };
 
             Locations = new List<Location> {

@@ -11,6 +11,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid {
         public RewardType Reward { get; set; } = RewardType.None;
 
         public WreckedShip(World world, Config config) : base(world, config) {
+            Weight = 4;
+
             Locations = new List<Location> {
                 new Location(this, 128, 0x8FC265, LocationType.Visible, "Missile (Wrecked Ship middle)", Logic switch {
                     _ => new Requirement(items => items.CanPassBombPassages())
