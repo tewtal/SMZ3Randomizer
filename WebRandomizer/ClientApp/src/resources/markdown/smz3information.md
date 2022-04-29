@@ -29,6 +29,15 @@ game and reach the credits. After defeating the first final boss you will still
 retain access to the game where you killed the boss, in case there are some
 items left to be found to complete the other game.
 
+A new concept of "Boss Tokens" has been introduced to count as a kill credit for
+entering Tourian in Super Metroid.
+
+Crystals, Pendants and Boss Tokens are shuffled fully between both games.
+This means that killing a Super Metroid boss can for example reward a Crystal
+or a Pendant, and a Link to the Past boss can reward a SM Boss Token.
+You can check what boss prize you will get by checking the in-game map in both
+games. In Super Metroid the prize icon is shown below the boss location.
+
 Being familiar with the regular [A Link to the Past Randomizer](https://alttpr.com/)
 and [Super Metroid Randomizer](https://sm.samus.link/) is a great benefit for
 playing this randomizer.
@@ -85,8 +94,33 @@ This option selects what kind of logic to use for item placement inside Super Me
 
 ### Goal
 
-This option currently only has the *Defeat Ganon and Mother Brain* option, but
-will be expanded in the future to include other goals.
+This option decides what goal is required to finish the randomizer.
+
+* Defeat Ganon and Mother Brain - Find the required crystals and boss tokens kill both bosses.
+
+* Fast Ganon and Defeat Mother Brain - The hole to ganon is open without having to defeat
+  Agahnim in Ganon's Tower and Ganon can be defeat as soon you have the required crystals to
+  make Ganon vulnerable. For keysanity, this mode also removes the Crateria Boss Key requirement
+  from Tourian to allow faster access.
+
+* All Dungeons and Defeat Mother Brain - Similar to "Defeat Ganon and Mother Brain", but also
+  requires all dungeons to be beaten including Castle Tower and Agahnim.
+
+### Open Ganon's Tower
+
+The amount of crystals required to be able to enter Ganon's Tower.
+If this is set to Random, the amount can be found in-game on a sign next to Ganon's Tower.
+
+### Ganon Vulnerable
+
+The amount of crystals required to be able to harm Ganon.
+If this is set to Random, the amount can be found in-game on a sign near the top of the Pyramid.
+
+### Open Tourian
+
+The amount of boss tokens required to enter Tourian.
+If this is set to Random, the amount can be found in-game on a sign above the door leading to
+the Tourian entrance.
 
 ### First Sword
 
@@ -108,18 +142,26 @@ This option decides where the morph ball will be placed.
 
 This option decides how dungeon items such as keys are shuffled.
 
-* None - A Link to the Past dungeon items can only be placed inside the dungeon they belong to, and there are no changes to Super Metroid.
+* None - A Link to the Past dungeon items can only be placed inside the dungeon
+  they belong to, and there are no changes to Super Metroid.
 * Keysanity
     * Maps, Small Keys and Big Keys can now be found anywhere in either game.
     * There are now new Keycard items for Super Metroid that unlocks new types of doors.
     * Three different levels of keycards exists:
-      * Level 1 - Lets you open all the doors with a matching Level 1 marker above it for the specified area.
-      * Level 2 - Lets you open all the doors with a matching Level 2 marker above it for the specified area.
-      * Boss - Opens the door to the boss for the specified area (The crateria Boss Keycard opens both Bomb Torizo and the Golden 4 Statue room)
-    * Each area in Super Metroid has either 2 (Wrecked Ship and Lower Norfair) or 3 keycards that can be found.
-    * Markers showing the locked doors and their keycard type in Super Metroid have been added to the in-game map.
-    * There is also a tracker showing what Keycards you have found overlaid in the bottom right of the in-game map screen in Super Metroid.
-    * A Link to the Past Compasses have been removed from the item pool to make space for the Super Metroid Keycards.
+      * Level 1 - Lets you open all the doors with a matching Level 1 marker
+        above it for the specified area.
+      * Level 2 - Lets you open all the doors with a matching Level 2 marker
+        above it for the specified area.
+      * Boss - Opens the door to the boss for the specified area (The crateria
+        Boss Keycard opens both Bomb Torizo and the Golden 4 Statue room).
+    * Each area in Super Metroid has either 2 (Wrecked Ship and Lower Norfair)
+      or 3 keycards that can be found.
+    * Markers showing the locked doors and their keycard type in Super Metroid
+      have been added to the in-game map.
+    * There is also a tracker showing what Keycards you have found overlaid in
+      the bottom right of the in-game map screen in Super Metroid.
+    * A Link to the Past Compasses have been removed from the item pool to make
+      space for the Super Metroid Keycards.
 
 ### Seed
 

@@ -84,7 +84,7 @@ expanded in the future to include other goals.
 This decides how items are placed in the game.
 
 * Major/Minor split - Major items, Energy Tanks and Reserve Tanks are
-  randomized in one item and location pool, and ammo packs in another.  
+  randomized in one item and location pool, and ammo packs in another.\
   There is one exception: The e-tank at Hi-Jump is no longer a major item
   location, it has been moved to the right super missile pack location in
   Wrecked Ship.
