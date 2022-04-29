@@ -679,8 +679,8 @@
   ],
   "sm": [
     {
-      "title": "Dark Samus",
-      "path": "sm/dark_samus.2.sm.rdc.gz"
+      "title": "8-Bit Mario",
+      "path": "sm/8_bit_mario.1.sm.rdc.gz"
     },
     {
       "title": "Alice Margatroid",
@@ -691,12 +691,60 @@
       "path": "sm/alucard.1.sm.rdc.gz"
     },
     {
+      "title": "Buffed Kirby",
+      "path": "sm/buffed_kirby.1.sm.rdc.gz"
+    },
+    {
+      "title": "Captain Novolin",
+      "path": "sm/captaion_novolin.1.sm.rdc.gz"
+    },
+    {
+      "title": "Chairdeep",
+      "path": "sm/chairdeep.1.sm.rdc.gz"
+    },
+    {
+      "title": "Crewmate",
+      "path": "sm/crewmate.1.sm.rdc.gz"
+    },
+    {
+      "title": "Cuphead",
+      "path": "sm/cuphead.1.sm.rdc.gz"
+    },
+    {
+      "title": "Dark Samus",
+      "path": "sm/dark_samus.2.sm.rdc.gz"
+    },
+    {
+      "title": "Diddy Kong",
+      "path": "sm/diddy_kong.1.sm.rdc.gz"
+    },
+    {
+      "title": "Earthworm Jim",
+      "path": "sm/earthworm_jim.1.sm.rdc.gz"
+    },
+    {
+      "title": "Enby Pride",
+      "path": "sm/enby_pride.1.sm.rdc.gz"
+    },
+    {
       "title": "Federation Trooper",
       "path": "sm/federation_trooper.1.sm.rdc.gz"
     },
     {
+      "title": "Fusion (Green)",
+      "path": "sm/fusion_green.1.sm.rdc.gz"
+    },
+    {
+      "title": "Inkling Girl",
+      "path": "sm/inkling_girl.1.sm.rdc.gz"
+    },
+    {
       "title": "Justin Bailey",
       "path": "sm/justin_bailey.1.sm.rdc.gz"
+    },
+    {
+      "title": "Kirby",
+      "path": "sm/kirby.1.sm.rdc.gz"
     },
     {
       "title": "Link (OoT)",
@@ -711,8 +759,48 @@
       "path": "sm/mega_man_x.1.sm.rdc.gz"
     },
     {
+      "title": "Metroid",
+      "path": "sm/metroid.1.sm.rdc.gz"
+    },
+    {
+      "title": "Moonclif",
+      "path": "sm/mooncliff.1.sm.rdc.gz"
+    },
+    {
+      "title": "Opposition",
+      "path": "sm/opposition1.sm.rdc.gz"
+    },
+    {
+      "title": "Sans",
+      "path": "sm/sans.1.sm.rdc.gz"
+    },
+    {
+      "title": "Shaktool",
+      "path": "sm/shaktool.1.sm.rdc.gz"
+    },
+    {
+      "title": "Shaktool Jr.",
+      "path": "sm/shaktool_jr.1.sm.rdc.gz"
+    },
+    {
+      "title": "Sprite",
+      "path": "sm/sprite.1.sm.rdc.gz"
+    },
+    {
       "title": "Super Controid (PG)",
       "path": "sm/super_controid_pg.1.sm.rdc.gz"
+    },
+    {
+      "title": "Trans Pride",
+      "path": "sm/trans_pride.1.sm.rdc.gz"
+    },
+    {
+      "title": "Win95 Cursor",
+      "path": "sm/win95_cursor.1.sm.rdc.gz"
+    },
+    {
+      "title": "Zero Mission",
+      "path": "sm/zero_mission.1.sm.rdc.gz"
     }
   ]
 }
