@@ -89,7 +89,7 @@ namespace Randomizer.SMZ3 {
                         ItemId = (int)l.Item.Type,
                         ItemWorldId = l.Item.World.Id
                     }).ToList<ILocationData>(),
-                    WorldState = config.Race ? null : world.WorldState,
+                    WorldState = world.WorldState,
                 };
 
                 seedData.Worlds.Add(worldData);

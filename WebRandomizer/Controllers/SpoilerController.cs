@@ -57,7 +57,7 @@ namespace WebRandomizer.Controllers {
                     foreach (var world in seedData.Worlds) {
                         try {
                             var settings = JsonSerializer.Deserialize<Dictionary<string, string>>(world.Settings);
-                            if(settings["race"] == "true") {
+                            if(settings["race"] == "true" && (!settings.ContainsKey("spoilerrace") || settings["spoilerrace"] != "true")) {
                                 return new StatusCodeResult(400);
                             }
                         } catch {

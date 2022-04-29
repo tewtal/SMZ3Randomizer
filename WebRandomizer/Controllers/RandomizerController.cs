@@ -113,9 +113,12 @@ namespace WebRandomizer.Controllers {
                     await context.SaveChangesAsync(cancellationToken);
                 }
 
-                /* If race mode is enabled, remove WorldState from the response since it contains spoilery information */
+                /* If race mode is enabled, remove WorldState and Locations from the response since it contains spoilery information */
                 if (options.ContainsKey("race") && options["race"] == "true") {
-                    seed.Worlds.ForEach(world => { world.WorldState = null; });
+                    seed.Worlds.ForEach(world => { 
+                        world.WorldState = null; 
+                        world.Locations = null; 
+                    });
                 }
                 
                 return new OkObjectResult(seed);

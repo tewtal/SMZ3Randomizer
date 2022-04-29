@@ -32,6 +32,7 @@ namespace WebRandomizer.Controllers {
                     var settings = JsonSerializer.Deserialize<Dictionary<string, string>>(world.Settings);
                     if (settings.ContainsKey("race") && settings["race"] == "true") {
                         world.WorldState = null;
+                        world.Locations = null;
                     }
                 }
 
