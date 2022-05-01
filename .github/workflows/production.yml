@@ -20,13 +20,13 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: tewtal/webrandomizer
-        tags: live
+        tags: live    
 
     - name: Build and push webrandomizer-service Docker image
       uses: docker/build-push-action@v1.1.0
       with:
-        dockerfile: WebGameService/Dockerfile
+        dockerfile: Randomizer.Service/Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: tewtal/webrandomizer-service
-        tags: live
+        tags: live  
