@@ -44,6 +44,8 @@
       crystals required for access.
     * The required number of boss tokens scales down with the fraction of total
       crystals required for access.
+    * A reduced crystal requirement for Ganon's Tower now allows for 
+      progression items to be found there.
   * The key logic for the "east wing" of Ice Palace were previously disabled as
     it broke generating a playthrough. This has been solved and with that IP is
     once again logically secured.
