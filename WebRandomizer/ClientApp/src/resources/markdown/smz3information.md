@@ -105,7 +105,7 @@ This option decides what goal is required to finish the randomizer.
 
 * All Dungeons and Defeat Mother Brain - Similar to "Defeat Ganon and Mother Brain", but also
   requires all dungeons to be beaten including Castle Tower and Agahnim. 
-  Ganon also remains invulnerable until all Boss Tokens are aquired.
+  Ganon also remains invulnerable until all Boss Tokens are acquired.
 
 ### Open Ganon's Tower
 
