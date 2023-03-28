@@ -100,7 +100,7 @@ namespace Randomizer.SMZ3 {
 
             WriteGanonInvicible(config.Goal);
             WritePreOpenPyramid(config.Goal);
-            WriteCrystalsNeeded(myWorld.TowerCrystals, myWorld.GanonCrystals);
+            WriteCrystalsNeeded(myWorld.TowerCrystals, myWorld.GanonCrystals, config.Goal);
             WriteBossesNeeded(myWorld.TourianBossTokens);
             WriteRngBlock();
 
@@ -772,12 +772,17 @@ namespace Randomizer.SMZ3 {
             patches.Add((Snes(0xF47200), UshortBytes(tourianBossTokens)));
         }
 
-        void WriteCrystalsNeeded(int towerCrystals, int ganonCrystals) {
+        void WriteCrystalsNeeded(int towerCrystals, int ganonCrystals, Goal goal) {
             patches.Add((Snes(0x30805E), new byte[] { (byte)towerCrystals }));
             patches.Add((Snes(0x30805F), new byte[] { (byte)ganonCrystals }));
 
             stringTable.SetTowerRequirementText($"You need {towerCrystals} crystals to enter Ganon's Tower.");
-            stringTable.SetGanonRequirementText($"You need {ganonCrystals} crystals to defeat Ganon.");
+            if (goal == Goal.AllDungeonsDefeatMotherBrain) {
+                stringTable.SetGanonRequirementText($"You need to complete all the dungeons and bosses to defeat Ganon.");
+            }
+            else {
+                stringTable.SetGanonRequirementText($"You need {ganonCrystals} crystals to defeat Ganon.");
+            }
         }
 
         void WriteRngBlock() {
