@@ -48,7 +48,7 @@ export default function Markdown(props) {
             <GlobalMarkdownStyle/>
             <ReactMarkdown
                 className={classNames('markdown', className)}
-                source={sourceText || text}
+                children={sourceText || text}
             />
         </>
     );
