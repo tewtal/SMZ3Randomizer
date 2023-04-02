@@ -145,7 +145,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
         public override bool CanEnter(Progression items) {
             return items.MoonPearl && World.CanEnter("Dark World Death Mountain East", items) &&
                 World.CanAcquireAtLeast(World.TowerCrystals, items, AnyCrystal) &&
-                World.CanAcquireAtLeast(World.TourianBossTokens * (World.TowerCrystals / 7), items, AnyBossToken);
+                World.CanAcquireAtLeast((World.TourianBossTokens * World.TowerCrystals) / 7, items, AnyBossToken);
         }
 
         public override bool CanFill(Item item, Progression items) {
