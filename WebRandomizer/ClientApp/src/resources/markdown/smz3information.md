@@ -104,7 +104,8 @@ This option decides what goal is required to finish the randomizer.
   from Tourian to allow faster access.
 
 * All Dungeons and Defeat Mother Brain - Similar to "Defeat Ganon and Mother Brain", but also
-  requires all dungeons to be beaten including Castle Tower and Agahnim.
+  requires all dungeons to be beaten including Castle Tower and Agahnim. 
+  Ganon also remains invulnerable until all Boss Tokens are acquired.
 
 ### Open Ganon's Tower
 
@@ -115,6 +116,7 @@ If this is set to Random, the amount can be found in-game on a sign next to Gano
 
 The amount of crystals required to be able to harm Ganon.
 If this is set to Random, the amount can be found in-game on a sign near the top of the Pyramid.
+In All Dungeon mode, this option does nothing.
 
 ### Open Tourian
 
