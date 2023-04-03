@@ -16,6 +16,14 @@ import { tryParseJson } from '../util';
 import defaults from 'lodash/defaults';
 import attempt from 'lodash/attempt';
 
+import styled from 'styled-components';
+
+const SpoilerWarning = styled.p`
+    font-size: 1.2em;
+    color: red;
+    font-weight: bold;
+`;
+
 export default function Permalink() {
     const { seedSlug } = useParams();
     const seedGuid = decode(seedSlug).replace(/-/g, '');
@@ -59,6 +67,11 @@ export default function Permalink() {
                     {seed.gameName}
                 </CardHeader>
                 <CardBody>
+                    {settings && settings.spoilerKey && settings.spoilerKey === "true" && (
+                        <Row>
+                            <Col md="12"><SpoilerWarning>Warning: The creator of this seed is able to access the spoiler log.</SpoilerWarning></Col>
+                        </Row>
+                    )}
                     <Row>
                         <Col md="3">Seed:</Col><Col> {seedSlug}</Col>
                     </Row>

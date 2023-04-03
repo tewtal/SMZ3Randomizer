@@ -34,6 +34,12 @@ namespace WebRandomizer.Controllers {
                         world.WorldState = null;
                         world.Locations = null;
                     }
+                    
+                    /* If a spoiler key has been set, don't send it to the Permalink endpoint, except for info that one has been used */
+                    if(settings.ContainsKey("spoilerKey")) {
+                        settings["spoilerKey"] = "true";
+                        world.Settings = JsonSerializer.Serialize(settings);
+                    }
                 }
 
                 if (seedData != null) {

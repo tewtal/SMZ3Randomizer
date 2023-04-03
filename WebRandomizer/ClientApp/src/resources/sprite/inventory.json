@@ -9,24 +9,72 @@
       "path": "z3/adol.1.z3.rdc"
     },
     {
+      "title": "Adventure 2600",
+      "path": "z3/adventure-2600.rdc"
+    },
+    {
       "title": "Aggretsuko",
       "path": "z3/aggretsuko.1.z3.rdc"
+    },
+    {
+      "title": "Alex",
+      "path": "z3/alex.rdc"
     },
     {
       "title": "Alice",
       "path": "z3/alice.1.z3.rdc"
     },
     {
+      "title": "Angry Video Game Nerd",
+      "path": "z3/angry-video-game-nerd.rdc"
+    },
+    {
+      "title": "AnnaLavellan",
+      "path": "z3/annalavellan.rdc"
+    },
+    {
       "title": "Arcane",
       "path": "z3/arcane.1.z3.rdc"
+    },
+    {
+      "title": "Archen",
+      "path": "z3/archen.rdc"
+    },
+    {
+      "title": "ArcticArtemisFox",
+      "path": "z3/arcticartemisfox.rdc"
+    },
+    {
+      "title": "ArcturusChusky",
+      "path": "z3/arcturuschusky.rdc"
+    },
+    {
+      "title": "Aria",
+      "path": "z3/aria.rdc"
     },
     {
       "title": "Ark",
       "path": "z3/ark.1.z3.rdc"
     },
     {
+      "title": "Ark (No Cape)",
+      "path": "z3/ark-(no-cape).rdc"
+    },
+    {
+      "title": "Arrghus",
+      "path": "z3/arrghus.rdc"
+    },
+    {
+      "title": "Astor",
+      "path": "z3/astor.rdc"
+    },
+    {
       "title": "Astronaut",
       "path": "z3/astronaut.1.z3.rdc"
+    },
+    {
+      "title": "Asuna",
+      "path": "z3/asuna.rdc"
     },
     {
       "title": "B.S. Boy",
@@ -35,6 +83,22 @@
     {
       "title": "B.S. Girl",
       "path": "z3/bs_girl.1.z3.rdc"
+    },
+    {
+      "title": "Baba",
+      "path": "z3/baba.rdc"
+    },
+    {
+      "title": "Baby Fro",
+      "path": "z3/baby-fro.rdc"
+    },
+    {
+      "title": "Baby Metroid",
+      "path": "z3/baby-metroid.rdc"
+    },
+    {
+      "title": "Badeline",
+      "path": "z3/badeline.rdc"
     },
     {
       "title": "Bananas In Pyjamas",
@@ -49,36 +113,160 @@
       "path": "z3/batman.1.z3.rdc"
     },
     {
+      "title": "Beau",
+      "path": "z3/beau.rdc"
+    },
+    {
+      "title": "Bee",
+      "path": "z3/bee.rdc"
+    },
+    {
+      "title": "Bel",
+      "path": "z3/bel.rdc"
+    },
+    {
       "title": "Bewp",
       "path": "z3/bewp.1.z3.rdc"
+    },
+    {
+      "title": "Big Key",
+      "path": "z3/big-key.rdc"
     },
     {
       "title": "Birb",
       "path": "z3/birb.1.z3.rdc"
     },
     {
+      "title": "Birb of Paradise",
+      "path": "z3/birb-of-paradise.rdc"
+    },
+    {
+      "title": "Birdfruit",
+      "path": "z3/birdfruit.rdc"
+    },
+    {
       "title": "Birdo",
       "path": "z3/birdo.1.z3.rdc"
+    },
+    {
+      "title": "Black Mage",
+      "path": "z3/black-mage.rdc"
     },
     {
       "title": "Blacksmith Link",
       "path": "z3/blacksmith_link.1.z3.rdc"
     },
     {
+      "title": "Blazer",
+      "path": "z3/blazer.rdc"
+    },
+    {
+      "title": "Blossom",
+      "path": "z3/blossom.rdc"
+    },
+    {
+      "title": "Blue",
+      "path": "z3/blue.rdc"
+    },
+    {
+      "title": "Bob",
+      "path": "z3/bob.rdc"
+    },
+    {
+      "title": "Bob Ross",
+      "path": "z3/bob-ross.rdc"
+    },
+    {
+      "title": "Boco the Chocobo",
+      "path": "z3/boco-the-chocobo.rdc"
+    },
+    {
+      "title": "Boo",
+      "path": "z3/boo.rdc"
+    },
+    {
+      "title": "Boo 2",
+      "path": "z3/boo-2.rdc"
+    },
+    {
+      "title": "Bottle o' Goo",
+      "path": "z3/bottle-o'-goo.rdc"
+    },
+    {
+      "title": "BotW Link",
+      "path": "z3/botw-link.rdc"
+    },
+    {
+      "title": "BotW Zelda",
+      "path": "z3/botw-zelda.rdc"
+    },
+    {
       "title": "Bowser",
       "path": "z3/bowser.1.z3.rdc"
+    },
+    {
+      "title": "Bowsette",
+      "path": "z3/bowsette.rdc"
+    },
+    {
+      "title": "Bowsette-Red",
+      "path": "z3/bowsette-red.rdc"
+    },
+    {
+      "title": "Branch",
+      "path": "z3/branch.rdc"
     },
     {
       "title": "Brian",
       "path": "z3/brian.1.z3.rdc"
     },
     {
+      "title": "Broccoli",
+      "path": "z3/broccoli.rdc"
+    },
+    {
+      "title": "Bronzor",
+      "path": "z3/bronzor.rdc"
+    },
+    {
+      "title": "Bubblen",
+      "path": "z3/bubblen.rdc"
+    },
+    {
+      "title": "Bubbles",
+      "path": "z3/bubbles.rdc"
+    },
+    {
+      "title": "Bullet Bill",
+      "path": "z3/bullet-bill.rdc"
+    },
+    {
+      "title": "Buttercup",
+      "path": "z3/buttercup.rdc"
+    },
+    {
+      "title": "Cactuar",
+      "path": "z3/cactuar.rdc"
+    },
+    {
       "title": "Cadence",
       "path": "z3/cadence.1.z3.rdc"
     },
     {
+      "title": "Captain Novolin",
+      "path": "z3/captain-novolin.rdc"
+    },
+    {
       "title": "Captain Toadette",
       "path": "z3/captain_toadette.1.z3.rdc"
+    },
+    {
+      "title": "Casual Zelda",
+      "path": "z3/casual-zelda.rdc"
+    },
+    {
+      "title": "Cat Boo",
+      "path": "z3/cat-boo.rdc"
     },
     {
       "title": "CD_i Link",
@@ -89,12 +277,36 @@
       "path": "z3/celes.1.z3.rdc"
     },
     {
+      "title": "Centaur Enos",
+      "path": "z3/centaur-enos.rdc"
+    },
+    {
       "title": "Charizard",
       "path": "z3/charizard.1.z3.rdc"
     },
     {
+      "title": "Cheep Cheep",
+      "path": "z3/cheep-cheep.rdc"
+    },
+    {
+      "title": "Chef Pepper",
+      "path": "z3/chef-pepper.rdc"
+    },
+    {
       "title": "Chibity",
       "path": "z3/chibity.1.z3.rdc"
+    },
+    {
+      "title": "Chrizzz",
+      "path": "z3/chrizzz.rdc"
+    },
+    {
+      "title": "Chrono",
+      "path": "z3/chrono.rdc"
+    },
+    {
+      "title": "Cinna",
+      "path": "z3/cinna.rdc"
     },
     {
       "title": "Cirno",
@@ -105,8 +317,32 @@
       "path": "z3/clifford.1.z3.rdc"
     },
     {
+      "title": "Clippy",
+      "path": "z3/clippy.rdc"
+    },
+    {
+      "title": "Cloud",
+      "path": "z3/cloud.rdc"
+    },
+    {
+      "title": "Clyde",
+      "path": "z3/clyde.rdc"
+    },
+    {
       "title": "Conker",
       "path": "z3/conker.1.z3.rdc"
+    },
+    {
+      "title": "Conker Neo",
+      "path": "z3/conker-neo.rdc"
+    },
+    {
+      "title": "Cool 90s Bun",
+      "path": "z3/cool-90s-bun.rdc"
+    },
+    {
+      "title": "Cool 90s Link",
+      "path": "z3/cool-90s-link.rdc"
     },
     {
       "title": "Cornelius",
@@ -117,8 +353,32 @@
       "path": "z3/corona.1.z3.rdc"
     },
     {
+      "title": "Cousin Knol",
+      "path": "z3/cousin-knol.rdc"
+    },
+    {
+      "title": "Crewmate",
+      "path": "z3/crewmate.rdc"
+    },
+    {
+      "title": "Cucco",
+      "path": "z3/cucco.rdc"
+    },
+    {
+      "title": "Cursor",
+      "path": "z3/cursor.rdc"
+    },
+    {
       "title": "D.Owls",
       "path": "z3/d_owls.1.z3.rdc"
+    },
+    {
+      "title": "Dark Link Damien",
+      "path": "z3/dark-link-damien.rdc"
+    },
+    {
+      "title": "Dark Matter",
+      "path": "z3/dark-matter.rdc"
     },
     {
       "title": "Dark Panda",
@@ -133,8 +393,52 @@
       "path": "z3/deadpool_sirczah.1.z3.rdc"
     },
     {
+      "title": "Deadrock",
+      "path": "z3/deadrock.rdc"
+    },
+    {
       "title": "Decidueye",
       "path": "z3/decidueye.1.z3.rdc"
+    },
+    {
+      "title": "Dekar",
+      "path": "z3/dekar.rdc"
+    },
+    {
+      "title": "Dennsen86",
+      "path": "z3/dennsen86.rdc"
+    },
+    {
+      "title": "Diddy Kong",
+      "path": "z3/diddy-kong.rdc"
+    },
+    {
+      "title": "Dig Dug",
+      "path": "z3/dig-dug.rdc"
+    },
+    {
+      "title": "Dipper",
+      "path": "z3/dipper.rdc"
+    },
+    {
+      "title": "Discord",
+      "path": "z3/discord.rdc"
+    },
+    {
+      "title": "Dot_lvl",
+      "path": "z3/dot_lvl.rdc"
+    },
+    {
+      "title": "DQ Slime",
+      "path": "z3/dq-slime.rdc"
+    },
+    {
+      "title": "Dr. Treymond Spyre Spyreson III",
+      "path": "z3/dr.-treymond-spyre-spyreson-iii.rdc"
+    },
+    {
+      "title": "Dragonair",
+      "path": "z3/dragonair.rdc"
     },
     {
       "title": "Dragonite",
@@ -145,8 +449,40 @@
       "path": "z3/drake_dragon.1.z3.rdc"
     },
     {
+      "title": "Drawcia",
+      "path": "z3/drawcia.rdc"
+    },
+    {
+      "title": "Eevee",
+      "path": "z3/eevee.rdc"
+    },
+    {
       "title": "Eggplant",
       "path": "z3/eggplant.1.z3.rdc"
+    },
+    {
+      "title": "Eirika",
+      "path": "z3/eirika.rdc"
+    },
+    {
+      "title": "Elfilin",
+      "path": "z3/elfilin.rdc"
+    },
+    {
+      "title": "Ema Skye",
+      "path": "z3/ema-skye.rdc"
+    },
+    {
+      "title": "Espeon",
+      "path": "z3/espeon.rdc"
+    },
+    {
+      "title": "Ezlo",
+      "path": "z3/ezlo.rdc"
+    },
+    {
+      "title": "Fi",
+      "path": "z3/fi.rdc"
     },
     {
       "title": "Fierce Deity Link",
@@ -165,8 +501,20 @@
       "path": "z3/finny_bear.1.z3.rdc"
     },
     {
+      "title": "Flareon",
+      "path": "z3/flareon.rdc"
+    },
+    {
       "title": "Flavor Guy",
       "path": "z3/flavor_guy.1.z3.rdc"
+    },
+    {
+      "title": "Floodgate Fish",
+      "path": "z3/floodgate-fish.rdc"
+    },
+    {
+      "title": "Four Swords Link",
+      "path": "z3/four-swords-link.rdc"
     },
     {
       "title": "Four Swords Link",
@@ -177,8 +525,24 @@
       "path": "z3/fox_link.1.z3.rdc"
     },
     {
+      "title": "Fransen",
+      "path": "z3/fransen.rdc"
+    },
+    {
+      "title": "Freya Crescent",
+      "path": "z3/freya-crescent.rdc"
+    },
+    {
+      "title": "Frisk",
+      "path": "z3/frisk.rdc"
+    },
+    {
       "title": "Frog Link",
       "path": "z3/frog_link.3.z3.rdc"
+    },
+    {
+      "title": "Frog Link",
+      "path": "z3/frog_link.rdc"
     },
     {
       "title": "Fujin",
@@ -209,28 +573,172 @@
       "path": "z3/garo_master.1.z3.rdc"
     },
     {
+      "title": "GBC Link",
+      "path": "z3/gbc-link.rdc"
+    },
+    {
       "title": "Geno",
       "path": "z3/geno.1.z3.rdc"
+    },
+    {
+      "title": "Gina Lestrade",
+      "path": "z3/gina-lestrade.rdc"
+    },
+    {
+      "title": "GliitchWiitch",
+      "path": "z3/gliitchwiitch.rdc"
+    },
+    {
+      "title": "Go Mode",
+      "path": "z3/go-mode.rdc"
+    },
+    {
+      "title": "Gobli",
+      "path": "z3/gobli.rdc"
+    },
+    {
+      "title": "Goemon",
+      "path": "z3/goemon.rdc"
+    },
+    {
+      "title": "Gooey",
+      "path": "z3/gooey.rdc"
+    },
+    {
+      "title": "Goomba",
+      "path": "z3/goomba.rdc"
+    },
+    {
+      "title": "Goose",
+      "path": "z3/goose.rdc"
+    },
+    {
+      "title": "Graalian Noob",
+      "path": "z3/graalian-noob.rdc"
+    },
+    {
+      "title": "GrandPOOBear",
+      "path": "z3/grandpoobear.rdc"
+    },
+    {
+      "title": "Gretis",
+      "path": "z3/gretis.rdc"
+    },
+    {
+      "title": "Growlithe",
+      "path": "z3/growlithe.rdc"
+    },
+    {
+      "title": "Gruncle Stan",
+      "path": "z3/gruncle-stan.rdc"
+    },
+    {
+      "title": "Guiz",
+      "path": "z3/guiz.rdc"
+    },
+    {
+      "title": "Hainz the Blåhaj",
+      "path": "z3/hainz-the-blåhaj.rdc"
+    },
+    {
+      "title": "Hamtaro",
+      "path": "z3/hamtaro.rdc"
+    },
+    {
+      "title": "Hanna",
+      "path": "z3/hanna.rdc"
+    },
+    {
+      "title": "Hardhat Beetle",
+      "path": "z3/hardhat-beetle.rdc"
     },
     {
       "title": "Hat Kid",
       "path": "z3/hat_kid.1.z3.rdc"
     },
     {
+      "title": "Head Link",
+      "path": "z3/head-link.rdc"
+    },
+    {
+      "title": "Headless Link",
+      "path": "z3/headless-link.rdc"
+    },
+    {
+      "title": "Heem",
+      "path": "z3/heem.rdc"
+    },
+    {
       "title": "Hello Kitty",
       "path": "z3/hello_kitty.1.z3.rdc"
+    },
+    {
+      "title": "Hero of Awakening",
+      "path": "z3/hero-of-awakening.rdc"
+    },
+    {
+      "title": "Hero of Hyrule",
+      "path": "z3/hero-of-hyrule.rdc"
     },
     {
       "title": "Hidari",
       "path": "z3/hidari.1.z3.rdc"
     },
     {
+      "title": "Hint Tile",
+      "path": "z3/hint-tile.rdc"
+    },
+    {
       "title": "Hitsuyan1337",
       "path": "z3/hitsuyan1337.1.z3.rdc"
     },
     {
+      "title": "Hoarder (Bush)",
+      "path": "z3/hoarder-(bush).rdc"
+    },
+    {
+      "title": "Hoarder (Pot)",
+      "path": "z3/hoarder-(pot).rdc"
+    },
+    {
+      "title": "Hoarder (Rock)",
+      "path": "z3/hoarder-(rock).rdc"
+    },
+    {
+      "title": "Hollow Knight",
+      "path": "z3/hollow-knight.rdc"
+    },
+    {
+      "title": "Hollow Knight (Malmo+Winter)",
+      "path": "z3/hollow-knight-(malmo+winter).rdc"
+    },
+    {
       "title": "Homer Simpson",
       "path": "z3/homer_simpson.1.z3.rdc"
+    },
+    {
+      "title": "Hornet",
+      "path": "z3/hornet.rdc"
+    },
+    {
+      "title": "Horseman",
+      "path": "z3/horseman.rdc"
+    },
+    {
+      "title": "Hotdog",
+      "path": "z3/hotdog.rdc"
+    },
+    {
+      "title": "Hyrule Knight",
+      "path": "z3/hyrule-knight.rdc"
+    },
+    {
+      "title": "Hyrule Soldier",
+      "path": "z3/hyrule-soldier.rdc"
+    },
+    {
+      "title": "Ignignokt",
+      "path": "z3/ignignokt.rdc"
     },
     {
       "title": "Informant Woman",
@@ -241,16 +749,76 @@
       "path": "z3/inkling.1.z3.rdc"
     },
     {
+      "title": "Invisible Link",
+      "path": "z3/invisible-link.rdc"
+    },
+    {
+      "title": "Jack Frost",
+      "path": "z3/jack-frost.rdc"
+    },
+    {
       "title": "Jason Frudnick",
       "path": "z3/jason_frudnick.1.z3.rdc"
+    },
+    {
+      "title": "Jasp",
+      "path": "z3/jasp.rdc"
+    },
+    {
+      "title": "Jogurt",
+      "path": "z3/jogurt.rdc"
+    },
+    {
+      "title": "Jolteon",
+      "path": "z3/jolteon.rdc"
+    },
+    {
+      "title": "JoshTriangles",
+      "path": "z3/joshtriangles.rdc"
+    },
+    {
+      "title": "Juste Belmont",
+      "path": "z3/juste-belmont.rdc"
+    },
+    {
+      "title": "Juzcook",
+      "path": "z3/juzcook.rdc"
+    },
+    {
+      "title": "Kaguya",
+      "path": "z3/kaguya.rdc"
+    },
+    {
+      "title": "Kain",
+      "path": "z3/kain.rdc"
+    },
+    {
+      "title": "Kakyoin",
+      "path": "z3/kakyoin.rdc"
+    },
+    {
+      "title": "Katsura",
+      "path": "z3/katsura.rdc"
     },
     {
       "title": "Kecleon",
       "path": "z3/kecleon.1.z3.rdc"
     },
     {
+      "title": "Kefka",
+      "path": "z3/kefka.rdc"
+    },
+    {
       "title": "Kenny McCormick",
       "path": "z3/kenny_mccormick.1.z3.rdc"
+    },
+    {
+      "title": "Ketchup",
+      "path": "z3/ketchup.rdc"
+    },
+    {
+      "title": "Kholdstare",
+      "path": "z3/kholdstare.rdc"
     },
     {
       "title": "King Gothalion",
@@ -261,16 +829,88 @@
       "path": "z3/king_graham.1.z3.rdc"
     },
     {
+      "title": "Kinu",
+      "path": "z3/kinu.rdc"
+    },
+    {
+      "title": "Kira",
+      "path": "z3/kira.rdc"
+    },
+    {
+      "title": "Kirby",
+      "path": "z3/kirby.rdc"
+    },
+    {
+      "title": "Kirby (Dreamland 3)",
+      "path": "z3/kirby-(dreamland-3).rdc"
+    },
+    {
+      "title": "Kite",
+      "path": "z3/kite.rdc"
+    },
+    {
+      "title": "Koda",
+      "path": "z3/koda.rdc"
+    },
+    {
+      "title": "Koragi",
+      "path": "z3/koragi.rdc"
+    },
+    {
       "title": "Kore8",
       "path": "z3/kore8.1.z3.rdc"
+    },
+    {
+      "title": "Korok",
+      "path": "z3/korok.rdc"
+    },
+    {
+      "title": "Kris",
+      "path": "z3/kris.rdc"
+    },
+    {
+      "title": "Krissy",
+      "path": "z3/krissy.rdc"
+    },
+    {
+      "title": "Kriv",
+      "path": "z3/kriv.rdc"
+    },
+    {
+      "title": "Kromb",
+      "path": "z3/kromb.rdc"
+    },
+    {
+      "title": "Lakitu",
+      "path": "z3/lakitu.rdc"
     },
     {
       "title": "Lapras",
       "path": "z3/lapras.1.z3.rdc"
     },
     {
+      "title": "Latias",
+      "path": "z3/latias.rdc"
+    },
+    {
+      "title": "Latios",
+      "path": "z3/latios.rdc"
+    },
+    {
+      "title": "Leafeon",
+      "path": "z3/leafeon.rdc"
+    },
+    {
+      "title": "Leongar",
+      "path": "z3/leongar.rdc"
+    },
+    {
       "title": "Lest",
       "path": "z3/lest.1.z3.rdc"
+    },
+    {
+      "title": "Lestat",
+      "path": "z3/lestat.rdc"
     },
     {
       "title": "Lily",
@@ -281,16 +921,76 @@
       "path": "z3/linja.1.z3.rdc"
     },
     {
+      "title": "Link Redrawn",
+      "path": "z3/link-redrawn.rdc"
+    },
+    {
+      "title": "Little Hylian",
+      "path": "z3/little-hylian.rdc"
+    },
+    {
+      "title": "Locke",
+      "path": "z3/locke.rdc"
+    },
+    {
+      "title": "Love Shak",
+      "path": "z3/love-shak.rdc"
+    },
+    {
       "title": "Lucario",
       "path": "z3/lucario.1.z3.rdc"
+    },
+    {
+      "title": "Lucas",
+      "path": "z3/lucas.rdc"
+    },
+    {
+      "title": "LuckwurstJoe",
+      "path": "z3/luckwurstjoe.rdc"
     },
     {
       "title": "Luigi",
       "path": "z3/luigi.1.z3.rdc"
     },
     {
+      "title": "Lumberjack",
+      "path": "z3/lumberjack.rdc"
+    },
+    {
+      "title": "Luna Maindo",
+      "path": "z3/luna-maindo.rdc"
+    },
+    {
+      "title": "Lycanroc",
+      "path": "z3/lycanroc.rdc"
+    },
+    {
+      "title": "Lynea",
+      "path": "z3/lynea.rdc"
+    },
+    {
+      "title": "Lynel (BotW)",
+      "path": "z3/lynel-(botw).rdc"
+    },
+    {
+      "title": "Mad_Tears",
+      "path": "z3/mad_tears.rdc"
+    },
+    {
+      "title": "Madeline",
+      "path": "z3/madeline.rdc"
+    },
+    {
       "title": "Magus",
       "path": "z3/magus.1.z3.rdc"
+    },
+    {
+      "title": "Maiden",
+      "path": "z3/maiden.rdc"
+    },
+    {
+      "title": "Majora's Mask",
+      "path": "z3/majora's-mask.rdc"
     },
     {
       "title": "Mallow (Cat)",
@@ -329,12 +1029,36 @@
       "path": "z3/matthias.1.z3.rdc"
     },
     {
+      "title": "Meatwad",
+      "path": "z3/meatwad.rdc"
+    },
+    {
+      "title": "Medallions",
+      "path": "z3/medallions.rdc"
+    },
+    {
       "title": "Medli",
       "path": "z3/medli.1.z3.rdc"
     },
     {
+      "title": "Mega Man (Classic)",
+      "path": "z3/mega-man-(classic).rdc"
+    },
+    {
       "title": "Megaman X",
       "path": "z3/megaman_x.2.z3.rdc"
+    },
+    {
+      "title": "Megaman X2",
+      "path": "z3/megaman-x2.rdc"
+    },
+    {
+      "title": "Meta Knight",
+      "path": "z3/meta-knight.rdc"
+    },
+    {
+      "title": "Meteion",
+      "path": "z3/meteion.rdc"
     },
     {
       "title": "MewLp",
@@ -345,12 +1069,44 @@
       "path": "z3/mike_jones.2.z3.rdc"
     },
     {
+      "title": "Milly",
+      "path": "z3/milly.rdc"
+    },
+    {
+      "title": "Mimic",
+      "path": "z3/mimic.rdc"
+    },
+    {
+      "title": "Mimikyu",
+      "path": "z3/mimikyu.rdc"
+    },
+    {
       "title": "Mini Ganon",
       "path": "z3/mini_ganon.1.z3.rdc"
     },
     {
       "title": "Minish Cap Link",
       "path": "z3/minish_cap_link.2.z3.rdc"
+    },
+    {
+      "title": "Minish Link",
+      "path": "z3/minish-link.rdc"
+    },
+    {
+      "title": "Mipha",
+      "path": "z3/mipha.rdc"
+    },
+    {
+      "title": "missingno",
+      "path": "z3/missingno.rdc"
+    },
+    {
+      "title": "Moblin",
+      "path": "z3/moblin.rdc"
+    },
+    {
+      "title": "MoeChicken",
+      "path": "z3/moechicken.rdc"
     },
     {
       "title": "Mog",
@@ -373,6 +1129,46 @@
       "path": "z3/ms_paint_dog.1.z3.rdc"
     },
     {
+      "title": "Navi",
+      "path": "z3/navi.rdc"
+    },
+    {
+      "title": "Navirou",
+      "path": "z3/navirou.rdc"
+    },
+    {
+      "title": "Nayada",
+      "path": "z3/nayada.rdc"
+    },
+    {
+      "title": "Necrosky90",
+      "path": "z3/necrosky90.rdc"
+    },
+    {
+      "title": "Ned Flanders",
+      "path": "z3/ned-flanders.rdc"
+    },
+    {
+      "title": "Nekoni Hoozuki",
+      "path": "z3/nekoni-hoozuki.rdc"
+    },
+    {
+      "title": "Neosad",
+      "path": "z3/neosad.rdc"
+    },
+    {
+      "title": "Nepgear",
+      "path": "z3/nepgear.rdc"
+    },
+    {
+      "title": "Neptune",
+      "path": "z3/neptune.rdc"
+    },
+    {
+      "title": "NES Link",
+      "path": "z3/nes-link.rdc"
+    },
+    {
       "title": "Ness (Earthbound)",
       "path": "z3/ness_earthbound.1.z3.rdc"
     },
@@ -381,12 +1177,52 @@
       "path": "z3/nia.1.z3.rdc"
     },
     {
+      "title": "Niddraig",
+      "path": "z3/niddraig.rdc"
+    },
+    {
+      "title": "Niko",
+      "path": "z3/niko.rdc"
+    },
+    {
+      "title": "Ninten",
+      "path": "z3/ninten.rdc"
+    },
+    {
+      "title": "Octorok",
+      "path": "z3/octorok.rdc"
+    },
+    {
+      "title": "Old Man",
+      "path": "z3/old-man.rdc"
+    },
+    {
+      "title": "Olde Man",
+      "path": "z3/olde-man.rdc"
+    },
+    {
       "title": "Ori",
       "path": "z3/ori.2.z3.rdc"
     },
     {
+      "title": "Outline Link",
+      "path": "z3/outline-link.rdc"
+    },
+    {
+      "title": "Paper Mario",
+      "path": "z3/paper-mario.rdc"
+    },
+    {
       "title": "Parallel Worlds Link",
       "path": "z3/parallel_worlds_link.1.z3.rdc"
+    },
+    {
+      "title": "Patia",
+      "path": "z3/patia.rdc"
+    },
+    {
+      "title": "Paul the Woodsman",
+      "path": "z3/paul-the-woodsman.rdc"
     },
     {
       "title": "Paula",
@@ -417,6 +1253,18 @@
       "path": "z3/plague_knight.1.z3.rdc"
     },
     {
+      "title": "Plouni",
+      "path": "z3/plouni.rdc"
+    },
+    {
+      "title": "PoC Link",
+      "path": "z3/poc-link.rdc"
+    },
+    {
+      "title": "Pokey",
+      "path": "z3/pokey.rdc"
+    },
+    {
       "title": "Pony",
       "path": "z3/pony.1.z3.rdc"
     },
@@ -427,6 +1275,14 @@
     {
       "title": "Poppy",
       "path": "z3/poppy.1.z3.rdc"
+    },
+    {
+      "title": "Porg Knight",
+      "path": "z3/porg-knight.rdc"
+    },
+    {
+      "title": "Power Ranger",
+      "path": "z3/power-ranger.rdc"
     },
     {
       "title": "Power Up with Pride Mushroom",
@@ -445,16 +1301,80 @@
       "path": "z3/primm.1.z3.rdc"
     },
     {
+      "title": "Princess Bubblegum",
+      "path": "z3/princess-bubblegum.rdc"
+    },
+    {
       "title": "Princess Peach",
       "path": "z3/princess_peach.1.z3.rdc"
+    },
+    {
+      "title": "Prof. Renderer Grizzleton",
+      "path": "z3/prof.-renderer-grizzleton.rdc"
+    },
+    {
+      "title": "Protogen",
+      "path": "z3/protogen.rdc"
     },
     {
       "title": "Psyduck",
       "path": "z3/psyduck.2.z3.rdc"
     },
     {
+      "title": "Purple Chest",
+      "path": "z3/purple-chest.rdc"
+    },
+    {
       "title": "Pyro",
       "path": "z3/pyro.1.z3.rdc"
+    },
+    {
+      "title": "QuadBanger",
+      "path": "z3/quadbanger.rdc"
+    },
+    {
+      "title": "Rainbow Link",
+      "path": "z3/rainbow-link.rdc"
+    },
+    {
+      "title": "Randi",
+      "path": "z3/randi.rdc"
+    },
+    {
+      "title": "Rash",
+      "path": "z3/rash.rdc"
+    },
+    {
+      "title": "Rat",
+      "path": "z3/rat.rdc"
+    },
+    {
+      "title": "Red",
+      "path": "z3/red.rdc"
+    },
+    {
+      "title": "Red Mage",
+      "path": "z3/red-mage.rdc"
+    },
+    {
+      "title": "Reimu Hakurei (HoxNorf)",
+      "path": "z3/reimu-hakurei-(hoxnorf).rdc"
+    },
+    {
+      "title": "Reimu Hakurei (RickyofKokiri)",
+      "path": "z3/reimu-hakurei-(rickyofkokiri).rdc"
+    },
+    {
+      "title": "Remeer",
+      "path": "z3/remeer.rdc"
+    },
+    {
+      "title": "Remus R Black",
+      "path": "z3/remus-r-black.rdc"
+    },
+    {
+      "title": "Rick",
+      "path": "z3/rick.rdc"
     },
     {
       "title": "Robo_Link 9000",
@@ -465,12 +1385,28 @@
       "path": "z3/rocko.1.z3.rdc"
     },
     {
+      "title": "Roronoa Zoro",
+      "path": "z3/roronoa-zoro.rdc"
+    },
+    {
       "title": "Rottytops",
       "path": "z3/rottytops.1.z3.rdc"
     },
     {
+      "title": "Rover",
+      "path": "z3/rover.rdc"
+    },
+    {
       "title": "Roy Koopa",
       "path": "z3/roy_koopa.1.z3.rdc"
+    },
+    {
+      "title": "Rozalyndis",
+      "path": "z3/rozalyndis.rdc"
+    },
+    {
+      "title": "Rumia",
+      "path": "z3/rumia.rdc"
     },
     {
       "title": "Rydia",
@@ -481,12 +1417,40 @@
       "path": "z3/ryu.1.z3.rdc"
     },
     {
+      "title": "Sailor Jupiter",
+      "path": "z3/sailor-jupiter.rdc"
+    },
+    {
+      "title": "Sailor Mars",
+      "path": "z3/sailor-mars.rdc"
+    },
+    {
+      "title": "Sailor Mercury",
+      "path": "z3/sailor-mercury.rdc"
+    },
+    {
       "title": "Sailor Moon",
       "path": "z3/sailor_moon.1.z3.rdc"
     },
     {
+      "title": "Sailor Saturn",
+      "path": "z3/sailor-saturn.rdc"
+    },
+    {
+      "title": "Sailor Venus",
+      "path": "z3/sailor-venus.rdc"
+    },
+    {
       "title": "Saitama",
       "path": "z3/saitama.1.z3.rdc"
+    },
+    {
+      "title": "Salty Squiddy",
+      "path": "z3/salty-squiddy.rdc"
+    },
+    {
+      "title": "Samurott",
+      "path": "z3/samurott.rdc"
     },
     {
       "title": "Samus",
@@ -505,6 +1469,10 @@
       "path": "z3/santa_link.2.z3.rdc"
     },
     {
+      "title": "Saria",
+      "path": "z3/saria.rdc"
+    },
+    {
       "title": "Scholar",
       "path": "z3/scholar.1.z3.rdc"
     },
@@ -517,16 +1485,44 @@
       "path": "z3/sevens1ns.1.z3.rdc"
     },
     {
+      "title": "Shade",
+      "path": "z3/shade.rdc"
+    },
+    {
       "title": "Shadow",
       "path": "z3/shadow.1.z3.rdc"
+    },
+    {
+      "title": "Shaktool",
+      "path": "z3/shaktool.rdc"
     },
     {
       "title": "Shantae",
       "path": "z3/shantae.1.z3.rdc"
     },
     {
+      "title": "Shiluna",
+      "path": "z3/shiluna.rdc"
+    },
+    {
+      "title": "Shin",
+      "path": "z3/shin.rdc"
+    },
+    {
+      "title": "Shinmyoumaru Sukuna",
+      "path": "z3/shinmyoumaru-sukuna.rdc"
+    },
+    {
+      "title": "Shopkeeper Link",
+      "path": "z3/shopkeeper-link.rdc"
+    },
+    {
       "title": "Shuppet",
       "path": "z3/shuppet.1.z3.rdc"
+    },
+    {
+      "title": "Shy Gal",
+      "path": "z3/shy-gal.rdc"
     },
     {
       "title": "Shy Guy",
@@ -537,6 +1533,30 @@
       "path": "z3/sighnwaive.1.z3.rdc"
     },
     {
+      "title": "Skunk",
+      "path": "z3/skunk.rdc"
+    },
+    {
+      "title": "Slowpoke",
+      "path": "z3/slowpoke.rdc"
+    },
+    {
+      "title": "SNES Controller",
+      "path": "z3/snes-controller.rdc"
+    },
+    {
+      "title": "Sobble",
+      "path": "z3/sobble.rdc"
+    },
+    {
+      "title": "Soda Can",
+      "path": "z3/soda-can.rdc"
+    },
+    {
+      "title": "Sokka",
+      "path": "z3/sokka.rdc"
+    },
+    {
       "title": "Solaire of Astora",
       "path": "z3/solaire_astora.1.z3.rdc"
     },
@@ -545,8 +1565,32 @@
       "path": "z3/sonic_hedgehog.1.z3.rdc"
     },
     {
+      "title": "Sora",
+      "path": "z3/sora.rdc"
+    },
+    {
       "title": "Sora (KH1)",
       "path": "z3/sora_kh1.1.z3.rdc"
+    },
+    {
+      "title": "Spamton G. Spamton",
+      "path": "z3/spamton-g.-spamton.rdc"
+    },
+    {
+      "title": "Spat",
+      "path": "z3/spat.rdc"
+    },
+    {
+      "title": "Spiked Roller",
+      "path": "z3/spiked-roller.rdc"
+    },
+    {
+      "title": "SpongeBob SquarePants",
+      "path": "z3/spongebob-squarepants.rdc"
+    },
+    {
+      "title": "Spyro the Dragon",
+      "path": "z3/spyro-the-dragon.rdc"
     },
     {
       "title": "Squall",
@@ -561,16 +1605,68 @@
       "path": "z3/squirtle.1.z3.rdc"
     },
     {
+      "title": "Stalfos",
+      "path": "z3/stalfos.rdc"
+    },
+    {
+      "title": "Stan",
+      "path": "z3/stan.rdc"
+    },
+    {
+      "title": "Steamed Ham",
+      "path": "z3/steamed-ham.rdc"
+    },
+    {
+      "title": "Stick Man",
+      "path": "z3/stick-man.rdc"
+    },
+    {
+      "title": "Super Bomb",
+      "path": "z3/super-bomb.rdc"
+    },
+    {
       "title": "Super Bunny",
       "path": "z3/super_bunny.2.z3.rdc"
+    },
+    {
+      "title": "Super Meat Boy",
+      "path": "z3/super-meat-boy.rdc"
+    },
+    {
+      "title": "Susie",
+      "path": "z3/susie.rdc"
+    },
+    {
+      "title": "Swiper",
+      "path": "z3/swiper.rdc"
+    },
+    {
+      "title": "SwirlDrop",
+      "path": "z3/swirldrop.rdc"
     },
     {
       "title": "Tanooki Mario",
       "path": "z3/tanooki_mario.1.z3.rdc"
     },
     {
+      "title": "TASBot",
+      "path": "z3/tasbot.rdc"
+    },
+    {
+      "title": "Tea Time",
+      "path": "z3/tea-time.rdc"
+    },
+    {
+      "title": "Teddiursa",
+      "path": "z3/teddiursa.rdc"
+    },
+    {
       "title": "Terra (Esper)",
       "path": "z3/terra_esper.1.z3.rdc"
+    },
+    {
+      "title": "Terry",
+      "path": "z3/terry.rdc"
     },
     {
       "title": "Tetra",
@@ -581,12 +1677,32 @@
       "path": "z3/tgh.1.z3.rdc"
     },
     {
+      "title": "The Professor",
+      "path": "z3/the-professor.rdc"
+    },
+    {
       "title": "The Pug",
       "path": "z3/pug.1.z3.rdc"
     },
     {
+      "title": "The Robot",
+      "path": "z3/the-robot.rdc"
+    },
+    {
+      "title": "Thief",
+      "path": "z3/thief.rdc"
+    },
+    {
+      "title": "ThinkDorm",
+      "path": "z3/thinkdorm.rdc"
+    },
+    {
       "title": "Thomcrow",
       "path": "z3/thomcrow.1.z3.rdc"
+    },
+    {
+      "title": "Tile",
+      "path": "z3/tile.rdc"
     },
     {
       "title": "Tingle",
@@ -605,20 +1721,52 @@
       "path": "z3/toadette.2.z3.rdc"
     },
     {
+      "title": "TotemLinks",
+      "path": "z3/totemlinks.rdc"
+    },
+    {
       "title": "TP Zelda",
       "path": "z3/tp_zelda.2.z3.rdc"
+    },
+    {
+      "title": "Trogdor the Burninator",
+      "path": "z3/trogdor-the-burninator.rdc"
+    },
+    {
+      "title": "Tueffel",
+      "path": "z3/tueffel.rdc"
+    },
+    {
+      "title": "Tunic",
+      "path": "z3/tunic.rdc"
+    },
+    {
+      "title": "TwoFaced",
+      "path": "z3/twofaced.rdc"
     },
     {
       "title": "Ty the Tasmanian Tiger",
       "path": "z3/ty_tasmanian_tiger.1.z3.rdc"
     },
     {
+      "title": "UFO Kirby",
+      "path": "z3/ufo-kirby.rdc"
+    },
+    {
       "title": "Ultros",
       "path": "z3/ultros.1.z3.rdc"
     },
     {
+      "title": "Umbreon",
+      "path": "z3/umbreon.rdc"
+    },
+    {
       "title": "Valeera",
       "path": "z3/valeera.1.z3.rdc"
+    },
+    {
+      "title": "VanillaLink",
+      "path": "z3/vanillalink.rdc"
     },
     {
       "title": "Vaporeon",
@@ -633,20 +1781,44 @@
       "path": "z3/vera.1.z3.rdc"
     },
     {
+      "title": "Vitreous",
+      "path": "z3/vitreous.rdc"
+    },
+    {
       "title": "Vivi",
       "path": "z3/vivi.1.z3.rdc"
+    },
+    {
+      "title": "Vivian",
+      "path": "z3/vivian.rdc"
     },
     {
       "title": "Wario",
       "path": "z3/wario.1.z3.rdc"
     },
     {
+      "title": "White Mage",
+      "path": "z3/white-mage.rdc"
+    },
+    {
       "title": "Will",
       "path": "z3/will.1.z3.rdc"
     },
     {
+      "title": "Wolf Link",
+      "path": "z3/wolf-link.rdc"
+    },
+    {
       "title": "Wolf Link (TP)",
       "path": "z3/wolf_link_tp.1.z3.rdc"
+    },
+    {
+      "title": "Wolf O'Donnell",
+      "path": "z3/wolf-o'donnell.rdc"
+    },
+    {
+      "title": "WuZaiiii",
+      "path": "z3/wuzaiiii.rdc"
     },
     {
       "title": "Yoshi",
@@ -657,8 +1829,16 @@
       "path": "z3/yunica_tovah.1.z3.rdc"
     },
     {
+      "title": "Zagreus",
+      "path": "z3/zagreus.rdc"
+    },
+    {
       "title": "Zandra",
       "path": "z3/zandra.1.z3.rdc"
+    },
+    {
+      "title": "Zaruvyen",
+      "path": "z3/zaruvyen.rdc"
     },
     {
       "title": "Zebra Unicorn",
@@ -669,12 +1849,20 @@
       "path": "z3/zeckemyro.1.z3.rdc"
     },
     {
+      "title": "Zekrom",
+      "path": "z3/zekrom.rdc"
+    },
+    {
       "title": "Zelda",
       "path": "z3/zelda.1.z3.rdc"
     },
     {
       "title": "Zero Suit Samus",
       "path": "z3/zero_suit_samus.2.z3.rdc"
+    },
+    {
+      "title": "Zora",
+      "path": "z3/zora.rdc"
     }
   ],
   "sm": [

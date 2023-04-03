@@ -1,5 +1,26 @@
 # Randomizer Changes
 
+## 2023-04-xx - Version 11.3.1
+* Systems Changes
+  * A collection of new sprites have been added.
+  * The "All Dungeons" goal have been clarified in the help documention.
+
+* Gameplay Changes
+  * Quickswap can now be enabled for race seeds.
+  * The GT token requirements have been fixed in cases where the number of crystals
+	required for access was something other than seven.
+  * The pyramid sign text has been adjusted to reflect the "All Dungeons" goal better.
+
+ * Technical Changes
+   * A few behind the scenes changes and updates to new versions of dependencies.
+   * New spoiler-related API functions have been added:
+     - Setting "spoilerKey" to a string value will enable the spoiler API endpoint a seed,
+       even if it is a race seed. Doing this will show a warning on the Permalink page.
+     - When a "spoilerKey" is set for a seed, the spoiler API endpoint will accept a "key"
+       parameter that will give access to the spoiler log if it matches the "spoilerKey".
+     - Adding a "yaml=true" parameter to the spoiler endpoint will return a human-readable
+       YAML-formatted spoiler log instead of the default JSON format.
+
 ## 2022-05-01 - Version 11.3
 
 * Systems Changes
