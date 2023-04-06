@@ -77,6 +77,10 @@
       "path": "z3/asuna.rdc"
     },
     {
+      "title": "B.O.B.",
+      "path": "z3/b.o.b..rdc"
+    },
+    {
       "title": "B.S. Boy",
       "path": "z3/bs_boy.1.z3.rdc"
     },
@@ -99,6 +103,10 @@
     {
       "title": "Badeline",
       "path": "z3/badeline.rdc"
+    },
+    {
+      "title": "Bailey",
+      "path": "z3/bailey.rdc"
     },
     {
       "title": "Bananas In Pyjamas",
@@ -517,10 +525,6 @@
       "path": "z3/four-swords-link.rdc"
     },
     {
-      "title": "Four Swords Link",
-      "path": "z3/four_swords_link.1.z3.rdc"
-    },
-    {
       "title": "Fox Link",
       "path": "z3/fox_link.1.z3.rdc"
     },
@@ -535,10 +539,6 @@
     {
       "title": "Frisk",
       "path": "z3/frisk.rdc"
-    },
-    {
-      "title": "Frog Link",
-      "path": "z3/frog_link.3.z3.rdc"
     },
     {
       "title": "Frog Link",
@@ -1821,6 +1821,10 @@
       "path": "z3/wuzaiiii.rdc"
     },
     {
+      "title": "Xman101",
+      "path": "z3/xman101.rdc"
+    },
+    {
       "title": "Yoshi",
       "path": "z3/yoshi.1.z3.rdc"
     },
@@ -1867,6 +1871,10 @@
   ],
   "sm": [
     {
+      "title": "140",
+      "path": "sm/140.sm.rdc.gz"
+    },
+    {
       "title": "8-Bit Mario",
       "path": "sm/8_bit_mario.1.sm.rdc.gz"
     },
@@ -1877,6 +1885,22 @@
     {
       "title": "Alucard",
       "path": "sm/alucard.1.sm.rdc.gz"
+    },
+    {
+      "title": "Arcana",
+      "path": "sm/arcana.rdc.gz"
+    },
+    {
+      "title": "AroAce Samus",
+      "path": "sm/aroace-samus.rdc.gz"
+    },
+    {
+      "title": "B.O.B.",
+      "path": "sm/b.o.b..rdc.gz"
+    },
+    {
+      "title": "Brad Fang",
+      "path": "sm/brad-fang.rdc.gz"
     },
     {
       "title": "Buffed Kirby",
@@ -1907,6 +1931,14 @@
       "path": "sm/diddy_kong.1.sm.rdc.gz"
     },
     {
+      "title": "Dread",
+      "path": "sm/dread.rdc.gz"
+    },
+    {
+      "title": "Dream Team Mario",
+      "path": "sm/dream-team-mario.rdc.gz"
+    },
+    {
       "title": "Earthworm Jim",
       "path": "sm/earthworm_jim.1.sm.rdc.gz"
     },
@@ -1923,24 +1955,60 @@
       "path": "sm/fusion_green.1.sm.rdc.gz"
     },
     {
-      "title": "Inkling Girl",
-      "path": "sm/inkling_girl.1.sm.rdc.gz"
+      "title": "Goku",
+      "path": "sm/goku.rdc.gz"
+    },
+    {
+      "title": "Inkling Girl v2",
+      "path": "sm/inkling-girl-v2.rdc.gz"
+    },
+    {
+      "title": "Janky",
+      "path": "sm/janky.rdc.gz"
     },
     {
       "title": "Justin Bailey",
       "path": "sm/justin_bailey.1.sm.rdc.gz"
     },
     {
+      "title": "King Graham",
+      "path": "sm/king-graham.rdc.gz"
+    },
+    {
       "title": "Kirby",
       "path": "sm/kirby.1.sm.rdc.gz"
+    },
+    {
+      "title": "Knuckles",
+      "path": "sm/knuckles.rdc.gz"
     },
     {
       "title": "Link (OoT)",
       "path": "sm/link_oot.1.sm.rdc.gz"
     },
     {
+      "title": "Link 2 The Past",
+      "path": "sm/link-2-the-past.rdc.gz"
+    },
+    {
       "title": "Luigi",
       "path": "sm/luigi.1.sm.rdc.gz"
+    },
+    {
+      "title": "Maria Pollo",
+      "path": "sm/maria-pollo.rdc.gz"
+    },
+    {
+      "title": "Maria Renard",
+      "path": "sm/maria-renard.rdc.gz"
+    },
+    {
+      "title": "Master Hand",
+      "path": "sm/master-hand.rdc.gz"
+    },
+    {
+      "title": "Maxim Kischine",
+      "path": "sm/maxim-kischine.rdc.gz"
     },
     {
       "title": "Mega Man X",
@@ -1951,16 +2019,44 @@
       "path": "sm/metroid.1.sm.rdc.gz"
     },
     {
+      "title": "Mini Samus",
+      "path": "sm/mini-samus.rdc.gz"
+    },
+    {
+      "title": "missingno",
+      "path": "sm/missingno.rdc.gz"
+    },
+    {
       "title": "Moonclif",
       "path": "sm/mooncliff.1.sm.rdc.gz"
     },
     {
       "title": "Opposition",
-      "path": "sm/opposition1.sm.rdc.gz"
+      "path": "sm/opposition.rdc.gz"
+    },
+    {
+      "title": "Outline Samus",
+      "path": "sm/outline-samus.rdc.gz"
+    },
+    {
+      "title": "Plissken",
+      "path": "sm/plissken.rdc.gz"
+    },
+    {
+      "title": "Pyronett",
+      "path": "sm/pyronett.rdc.gz"
+    },
+    {
+      "title": "Ronald McDonald",
+      "path": "sm/ronald-mcdonald.rdc.gz"
     },
     {
       "title": "Sans",
       "path": "sm/sans.1.sm.rdc.gz"
+    },
+    {
+      "title": "SFC Contoller",
+      "path": "sm/sfc-contoller.rdc.gz"
     },
     {
       "title": "Shaktool",
@@ -1971,6 +2067,14 @@
       "path": "sm/shaktool_jr.1.sm.rdc.gz"
     },
     {
+      "title": "Shantae",
+      "path": "sm/shantae.rdc.gz"
+    },
+    {
+      "title": "Sonic",
+      "path": "sm/sonic.rdc.gz"
+    },
+    {
       "title": "Sprite",
       "path": "sm/sprite.1.sm.rdc.gz"
     },
@@ -1979,12 +2083,36 @@
       "path": "sm/super_controid_pg.1.sm.rdc.gz"
     },
     {
+      "title": "Tails",
+      "path": "sm/tails.rdc.gz"
+    },
+    {
+      "title": "Tallink",
+      "path": "sm/tallink.rdc.gz"
+    },
+    {
+      "title": "Tetris",
+      "path": "sm/tetris.rdc.gz"
+    },
+    {
+      "title": "Thomcrow Corbin",
+      "path": "sm/thomcrow-corbin.rdc.gz"
+    },
+    {
       "title": "Trans Pride",
       "path": "sm/trans_pride.1.sm.rdc.gz"
     },
     {
+      "title": "Wario",
+      "path": "sm/wario.rdc.gz"
+    },
+    {
       "title": "Win95 Cursor",
       "path": "sm/win95_cursor.1.sm.rdc.gz"
+    },
+    {
+      "title": "Yoshi & Baby Mario",
+      "path": "sm/yoshi-&-baby-mario.rdc.gz"
     },
     {
       "title": "Zero Mission",

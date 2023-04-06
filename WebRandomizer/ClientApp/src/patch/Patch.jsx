@@ -54,7 +54,7 @@ const Z3SpriteStyle = styled.option`
     height: 24px;
     margin-right: ${inputPaddingX};
     background-size: auto 24px;
-    background-image: url(${process.env.PUBLIC_URL}/sprites/z3.png);
+    background-image: url(${process.env.PUBLIC_URL}/sprites/z3.png?version=131);
 `;
 
 const Z3Sprite = ({ index }) => {
@@ -62,7 +62,7 @@ const Z3Sprite = ({ index }) => {
 }
 
 const SMSpriteStyle = styled(Z3SpriteStyle)`
-    background-image: url(${process.env.PUBLIC_URL}/sprites/sm.png);
+    background-image: url(${process.env.PUBLIC_URL}/sprites/sm.png?version=131);
 `;
 
 const SMSprite = ({ index }) => {
