@@ -1,6 +1,6 @@
 # Randomizer Changes
 
-## 2023-04-xx - Version 11.3.1
+## 2023-04-06 - Version 11.3.1
 * Systems Changes
   * A collection of new sprites have been added.
   * The "All Dungeons" goal have been clarified in the help documention.
@@ -20,6 +20,7 @@
        parameter that will give access to the spoiler log if it matches the "spoilerKey".
      - Adding a "yaml=true" parameter to the spoiler endpoint will return a human-readable
        YAML-formatted spoiler log instead of the default JSON format.
+
 
 ## 2022-05-01 - Version 11.3
 
