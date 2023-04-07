@@ -45,9 +45,7 @@ export async function prepareRom(worldPatch, settings, baseIps, game) {
     if (game.z3) {
         z3HeartColor(rom, mapping, settings.z3HeartColor);
         z3HeartBeep(rom, settings.z3HeartBeep);
-        if (settings.worldSettings.race === "false") {
-            z3QuickSwap(rom, settings.z3QuickSwap);
-        }
+        z3QuickSwap(rom, settings.z3QuickSwap);
     }
     if (!settings.smEnergyBeep) {
         smEnergyBeepOff(rom, mapping);
