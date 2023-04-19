@@ -24,8 +24,7 @@ const webpackPlugin = {
                 })
             )
 
-            webpackConfig.resolve.fallback = { "path": require.resolve("path-browserify") };
-            webpackConfig.resolve.fallback = { "buffer": require.resolve("buffer") };
+            webpackConfig.resolve.fallback = { "path": require.resolve("path-browserify"), "buffer": require.resolve("buffer"), "util": require.resolve("util/") };
 
             return webpackConfig;
         },
