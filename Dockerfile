@@ -8,9 +8,9 @@ RUN curl -sSL "https://deb.nodesource.com/setup_18.x" -o nodesource_setup.sh \
 
 # Build asar
 WORKDIR /asar
-RUN curl -sSL "https://github.com/RPGHacker/asar/archive/v1.71.tar.gz" -o v1.71.tar.gz \
- && tar xfz v1.71.tar.gz \
- && cd asar-1.71 \
+RUN curl -sSL "https://github.com/RPGHacker/asar/archive/v1.81.tar.gz" -o v1.81.tar.gz \
+ && tar xfz v1.81.tar.gz \
+ && cd asar-1.81 \
  && cmake src \
  && make
 
@@ -20,7 +20,7 @@ COPY . ./
 
 # Create IPS patch from combo ASM code project
 WORKDIR /app/alttp_sm_combo_randomizer_rom/
-RUN cp /asar/asar-1.71/asar/asar-standalone resources/asar \
+RUN cp /asar/asar-1.81/asar/asar-standalone resources/asar \
  && chmod +x ./build.sh \
  && ./build.sh \
  && cd build \
@@ -29,7 +29,7 @@ RUN cp /asar/asar-1.71/asar/asar-standalone resources/asar \
 
 # Create IPS patch from sm ASM code project
 WORKDIR /app/sm_randomizer_rom/
-RUN cp /asar/asar-1.71/asar/asar-standalone resources/asar \
+RUN cp /asar/asar-1.81/asar/asar-standalone resources/asar \
  && chmod +x ./build.sh \
  && ./build.sh \
  && cd build \ 
