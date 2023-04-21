@@ -6,12 +6,6 @@ This is the main discord server for the randomizer where you can find more
 information, useful links, ask questions, participate in races and get involved
 with the community.
 
-#### [SMZ3 Multiworld Discord](https://discord.gg/K4V6V2B)
-
-This is the server for finding people to play with in multiworld games. It's
-also a good place to go for help setting things up if you're new to multiworld
-and need help getting started.
-
 ### Useful links
 
 * [Super Metroid x ALttP Resources](https://docs.google.com/document/d/1fP-DRbuROuQ-zifwKftuV-Paoh0_GGYErLGv3VVAg7Y/edit)\
