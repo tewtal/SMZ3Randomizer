@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Randomizer.SMZ3 {
 
@@ -139,6 +140,7 @@ namespace Randomizer.SMZ3 {
         public OpenTower OpenTower { get; set; } = OpenTower.SevenCrystals;
         public GanonVulnerable GanonVulnerable { get; set; } = GanonVulnerable.SevenCrystals;
         public OpenTourian OpenTourian { get; set; } = OpenTourian.FourBosses;
+        public Dictionary<ItemType, int> InitialItems = new Dictionary<ItemType, int>();
 
         public bool SingleWorld => GameMode == GameMode.Normal;
         public bool MultiWorld => GameMode == GameMode.Multiworld;

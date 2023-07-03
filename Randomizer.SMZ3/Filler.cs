@@ -47,6 +47,10 @@ namespace Randomizer.SMZ3 {
 
                 progressionItems.AddRange(dungeon);
                 progressionItems.AddRange(progression);
+
+                /* Remove initial items from the progression pool and add them to the base item pool */
+                baseItems.AddRange(HandleInitialItems(progressionItems, world));
+
             }
 
             progressionItems = progressionItems.Shuffle(Rnd);
@@ -103,22 +107,31 @@ namespace Randomizer.SMZ3 {
             FillItemAtLocation(dungeonItems, ItemType.KeySW, world.GetLocation("Skull Woods - Pinball Room"));
 
             /* Check Swords option and place as needed */
-            switch (Config.SwordLocation) {
-                case SwordLocation.Uncle: FillItemAtLocation(progressionItems, ItemType.ProgressiveSword, world.GetLocation("Link's Uncle")); break;
-                case SwordLocation.Early: FrontFillItemInOwnWorld(progressionItems, ItemType.ProgressiveSword, world); break;
+            if (!Config.InitialItems.ContainsKey(ItemType.ProgressiveSword)) {
+                switch (Config.SwordLocation) {
+                    case SwordLocation.Uncle: FillItemAtLocation(progressionItems, ItemType.ProgressiveSword, world.GetLocation("Link's Uncle")); break;
+                    case SwordLocation.Early: FrontFillItemInOwnWorld(progressionItems, ItemType.ProgressiveSword, world); break;
+                }
             }
 
             /* Check Morph option and place as needed */
-            switch (Config.MorphLocation) {
-                case MorphLocation.Original: FillItemAtLocation(progressionItems, ItemType.Morph, world.GetLocation("Morphing Ball")); break;
-                case MorphLocation.Early: FrontFillItemInOwnWorld(progressionItems, ItemType.Morph, world); break;
+            if(!Config.InitialItems.ContainsKey(ItemType.Morph)) {
+                switch (Config.MorphLocation) {
+                    case MorphLocation.Original: FillItemAtLocation(progressionItems, ItemType.Morph, world.GetLocation("Morphing Ball")); break;
+                    case MorphLocation.Early: FrontFillItemInOwnWorld(progressionItems, ItemType.Morph, world); break;
+                }
             }
 
             /* We place a PB and Super in Sphere 1 to make sure the filler
              * doesn't start locking items behind this when there are a
              * high chance of the trash fill actually making them available */
-            FrontFillItemInOwnWorld(progressionItems, ItemType.Super, world);
-            FrontFillItemInOwnWorld(progressionItems, ItemType.PowerBomb, world);
+            if (!Config.InitialItems.ContainsKey(ItemType.Super)) {
+                FrontFillItemInOwnWorld(progressionItems, ItemType.Super, world);
+            }
+
+            if (!Config.InitialItems.ContainsKey(ItemType.PowerBomb)) {
+                FrontFillItemInOwnWorld(progressionItems, ItemType.PowerBomb, world);
+            }
         }
 
         void AssumedFill(List<Item> itemPool, List<Item> baseItems, IEnumerable<Location> locations, IEnumerable<World> worlds) {
@@ -190,6 +203,31 @@ namespace Randomizer.SMZ3 {
             var itemToPlace = itemPool.Get(itemType);
             location.Item = itemToPlace ?? throw new InvalidOperationException($"Tried to place item {itemType} at {location.Name}, but there is no such item in the item pool");
             itemPool.Remove(itemToPlace);
+        }
+
+        List<Item> HandleInitialItems(List<Item> progressionItems, World world) {
+            var baseItems = new List<Item>();
+            int removedItems = 0;
+            foreach ((var initialItem, int initialItemCount) in Config.InitialItems) {
+                for (int i = 0; i < initialItemCount; i++) {
+                    var item = progressionItems.Find(i => i.Is(initialItem, world));
+                    if(item != null) {
+                        progressionItems.Remove(item);
+                        removedItems++;
+                    }
+                    baseItems.Add(item);
+                }
+            }
+
+            /* Add back a random selection of rupees, arrows, and missiles to the progression pool in the same amount we just removed */
+            ItemType[] availableItems = new ItemType[] { ItemType.Arrow, ItemType.TenArrows, ItemType.Missile, ItemType.OneRupee, ItemType.ThreeBombs };
+            
+            progressionItems.AddRange(Enumerable.Repeat(
+                new Item(availableItems[Rnd.Next(availableItems.Length)], world),
+                removedItems
+            ));
+
+            return baseItems;
         }
 
     }
