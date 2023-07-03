@@ -106,6 +106,26 @@ namespace Randomizer.SMZ3 {
                         result.Add(item, quantity);
                     }
                 }
+
+                if (result.ContainsKey(ItemType.Random)) {
+                    var randomItemCount = result[ItemType.Random];
+                    var randomPool = Item.CreateProgressionPool(new World(new Config(), "", 1, ""))
+                        .Where(i => i.Type != ItemType.ETank && i.Type != ItemType.Missile && i.Type != ItemType.Super && i.Type != ItemType.PowerBomb && i.Type != ItemType.ReserveTank && i.Type != ItemType.HalfMagic)
+                        .Select(x => x.Type)
+                        .Distinct()
+                        .ToList();
+
+                    var rnd = new Random();
+
+                    for (int i = 0; i < randomItemCount; i++) {
+                        var item = randomPool[rnd.Next(randomPool.Count)];
+                        result.Add(item, 1);
+                        randomPool.Remove(item);
+                    }
+
+                    result.Remove(ItemType.Random);
+                }
+
             }
             return result;
         }

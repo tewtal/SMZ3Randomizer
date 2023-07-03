@@ -14,6 +14,10 @@ namespace Randomizer.SMZ3 {
         [Description("Nothing")] 
         Nothing,
 
+        /* This is used for the Random starting items */
+        [Description("Random")]
+        Random,
+
         [Description("Hyrule Castle Map")]
         MapHC = 0x7F,
         [Description("Eastern Palace Map")]
