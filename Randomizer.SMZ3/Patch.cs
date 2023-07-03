@@ -576,7 +576,7 @@ namespace Randomizer.SMZ3 {
 
                 /* bit 2 of $7E:F379 also needs to be set to actually dash */
                 if (item == Boots) {
-                    patchValues.Add(0x403039, 0x04);
+                    patchValues.Add(0x403039, 0xF8 | 0x04);
                 }
             }
 
