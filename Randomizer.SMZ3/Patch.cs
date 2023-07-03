@@ -121,6 +121,7 @@ namespace Randomizer.SMZ3 {
             WriteSeedData();
             WriteGameTitle();
             WriteCommonFlags();
+            WriteInitialItems(config.InitialItems);
 
             return patches.ToDictionary(x => x.offset, x => x.bytes);
         }
@@ -547,6 +548,39 @@ namespace Randomizer.SMZ3 {
             name = name.PadRight(width);
 
             return AsAscii(name).Concat(UintBytes(0)).ToArray();
+        }
+
+        void WriteInitialItems(Dictionary<ItemType, int> initialItems) {
+            var patchValues = new Dictionary<int, int>();
+
+            foreach((var item, var count) in initialItems) {
+                var itemAddress = item.ItemAddress();
+                if (patchValues.ContainsKey(itemAddress.Address)) {
+                    if (itemAddress.Bitflag) {
+                        patchValues[itemAddress.Address] |= itemAddress.Value;
+                    }
+                    else if (itemAddress.Additive) {
+                        patchValues[itemAddress.Address] += itemAddress.Value * count;
+                    }
+                    else {
+                        patchValues[itemAddress.Address] = itemAddress.Value;
+                    }
+                } else {
+                    patchValues[itemAddress.Address] = itemAddress.Value * (itemAddress.Additive ? count : 1);
+                    
+                    /* Add initial energy if we're setting starting e-tanks */
+                    if(item == ETank) {
+                        patchValues[itemAddress.Address] += 99;
+                    }
+                }
+
+                /* bit 2 of $7E:F379 also needs to be set to actually dash */
+                if (item == Boots) {
+                    patchValues.Add(0x403039, 0x04);
+                }
+            }
+
+            patches.AddRange(patchValues.Select(pv => (Snes(pv.Key), pv.Value > 0xFF ? UshortBytes(pv.Value) : new byte[] { (byte)pv.Value })));
         }
 
         void WriteSeedData() {

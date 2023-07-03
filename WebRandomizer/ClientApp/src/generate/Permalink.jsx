@@ -180,6 +180,12 @@ export default function Permalink() {
                             <Col>Race Rom (no spoilers)</Col>
                         </Row>
                     )}
+                    {settings && settings.initialitems && (
+                        <Row>
+                            <Col md="3">Starting items:</Col>
+                            <Col>{settings.initialitems}</Col>
+                        </Row>
+                    )}
 
                     <Row className="mt-3">
                         <Col>

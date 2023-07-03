@@ -6,6 +6,7 @@ using static Randomizer.SMZ3.SMLogic;
 using static Randomizer.SMZ3.RewardType;
 using System.Text.RegularExpressions;
 using System.ComponentModel;
+using Randomizer.Shared.Models;
 
 namespace Randomizer.SMZ3 {
 
@@ -918,6 +919,83 @@ namespace Randomizer.SMZ3 {
             };
         }
 
+    }
+
+    public record ItemAddress {
+        public int Address { get; init; }
+        public int Value { get; init; } = 0x01;
+        public bool Bitflag { get; init; } = false;
+        public bool Additive { get; init; } = false;
+    }
+
+    static class ItemTypeExtensions {
+        public static ItemAddress ItemAddress(this ItemType itemType) {
+            return itemType switch {
+                Bow => new ItemAddress { Address = 0x403000 },
+                SilverArrows => new ItemAddress { Address = 0x403000, Value = 0x04 },
+                BlueBoomerang => new ItemAddress { Address = 0x403001 },
+                RedBoomerang => new ItemAddress { Address = 0x403001, Value = 0x02 },
+                Hookshot => new ItemAddress { Address = 0x403002 },
+                ThreeBombs => new ItemAddress { Address = 0x403003, Value = 0x03, Additive = true },
+                Mushroom => new ItemAddress { Address = 0x403004, Value = 0x01 },
+                Powder => new ItemAddress { Address = 0x403004, Value = 0x02 },
+                Firerod => new ItemAddress { Address = 0x403005 },
+                Icerod => new ItemAddress { Address = 0x403006 },
+                Bombos => new ItemAddress { Address = 0x403007 },
+                Ether => new ItemAddress { Address = 0x403008 },
+                Quake => new ItemAddress { Address = 0x403009 },
+                Lamp => new ItemAddress { Address = 0x40300A },
+                Hammer => new ItemAddress { Address = 0x40300B },
+                Shovel => new ItemAddress { Address = 0x40300C },
+                Flute => new ItemAddress { Address = 0x40300C, Value = 0x03 },
+                Bugnet => new ItemAddress { Address = 0x40300D },
+                Book => new ItemAddress { Address = 0x40300E },
+                Somaria => new ItemAddress { Address = 0x403010 },
+                Byrna => new ItemAddress { Address = 0x403011 },
+                Cape => new ItemAddress { Address = 0x403012 },
+                Mirror => new ItemAddress { Address = 0x403013, Value = 0x02 },
+                ProgressiveGlove => new ItemAddress { Address = 0x403014, Value = 0x01, Additive = true },
+                Boots => new ItemAddress { Address = 0x403015 },
+                Flippers => new ItemAddress { Address = 0x403016 },
+                MoonPearl => new ItemAddress { Address = 0x403017 },
+                ProgressiveSword => new ItemAddress { Address = 0x400043, Value = 0x01, Additive = true },
+                ProgressiveShield => new ItemAddress { Address = 0x40301A, Value = 0x01, Additive = true },
+                ProgressiveTunic => new ItemAddress { Address = 0x40301B, Value = 0x01, Additive = true },
+                Bottle => new ItemAddress { Address = 0x40301C, Value = 0x02 },
+                OneRupee => new ItemAddress { Address = 0x403020, Value = 0x01, Additive = true },
+                FiveRupees => new ItemAddress { Address = 0x403020, Value = 0x05, Additive = true },
+                TwentyRupees => new ItemAddress { Address = 0x403020, Value = 0x14, Additive = true },
+                TwentyRupees2 => new ItemAddress { Address = 0x403020, Value = 0x14, Additive = true },
+                FiftyRupees => new ItemAddress { Address = 0x403020, Value = 0x32, Additive = true },
+                OneHundredRupees => new ItemAddress { Address = 0x403020, Value = 0x64, Additive = true },
+                ThreeHundredRupees => new ItemAddress { Address = 0x403020, Value = 0x12C, Additive = true },
+
+                Missile => new ItemAddress { Address = 0xF26106, Value = 0x05, Additive = true },
+                Super => new ItemAddress { Address = 0xF26108, Value = 0x05, Additive = true },
+                PowerBomb => new ItemAddress { Address = 0xF2610A, Value = 0x05, Additive = true },
+
+                Varia => new ItemAddress { Address = 0xF26100, Value = 0x1, Bitflag = true },
+                SpringBall => new ItemAddress { Address = 0xF26100, Value = 0x2, Bitflag = true },
+                Morph => new ItemAddress { Address = 0xF26100, Value = 0x4, Bitflag = true },
+                ScrewAttack => new ItemAddress { Address = 0xF26100, Value = 0x8, Bitflag = true },
+                Gravity => new ItemAddress { Address = 0xF26100, Value = 0x20, Bitflag = true },
+                HiJump => new ItemAddress { Address = 0xF26100, Value = 0x100, Bitflag = true },
+                SpaceJump => new ItemAddress { Address = 0xF26100, Value = 0x200, Bitflag = true },
+                Bombs => new ItemAddress { Address = 0xF26100, Value = 0x1000, Bitflag = true },
+                SpeedBooster => new ItemAddress { Address = 0xF26100, Value = 0x2000, Bitflag = true },
+                Grapple => new ItemAddress { Address = 0xF26100, Value = 0x4000, Bitflag = true },
+                XRay => new ItemAddress { Address = 0xF26100, Value = 0x8000, Bitflag = true },
+
+                Wave => new ItemAddress { Address = 0xF26102, Value = 0x1, Bitflag = true },
+                Ice => new ItemAddress { Address = 0xF26102, Value = 0x2, Bitflag = true },
+                Spazer => new ItemAddress { Address = 0xF26102, Value = 0x4, Bitflag = true },
+                Plasma => new ItemAddress { Address = 0xF26102, Value = 0x8, Bitflag = true },
+                Charge => new ItemAddress { Address = 0xF26102, Value = 0x1000, Bitflag = true },
+
+                ETank => new ItemAddress { Address = 0xF26104, Value = 0x64, Additive = true },
+
+            };
+        }
     }
 
 }

@@ -17,6 +17,10 @@ namespace Randomizer.SMZ3 {
                 if (!world.Config.Keysanity) {
                     items.AddRange(Item.CreateKeycards(world));
                 }
+
+                if (world.Config.InitialItems.Count > 0) {
+                    items.AddRange(world.Config.InitialItems.SelectMany(ii => Enumerable.Repeat(new Item(ii.Key, world), ii.Value)));
+                }
             }
 
             var totalItemCount = worlds.SelectMany(w => w.Items).Count();

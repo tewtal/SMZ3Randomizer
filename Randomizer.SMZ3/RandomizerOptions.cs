@@ -71,6 +71,7 @@ namespace Randomizer.SMZ3 {
                 GanonVulnerable = ParseOption(options, GanonVulnerable.SevenCrystals),
                 OpenTourian = ParseOption(options, OpenTourian.FourBosses),
                 Race = ParseOption(options, "Race", false),
+                InitialItems = ParseOption(options, "InitialItems")
             };
         }
 
@@ -90,6 +91,23 @@ namespace Randomizer.SMZ3 {
             } else {
                 return defaultValue;
             }
+        }
+
+        static Dictionary<ItemType, int> ParseOption(IDictionary<string, string> options, string option) {
+            // Extract a set of ItemType, int from the option value InitialItems encoded as "ItemType:Quantity, ItemType:Quantity"
+            var result = new Dictionary<ItemType, int>();
+            if (options.ContainsKey(option.ToLower())) {
+                var items = options[option.ToLower()].Split(',');
+                foreach (var itemData in items) {
+                    var parts = itemData.Trim().Split(':');
+                    var quantity = parts.Length == 2 && int.TryParse(parts[1].Trim(), out int q) ? q : 1;
+                    var item = Enum.TryParse(parts[0].Trim(), true, out ItemType itemType) ? itemType : ItemType.Nothing;
+                    if (item != ItemType.Nothing) {
+                        result.Add(item, quantity);
+                    }
+                }
+            }
+            return result;
         }
 
     }
