@@ -551,32 +551,32 @@ namespace Randomizer.SMZ3 {
         }
 
         void WriteInitialItems(Dictionary<ItemType, int> initialItems) {
-            var patchValues = new Dictionary<int, int>();
+            var patchValues = new Dictionary<int, int> {
+                { 0x403039, 0b01101000 }
+            };
 
-            foreach((var item, var count) in initialItems) {
-                var itemAddress = item.ItemAddress();
-                if (patchValues.ContainsKey(itemAddress.Address)) {
-                    if (itemAddress.Bitflag) {
-                        patchValues[itemAddress.Address] |= itemAddress.Value;
-                    }
-                    else if (itemAddress.Additive) {
-                        patchValues[itemAddress.Address] += itemAddress.Value * count;
+            foreach ((var item, var count) in initialItems) {
+                var itemAddresses = item.ItemAddress();
+                foreach (var itemAddress in itemAddresses) {
+                    if (patchValues.ContainsKey(itemAddress.Address)) {
+                        if (itemAddress.Bitflag) {
+                            patchValues[itemAddress.Address] |= itemAddress.Value;
+                        }
+                        else if (itemAddress.Additive) {
+                            patchValues[itemAddress.Address] += itemAddress.Value * count;
+                        }
+                        else {
+                            patchValues[itemAddress.Address] = itemAddress.Value;
+                        }
                     }
                     else {
-                        patchValues[itemAddress.Address] = itemAddress.Value;
-                    }
-                } else {
-                    patchValues[itemAddress.Address] = itemAddress.Value * (itemAddress.Additive ? count : 1);
-                    
-                    /* Add initial energy if we're setting starting e-tanks */
-                    if(item == ETank) {
-                        patchValues[itemAddress.Address] += 99;
-                    }
-                }
+                        patchValues[itemAddress.Address] = itemAddress.Value * (itemAddress.Additive ? count : 1);
 
-                /* bit 2 of $7E:F379 also needs to be set to actually dash */
-                if (item == Boots) {
-                    patchValues.Add(0x403039, 0xF8 | 0x04);
+                        /* Add initial energy if we're setting starting e-tanks */
+                        if (item == ETank) {
+                            patchValues[itemAddress.Address] += 99;
+                        }
+                    }
                 }
             }
 

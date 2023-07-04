@@ -110,7 +110,7 @@ namespace Randomizer.SMZ3 {
                 if (result.ContainsKey(ItemType.Random)) {
                     var randomItemCount = result[ItemType.Random];
                     var randomPool = Item.CreateProgressionPool(new World(new Config(), "", 1, ""))
-                        .Where(i => i.Type != ItemType.ETank && i.Type != ItemType.Missile && i.Type != ItemType.Super && i.Type != ItemType.PowerBomb && i.Type != ItemType.ReserveTank && i.Type != ItemType.HalfMagic)
+                        .Where(i => !result.ContainsKey(i.Type) && i.Type != ItemType.ETank && i.Type != ItemType.Missile && i.Type != ItemType.Super && i.Type != ItemType.PowerBomb && i.Type != ItemType.ReserveTank && i.Type != ItemType.HalfMagic)
                         .Select(x => x.Type)
                         .Distinct()
                         .ToList();
