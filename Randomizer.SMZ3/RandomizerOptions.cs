@@ -102,6 +102,11 @@ namespace Randomizer.SMZ3 {
                     var parts = itemData.Trim().Split(':');
                     var quantity = parts.Length == 2 && int.TryParse(parts[1].Trim(), out int q) ? q : 1;
                     var item = Enum.TryParse(parts[0].Trim(), true, out ItemType itemType) ? itemType : ItemType.Nothing;
+                    
+                    if (item != ItemType.Random && item.ItemAddress() == null) {
+                        throw new ArgumentOutOfRangeException(item.ToString(), $"Invalid Starting Item: {item}");
+                    }
+
                     if (item != ItemType.Nothing) {
                         result.Add(item, quantity);
                     }
@@ -109,13 +114,19 @@ namespace Randomizer.SMZ3 {
 
                 if (result.ContainsKey(ItemType.Random)) {
                     var randomItemCount = result[ItemType.Random];
-                    var randomPool = Item.CreateProgressionPool(new World(new Config(), "", 1, ""))
+                    var world = new World(new Config(), "", 1, "");
+                    var randomPool = Item.CreateProgressionPool(world)
+                        .Concat(new[] { new Item(ItemType.Spazer, world) })
                         .Where(i => !result.ContainsKey(i.Type) && i.Type != ItemType.ETank && i.Type != ItemType.Missile && i.Type != ItemType.Super && i.Type != ItemType.PowerBomb && i.Type != ItemType.ReserveTank && i.Type != ItemType.HalfMagic)
                         .Select(x => x.Type)
                         .Distinct()
                         .ToList();
 
                     var rnd = new Random();
+
+                    if(randomItemCount == 0) {
+                        randomItemCount = rnd.Next(randomPool.Count);
+                    }
 
                     for (int i = 0; i < randomItemCount; i++) {
                         var item = randomPool[rnd.Next(randomPool.Count)];

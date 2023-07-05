@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Randomizer.Shared.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -47,15 +48,18 @@ namespace Randomizer.SMZ3 {
 
                 progressionItems.AddRange(dungeon);
                 progressionItems.AddRange(progression);
-
-                /* Remove initial items from the progression pool and add them to the base item pool */
-                baseItems.AddRange(HandleInitialItems(progressionItems, world));
-
             }
 
             progressionItems = progressionItems.Shuffle(Rnd);
             var niceItems = Worlds.SelectMany(world => Item.CreateNicePool(world)).Shuffle(Rnd);
             var junkItems = Worlds.SelectMany(world => Item.CreateJunkPool(world)).Shuffle(Rnd);
+
+            /* Remove initial items from the item pools and add them to the base item pool */
+            List<ItemType> initialItems = Config.InitialItems.SelectMany(ii => Enumerable.Repeat(ii.Key, ii.Value)).ToList();
+            baseItems = HandleInitialItems(progressionItems, baseItems, initialItems);
+            baseItems = HandleInitialItems(niceItems, baseItems, initialItems);
+            baseItems = HandleInitialItems(junkItems, baseItems, initialItems);
+
 
             var locations = Worlds.SelectMany(x => x.Locations).Empty().Shuffle(Rnd);
             if (Config.SingleWorld)
@@ -205,31 +209,29 @@ namespace Randomizer.SMZ3 {
             itemPool.Remove(itemToPlace);
         }
 
-        List<Item> HandleInitialItems(List<Item> progressionItems, World world) {
-            var baseItems = new List<Item>();
-            int removedItems = 0;
-            foreach ((var initialItem, int initialItemCount) in Config.InitialItems) {
-                for (int i = 0; i < initialItemCount; i++) {
-                    var item = progressionItems.Find(i => i.Is(initialItem, world));
+        List<Item> HandleInitialItems(List<Item> itemPool, List<Item> baseItems, List<ItemType> initialItems) {
+            ItemType[] availableItems = new ItemType[] { ItemType.Arrow, ItemType.TenArrows, ItemType.Missile, ItemType.OneRupee, ItemType.ThreeBombs };
+
+            foreach (var initialItem in initialItems.ToList()) {
+                bool itemFound = false;
+                foreach(var world in Worlds) {
+                    var item = itemPool.Find(i => i.Is(initialItem, world));
                     if(item != null) {
-                        progressionItems.Remove(item);
-                        removedItems++;
+                        itemFound = true;
+                        itemPool.Remove(item);
+                        baseItems.Add(item);
+
+                        /* Add back a random item to the itemPool from availableItems */
+                        itemPool.Add(new Item(availableItems[Rnd.Next(availableItems.Length)], world));
                     }
-                    baseItems.Add(item);
+                }
+
+                if (itemFound) {
+                    initialItems.Remove(initialItem);
                 }
             }
 
-            /* Add back a random selection of rupees, arrows, and missiles to the progression pool in the same amount we just removed */
-            ItemType[] availableItems = new ItemType[] { ItemType.Arrow, ItemType.TenArrows, ItemType.Missile, ItemType.OneRupee, ItemType.ThreeBombs };
-            
-            progressionItems.AddRange(Enumerable.Repeat(
-                new Item(availableItems[Rnd.Next(availableItems.Length)], world),
-                removedItems
-            ));
-
             return baseItems;
         }
-
     }
-
 }

@@ -997,6 +997,7 @@ namespace Randomizer.SMZ3 {
                 Charge => new[] { new ItemAddress { Address = 0xF26102, Value = 0x1000, Bitflag = true } },
 
                 ETank => new[] { new ItemAddress { Address = 0xF26104, Value = 0x64, Additive = true } },
+                _ => null
             };
         }
     }
