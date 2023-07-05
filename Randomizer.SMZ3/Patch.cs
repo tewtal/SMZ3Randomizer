@@ -520,11 +520,15 @@ namespace Randomizer.SMZ3 {
             var ganon = Texts.GanonFirstPhase(rnd);
             stringTable.SetGanonFirstPhaseText(ganon);
 
-            var silversLocation = allWorlds.SelectMany(world => world.Locations).Where(l => l.ItemIs(SilverArrows, myWorld)).First();
-            var silvers = config.MultiWorld ?
-                Texts.GanonThirdPhaseMulti(silversLocation.Region, myWorld) :
-                Texts.GanonThirdPhaseSingle(silversLocation.Region);           
-            stringTable.SetGanonThirdPhaseText(silvers);
+            var silversLocation = allWorlds.SelectMany(world => world.Locations).Where(l => l.ItemIs(SilverArrows, myWorld)).FirstOrDefault();
+            if (silversLocation != null) {
+                var silvers = config.MultiWorld ?
+                    Texts.GanonThirdPhaseMulti(silversLocation.Region, myWorld) :
+                    Texts.GanonThirdPhaseSingle(silversLocation.Region);
+                stringTable.SetGanonThirdPhaseText(silvers);
+            } else {
+                stringTable.SetGanonThirdPhaseText(Texts.GanonThirdPhaseSingle(myWorld.GetRegion("Ganon's Tower")));
+            }
 
             var triforceRoom = Texts.TriforceRoom(rnd);            
             stringTable.SetTriforceRoomText(triforceRoom);
