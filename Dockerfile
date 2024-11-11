@@ -1,5 +1,5 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
-RUN apt-get update -yq && apt-get install cmake build-essential python3.11 -yq
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
+RUN apt-get update -yq && apt-get install cmake build-essential python3.9 -yq
 
 # Install node 18
 RUN curl -sSL "https://deb.nodesource.com/setup_18.x" -o nodesource_setup.sh \
@@ -41,7 +41,7 @@ WORKDIR /app
 RUN dotnet publish -c Release -o out
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /app
 COPY --from=build-env /app/out .
 COPY docker-entrypoint.sh /usr/local/bin/
