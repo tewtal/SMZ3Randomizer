@@ -1,5 +1,17 @@
 # Randomizer Changes
 
+## 2024-11-11 - Version 11.3.2
+* Systems Changes
+  * A collection of new sprites have been added.
+  
+* Technical Changes
+  * Added support for MSU-1 (Big thanks to MattEqualsCoder for additional fixes and implementation)
+    * See http://alttp.mymm1.com/wiki/Z3M3:Soundtrack for track list (SM tracks start at 100+) and track 99 is the overall credits track.
+  * Support for defining starting items has been added to the API
+    * This can be set by supplying a string of "initialitems" which is a comma separated list of "Item:Quantity" pairs.
+    * An item named "Random" can be used to give a quantity of random items.
+
+
 ## 2023-04-06 - Version 11.3.1
 * Systems Changes
   * A collection of new sprites have been added.
