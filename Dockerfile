@@ -1,5 +1,5 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
-RUN apt-get update -yq && apt-get install cmake build-essential python3.9 -yq
+RUN apt-get update -yq && apt-get install cmake build-essential python3.11 -yq
 
 # Install node 18
 RUN curl -sSL "https://deb.nodesource.com/setup_18.x" -o nodesource_setup.sh \
