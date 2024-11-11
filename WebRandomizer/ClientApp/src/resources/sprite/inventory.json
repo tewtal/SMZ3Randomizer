@@ -1879,6 +1879,14 @@
       "path": "sm/8_bit_mario.1.sm.rdc.gz"
     },
     {
+      "title": "Agender Samus",
+      "path": "sm/agender-samus.rdc.gz"
+    },
+    {
+      "title": "Alcoon",
+      "path": "sm/alcoon.rdc.gz"
+    },
+    {
       "title": "Alice Margatroid",
       "path": "sm/alice_margatroid.1.sm.rdc.gz"
     },
@@ -1895,6 +1903,10 @@
       "path": "sm/aroace-samus.rdc.gz"
     },
     {
+      "title": "Aroace Samus II",
+      "path": "sm/aroace-samus-ii.rdc.gz"
+    },
+    {
       "title": "B.O.B.",
       "path": "sm/b.o.b..rdc.gz"
     },
@@ -1903,16 +1915,40 @@
       "path": "sm/brad-fang.rdc.gz"
     },
     {
+      "title": "Bruno",
+      "path": "sm/bruno.rdc.gz"
+    },
+    {
+      "title": "Buffed Eggplant",
+      "path": "sm/buffed-eggplant.rdc.gz"
+    },
+    {
       "title": "Buffed Kirby",
       "path": "sm/buffed_kirby.1.sm.rdc.gz"
+    },
+    {
+      "title": "Buffed Pug",
+      "path": "sm/buffed-pug.rdc.gz"
     },
     {
       "title": "Captain Novolin",
       "path": "sm/captaion_novolin.1.sm.rdc.gz"
     },
     {
+      "title": "Ceroba Ketsukane",
+      "path": "sm/ceroba-ketsukane.rdc.gz"
+    },
+    {
       "title": "Chairdeep",
       "path": "sm/chairdeep.1.sm.rdc.gz"
+    },
+    {
+      "title": "Charizard",
+      "path": "sm/charizard.rdc.gz"
+    },
+    {
+      "title": "Charlotte Aulin",
+      "path": "sm/charlotte-aulin.rdc.gz"
     },
     {
       "title": "Crewmate",
@@ -1951,6 +1987,10 @@
       "path": "sm/federation_trooper.1.sm.rdc.gz"
     },
     {
+      "title": "Fight",
+      "path": "sm/fight.rdc.gz"
+    },
+    {
       "title": "Fusion (Green)",
       "path": "sm/fusion_green.1.sm.rdc.gz"
     },
@@ -1967,8 +2007,16 @@
       "path": "sm/janky.rdc.gz"
     },
     {
+      "title": "Junko",
+      "path": "sm/junko.rdc.gz"
+    },
+    {
       "title": "Justin Bailey",
       "path": "sm/justin_bailey.1.sm.rdc.gz"
+    },
+    {
+      "title": "Kiara",
+      "path": "sm/kiara.rdc.gz"
     },
     {
       "title": "King Graham",
@@ -1983,6 +2031,14 @@
       "path": "sm/knuckles.rdc.gz"
     },
     {
+      "title": "Leading Edge Samus",
+      "path": "sm/leading-edge-samus.rdc.gz"
+    },
+    {
+      "title": "Left Leg Samus",
+      "path": "sm/left-leg-samus.rdc.gz"
+    },
+    {
       "title": "Link (OoT)",
       "path": "sm/link_oot.1.sm.rdc.gz"
     },
@@ -1995,12 +2051,24 @@
       "path": "sm/luigi.1.sm.rdc.gz"
     },
     {
+      "title": "Madeline",
+      "path": "sm/madeline.rdc.gz"
+    },
+    {
       "title": "Maria Pollo",
       "path": "sm/maria-pollo.rdc.gz"
     },
     {
       "title": "Maria Renard",
       "path": "sm/maria-renard.rdc.gz"
+    },
+    {
+      "title": "Mario (SMW)",
+      "path": "sm/mario-(smw).rdc.gz"
+    },
+    {
+      "title": "Mario Dreamteam",
+      "path": "sm/mario-dreamteam.rdc.gz"
     },
     {
       "title": "Master Hand",
@@ -2013,6 +2081,10 @@
     {
       "title": "Mega Man X",
       "path": "sm/mega_man_x.1.sm.rdc.gz"
+    },
+    {
+      "title": "MegaMan X (Bearded)",
+      "path": "sm/megaman-x-(bearded).rdc.gz"
     },
     {
       "title": "Metroid",
@@ -2039,8 +2111,16 @@
       "path": "sm/outline-samus.rdc.gz"
     },
     {
+      "title": "PED Suit Samus",
+      "path": "sm/ped-suit-samus.rdc.gz"
+    },
+    {
       "title": "Plissken",
       "path": "sm/plissken.rdc.gz"
+    },
+    {
+      "title": "Protogen Laso",
+      "path": "sm/protogen-laso.rdc.gz"
     },
     {
       "title": "Pyronett",
@@ -2049,6 +2129,14 @@
     {
       "title": "Ronald McDonald",
       "path": "sm/ronald-mcdonald.rdc.gz"
+    },
+    {
+      "title": "Samus Maid",
+      "path": "sm/samus-maid.rdc.gz"
+    },
+    {
+      "title": "Samus Returns",
+      "path": "sm/samus-returns.rdc.gz"
     },
     {
       "title": "Sans",
@@ -2109,6 +2197,10 @@
     {
       "title": "Win95 Cursor",
       "path": "sm/win95_cursor.1.sm.rdc.gz"
+    },
+    {
+      "title": "Yarn Kirby",
+      "path": "sm/yarn-kirby.rdc.gz"
     },
     {
       "title": "Yoshi & Baby Mario",
