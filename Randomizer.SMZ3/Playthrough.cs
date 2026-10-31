@@ -77,6 +77,42 @@ namespace Randomizer.SMZ3 {
             return spheres;
         }
 
+        /// <summary>The 1-based sphere each reachable location is first available in</summary>
+        public static Dictionary<Location, int> LocationSpheres(List<World> worlds) {
+            var spheres = new Dictionary<Location, int>();
+            var items = new List<Item>();
+
+            foreach (var world in worlds) {
+                world.ForwardSearch = true;
+                if (!world.Config.Keysanity) {
+                    items.AddRange(Item.CreateKeycards(world));
+                }
+                items.AddRange(world.Config.InitialItems.SelectMany(ii => Enumerable.Repeat(new Item(ii.Key, world), ii.Value)));
+            }
+
+            try {
+                for (var sphere = 1; ; sphere++) {
+                    var added = worlds
+                        .SelectMany(w => w.Locations.Available(items.Where(i => i.World == w)))
+                        .Where(l => !spheres.ContainsKey(l))
+                        .ToList();
+                    if (added.Count == 0)
+                        break;
+
+                    foreach (var location in added) {
+                        spheres[location] = sphere;
+                    }
+                    items.AddRange(added.Select(l => l.Item));
+                }
+            } finally {
+                foreach (var world in worlds) {
+                    world.ForwardSearch = false;
+                }
+            }
+
+            return spheres;
+        }
+
         static void AddLocation(Dictionary<string, string> sphere, Location location, bool multiWorld) {
             sphere.Add(
                 multiWorld ? $"{location.Name} ({location.Region.World.Player})"

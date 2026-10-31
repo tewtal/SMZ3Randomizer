@@ -704,7 +704,10 @@ namespace Randomizer.SMZ3 {
 
         int shield;
 
-        public Progression(IEnumerable<Item> items) {
+        public SMSkills Skills { get; }
+
+        public Progression(IEnumerable<Item> items, SMSkills skills = null) {
+            Skills = skills ?? items.FirstOrDefault()?.World?.Config.Skills ?? SMSkills.Preset(SMLogic.Normal);
             Add(items);
         }
 
@@ -843,7 +846,7 @@ namespace Randomizer.SMZ3 {
         }
 
         public static bool CanAccessDarkWorldPortal(this Progression items, Config config) {
-            return config.SMLogic switch {
+            return (config.Skills.HardSkills ? Hard : Normal) switch {
                 Normal =>
                     items.CardMaridiaL1 && items.CardMaridiaL2 && items.CanUsePowerBombs() && items.Super && items.Gravity && items.SpeedBooster,
                 _ =>
@@ -855,7 +858,7 @@ namespace Randomizer.SMZ3 {
         }
 
         public static bool CanAccessMiseryMirePortal(this Progression items, Config config) {
-            return config.SMLogic switch {
+            return (config.Skills.HardSkills ? Hard : Normal) switch {
                 Normal =>
                     (items.CardNorfairL2 || items.SpeedBooster && items.Wave) && items.Varia && items.Super &&
                         items.Gravity && items.SpaceJump && items.CanUsePowerBombs(),
@@ -866,8 +869,12 @@ namespace Randomizer.SMZ3 {
              };
         }
 
+        public static bool CanNavigateDarkRooms(this Progression items) {
+            return items.Lamp || items.Skills.DarkRooms;
+        }
+
         public static bool CanIbj(this Progression items) {
-            return items.Morph && items.Bombs;
+            return items.Skills.InfiniteBombJump && items.Morph && items.Bombs;
         }
 
         public static bool CanFly(this Progression items) {
@@ -895,7 +902,7 @@ namespace Randomizer.SMZ3 {
         }
 
         public static bool HasEnergyReserves(this Progression items, int amount) {
-            return (items.ETank + items.ReserveTank) >= amount;
+            return items.Skills.HealthIndifferent || (items.ETank + items.ReserveTank) >= amount;
         }
 
         public static bool CanOpenRedDoors(this Progression items) {
@@ -903,7 +910,7 @@ namespace Randomizer.SMZ3 {
         }
 
         public static bool CanAccessNorfairUpperPortal(this Progression items) {
-            return items.Flute || items.CanLiftLight() && items.Lamp;
+            return items.Flute || items.CanLiftLight() && items.CanNavigateDarkRooms();
         }
 
         public static bool CanAccessNorfairLowerPortal(this Progression items) {
@@ -911,7 +918,7 @@ namespace Randomizer.SMZ3 {
         }
 
         public static bool CanAccessMaridiaPortal(this Progression items, World world) {
-            return world.Config.SMLogic switch {
+            return (world.Config.Skills.HardSkills ? Hard : Normal) switch {
                 Normal =>
                     items.MoonPearl && items.Flippers &&
                     items.Gravity && items.Morph &&

@@ -19,9 +19,9 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                 new Location(this, 256+106, 0x1E97D, LocationType.Regular, "Eastern Palace - Big Chest",
                     items => items.BigKeyEP),
                 new Location(this, 256+107, 0x1E9B9, LocationType.Regular, "Eastern Palace - Big Key Chest",
-                    items => items.Lamp),
+                    items => items.CanNavigateDarkRooms()),
                 new Location(this, 256+108, 0x308150, LocationType.Regular, "Eastern Palace - Armos Knights",
-                    items => items.BigKeyEP && items.Bow && items.Lamp),
+                    items => items.BigKeyEP && items.Bow && items.CanNavigateDarkRooms()),
             };
         }
 

@@ -79,6 +79,8 @@ namespace Randomizer.SMZ3 {
             AssumedFill(progressionItems, baseItems, locations, Worlds);
             FastFill(niceItems, locations);
             FastFill(junkItems, locations);
+
+            SphereConstraints.Enforce(Worlds, Config, Rnd, CancellationToken);
         }
 
         void ApplyItemBias(List<Item> itemPool, IEnumerable<(ItemType type, double weight)> reorder) {
