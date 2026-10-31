@@ -127,7 +127,7 @@ namespace Randomizer.SMZ3.Tests.Logic {
             if (skip != null) {
                 preparations.ElementAt((int) skip).Skip(world, name, pool);
             }
-            return new Progression(pool);
+            return new Progression(pool, world.Config.Skills);
         }
 
         public IEnumerator<Preparation> GetEnumerator() => preparations.GetEnumerator();

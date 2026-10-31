@@ -9,7 +9,16 @@ namespace Randomizer.SMZ3 {
 
     static class RandomizerOptions {
 
-        public static List<IRandomizerOption> List { get; } = new List<IRandomizerOption> {
+        public static List<IRandomizerOption> List { get; } = CreateList();
+
+        static List<IRandomizerOption> CreateList() {
+            var list = CreateCommonOptions();
+            /* Skills and per item sphere options come last, the web UI tucks them into collapsible sections */
+            list.AddRange(SphereConstraints.CreateOptions());
+            return list;
+        }
+
+        static List<IRandomizerOption> CreateCommonOptions() => new List<IRandomizerOption> {
             CreateEnumOption<SMLogic>("Super Metroid Logic"),
             CreateEnumOption<Goal>("Goal"),
             CreateEnumOption<OpenTower>("Open Ganon's Tower"),
@@ -23,6 +32,12 @@ namespace Randomizer.SMZ3 {
             CreateBoolOption("Race", "Race ROM (no spoilers)", false),
             CreateEnumOption<GameMode>("Game mode"),
             CreatePlayerOption(),
+            CreateSkillOption("HardSkills", "Hard skills (generic difficulty)"),
+            CreateSkillOption("InfiniteBombJump", "Infinite bomb jump"),
+            CreateSkillOption("MockBall", "Mockball"),
+            CreateSkillOption("ShortSpark", "Short spark"),
+            CreateSkillOption("HealthIndifferent", "Health indifferent"),
+            CreateSkillOption("DarkRooms", "Navigate dark rooms without lamp"),
         };
 
         static RandomizerOption CreateEnumOption<TEnum>(string description, string defaultOption = null) where TEnum : Enum {
@@ -33,6 +48,16 @@ namespace Randomizer.SMZ3 {
                 Type = Dropdown,
                 Default = string.IsNullOrEmpty(defaultOption) ? GetDefaultValue<TEnum>().ToLowerString() : defaultOption,
                 Values = Enum.GetValues(enumType).Cast<Enum>().ToDictionary(k => k.ToLowerString(), v => v.GetDescription()),
+            };
+        }
+
+        static RandomizerOption CreateSkillOption(string key, string description) {
+            return new RandomizerOption {
+                Key = key.ToLower(),
+                Description = description,
+                Type = Dropdown,
+                Default = SkillSetting.Default.ToLowerString(),
+                Values = Enum.GetValues(typeof(SkillSetting)).Cast<Enum>().ToDictionary(k => k.ToLowerString(), v => v.GetDescription()),
             };
         }
 
@@ -59,7 +84,7 @@ namespace Randomizer.SMZ3 {
             new RandomizerOption { Key = "players", Description = "Players", Type = Players, Default = "2" };
 
         public static Config Parse(IDictionary<string, string> options) {
-            return new Config {
+            var config = new Config {
                 GameMode = ParseOption(options, GameMode.Normal),
                 Z3Logic = ParseOption(options, Z3Logic.Normal),
                 SMLogic = ParseOption(options, SMLogic.Normal),
@@ -71,8 +96,30 @@ namespace Randomizer.SMZ3 {
                 GanonVulnerable = ParseOption(options, GanonVulnerable.SevenCrystals),
                 OpenTourian = ParseOption(options, OpenTourian.FourBosses),
                 Race = ParseOption(options, "Race", false),
-                InitialItems = ParseOption(options, "InitialItems")
+                InitialItems = ParseOption(options, "InitialItems"),
+                ItemSpheres = SphereConstraints.Parse(options),
             };
+
+            // Logic only selects the preset, explicit skill settings override it
+            var skills = config.Skills;
+            skills.HardSkills = ParseSkill(options, "HardSkills", skills.HardSkills);
+            skills.InfiniteBombJump = ParseSkill(options, "InfiniteBombJump", skills.InfiniteBombJump);
+            skills.MockBall = ParseSkill(options, "MockBall", skills.MockBall);
+            skills.ShortSpark = ParseSkill(options, "ShortSpark", skills.ShortSpark);
+            skills.HealthIndifferent = ParseSkill(options, "HealthIndifferent", skills.HealthIndifferent);
+            skills.DarkRooms = ParseSkill(options, "DarkRooms", skills.DarkRooms);
+            return config;
+        }
+
+        static bool ParseSkill(IDictionary<string, string> options, string key, bool preset) {
+            if (options.TryGetValue(key.ToLower(), out var value) && Enum.TryParse(value, true, out SkillSetting setting)) {
+                return setting switch {
+                    SkillSetting.Enabled => true,
+                    SkillSetting.Disabled => false,
+                    _ => preset,
+                };
+            }
+            return preset;
         }
 
         static TEnum ParseOption<TEnum>(IDictionary<string, string> options, TEnum defaultValue) where TEnum : Enum {

@@ -29,6 +29,42 @@ namespace Randomizer.SMZ3 {
         Hard,
     }
 
+    [DefaultValue(Default)]
+    enum SkillSetting {
+        [Description("Default (per logic)")]
+        Default,
+        [Description("Enabled")]
+        Enabled,
+        [Description("Disabled")]
+        Disabled,
+    }
+
+    /// <summary>
+    /// The Super Metroid / dungeon tricks the player is expected to be able to perform.
+    /// <see cref="SMLogic"/> only selects a preset of these, each can be overridden individually.
+    /// </summary>
+    class SMSkills {
+
+        /// <summary>Generic "hard" Super Metroid routes (everything the Hard logic adds over Normal).</summary>
+        public bool HardSkills { get; set; }
+        /// <summary>Infinite bomb jumping, Morph + Bombs counts as flight.</summary>
+        public bool InfiniteBombJump { get; set; }
+        /// <summary>Mockball (entering morph-only passages without stopping).</summary>
+        public bool MockBall { get; set; }
+        /// <summary>Short charge / short spark with a minimal speed booster runway.</summary>
+        public bool ShortSpark { get; set; }
+        /// <summary>Energy tank / reserve requirements are ignored.</summary>
+        public bool HealthIndifferent { get; set; }
+        /// <summary>Dark rooms can be navigated without the Lamp.</summary>
+        public bool DarkRooms { get; set; }
+
+        public static SMSkills Preset(SMLogic logic) => logic switch {
+            SMLogic.Hard => new SMSkills { HardSkills = true, InfiniteBombJump = true },
+            _ => new SMSkills { InfiniteBombJump = true },
+        };
+
+    }
+
     [DefaultValue(Randomized)]
     enum SwordLocation {
         [Description("Randomized")]
@@ -131,7 +167,18 @@ namespace Randomizer.SMZ3 {
 
         public GameMode GameMode { get; set; } = GameMode.Normal;
         public Z3Logic Z3Logic { get; set; } = Z3Logic.Normal;
-        public SMLogic SMLogic { get; set; } = SMLogic.Normal;
+        SMLogic smLogic = SMLogic.Normal;
+        SMSkills skills = SMSkills.Preset(SMLogic.Normal);
+
+        /// <summary>Selecting a logic resets <see cref="Skills"/> to that logic's preset.</summary>
+        public SMLogic SMLogic {
+            get => smLogic;
+            set {
+                smLogic = value;
+                skills = SMSkills.Preset(value);
+            }
+        }
+        public SMSkills Skills { get => skills; set => skills = value; }
         public SwordLocation SwordLocation { get; set; } = SwordLocation.Randomized;
         public MorphLocation MorphLocation { get; set; } = MorphLocation.Randomized;
         public Goal Goal { get; set; } = Goal.DefeatBoth;
@@ -141,6 +188,8 @@ namespace Randomizer.SMZ3 {
         public GanonVulnerable GanonVulnerable { get; set; } = GanonVulnerable.SevenCrystals;
         public OpenTourian OpenTourian { get; set; } = OpenTourian.FourBosses;
         public Dictionary<ItemType, int> InitialItems = new Dictionary<ItemType, int>();
+        /// <summary>Latest sphere each copy of an item may appear in, sorted ascending. Items not listed are random.</summary>
+        public Dictionary<ItemType, List<int>> ItemSpheres { get; set; } = new Dictionary<ItemType, List<int>>();
 
         public bool SingleWorld => GameMode == GameMode.Normal;
         public bool MultiWorld => GameMode == GameMode.Multiworld;

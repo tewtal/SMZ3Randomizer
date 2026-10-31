@@ -38,12 +38,12 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                 new Location(this, 256+186, 0x1EA2E, LocationType.Regular, "Turtle Rock - Eye Bridge - Bottom Right", LaserBridge),
                 new Location(this, 256+187, 0x1EA31, LocationType.Regular, "Turtle Rock - Eye Bridge - Bottom Left", LaserBridge),
                 new Location(this, 256+188, 0x308159, LocationType.Regular, "Turtle Rock - Trinexx",
-                    items => items.BigKeyTR && items.KeyTR >= 4 && items.Lamp && CanBeatBoss(items)),
+                    items => items.BigKeyTR && items.KeyTR >= 4 && items.CanNavigateDarkRooms() && CanBeatBoss(items)),
             };
         }
 
         bool LaserBridge(Progression items) {
-            return items.BigKeyTR && items.KeyTR >= 3 && items.Lamp && (items.Cape || items.Byrna || items.CanBlockLasers);
+            return items.BigKeyTR && items.KeyTR >= 3 && items.CanNavigateDarkRooms() && (items.Cape || items.Byrna || items.CanBlockLasers);
         }
 
         bool CanBeatBoss(Progression items) {

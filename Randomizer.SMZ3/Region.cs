@@ -45,7 +45,7 @@ namespace Randomizer.SMZ3 {
     }
 
     abstract class SMRegion : Region {
-        public SMLogic Logic => Config.SMLogic;
+        public SMLogic Logic => Config.Skills.HardSkills ? SMLogic.Hard : SMLogic.Normal;
         public SMRegion(World world, Config config) : base(world, config) { }
     }
 

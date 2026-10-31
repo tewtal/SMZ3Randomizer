@@ -31,7 +31,7 @@ namespace Randomizer.SMZ3.Regions.Zelda {
                 new Location(this, 256+175, 0x1EA67, LocationType.Regular, "Misery Mire - Big Chest",
                     items => items.BigKeyMM),
                 new Location(this, 256+176, 0x308158, LocationType.Regular, "Misery Mire - Vitreous",
-                    items => items.BigKeyMM && items.Lamp && items.Somaria),
+                    items => items.BigKeyMM && items.CanNavigateDarkRooms() && items.Somaria),
             };
         }
 

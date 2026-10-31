@@ -15,12 +15,12 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain {
                     items => items.Mirror),
                 new Location(this, 256+2, 0x308002, LocationType.Regular, "Spectacle Rock Cave"),
                 new Location(this, 256+3, 0x1EE9FA, LocationType.Regular, "Old Man",
-                    items => items.Lamp),
+                    items => items.CanNavigateDarkRooms()),
             };
         }
 
         public override bool CanEnter(Progression items) {
-            return items.Flute || items.CanLiftLight() && items.Lamp || items.CanAccessDeathMountainPortal();
+            return items.Flute || items.CanLiftLight() && items.CanNavigateDarkRooms() || items.CanAccessDeathMountainPortal();
         }
 
     }

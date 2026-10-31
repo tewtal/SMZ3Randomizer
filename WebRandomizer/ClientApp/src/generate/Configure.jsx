@@ -1,6 +1,6 @@
 ﻿import React, { useState, useEffect, useContext } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { Container, Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
+import { Container, Row, Col, Card, CardHeader, CardBody, Collapse } from 'reactstrap';
 import { Form, FormGroup, Button, Input } from 'reactstrap';
 import { Modal, ModalHeader, ModalBody, Progress } from 'reactstrap';
 import BootstrapSwitchButton from 'bootstrap-switch-button-react';
@@ -18,8 +18,13 @@ import map from 'lodash/map';
 import transform from 'lodash/transform';
 import chunk from 'lodash/chunk';
 import range from 'lodash/range';
+import partition from 'lodash/partition';
 import attempt from 'lodash/attempt';
 import defaultTo from 'lodash/defaultTo';
+
+/* Still sent with the options, just not shown */
+const hiddenKeys = ['hardskills'];
+const skillKeys = ['hardskills', 'infinitebombjump', 'mockball', 'shortspark', 'healthindifferent', 'darkrooms'];
 
 export default function Configure() {
     const game = useContext(GameTraitsCtx);
@@ -35,6 +40,8 @@ export default function Configure() {
     const [randomizer, setRandomizer] = useState(null);
     const [modal, setModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
+    const [showSkills, setShowSkills] = useState(false);
+    const [showAdvanced, setShowAdvanced] = useState(false);
 
     useEffect(() => {
         attempt(async () => {
@@ -90,6 +97,35 @@ export default function Configure() {
         setOptions({ ...options, [key]: value });
     }
 
+    /* Skill and sphere options are collapsed by default, everything else is shown up front */
+    const isSkill = (opt) => skillKeys.includes(opt.key);
+    const isAdvanced = (opt) => opt.key.startsWith('sphere-');
+    const allOptions = randomizer ? randomizer.options : [];
+    const [skillOptions, rest] = partition(allOptions.filter(opt => !hiddenKeys.includes(opt.key)), isSkill);
+    const [advancedOptions, mainOptions] = partition(rest, isAdvanced);
+
+    function createOptionRows(list) {
+        return map(chunk(list, 2), (group, i) => (
+            <FormGroup row={true} key={i}>
+                {map(group, (option) => {
+                    let input = createFormOption(option);
+                    return input && <Col key={option.key} md="6">{input}</Col>;
+                })}
+            </FormGroup>
+        ));
+    }
+
+    function createSection(title, list, open, setOpen) {
+        return list.length > 0 && (
+            <div className="mb-3">
+                <Button color="link" className="p-0 mb-2" type="button" onClick={() => setOpen(!open)}>
+                    {title} {open ? '\u25BE' : '\u203A'}
+                </Button>
+                <Collapse isOpen={open}>{createOptionRows(list)}</Collapse>
+            </div>
+        );
+    }
+
     const gameMismatch = gameId !== game.id;
     const content = randomizer && !gameMismatch
         ? (<Card>
@@ -98,14 +134,7 @@ export default function Configure() {
             </CardHeader>
             <CardBody>
                 <Form autoComplete="off" onSubmit={(e) => { e.preventDefault(); createGame(); }}>
-                    {map(chunk(randomizer.options, 2), (group, i) => (
-                        <FormGroup row={true} key={i}>
-                            {map(group, (option) => {
-                                let input = createFormOption(option);
-                                return input && <Col key={option.key} md="6">{input}</Col>;
-                            })}
-                        </FormGroup>
-                    ))}
+                    {createOptionRows(mainOptions)}
                     {options.gamemode === 'multiworld' && (
                         <FormGroup row={true}>
                             {map(createPlayerInputs(), (input, p) => (
@@ -115,6 +144,8 @@ export default function Configure() {
                             ))}
                         </FormGroup>
                     )}
+                    {createSection('Skills', skillOptions, showSkills, setShowSkills)}
+                    {createSection('Advanced', advancedOptions, showAdvanced, setShowAdvanced)}
                     <FormGroup row={true}>
                         <Col md="6">
                             <Button color="success" type="submit">Generate Game</Button>
